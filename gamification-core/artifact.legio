@@ -1,0 +1,9 @@
+dsl Legio
+
+Artifact(groupId = "org.example", version = "1.0.0") gamification-core
+	Imports
+		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
+	Package(mode = ModulesAndLibrariesLinkedByManifest)
+
+Repository(identifier = "intino-maven")
+	Release(url = "https://artifactory.intino.io/artifactory/releases")

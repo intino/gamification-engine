@@ -12,7 +12,7 @@ import java.util.Map;
 public class Engine extends Async {
 
     private static final String Gamification = "Gamification";
-    private static final String[] StartUpStashes = {Gamification, "Player", "Npc", "Mission", "Achievement"};
+    private static final String[] StartUpStashes = {Gamification, "Player", "Npc", "Mission", "Achievement", "Match"};
 
     private final String[] args;
 
@@ -31,16 +31,24 @@ public class Engine extends Async {
     private void initialize(CoreBox box) {
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
         box.put(graph);
-        box.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            box.stop();
-            stop();
-        }));
-        onStart.run();
+
+        Model model = new Model(box.configuration());
+
+        model.onStart(() -> {
+            box.start();
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                box.stop();
+                stop();
+            }));
+            onStart.run();
+        });
+
+        model.start();
     }
 
     private static FileSystemStore store(File datamartFolder) {
         return new FileSystemStore(datamartFolder) {
+
             @Override
             public Stash stashFrom(String path) {
                 Stash stash = super.stashFrom(path);

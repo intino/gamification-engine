@@ -1,0 +1,31 @@
+dsl Proteo
+
+Concept Match
+	var string id
+
+Concept Achievement
+	var string id
+	var word:AchievementType type
+	var string description
+	var string match
+	var string player
+	var word:AchievementStatus status
+
+Concept Mission
+	var string id
+	var string player
+	var word:MissionDifficulty missionDifficulty
+	var word:MissionType missionType
+	var string description
+	var string mission
+	var word:MissionStatus missionStatus
+
+Concept Entity is abstract
+	var string id
+	var string attributes
+	var Entity parent
+	var Entity[] childs
+
+Concept Player extends Entity
+
+Concept Npc extends Entity

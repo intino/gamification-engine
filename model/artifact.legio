@@ -1,0 +1,14 @@
+dsl Legio
+
+Artifact("io.intino.gamification", "1.0.0-SNAPSHOT") model as Solution
+	Model("Ness", "5.5.2", "4.1.1")
+	Package(LibrariesLinkedByManifest)
+	IntinoPlugin("io.intino.ness:data-hub-terminal-plugin:3.0.3", "io.intino.ness.datahubterminalplugin.DataHubTerminalsPluginLauncher", phase = Export)
+
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Snapshot("https://artifactory.intino.io/artifactory/snapshots")
+
+Repository("monentia-maven")
+	Snapshot("https://artifactory.monentia.es/artifactory/snapshots")
+	Release("https://artifactory.monentia.es/artifactory/releases")

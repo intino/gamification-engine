@@ -1,0 +1,27 @@
+dsl Konos
+
+Datalake(path = "{datalake_path}") as Local
+
+Datamart(type = Graph) graph
+	Mounter AttackMounter as Event
+		Require("Attack")
+	Mounter HealMounter as Event
+		Require("Heal")
+	Mounter MissionMounter as Event
+		Require("Mission")
+	Mounter MissionCompleteMounter as Event
+		Require("MissionComplete")
+	Mounter MissionFailedMounter as Event
+		Require("MissionFailed")
+	Mounter MissionCancelledMounter as Event
+		Require("MissionCancelled")
+	Mounter AchievementMounter as Event
+		Require("Achievement")
+
+Subscriber(event = "gamification.Attack", subscriberId = "Attack") AttackSubscriber
+Subscriber(event = "gamification.Heal", subscriberId = "Heal") HealSubscriber
+Subscriber(event = "gamification.Mission", subscriberId = "Mission") MissionSubscriber
+Subscriber(event = "gamification.MissionComplete", subscriberId = "MissionComplete") MissionCompleteSubscriber
+Subscriber(event = "gamification.MissionFailed", subscriberId = "MissionFailed") MissionFailedSubscriber
+Subscriber(event = "gamification.MissionCancelled", subscriberId = "MissionCancelled") MissionCancelledSubscriber
+Subscriber(event = "gamification.Achievement", subscriberId = "Achievement") AchievementSubscriber

@@ -2,7 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/gamification-core/gamification-core.iml" filepath="$PROJECT_DIR$/gamification-core/gamification-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/control/example.control.iml" filepath="$PROJECT_DIR$/control/example.control.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data-hub/example.data-hub.iml" filepath="$PROJECT_DIR$/data-hub/example.data-hub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/model/model.iml" filepath="$PROJECT_DIR$/model/model.iml" />
     </modules>
   </component>
 </project>

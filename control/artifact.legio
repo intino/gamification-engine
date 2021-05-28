@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "io.intino", version = "1.0.0-SNAPSHOT") gamification-core
+Artifact(groupId = "org.example", version = "1.0.0") control
 	Imports
 		Test(groupId = "junit", artifactId = "junit", version = "LATEST")
 	Package(mode = ModulesAndLibrariesLinkedByManifest)

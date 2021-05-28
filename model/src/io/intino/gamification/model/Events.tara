@@ -1,0 +1,34 @@
+dsl Ness
+
+Namespace gamification
+
+	Event Attack
+		Attribute id as Text
+		Attribute npc as Text
+		Attribute damage as Integer
+
+	Event Heal
+		Attribute id as Text
+		Attribute npc as Text
+		Attribute health as Integer
+
+	Event Mission
+		Attribute id as Text
+		Attribute npc as Text
+		Attribute description as Text
+		Attribute level as Word("Easy" "Medium" "Hard")
+		Attribute type as Word("Primary" "Secondary" "Special")
+
+	Event MissionComplete
+		Attribute id as Text
+
+	Event MissionFailed
+		Attribute id as Text
+
+	Event MissionCancelled
+		Attribute id as Text
+
+	Event Achievement
+		Attribute id as Text
+		Attribute player as Text
+		Attribute description as Text

@@ -1,0 +1,20 @@
+dsl Ness
+
+use Events
+
+Broker(path = empty, port = empty, secondaryPort = empty)
+	User("gamification", "gamification")
+
+Datalake(scale = Month, path = empty) dl
+
+	Tank attack as Event(gamification.Attack)
+	Tank heal as Event(gamification.Heal)
+	Tank mission as Event(gamification.Mission)
+	Tank missionComplete as Event(gamification.MissionComplete)
+	Tank missionFailed as Event(gamification.MissionFailed)
+	Tank missionCancelled as Event(gamification.MissionCancelled)
+	Tank achievement as Event(gamification.Achievement)
+
+Terminal gamificationTerminal
+	Publish(dl.attack dl.heal dl.mission dl.missionComplete dl.missionFailed dl.missionCancelled dl.achievement)
+	Subscribe(dl.attack dl.heal dl.mission dl.missionComplete dl.missionFailed dl.missionCancelled dl.achievement)

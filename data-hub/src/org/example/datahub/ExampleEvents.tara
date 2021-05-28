@@ -1,0 +1,16 @@
+dsl Ness
+
+Namespace example
+
+	Event Hospital
+		Attribute id as Text
+		Attribute name as Text
+
+	Event Vaccine
+		Attribute id as Text
+		Attribute name as Text
+
+	Event Patient
+		Attribute id as Text
+		Attribute name as Text
+		Attribute age as Integer

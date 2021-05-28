@@ -1,7 +1,7 @@
 package io.intino.gamification;
 
 import io.intino.alexandria.core.BoxConfiguration;
-import io.intino.alexandria.logger4j.Logger;
+import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
@@ -9,27 +9,20 @@ import io.intino.magritte.io.Stash;
 import org.apache.log4j.Level;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 
-public class Engine implements Runnable {
-
-    private final String[] args;
+public class Engine extends Async {
 
     private static final String Gamification = "Gamification";
     private static final String[] StartUpStashes = {Gamification, "Player", "Npc", "Mission", "Achievement"};
 
-    public Engine(BoxConfiguration configuration) {
-        args = argsFrom(configuration.args());
-    }
+    private final String[] args;
 
-    public void start() {
-        Thread t = new Thread(this);
-        t.start();
+    public Engine(BoxConfiguration configuration) {
+        this.args = argsFrom(configuration.args());
     }
 
     public void run() {
-
         Logger.init(Level.ERROR);
         CoreBox box = new CoreBox(args);
         Model model = new Model(box.configuration());
@@ -37,7 +30,11 @@ public class Engine implements Runnable {
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
         box.put(graph);
         box.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            box.stop();
+            stop();
+        }));
+        onStart.run();
     }
 
     private static FileSystemStore store(File datamartFolder) {

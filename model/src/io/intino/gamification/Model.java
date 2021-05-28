@@ -18,37 +18,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Model {
+public class Model extends Async {
 
     private static final String[] NessStashes = {"Solution"};
 
     private final String[] args;
-    private final ExecutorService thread;
-    private final AtomicBoolean running;
-    private Runnable onStart;
 
     public Model(BoxConfiguration configuration) {
         this.args = argsFrom(configuration.args());
-        this.thread = Executors.newSingleThreadExecutor(Model::thread);
-        this.running = new AtomicBoolean();
-        this.onStart = () -> {};
     }
 
-    public Model onStart(Runnable onStartCallback) {
-        this.onStart = onStartCallback != null ? onStartCallback : () -> {};
-        return this;
-    }
-
-    public boolean start() {
-        if(!running.compareAndSet(false, true)) {
-            Logger.warn("Model " + hashCode() + " is already running");
-            return false;
-        }
-        thread.submit(this::run);
-        return true;
-    }
-
-    private void run() {
+    @Override
+    protected void run() {
         DataHubConfiguration configuration = new DataHubConfiguration(args);
         NessGraph nessGraph = new Graph().loadStashes(NessStashes).as(NessGraph.class);
         loadUsers(configuration.home(), nessGraph);
@@ -58,25 +39,6 @@ public class Model {
             stop();
         }));
         onStart.run();
-    }
-
-    public boolean running() {
-        return running.get();
-    }
-
-    public boolean stop() {
-        return stop(0, TimeUnit.SECONDS);
-    }
-
-    public boolean stop(long timeout, TimeUnit timeUnit) {
-        if(!running.compareAndSet(true, false)) return false;
-        try {
-            thread.shutdown();
-            thread.awaitTermination(timeout, timeUnit);
-        } catch (InterruptedException e) {
-            Logger.error(e);
-        }
-        return true;
     }
 
     private static void loadUsers(File workspace, NessGraph nessGraph) {
@@ -111,7 +73,4 @@ public class Model {
         return home + "/datahub/broker";
     }
 
-    private static Thread thread(Runnable runnable) {
-        return new Thread(runnable, "Model-Thread");
-    }
 }

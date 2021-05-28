@@ -20,11 +20,15 @@ public class Engine extends Async {
         this.args = argsFrom(configuration.args());
     }
 
-    public void run() {
-
+    @Override
+    protected void run() {
         CoreBox box = new CoreBox(args);
         Model model = new Model(box.configuration());
+        model.onStart(() -> initialize(box));
         model.start();
+    }
+
+    private void initialize(CoreBox box) {
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
         box.put(graph);
         box.start();
@@ -37,7 +41,6 @@ public class Engine extends Async {
 
     private static FileSystemStore store(File datamartFolder) {
         return new FileSystemStore(datamartFolder) {
-
             @Override
             public Stash stashFrom(String path) {
                 Stash stash = super.stashFrom(path);
@@ -66,7 +69,7 @@ public class Engine extends Async {
     }
 
     private String getOutboxDirectoryFrom(String datahub_outbox_directory) {
-        int index = datahub_outbox_directory.lastIndexOf("/");
+        final int index = datahub_outbox_directory.lastIndexOf("/");
         return datahub_outbox_directory.substring(0, index + 1) + "gamification";
     }
 }

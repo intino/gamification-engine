@@ -1,12 +1,10 @@
 package io.intino.gamification;
 
 import io.intino.alexandria.core.BoxConfiguration;
-import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
-import org.apache.log4j.Level;
 
 import java.io.File;
 import java.util.Map;
@@ -23,7 +21,7 @@ public class Engine extends Async {
     }
 
     public void run() {
-        Logger.init(Level.ERROR);
+
         CoreBox box = new CoreBox(args);
         Model model = new Model(box.configuration());
         model.start();

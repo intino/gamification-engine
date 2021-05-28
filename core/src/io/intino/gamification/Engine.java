@@ -1,0 +1,65 @@
+package io.intino.gamification;
+
+import io.intino.alexandria.core.BoxConfiguration;
+import io.intino.alexandria.logger4j.Logger;
+import io.intino.gamification.core.box.CoreBox;
+import io.intino.magritte.framework.Graph;
+import io.intino.magritte.framework.stores.FileSystemStore;
+import io.intino.magritte.io.Stash;
+import org.apache.log4j.Level;
+
+import java.io.File;
+import java.util.Map;
+
+public class Engine {
+
+    private final String[] args;
+
+    private static final String Gamification = "Gamification";
+    private static final String[] StartUpStashes = {Gamification, "Player", "Npc", "Mission", "Achievement"};
+
+    public Engine(BoxConfiguration configuration) {
+        args = argsFrom(configuration.args());
+        run();
+    }
+
+    private String[] argsFrom(Map<String, String> args) {
+        args.put("datahub_url", "failover:(tcp://localhost:64000)");
+        args.put("datahub_user", "gamification");
+        args.put("datahub_password", "gamification");
+        args.put("datahub_clientId", "gamification");
+        //args.put("home", "temp");
+        //args.put("datahub_outbox_directory", "temp/terminals/gamification");
+        //args.put("datalake_path", "temp/datalake");
+
+        return args.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toArray(String[]::new);
+    }
+
+    public void run() {
+
+        Logger.init(Level.ERROR);
+        CoreBox box = new CoreBox(args);
+        Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
+        box.put(graph);
+        box.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
+    }
+
+    private static FileSystemStore store(File datamartFolder) {
+        return new FileSystemStore(datamartFolder) {
+
+            @Override
+            public Stash stashFrom(String path) {
+                Stash stash = super.stashFrom(path);
+                if (stash != null && stash.language == null) stash.language = Gamification;
+                return stash;
+            }
+
+            @Override
+            public void writeStash(Stash stash, String path) {
+                stash.language = stash.language == null || stash.language.isEmpty() ? Gamification : stash.language;
+                super.writeStash(stash, path);
+            }
+        };
+    }
+}

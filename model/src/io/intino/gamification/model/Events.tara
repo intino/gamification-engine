@@ -2,64 +2,65 @@ dsl Ness
 
 Namespace gamification
 
-// ===== MATCH EVENTS =====
+	Namespace match
 
-	Event MatchBegin
-		Attribute id as Text
+		Event MatchBegin
+			Attribute id as Text
 
-	Event MatchEnd
-		Attribute id as Text
+		Event MatchEnd
+			Attribute id as Text
 
-// ===== ACHIEVEMENTS ======
+	Namespace achievement
 
-	Event Achievement
-		Attribute id as Text
-    	Attribute type as Word("Local" "Global") // Tells whether the achievement is local to a specific match, or global to the player
-    	Attribute description as Text
+		Event Achievement
+			Attribute id as Text
+			Attribute type as Word("Local" "Global") // Tells whether the achievement is local to a specific match, or global to the player
+			Attribute description as Text
 
-	Event AchievementStatus
-    	Attribute id as Text
-    	Attribute match as Text // The match in which this achievement was obtained
-    	Attribute player as Text // The player who got this achievement
-    	Attribute status as Word("Achieved" "Failed")
+		Event AchievementStatus
+			Attribute id as Text
+			Attribute match as Text // The match in which this achievement was obtained
+			Attribute player as Text // The player who got this achievement
+			Attribute status as Word("Achieved" "Failed")
 
-// ===== MISSIONS =====
+	Namespace mission
 
-	Event Mission
-		Attribute id as Text
-		Attribute player as Text
-		Attribute difficulty as Word("Easy" "Medium" "Hard")
-		Attribute type as Word("Primary" "Secondary" "Special")
-		Attribute description as Text
+		Event Mission
+			Attribute id as Text
+			Attribute player as Text
+			Attribute difficulty as Word("Easy" "Medium" "Hard")
+			Attribute type as Word("Primary" "Secondary" "Special")
+			Attribute description as Text
 
-	Event MissionStatus
-		Attribute mission as Text
-		Attribute status as Word("Created" "Completed" "Cancelled")
+		Event MissionStatus
+			Attribute mission as Text
+			Attribute status as Word("Created" "Completed" "Cancelled")
 
+	Namespace entity
 
-// ===== ENTITIES =====
+		Event Entity
+			Attribute id as Text
+			Attribute maxHealth as Real
+			Attribute points as Integer
+			Attribute type as Word("Player" "Npc")
 
-	Event Entity
-		Attribute id as Text
-		Attribute maxHealth as Real
-		Attribute points as Integer
-		Attribute type as Word("Player" "Npc")
+		Event AttachEntity
+			Attribute id as Text
+			Attribute parent as Text
+			Attribute child as Text
 
-   	Event AttachEntity
-   		Attribute id as Text
-   		Attribute parent as Text
-   		Attribute child as Text
+		Event DetachEntity
+			Attribute id as Text
+			Attribute parent as Text
+			Attribute child as Text
 
-   	Event DetachEntity
-   		Attribute id as Text
-   		Attribute parent as Text
-   		Attribute child as Text
+		Event Action
+			Attribute id as Text
+			Attribute srcEntity as Text
+			Attribute destEntity as Text
+			Attribute destEntityAttribute as Text
+			Attribute operationType as Word("Replace" "Sum" "Subtract" "Add" "Remove")
+			Attribute value as Text
 
-   	Event Action
-   		Attribute id as Text
-   		Attribute srcEntity as Text
-   		Attribute destEntity as Text
-   		Attribute value as Text
-
-   	Event DestroyEntity
-    	Attribute id as Text
+		Event DestroyEntity
+			Attribute id as Text

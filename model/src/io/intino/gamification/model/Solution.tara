@@ -7,14 +7,18 @@ Broker(path = empty, port = empty, secondaryPort = empty)
 
 Datalake(scale = Month, path = empty) dl
 
-	Tank attack as Event(gamification.Attack)
-	Tank heal as Event(gamification.Heal)
-	Tank mission as Event(gamification.Mission)
-	Tank missionComplete as Event(gamification.MissionComplete)
-	Tank missionFailed as Event(gamification.MissionFailed)
-	Tank missionCancelled as Event(gamification.MissionCancelled)
-	Tank achievement as Event(gamification.Achievement)
+	Tank matchBegin as Event(gamification.match.MatchBegin)
+	Tank matchEnd as Event(gamification.match.MatchEnd)
+	Tank achievement as Event(gamification.achievement.Achievement)
+	Tank achievementStatus as Event(gamification.achievement.AchievementStatus)
+	Tank mission as Event(gamification.mission.Mission)
+	Tank missionStatus as Event(gamification.mission.MissionStatus)
+	Tank entity as Event(gamification.entity.Entity)
+	Tank attachEntity as Event(gamification.entity.AttachEntity)
+	Tank detachEntity as Event(gamification.entity.DetachEntity)
+	Tank action as Event(gamification.entity.Action)
+	Tank destroyEntity as Event(gamification.entity.DestroyEntity)
 
 Terminal gamificationTerminal
-	Publish(dl.attack dl.heal dl.mission dl.missionComplete dl.missionFailed dl.missionCancelled dl.achievement)
-	Subscribe(dl.attack dl.heal dl.mission dl.missionComplete dl.missionFailed dl.missionCancelled dl.achievement)
+	Publish(dl.matchBegin dl.matchEnd dl.achievement dl.achievementStatus dl.mission dl.missionStatus dl.entity dl.attachEntity dl.detachEntity dl.action dl.destroyEntity)
+	Subscribe(dl.matchBegin dl.matchEnd dl.achievement dl.achievementStatus dl.mission dl.missionStatus dl.entity dl.attachEntity dl.detachEntity dl.action dl.destroyEntity)

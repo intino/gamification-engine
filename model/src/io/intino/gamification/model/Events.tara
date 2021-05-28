@@ -33,7 +33,7 @@ Namespace gamification
 			Attribute description as Text
 
 		Event MissionStatus
-			Attribute mission as Text
+			Attribute id as Text
 			Attribute status as Word("Created" "Completed" "Cancelled")
 
 	Namespace entity

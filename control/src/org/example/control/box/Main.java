@@ -13,16 +13,20 @@ public class Main {
 	private static final String[] StartUpStashes = {Stashes};
 
 	public static void main(String[] args) {
-		ControlBox box = new ControlBox(args);
 
-		Engine engine = new Engine(box.configuration());
-		engine.start();
-		box.put(engine);
+		ControlBox box = new ControlBox(args);
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
 		box.put(graph);
 
-		box.start();
-		Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
+		Engine engine = new Engine(box.configuration());
+		box.put(engine);
+
+		engine.onStart(() -> {
+			box.start();
+			Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
+		});
+
+		engine.start();
 	}
 
 	private static FileSystemStore store(File datamartFolder) {

@@ -1,11 +1,9 @@
 package org.example.control.box;
 
-import io.intino.alexandria.logger4j.Logger;
 import io.intino.gamification.Engine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
-import org.apache.log4j.Level;
 
 import java.io.File;
 
@@ -15,7 +13,6 @@ public class Main {
 	private static final String[] StartUpStashes = {Stashes};
 
 	public static void main(String[] args) {
-		Logger.init(Level.ERROR);
 		ControlBox box = new ControlBox(args);
 
 		Engine engine = new Engine(box.configuration());

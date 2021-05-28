@@ -59,7 +59,6 @@ public class Engine implements Runnable {
     }
 
     private String[] argsFrom(Map<String, String> args) {
-
         Map<String, String> engineArgs = new HashMap<>();
         engineArgs.put("home", args.get("home"));
         engineArgs.put("datahub_url", "failover:(tcp://localhost:64000)");

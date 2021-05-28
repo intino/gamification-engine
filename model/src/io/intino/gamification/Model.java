@@ -13,29 +13,70 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Model implements Runnable {
-
-    private final String[] args;
+public class Model {
 
     private static final String[] NessStashes = {"Solution"};
 
+    private final String[] args;
+    private final ExecutorService thread;
+    private final AtomicBoolean running;
+    private Runnable onStart;
+
     public Model(BoxConfiguration configuration) {
-        args = argsFrom(configuration.args());
+        this.args = argsFrom(configuration.args());
+        this.thread = Executors.newSingleThreadExecutor(Model::thread);
+        this.running = new AtomicBoolean();
+        this.onStart = () -> {};
     }
 
-    public void start() {
-        Thread t = new Thread(this);
-        t.start();
+    public Model onStart(Runnable onStartCallback) {
+        this.onStart = onStartCallback != null ? onStartCallback : () -> {};
+        return this;
     }
 
-    public void run() {
+    public boolean start() {
+        if(!running.compareAndSet(false, true)) {
+            Logger.warn("Model " + hashCode() + " is already running");
+            return false;
+        }
+        thread.submit(this::run);
+        return true;
+    }
 
+    private void run() {
         DataHubConfiguration configuration = new DataHubConfiguration(args);
         NessGraph nessGraph = new Graph().loadStashes(NessStashes).as(NessGraph.class);
         loadUsers(configuration.home(), nessGraph);
         Box box = new DataHubBox(args).put(nessGraph.core$()).start();
-        Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            box.stop();
+            stop();
+        }));
+        onStart.run();
+    }
+
+    public boolean running() {
+        return running.get();
+    }
+
+    public boolean stop() {
+        return stop(0, TimeUnit.SECONDS);
+    }
+
+    public boolean stop(long timeout, TimeUnit timeUnit) {
+        if(!running.compareAndSet(true, false)) return false;
+        try {
+            thread.shutdown();
+            thread.awaitTermination(timeout, timeUnit);
+        } catch (InterruptedException e) {
+            Logger.error(e);
+        }
+        return true;
     }
 
     private static void loadUsers(File workspace, NessGraph nessGraph) {
@@ -46,22 +87,20 @@ public class Model implements Runnable {
             String[] users = new String(Files.readAllBytes(file.toPath())).split("\n");
             for (String user : users) nessGraph.broker().create().user(user.split("::")[0], user.split("::")[1]);
         } catch (IOException e) {
-            Logger.error(e);
+            Logger.error("Failed to load users", e);
         }
     }
 
     private String[] argsFrom(Map<String, String> args) {
-
-        Map<String, String> modelArgs = new HashMap<>();
-        modelArgs.put("home", args.get("home"));
-        //modelArgs.put("backup_directory", getBackupFrom(args.get("home")));
-        //modelArgs.put("datalake_directory", args.get("datalake_path"));
-        //modelArgs.put("broker_directory", getBrokerFrom(args.get("home")));
-        modelArgs.put("broker_port", "64000");
-        modelArgs.put("broker_secondary_port", "1884");
-        modelArgs.put("ui_port", "9030");
-
-        return modelArgs.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toArray(String[]::new);
+        return new String[] {
+                "home" + args.get("home"),
+                "backup_directory" + getBackupFrom(args.get("home")),
+                "datalake_directory" + args.get("datalake_path"),
+                "broker_directory" + getBrokerFrom(args.get("home")),
+                "broker_port" + "64000",
+                "broker_secondary_port" + "1884",
+                "ui_port" + "9030"
+        };
     }
 
     private String getBackupFrom(String home) {
@@ -70,5 +109,9 @@ public class Model implements Runnable {
 
     private String getBrokerFrom(String home) {
         return home + "/datahub/broker";
+    }
+
+    private static Thread thread(Runnable runnable) {
+        return new Thread(runnable, "Model-Thread");
     }
 }

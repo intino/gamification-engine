@@ -2,33 +2,64 @@ dsl Ness
 
 Namespace gamification
 
-	Event Attack
-		Attribute id as Text
-		Attribute npc as Text
-		Attribute damage as Integer
+// ===== MATCH EVENTS =====
 
-	Event Heal
-		Attribute id as Text
-		Attribute npc as Text
-		Attribute health as Integer
-
-	Event Mission
-		Attribute id as Text
-		Attribute npc as Text
-		Attribute description as Text
-		Attribute level as Word("Easy" "Medium" "Hard")
-		Attribute type as Word("Primary" "Secondary" "Special")
-
-	Event MissionComplete
+	Event MatchBegin
 		Attribute id as Text
 
-	Event MissionFailed
+	Event MatchEnd
 		Attribute id as Text
 
-	Event MissionCancelled
-		Attribute id as Text
+// ===== ACHIEVEMENTS ======
 
 	Event Achievement
 		Attribute id as Text
+    	Attribute type as Word("Local" "Global") // Tells whether the achievement is local to a specific match, or global to the player
+    	Attribute description as Text
+
+	Event AchievementStatus
+    	Attribute id as Text
+    	Attribute match as Text // The match in which this achievement was obtained
+    	Attribute player as Text // The player who got this achievement
+    	Attribute status as Word("Achieved" "Failed")
+
+// ===== MISSIONS =====
+
+	Event Mission
+		Attribute id as Text
 		Attribute player as Text
+		Attribute difficulty as Word("Easy" "Medium" "Hard")
+		Attribute type as Word("Primary" "Secondary" "Special")
 		Attribute description as Text
+
+	Event MissionStatus
+		Attribute mission as Text
+		Attribute status as Word("Created" "Completed" "Cancelled")
+
+
+// ===== ENTITIES =====
+
+	Event Entity
+		Attribute id as Text
+		Attribute maxHealth as Real
+		Attribute points as Integer
+		Attribute type as Word("Player" "Npc")
+
+   	Event AttachEntity
+   		Attribute id as Text
+   		Attribute parent as Text
+   		Attribute child as Text
+
+   	Event DetachEntity
+   		Attribute id as Text
+   		Attribute parent as Text
+   		Attribute child as Text
+
+   	Event Action
+   		Attribute id as Text
+   		Attribute srcEntity as Text
+   		Attribute destEntity as Text
+   		Attribute value as Text
+
+   	Event DestroyEntity
+    	Attribute id as Text

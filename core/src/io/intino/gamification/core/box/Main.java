@@ -1,13 +1,11 @@
 package io.intino.gamification.core.box;
 
-import io.intino.magritte.framework.stores.FileSystemStore;
-import io.intino.magritte.io.Stash;
-
-import java.io.File;
+import io.intino.gamification.Engine;
 
 public class Main {
 
 	public static void main(String[] args) {
-
+		Engine engine = new Engine(new CoreConfiguration(args));
+		engine.start();
 	}
 }

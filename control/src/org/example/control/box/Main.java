@@ -2,6 +2,7 @@ package org.example.control.box;
 
 import io.intino.alexandria.logger4j.Logger;
 import io.intino.gamification.Engine;
+import io.intino.gamification.Model;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
@@ -16,10 +17,13 @@ public class Main {
 	public static void main(String[] args) {
 		Logger.init(Level.ERROR);
 		ControlBox box = new ControlBox(args);
+
 		Engine engine = new Engine(box.configuration());
+		engine.start();
 		box.put(engine);
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
 		box.put(graph);
+
 		box.start();
 		Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 	}

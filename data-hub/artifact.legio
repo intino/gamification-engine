@@ -10,18 +10,21 @@ Artifact(groupId = "org.example", version = "1.0.0-SNAPSHOT") data-hub as Soluti
 	IntinoPlugin(artifact = "io.intino.ness:data-hub-terminal-plugin:3.0.3", pluginClass = "io.intino.ness.datahubterminalplugin.DataHubTerminalsPluginLauncher", phase = Export)
 
 	Parameter("home")
-	Parameter("backup_directory")
-	Parameter("datalake_directory")
+//	Parameter("backup_directory")
+//	Parameter("datalake_directory")
+//	Parameter("broker_directory")
 	Parameter("broker_port")
 	Parameter("broker_secondary_port")
+	Parameter("ui_port")
 
 RunConfiguration local
 	Argument("home", "temp")
-	Argument("datalake_directory", "temp/datalake")
-	Argument("broker_directory", "temp/datahub/broker")
 	Argument("broker_port", "63000")
 	Argument("broker_secondary_port", "1883")
-	Argument("backup_directory", "temp/backup")
+	Argument("ui_port", "9000")
+//	Argument("datalake_directory", "temp/datalake")
+//	Argument("broker_directory", "temp/datahub/broker")
+//	Argument("backup_directory", "temp/backup")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

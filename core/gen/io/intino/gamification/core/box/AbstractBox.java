@@ -129,13 +129,17 @@ public abstract class AbstractBox extends io.intino.alexandria.core.Box {
 
 	private void initTerminal() {
 		if (this.terminal != null) {
-			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationAttackConsumer) e -> new io.intino.gamification.core.box.subscribers.AttackSubscriber((CoreBox) AbstractBox.this).accept(e), "Attack");
-			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationHealConsumer) e -> new io.intino.gamification.core.box.subscribers.HealSubscriber((CoreBox) AbstractBox.this).accept(e), "Heal");
-			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationMissionConsumer) e -> new io.intino.gamification.core.box.subscribers.MissionSubscriber((CoreBox) AbstractBox.this).accept(e), "Mission");
-			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationMissionCompleteConsumer) e -> new io.intino.gamification.core.box.subscribers.MissionCompleteSubscriber((CoreBox) AbstractBox.this).accept(e), "MissionComplete");
-			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationMissionFailedConsumer) e -> new io.intino.gamification.core.box.subscribers.MissionFailedSubscriber((CoreBox) AbstractBox.this).accept(e), "MissionFailed");
-			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationMissionCancelledConsumer) e -> new io.intino.gamification.core.box.subscribers.MissionCancelledSubscriber((CoreBox) AbstractBox.this).accept(e), "MissionCancelled");
-			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationAchievementConsumer) e -> new io.intino.gamification.core.box.subscribers.AchievementSubscriber((CoreBox) AbstractBox.this).accept(e), "Achievement");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationmatchMatchBeginConsumer) e -> new io.intino.gamification.core.box.subscribers.MatchBeginSubscriber((CoreBox) AbstractBox.this).accept(e), "MatchBegin");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationmatchMatchEndConsumer) e -> new io.intino.gamification.core.box.subscribers.MatchEndSubscriber((CoreBox) AbstractBox.this).accept(e), "MatchEnd");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationachievementAchievementConsumer) e -> new io.intino.gamification.core.box.subscribers.AchievementSubscriber((CoreBox) AbstractBox.this).accept(e), "Achievement");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationachievementAchievementStatusConsumer) e -> new io.intino.gamification.core.box.subscribers.AchievementStatusSubscriber((CoreBox) AbstractBox.this).accept(e), "AchievementStatus");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationmissionMissionConsumer) e -> new io.intino.gamification.core.box.subscribers.MissionSubscriber((CoreBox) AbstractBox.this).accept(e), "Mission");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationmissionMissionStatusConsumer) e -> new io.intino.gamification.core.box.subscribers.MissionStatusSubscriber((CoreBox) AbstractBox.this).accept(e), "MissionStatus");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationentityEntityConsumer) e -> new io.intino.gamification.core.box.subscribers.EntitySubscriber((CoreBox) AbstractBox.this).accept(e), "Entity");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationentityAttachEntityConsumer) e -> new io.intino.gamification.core.box.subscribers.AttachEntitySubscriber((CoreBox) AbstractBox.this).accept(e), "AttachEntity");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationentityDetachEntityConsumer) e -> new io.intino.gamification.core.box.subscribers.DetachEntitySubscriber((CoreBox) AbstractBox.this).accept(e), "DetachEntity");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationentityActionConsumer) e -> new io.intino.gamification.core.box.subscribers.ActionSubscriber((CoreBox) AbstractBox.this).accept(e), "Action");
+			this.terminal.subscribe((io.intino.gamification.model.GamificationTerminal.GamificationentityDestroyEntityConsumer) e -> new io.intino.gamification.core.box.subscribers.DestroyEntitySubscriber((CoreBox) AbstractBox.this).accept(e), "DestroyEntity");
 		}
 	}
 

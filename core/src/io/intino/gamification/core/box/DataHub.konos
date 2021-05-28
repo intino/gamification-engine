@@ -3,25 +3,30 @@ dsl Konos
 Datalake(path = "{datalake_path}") as Local
 
 Datamart(type = Graph) graph
-	Mounter AttackMounter as Event
-		Require("Attack")
-	Mounter HealMounter as Event
-		Require("Heal")
-	Mounter MissionMounter as Event
-		Require("Mission")
-	Mounter MissionCompleteMounter as Event
-		Require("MissionComplete")
-	Mounter MissionFailedMounter as Event
-		Require("MissionFailed")
-	Mounter MissionCancelledMounter as Event
-		Require("MissionCancelled")
+	Mounter MatchMounter as Event
+		Require("MatchBegin")
+		Require("MatchEnd")
 	Mounter AchievementMounter as Event
 		Require("Achievement")
+		Require("AchievementStatus")
+	Mounter MissionMounter as Event
+		Require("Mission")
+		Require("MissionStatus")
+	Mounter EntityMounter as Event
+		Require("Entity")
+		Require("AttachEntity")
+		Require("DetachEntity")
+		Require("Action")
+		Require("DestroyEntity")
 
-Subscriber(event = "gamification.Attack", subscriberId = "Attack") AttackSubscriber
-Subscriber(event = "gamification.Heal", subscriberId = "Heal") HealSubscriber
-Subscriber(event = "gamification.Mission", subscriberId = "Mission") MissionSubscriber
-Subscriber(event = "gamification.MissionComplete", subscriberId = "MissionComplete") MissionCompleteSubscriber
-Subscriber(event = "gamification.MissionFailed", subscriberId = "MissionFailed") MissionFailedSubscriber
-Subscriber(event = "gamification.MissionCancelled", subscriberId = "MissionCancelled") MissionCancelledSubscriber
-Subscriber(event = "gamification.Achievement", subscriberId = "Achievement") AchievementSubscriber
+Subscriber(event = "gamification.match.MatchBegin", subscriberId = "MatchBegin") MatchBeginSubscriber
+Subscriber(event = "gamification.match.MatchEnd", subscriberId = "MatchEnd") MatchEndSubscriber
+Subscriber(event = "gamification.achievement.Achievement", subscriberId = "Achievement") AchievementSubscriber
+Subscriber(event = "gamification.achievement.AchievementStatus", subscriberId = "AchievementStatus") AchievementStatusSubscriber
+Subscriber(event = "gamification.mission.Mission", subscriberId = "Mission") MissionSubscriber
+Subscriber(event = "gamification.mission.MissionStatus", subscriberId = "MissionStatus") MissionStatusSubscriber
+Subscriber(event = "gamification.entity.Entity", subscriberId = "Entity") EntitySubscriber
+Subscriber(event = "gamification.entity.AttachEntity", subscriberId = "AttachEntity") AttachEntitySubscriber
+Subscriber(event = "gamification.entity.DetachEntity", subscriberId = "DetachEntity") DetachEntitySubscriber
+Subscriber(event = "gamification.entity.Action", subscriberId = "Action") ActionSubscriber
+Subscriber(event = "gamification.entity.DestroyEntity", subscriberId = "DestroyEntity") DestroyEntitySubscriber

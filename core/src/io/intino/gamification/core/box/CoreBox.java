@@ -1,6 +1,10 @@
 package io.intino.gamification.core.box;
 
+import io.intino.gamification.core.Archetype;
+
 public class CoreBox extends AbstractBox {
+
+	private final Archetype archetype;
 
 	public CoreBox(String[] args) {
 		this(new CoreConfiguration(args));
@@ -8,6 +12,7 @@ public class CoreBox extends AbstractBox {
 
 	public CoreBox(CoreConfiguration configuration) {
 		super(configuration);
+		this.archetype = new Archetype(configuration.home());
 	}
 
 	@Override
@@ -31,5 +36,9 @@ public class CoreBox extends AbstractBox {
 
 	public void afterStop() {
 
+	}
+
+	public Archetype.Datamart.Gamification datamart() {
+		return archetype.datamart().gamification();
 	}
 }

@@ -3,7 +3,7 @@ dsl Ness
 use ExampleEvents
 
 Broker(path = empty, port = empty, secondaryPort = empty)
-	User("gamification", "gamification")
+	User("example", "example")
 
 Datalake(scale = Month, path = empty) dl
 
@@ -11,14 +11,6 @@ Datalake(scale = Month, path = empty) dl
 	Tank vaccine as Event(example.Vaccine)
 	Tank patient as Event(example.Patient)
 
-//	Tank attack as Event(gamification.Attack)
-//	Tank heal as Event(gamification.Heal)
-//	Tank mission as Event(gamification.Mission)
-//	Tank missionComplete as Event(gamification.MissionComplete)
-//	Tank missionFailed as Event(gamification.MissionFailed)
-//	Tank missionCancelled as Event(gamification.MissionCancelled)
-//	Tank achievement as Event(gamification.Achievement)
-
 Terminal exampleTerminal
 	Publish (dl.hospital dl.vaccine dl.patient)
-//	Subscribe(dl.attack dl.heal dl.mission dl.missionComplete dl.missionFailed dl.missionCancelled dl.achievement)
+	Subscribe (dl.hospital dl.vaccine dl.patient)

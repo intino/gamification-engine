@@ -9,9 +9,10 @@ import io.intino.magritte.io.Stash;
 import org.apache.log4j.Level;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
 
-public class Engine {
+public class Engine implements Runnable {
 
     private final String[] args;
 
@@ -20,25 +21,19 @@ public class Engine {
 
     public Engine(BoxConfiguration configuration) {
         args = argsFrom(configuration.args());
-        run();
     }
 
-    private String[] argsFrom(Map<String, String> args) {
-        args.put("datahub_url", "failover:(tcp://localhost:64000)");
-        args.put("datahub_user", "gamification");
-        args.put("datahub_password", "gamification");
-        args.put("datahub_clientId", "gamification");
-        //args.put("home", "temp");
-        //args.put("datahub_outbox_directory", "temp/terminals/gamification");
-        //args.put("datalake_path", "temp/datalake");
-
-        return args.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toArray(String[]::new);
+    public void start() {
+        Thread t = new Thread(this);
+        t.start();
     }
 
     public void run() {
 
         Logger.init(Level.ERROR);
         CoreBox box = new CoreBox(args);
+        Model model = new Model(box.configuration());
+        model.start();
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
         box.put(graph);
         box.start();
@@ -61,5 +56,24 @@ public class Engine {
                 super.writeStash(stash, path);
             }
         };
+    }
+
+    private String[] argsFrom(Map<String, String> args) {
+
+        Map<String, String> engineArgs = new HashMap<>();
+        engineArgs.put("home", args.get("home"));
+        engineArgs.put("datahub_url", "failover:(tcp://localhost:64000)");
+        engineArgs.put("datahub_user", "gamification");
+        engineArgs.put("datahub_password", "gamification");
+        engineArgs.put("datahub_clientId", "gamification");
+        engineArgs.put("datahub_outbox_directory", getOutboxDirectoryFrom(args.get("datahub_outbox_directory")));
+        engineArgs.put("datalake_path", args.get("datalake_path"));
+
+        return engineArgs.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toArray(String[]::new);
+    }
+
+    private String getOutboxDirectoryFrom(String datahub_outbox_directory) {
+        int index = datahub_outbox_directory.lastIndexOf("/");
+        return datahub_outbox_directory.substring(0, index + 1) + "gamification";
     }
 }

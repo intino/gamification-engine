@@ -59,16 +59,15 @@ public class Engine implements Runnable {
     }
 
     private String[] argsFrom(Map<String, String> args) {
-        Map<String, String> engineArgs = new HashMap<>();
-        engineArgs.put("home", args.get("home"));
-        engineArgs.put("datahub_url", "failover:(tcp://localhost:64000)");
-        engineArgs.put("datahub_user", "gamification");
-        engineArgs.put("datahub_password", "gamification");
-        engineArgs.put("datahub_clientId", "gamification");
-        engineArgs.put("datahub_outbox_directory", getOutboxDirectoryFrom(args.get("datahub_outbox_directory")));
-        engineArgs.put("datalake_path", args.get("datalake_path"));
-
-        return engineArgs.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).toArray(String[]::new);
+        return new String[] {
+                "home=" + args.get("home"),
+                "datahub_url=" + "failover:(tcp://localhost:64000)",
+                "datahub_user=" + "gamification",
+                "datahub_password=" + "gamification",
+                "datahub_clientId=" + "gamification",
+                "datahub_outbox_directory=" + getOutboxDirectoryFrom(args.get("datahub_outbox_directory")),
+                "datalake_path=" + args.get("datalake_path")
+        };
     }
 
     private String getOutboxDirectoryFrom(String datahub_outbox_directory) {

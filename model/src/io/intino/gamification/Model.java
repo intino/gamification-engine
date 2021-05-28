@@ -93,13 +93,13 @@ public class Model {
 
     private String[] argsFrom(Map<String, String> args) {
         return new String[] {
-                "home" + args.get("home"),
-                "backup_directory" + getBackupFrom(args.get("home")),
-                "datalake_directory" + args.get("datalake_path"),
-                "broker_directory" + getBrokerFrom(args.get("home")),
-                "broker_port" + "64000",
-                "broker_secondary_port" + "1884",
-                "ui_port" + "9030"
+                "home=" + args.get("home"),
+                "backup_directory=" + getBackupFrom(args.get("home")),
+                "datalake_directory=" + args.get("datalake_path"),
+                "broker_directory=" + getBrokerFrom(args.get("home")),
+                "broker_port=" + "64000",
+                "broker_secondary_port=" + "1884",
+                "ui_port=" + "9030"
         };
     }
 

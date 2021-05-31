@@ -31,19 +31,12 @@ public class Engine extends Async {
     private void initialize(CoreBox box) {
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
         box.put(graph);
-
-        Model model = new Model(box.configuration());
-
-        model.onStart(() -> {
-            box.start();
-            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-                box.stop();
-                stop();
-            }));
-            onStart.run();
-        });
-
-        model.start();
+        box.start();
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            box.stop();
+            stop();
+        }));
+        onStart.run();
     }
 
     private static FileSystemStore store(File datamartFolder) {

@@ -1,7 +1,12 @@
 package io.intino.gamification.core.box.mounter;
 
+import com.google.gson.Gson;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
+import io.intino.gamification.core.graph.rules.Type;
+import io.intino.magritte.framework.Layer;
+
+import java.util.ArrayList;
 
 public class EntityMounter extends Mounter {
 
@@ -27,7 +32,8 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DestroyEntity event) {
-
+        box.graph().entityList(e -> e.id().equals(event.id()))
+                .findFirst().ifPresent(Layer::delete$);
     }
 
     protected void handle(DetachEntity event) {
@@ -35,11 +41,6 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(Entity event) {
-
-        if(event.type().equals(Entity.Type.Player)) {
-            box.graph().player("Player", event).save$();
-        } else if(event.type().equals(Entity.Type.Npc)) {
-            box.graph().npc("Npc", event).save$();
-        }
+        box.graph().entity(event).save$();
     }
 }

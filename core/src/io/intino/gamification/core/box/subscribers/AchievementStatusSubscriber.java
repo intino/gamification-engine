@@ -2,7 +2,7 @@ package io.intino.gamification.core.box.subscribers;
 
 import io.intino.gamification.core.box.CoreBox;
 
-public class AchievementStatusSubscriber implements java.util.function.Consumer<io.intino.gamification.model.events.gamification.achievement.AchievementStatus> {
+public class AchievementStatusSubscriber implements java.util.function.Consumer<io.intino.gamification.model.events.gamification.AchievementStatus> {
 
 	private final CoreBox box;
 
@@ -10,7 +10,7 @@ public class AchievementStatusSubscriber implements java.util.function.Consumer<
 		this.box = box;
 	}
 
-	public void accept(io.intino.gamification.model.events.gamification.achievement.AchievementStatus event) {
+	public void accept(io.intino.gamification.model.events.gamification.AchievementStatus event) {
 		box.mounterFactory().handle(event);
 	}
 }

@@ -7,17 +7,17 @@ Broker(path = empty, port = empty, secondaryPort = empty)
 
 Datalake(scale = Month, path = empty) dl
 
-	Tank matchBegin as Event(gamification.match.MatchBegin)
-	Tank matchEnd as Event(gamification.match.MatchEnd)
-	Tank achievement as Event(gamification.achievement.Achievement)
-	Tank achievementStatus as Event(gamification.achievement.AchievementStatus)
-	Tank mission as Event(gamification.mission.Mission)
-	Tank missionStatus as Event(gamification.mission.MissionStatus)
-	Tank entity as Event(gamification.entity.Entity)
-	Tank attachEntity as Event(gamification.entity.AttachEntity)
-	Tank detachEntity as Event(gamification.entity.DetachEntity)
-	Tank action as Event(gamification.entity.Action)
-	Tank destroyEntity as Event(gamification.entity.DestroyEntity)
+	Tank matchBegin as Event(gamification.MatchBegin)
+	Tank matchEnd as Event(gamification.MatchEnd)
+	Tank achievement as Event(gamification.Achievement)
+	Tank achievementStatus as Event(gamification.AchievementStatus)
+	Tank mission as Event(gamification.Mission)
+	Tank missionStatus as Event(gamification.MissionStatus)
+	Tank entity as Event(gamification.Entity)
+	Tank attachEntity as Event(gamification.AttachEntity)
+	Tank detachEntity as Event(gamification.DetachEntity)
+	Tank action as Event(gamification.Action)
+	Tank destroyEntity as Event(gamification.DestroyEntity)
 
 Terminal gamificationTerminal
 	Publish(dl.matchBegin dl.matchEnd dl.achievement dl.achievementStatus dl.mission dl.missionStatus dl.entity dl.attachEntity dl.detachEntity dl.action dl.destroyEntity)

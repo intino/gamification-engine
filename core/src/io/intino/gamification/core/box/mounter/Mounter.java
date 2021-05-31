@@ -11,5 +11,5 @@ public abstract class Mounter {
         this.box = box;
     }
 
-    protected abstract void handle(GamificationEvent event);
+    public abstract void handle(GamificationEvent event);
 }

@@ -12,7 +12,7 @@ public class AchievementMounter extends Mounter {
     }
 
     @Override
-    protected void handle(GamificationEvent event) {
+    public void handle(GamificationEvent event) {
         if(event instanceof Achievement) handle((Achievement) event);
         if(event instanceof AchievementStatus) handle((AchievementStatus) event);
     }

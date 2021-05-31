@@ -12,7 +12,7 @@ import java.util.Map;
 public class Engine extends Async {
 
     private static final String Gamification = "Gamification";
-    private static final String[] StartUpStashes = {Gamification, "Player", "Npc", "Mission", "Achievement", "Match"};
+    private static final String[] StartUpStashes = {Gamification, "Entity", "Mission", "Achievement", "Match"};
 
     private final String[] args;
 

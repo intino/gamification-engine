@@ -20,12 +20,9 @@ Concept Mission
 	var string mission
 	var word:MissionStatus missionStatus
 
-Concept Entity is abstract
+Concept Entity
 	var string id
+	var word:Type type
 	var string attributes
 	var Entity parent
 	var Entity[] childs
-
-Concept Player extends Entity
-
-Concept Npc extends Entity

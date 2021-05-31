@@ -8,7 +8,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class AchievementMounter extends Mounter {
 
     public AchievementMounter(CoreBox box) {
-        super(box, "Entity");
+        super(box);
     }
 
     @Override

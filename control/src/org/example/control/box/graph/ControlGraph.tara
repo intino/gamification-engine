@@ -1,0 +1,15 @@
+dsl Proteo
+
+Concept Hospital
+	var string name
+	var string location
+
+Concept Vaccine
+	var string name
+	var integer requiredDoseCount
+
+Concept Patient
+	var string name
+	var integer age
+
+

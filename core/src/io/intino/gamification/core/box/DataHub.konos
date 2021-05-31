@@ -2,31 +2,4 @@ dsl Konos
 
 Datalake(path = "{datalake_path}") as Local
 
-Datamart(type = Graph) graph
-	Mounter MatchMounter as Event
-		Require("MatchBegin")
-		Require("MatchEnd")
-	Mounter AchievementMounter as Event
-		Require("Achievement")
-		Require("AchievementStatus")
-	Mounter MissionMounter as Event
-		Require("Mission")
-		Require("MissionStatus")
-	Mounter EntityMounter as Event
-		Require("Entity")
-		Require("AttachEntity")
-		Require("DetachEntity")
-		Require("Action")
-		Require("DestroyEntity")
-
-Subscriber(event = "gamification.MatchBegin", subscriberId = "MatchBegin") MatchBeginSubscriber
-Subscriber(event = "gamification.MatchEnd", subscriberId = "MatchEnd") MatchEndSubscriber
-Subscriber(event = "gamification.Achievement", subscriberId = "Achievement") AchievementSubscriber
-Subscriber(event = "gamification.AchievementStatus", subscriberId = "AchievementStatus") AchievementStatusSubscriber
-Subscriber(event = "gamification.Mission", subscriberId = "Mission") MissionSubscriber
-Subscriber(event = "gamification.MissionStatus", subscriberId = "MissionStatus") MissionStatusSubscriber
-Subscriber(event = "gamification.Entity", subscriberId = "Entity") EntitySubscriber
-Subscriber(event = "gamification.AttachEntity", subscriberId = "AttachEntity") AttachEntitySubscriber
-Subscriber(event = "gamification.DetachEntity", subscriberId = "DetachEntity") DetachEntitySubscriber
-Subscriber(event = "gamification.Action", subscriberId = "Action") ActionSubscriber
-Subscriber(event = "gamification.DestroyEntity", subscriberId = "DestroyEntity") DestroyEntitySubscriber
+//Datamart(type = Graph) graph

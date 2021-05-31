@@ -21,7 +21,7 @@ RunConfiguration local
 	Argument("home", "temp")
 	Argument("broker_port", "63000")
 	Argument("broker_secondary_port", "1883")
-	Argument("ui_port", "9000")
+	Argument("ui_port", "9020")
 //	Argument("datalake_directory", "temp/datalake")
 //	Argument("broker_directory", "temp/datahub/broker")
 //	Argument("backup_directory", "temp/backup")

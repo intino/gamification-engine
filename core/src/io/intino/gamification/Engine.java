@@ -23,12 +23,6 @@ public class Engine extends Async {
     @Override
     protected void run() {
         CoreBox box = new CoreBox(args);
-        Model model = new Model(box.configuration());
-        model.onStart(() -> initialize(box));
-        model.start();
-    }
-
-    private void initialize(CoreBox box) {
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
         box.put(graph);
         box.start();
@@ -60,11 +54,11 @@ public class Engine extends Async {
     private String[] argsFrom(Map<String, String> args) {
         return new String[] {
                 "home=" + args.get("home"),
-                "datahub_url=" + "failover:(tcp://localhost:64000)",
-                "datahub_user=" + "gamification",
-                "datahub_password=" + "gamification",
-                "datahub_clientId=" + "gamification",
-                "datahub_outbox_directory=" + getOutboxDirectoryFrom(args.get("datahub_outbox_directory")),
+//                "datahub_url=" + "failover:(tcp://localhost:63001)",
+//                "datahub_user=" + "gamification",
+//                "datahub_password=" + "gamification",
+//                "datahub_clientId=" + "gamification",
+//                "datahub_outbox_directory=" + getOutboxDirectoryFrom(args.get("datahub_outbox_directory")),
                 "datalake_path=" + args.get("datalake_path")
         };
     }

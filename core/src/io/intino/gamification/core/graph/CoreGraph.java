@@ -1,7 +1,7 @@
 package io.intino.gamification.core.graph;
 
 import com.google.gson.Gson;
-import io.intino.gamification.core.box.events.Entity;
+import io.intino.gamification.core.box.events.CreateEntity;
 import io.intino.gamification.core.graph.rules.Type;
 import io.intino.magritte.framework.Graph;
 
@@ -17,7 +17,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	    super(graph, wrapper);
 	}
 
-	public io.intino.gamification.core.graph.Entity entity(Entity event) {
+	public io.intino.gamification.core.graph.Entity entity(CreateEntity event) {
 		return create("Entity").entity(event.id(), Type.valueOf(event.type().name()), new Gson().toJson(event.attributes()), null, new ArrayList<>());
 	}
 }

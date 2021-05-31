@@ -39,7 +39,7 @@ public class Terminal {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void handle(Entity event) {
+    public void handle(CreateEntity event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 

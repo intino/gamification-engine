@@ -2,21 +2,21 @@ package io.intino.gamification.core.box.events;
 
 import java.util.Map;
 
-public class Entity extends GamificationEvent {
+public class CreateEntity extends GamificationEvent {
 
     public enum Type {
         Player, Npc
     }
 
-    public Entity() {
+    public CreateEntity() {
         super("Entity");
     }
 
-    public Entity(io.intino.alexandria.event.Event event) {
+    public CreateEntity(io.intino.alexandria.event.Event event) {
         this(event.toMessage());
     }
 
-    public Entity(io.intino.alexandria.message.Message message) {
+    public CreateEntity(io.intino.alexandria.message.Message message) {
         super(message);
     }
 
@@ -28,12 +28,12 @@ public class Entity extends GamificationEvent {
         return getAsMap("attributes");
     }
 
-    public Entity type(Type type) {
+    public CreateEntity type(Type type) {
         set("type", type);
         return this;
     }
 
-    public Entity attributes(Map<String, String> attributes) {
+    public CreateEntity attributes(Map<String, String> attributes) {
         set("attributes", attributes);
         return this;
     }

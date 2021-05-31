@@ -1,12 +1,9 @@
 package io.intino.gamification.core.box.mounter;
 
-import com.google.gson.Gson;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
-import io.intino.gamification.core.graph.rules.Type;
+import io.intino.gamification.core.graph.Entity;
 import io.intino.magritte.framework.Layer;
-
-import java.util.ArrayList;
 
 public class EntityMounter extends Mounter {
 
@@ -20,7 +17,7 @@ public class EntityMounter extends Mounter {
         if(event instanceof AttachEntity) handle((AttachEntity) event);
         if(event instanceof DestroyEntity) handle((DestroyEntity) event);
         if(event instanceof DetachEntity) handle((DetachEntity) event);
-        if(event instanceof Entity) handle((Entity) event);
+        if(event instanceof CreateEntity) handle((CreateEntity) event);
     }
 
     protected void handle(Action event) {
@@ -29,6 +26,31 @@ public class EntityMounter extends Mounter {
 
     protected void handle(AttachEntity event) {
 
+        Entity parent = box.graph().entityList(e -> e.id().equals(event.parent()))
+                .findFirst().orElse(null);
+
+        Entity child = box.graph().entityList(e -> e.id().equals(event.child()))
+                .findFirst().orElse(null);
+
+        if(parent != null && child != null) {
+
+            if(child.parent() != null) {
+
+                Entity childParent = box.graph().entityList(e -> e.id().equals(child.parent().id()))
+                        .findFirst().orElse(null);
+
+                if(childParent != null) {
+                    childParent.childs().remove(child);
+                    childParent.save$();
+                }
+            }
+
+            parent.childs().add(child);
+            child.parent(parent);
+
+            parent.save$();
+            child.save$();
+        }
     }
 
     protected void handle(DestroyEntity event) {
@@ -40,7 +62,7 @@ public class EntityMounter extends Mounter {
 
     }
 
-    protected void handle(Entity event) {
+    protected void handle(CreateEntity event) {
         box.graph().entity(event).save$();
     }
 }

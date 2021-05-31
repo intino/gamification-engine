@@ -19,14 +19,14 @@ Datamart(type = Graph) graph
 		Require("Action")
 		Require("DestroyEntity")
 
-Subscriber(event = "gamification.match.MatchBegin", subscriberId = "MatchBegin") MatchBeginSubscriber
-Subscriber(event = "gamification.match.MatchEnd", subscriberId = "MatchEnd") MatchEndSubscriber
-Subscriber(event = "gamification.achievement.Achievement", subscriberId = "Achievement") AchievementSubscriber
-Subscriber(event = "gamification.achievement.AchievementStatus", subscriberId = "AchievementStatus") AchievementStatusSubscriber
-Subscriber(event = "gamification.mission.Mission", subscriberId = "Mission") MissionSubscriber
-Subscriber(event = "gamification.mission.MissionStatus", subscriberId = "MissionStatus") MissionStatusSubscriber
-Subscriber(event = "gamification.entity.Entity", subscriberId = "Entity") EntitySubscriber
-Subscriber(event = "gamification.entity.AttachEntity", subscriberId = "AttachEntity") AttachEntitySubscriber
-Subscriber(event = "gamification.entity.DetachEntity", subscriberId = "DetachEntity") DetachEntitySubscriber
-Subscriber(event = "gamification.entity.Action", subscriberId = "Action") ActionSubscriber
-Subscriber(event = "gamification.entity.DestroyEntity", subscriberId = "DestroyEntity") DestroyEntitySubscriber
+Subscriber(event = "gamification.MatchBegin", subscriberId = "MatchBegin") MatchBeginSubscriber
+Subscriber(event = "gamification.MatchEnd", subscriberId = "MatchEnd") MatchEndSubscriber
+Subscriber(event = "gamification.Achievement", subscriberId = "Achievement") AchievementSubscriber
+Subscriber(event = "gamification.AchievementStatus", subscriberId = "AchievementStatus") AchievementStatusSubscriber
+Subscriber(event = "gamification.Mission", subscriberId = "Mission") MissionSubscriber
+Subscriber(event = "gamification.MissionStatus", subscriberId = "MissionStatus") MissionStatusSubscriber
+Subscriber(event = "gamification.Entity", subscriberId = "Entity") EntitySubscriber
+Subscriber(event = "gamification.AttachEntity", subscriberId = "AttachEntity") AttachEntitySubscriber
+Subscriber(event = "gamification.DetachEntity", subscriberId = "DetachEntity") DetachEntitySubscriber
+Subscriber(event = "gamification.Action", subscriberId = "Action") ActionSubscriber
+Subscriber(event = "gamification.DestroyEntity", subscriberId = "DestroyEntity") DestroyEntitySubscriber

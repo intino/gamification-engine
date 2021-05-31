@@ -4,10 +4,13 @@ import io.intino.gamification.core.Archetype;
 import io.intino.gamification.core.box.mounter.Mounter;
 import io.intino.gamification.core.box.mounter.Mounters;
 import io.intino.gamification.core.box.terminal.Terminal;
+import io.intino.gamification.core.graph.CoreGraph;
+import io.intino.magritte.framework.Graph;
 
 public class CoreBox extends AbstractBox {
 
 	private final Archetype archetype;
+	private CoreGraph graph;
 	private Terminal terminal;
 	private Mounters mounters;
 
@@ -23,6 +26,7 @@ public class CoreBox extends AbstractBox {
 	@Override
 	public io.intino.alexandria.core.Box put(Object o) {
 		super.put(o);
+		if(o instanceof Graph) graph = ((Graph) o).as(CoreGraph.class);
 		return this;
 	}
 
@@ -45,6 +49,10 @@ public class CoreBox extends AbstractBox {
 
 	public Archetype.Datamart.Gamification datamart() {
 		return archetype.datamart().gamification();
+	}
+
+	public CoreGraph graph() {
+		return graph;
 	}
 
 	public Terminal terminal() {

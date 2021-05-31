@@ -36,5 +36,10 @@ public class EntityMounter extends Mounter {
 
     protected void handle(Entity event) {
 
+        if(event.type().equals(Entity.Type.Player)) {
+            box.graph().player("Player", event).save$();
+        } else if(event.type().equals(Entity.Type.Npc)) {
+            box.graph().npc("Npc", event).save$();
+        }
     }
 }

@@ -2,15 +2,8 @@ dsl Ness
 
 Namespace example
 
-	Event Hospital
-		Attribute id as Text
-		Attribute name as Text
-
 	Event Vaccine
-		Attribute id as Text
-		Attribute name as Text
-
-	Event Patient
-		Attribute id as Text
-		Attribute name as Text
-		Attribute age as Integer
+		Attribute patient as Text
+		Attribute hospital as Text
+		Attribute brand as Text
+		Attribute dose as Integer

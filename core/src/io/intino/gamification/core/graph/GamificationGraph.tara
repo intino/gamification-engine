@@ -25,4 +25,4 @@ Concept Entity
 	var word:Type type
 	var string attributes
 	var Entity parent
-	var Entity[] childs
+	var Entity[] children

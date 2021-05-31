@@ -6,7 +6,7 @@ import io.intino.gamification.core.box.events.*;
 public class MissionMounter extends Mounter {
 
     public MissionMounter(CoreBox box) {
-        super(box);
+        super(box, "Entity");
     }
 
     @Override

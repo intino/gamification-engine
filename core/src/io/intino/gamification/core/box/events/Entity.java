@@ -20,30 +20,12 @@ public class Entity extends GamificationEvent {
         super(message);
     }
 
-    public Double maxHealth() {
-        return getAsDouble("maxHealth");
-    }
-
-    public Integer points() {
-        return getAsInt("points");
-    }
-
     public Type type() {
         return getAsEnum("type", Type.class);
     }
 
     public Map<String, String> attributes() {
         return getAsMap("attributes");
-    }
-
-    public Entity maxHealth(Double maxHealth) {
-        set("maxHealth", maxHealth);
-        return this;
-    }
-
-    public Entity points(Integer points) {
-        set("points", points);
-        return this;
     }
 
     public Entity type(Type type) {

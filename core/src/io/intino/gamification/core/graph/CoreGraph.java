@@ -20,4 +20,8 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	public io.intino.gamification.core.graph.Entity entity(CreateEntity event) {
 		return create("Entity").entity(event.id(), Type.valueOf(event.type().name()), new Gson().toJson(event.attributes()), null, new ArrayList<>());
 	}
+
+	public Entity getEntity(String id) {
+		return entityList(e -> e.id().equals(id)).findFirst().orElse(null);
+	}
 }

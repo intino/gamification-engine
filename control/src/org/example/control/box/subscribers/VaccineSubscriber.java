@@ -49,6 +49,10 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		else updatePatientEvent(event);
 	}
 
+	private void treatVaccine(Vaccine event) {
+		if(!graph().contains(event.vaccineName(), Vaccine.class)) createVaccineEntity(event);
+	}
+
 	private void createHospitalEntity(org.example.datahub.events.example.Vaccine event) {
 		Map<String, String> attributes = new HashMap<>();
 		attributes.put("name", event.hospitalName());
@@ -71,6 +75,8 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		action.destEntityAttribute("name");
 		action.operationType(Action.OperationType.Sum);
 		action.value("1");
+
+		engine().terminal().handle(action);
 	}
 
 	private void createVaccineEntity(org.example.datahub.events.example.Vaccine event) {
@@ -88,6 +94,6 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		entity.type(type);
 		entity.attributes(attributes);
 
-		// TODO
+		engine().terminal().handle(entity);
 	}
 }

@@ -22,4 +22,10 @@ public class Entity extends AbstractEntity {
 	public <T> T get(String name, Function<String, T> mapper) {
 		return mapper.apply(get(name));
 	}
+
+	@Override
+	public void save$() {
+		attributes = new Gson().toJson(attributesMap);
+		super.save$();
+	}
 }

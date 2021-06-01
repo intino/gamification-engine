@@ -1,7 +1,7 @@
 package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.graph.AchievementDefinition;
+import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Entity;
 import io.intino.gamification.core.graph.Match;
 import io.intino.gamification.core.graph.Mission;
@@ -35,7 +35,7 @@ public class EngineDatamart {
         return box.graph().missionList();
     }
 
-    public List<AchievementDefinition> achievementDefinitions() {
+    public List<Achievement> achievementDefinitions() {
         return box.graph().achievementDefinitionList();
     }
 

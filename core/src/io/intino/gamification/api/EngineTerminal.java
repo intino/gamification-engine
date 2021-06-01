@@ -15,11 +15,11 @@ public class EngineTerminal {
         this.box = box;
     }
 
-    public void feed(Achievement event) {
+    public void feed(ModifyAchievement event) {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
-    public void feed(AchievementStatus event) {
+    public void feed(AchievementNewStatus event) {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
@@ -55,7 +55,7 @@ public class EngineTerminal {
         box.mounter(MissionMounter.class).handle(event);
     }
 
-    public void feed(MissionStatus event) {
+    public void feed(MissionNewStatus event) {
         box.mounter(MissionMounter.class).handle(event);
     }
 }

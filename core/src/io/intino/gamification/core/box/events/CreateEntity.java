@@ -1,12 +1,10 @@
 package io.intino.gamification.core.box.events;
 
+import io.intino.gamification.core.box.events.enumerates.EntityType;
+
 import java.util.Map;
 
 public class CreateEntity extends GamificationEvent {
-
-    public enum Type {
-        Player, Npc, Enemy, Item
-    }
 
     public CreateEntity() {
         super("Entity");
@@ -20,15 +18,15 @@ public class CreateEntity extends GamificationEvent {
         super(message);
     }
 
-    public Type type() {
-        return getAsEnum("type", Type.class);
+    public EntityType type() {
+        return getAsEnum("type", EntityType.class);
     }
 
     public Map<String, String> attributes() {
         return getAsMap("attributes");
     }
 
-    public CreateEntity type(Type type) {
+    public CreateEntity type(EntityType type) {
         set("type", type);
         return this;
     }

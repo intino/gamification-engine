@@ -1,6 +1,8 @@
 package io.intino.gamification.core.graph;
 
 import com.google.gson.Gson;
+import io.intino.gamification.core.box.events.enumerates.AchievementType;
+import io.intino.gamification.core.box.events.enumerates.EntityType;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -32,5 +34,14 @@ public class Entity extends AbstractEntity {
 	public void save$() {
 		attributes = new Gson().toJson(attributesMap);
 		super.save$();
+	}
+
+	public EntityType type() {
+		return EntityType.valueOf(typeName);
+	}
+
+	public Entity type(AchievementType type) {
+		typeName(type.name());
+		return this;
 	}
 }

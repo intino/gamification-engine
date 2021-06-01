@@ -3,29 +3,28 @@ dsl Proteo
 Concept Match
 	var string id
 
-Concept AchievementDefinition
+Concept Achievement is decorable
 	var string id
-	var word:AchievementType type
+	var string typeName
 	var string description
 
-Concept AchievementStatus
+Concept AchievementState is decorable
 	var string id
 	var string match
 	var string player
-	var word:AchievementStatus status
+	var string statusName
 
-Concept Mission
+Concept Mission is decorable
 	var string id
 	var string player
-	var word:MissionDifficulty missionDifficulty
-	var word:MissionType missionType
+	var string difficultyName
+	var string typeName
 	var string description
-	var string mission
-	var word:MissionStatus missionStatus
+	var string statusName
 
 Concept Entity is decorable
 	var string id
-	var word:Type type
+	var string typeName
 	var string attributes
 	var Entity parent
 	var Entity[] children

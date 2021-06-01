@@ -20,7 +20,7 @@ Concept Mission
 	var string mission
 	var word:MissionStatus missionStatus
 
-Concept Entity
+Concept Entity is decorable
 	var string id
 	var word:Type type
 	var string attributes

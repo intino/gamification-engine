@@ -11,5 +11,7 @@ Concept Vaccine
 Concept Patient
 	var string name
 	var integer age
+	var string vaccine
+	var integer doseCount
 
 

@@ -3,7 +3,7 @@ dsl Ness
 Namespace example
 
 	Event Vaccine
-		Attribute patient as Text
-		Attribute hospital as Text
-		Attribute brand as Text
-		Attribute dose as Integer
+		Attribute vaccineName as Text
+		Attribute patientName as Text
+		Attribute patientAge as Integer
+		Attribute hospitalName as Text

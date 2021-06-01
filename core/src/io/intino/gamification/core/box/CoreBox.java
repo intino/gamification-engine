@@ -1,9 +1,10 @@
 package io.intino.gamification.core.box;
 
+import io.intino.gamification.api.EngineDatamart;
+import io.intino.gamification.api.EngineTerminal;
 import io.intino.gamification.core.Archetype;
 import io.intino.gamification.core.box.mounter.Mounter;
 import io.intino.gamification.core.box.mounter.Mounters;
-import io.intino.gamification.core.box.terminal.Terminal;
 import io.intino.gamification.core.graph.CoreGraph;
 import io.intino.magritte.framework.Graph;
 
@@ -11,7 +12,8 @@ public class CoreBox extends AbstractBox {
 
 	private final Archetype archetype;
 	private CoreGraph graph;
-	private Terminal terminal;
+	private EngineTerminal terminal;
+	private EngineDatamart datamart;
 	private Mounters mounters;
 
 	public CoreBox(String[] args) {
@@ -31,7 +33,8 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public void beforeStart() {
-		this.terminal = new Terminal(this);
+		this.terminal = new EngineTerminal(this);
+		this.datamart = new EngineDatamart(this);
 		this.mounters = new Mounters(this);
 	}
 
@@ -55,8 +58,12 @@ public class CoreBox extends AbstractBox {
 		return graph;
 	}
 
-	public Terminal terminal() {
+	public EngineTerminal engineTerminal() {
 		return terminal;
+	}
+
+	public EngineDatamart engineDatamart() {
+		return datamart;
 	}
 
 	public <L extends Mounter> L mounter(Class<L> clazz) {

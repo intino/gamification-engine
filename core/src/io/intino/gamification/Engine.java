@@ -1,9 +1,10 @@
 package io.intino.gamification;
 
 import io.intino.alexandria.core.BoxConfiguration;
+import io.intino.gamification.api.EngineDatamart;
+import io.intino.gamification.api.EngineTerminal;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.launcher.Launcher;
-import io.intino.gamification.core.box.terminal.Terminal;
 import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Entity;
 import io.intino.gamification.core.graph.Match;
@@ -30,23 +31,11 @@ public class Engine {
         launch();
     }
 
-    public Terminal terminal() {
-        return box.terminal();
+    public EngineTerminal terminal() {
+        return box.engineTerminal();
     }
 
-    public List<Entity> entities() {
-        return box.graph().entityList();
-    }
-
-    public List<Mission> missions() {
-        return box.graph().missionList();
-    }
-
-    public List<Achievement> achievements() {
-        return box.graph().achievementList();
-    }
-
-    public List<Match> matches() {
-        return box.graph().matchList();
+    public EngineDatamart datamart() {
+        return box.engineDatamart();
     }
 }

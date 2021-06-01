@@ -15,6 +15,7 @@ public class Launcher extends Async {
     private static final String[] StartUpStashes = {Gamification, "Entity", "Mission", "Achievement", "Match"};
 
     private final String[] args;
+    private CoreBox box;
 
     public Launcher(BoxConfiguration configuration) {
         this.args = argsFrom(configuration.args());
@@ -22,12 +23,12 @@ public class Launcher extends Async {
 
     @Override
     protected void run() {
-        CoreBox box = new CoreBox(args);
-        Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
-        box.put(graph);
-        box.start();
+        this.box = new CoreBox(args);
+        Graph graph = new Graph(store(this.box.datamart().root())).loadStashes(false, StartUpStashes);
+        this.box.put(graph);
+        this.box.start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            box.stop();
+            this.box.stop();
             stop();
         }));
         onStart.run();
@@ -54,17 +55,11 @@ public class Launcher extends Async {
     private String[] argsFrom(Map<String, String> args) {
         return new String[] {
                 "home=" + args.get("home"),
-//                "datahub_url=" + "failover:(tcp://localhost:63001)",
-//                "datahub_user=" + "gamification",
-//                "datahub_password=" + "gamification",
-//                "datahub_clientId=" + "gamification",
-//                "datahub_outbox_directory=" + getOutboxDirectoryFrom(args.get("datahub_outbox_directory")),
                 "datalake_path=" + args.get("datalake_path")
         };
     }
 
-    private String getOutboxDirectoryFrom(String datahub_outbox_directory) {
-        final int index = datahub_outbox_directory.lastIndexOf("/");
-        return datahub_outbox_directory.substring(0, index + 1) + "gamification";
+    public CoreBox box() {
+        return box;
     }
 }

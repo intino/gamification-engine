@@ -1,11 +1,11 @@
 package io.intino.gamification.core.box;
 
-import io.intino.gamification.core.box.launcher.Launcher;
+import io.intino.gamification.Engine;
 
 public class Main {
 
 	public static void main(String[] args) {
-		Launcher engine = new Launcher(new CoreConfiguration(args));
-		engine.start();
+		Engine engine = new Engine(new CoreConfiguration(args));
+		engine.launch();
 	}
 }

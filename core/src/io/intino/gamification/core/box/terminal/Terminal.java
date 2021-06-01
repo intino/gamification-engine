@@ -15,47 +15,47 @@ public class Terminal {
         this.box = box;
     }
 
-    public void handle(Achievement event) {
+    public void feed(Achievement event) {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
-    public void handle(AchievementStatus event) {
+    public void feed(AchievementStatus event) {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
-    public void handle(Action event) {
+    public void feed(Action event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void handle(AttachEntity event) {
+    public void feed(AttachEntity event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void handle(DestroyEntity event) {
+    public void feed(DestroyEntity event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void handle(DetachEntity event) {
+    public void feed(DetachEntity event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void handle(CreateEntity event) {
+    public void feed(CreateEntity event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void handle(MatchBegin event) {
+    public void feed(MatchBegin event) {
         box.mounter(MatchMounter.class).handle(event);
     }
 
-    public void handle(MatchEnd event) {
+    public void feed(MatchEnd event) {
         box.mounter(MatchMounter.class).handle(event);
     }
 
-    public void handle(Mission event) {
+    public void feed(Mission event) {
         box.mounter(MissionMounter.class).handle(event);
     }
 
-    public void handle(MissionStatus event) {
+    public void feed(MissionStatus event) {
         box.mounter(MissionMounter.class).handle(event);
     }
 }

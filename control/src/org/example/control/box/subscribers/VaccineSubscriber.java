@@ -76,7 +76,7 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		action.operationType(Action.OperationType.Sum);
 		action.value("1");
 
-		engine().terminal().handle(action);
+		engine().terminal().feed(action);
 	}
 
 	private void createVaccineEntity(org.example.datahub.events.example.Vaccine event) {
@@ -94,6 +94,6 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		entity.type(type);
 		entity.attributes(attributes);
 
-		engine().terminal().handle(entity);
+		engine().terminal().feed(entity);
 	}
 }

@@ -1,10 +1,8 @@
 package io.intino.gamification.core.box.events;
 
-public class Action extends GamificationEvent {
+import io.intino.gamification.core.box.events.enumerates.ActionOperationType;
 
-    public enum OperationType {
-        Replace, Sum, Subtract, Add, Remove
-    }
+public class Action extends GamificationEvent {
 
     public Action() {
         super("Action");
@@ -34,8 +32,8 @@ public class Action extends GamificationEvent {
         return get("value");
     }
 
-    public OperationType operationType() {
-        return getAsEnum("operationType", OperationType.class);
+    public ActionOperationType operationType() {
+        return getAsEnum("operationType", ActionOperationType.class);
     }
 
     public Action srcEntity(String srcEntity) {
@@ -58,7 +56,7 @@ public class Action extends GamificationEvent {
         return this;
     }
 
-    public Action operationType(OperationType operationType) {
+    public Action operationType(ActionOperationType operationType) {
         set("operationType", operationType);
         return this;
     }

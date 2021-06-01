@@ -1,10 +1,8 @@
 package io.intino.gamification.core.box.events;
 
-public class Achievement extends GamificationEvent {
+import io.intino.gamification.core.box.events.enumerates.AchievementType;
 
-    public enum Type {
-        Local, Global
-    }
+public class Achievement extends GamificationEvent {
 
     public Achievement() {
         super("Achievement");
@@ -22,8 +20,8 @@ public class Achievement extends GamificationEvent {
         return getAsDouble("description");
     }
 
-    public Type type() {
-        return getAsEnum("type", Type.class);
+    public AchievementType type() {
+        return getAsEnum("type", AchievementType.class);
     }
 
     public Achievement description(Double description) {
@@ -31,7 +29,7 @@ public class Achievement extends GamificationEvent {
         return this;
     }
 
-    public Achievement type(Type type) {
+    public Achievement type(AchievementType type) {
         set("type", type);
         return this;
     }

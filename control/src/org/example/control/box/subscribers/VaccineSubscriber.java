@@ -1,8 +1,10 @@
 package org.example.control.box.subscribers;
 
 import io.intino.gamification.Engine;
+import io.intino.gamification.api.EngineDatamart;
 import io.intino.gamification.core.box.events.Action;
 import io.intino.gamification.core.box.events.CreateEntity;
+import io.intino.gamification.core.graph.Entity;
 import org.example.control.box.ControlBox;
 import org.example.control.box.graph.mounters.VaccineMounter;
 import org.example.control.graph.ControlGraph;
@@ -68,13 +70,13 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 	}
 
 	private void updatePatientEvent(Vaccine event) {
+		final int doseCount = box.engine().datamart().entity(event.patientName()).get("doseCount", Integer::parseInt) + 1;
+
 		Action action = new Action();
 		action.ss("Example");
 		action.ts(Instant.now());
-		action.destEntity(event.patientName());
-		action.destEntityAttribute("name");
-		action.operationType(Action.OperationType.Sum);
-		action.value("1");
+		action.entity(event.patientName());
+		action.value(String.valueOf(doseCount));
 
 		engine().terminal().feed(action);
 	}

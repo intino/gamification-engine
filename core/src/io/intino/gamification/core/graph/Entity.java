@@ -25,6 +25,11 @@ public class Entity extends AbstractEntity {
 		return mapper.apply(get(name));
 	}
 
+	public Entity set(String name, Object value) {
+		attributesMap.put(name, String.valueOf(value));
+		return this;
+	}
+
 	@Override
 	public void save$() {
 		attributes = new Gson().toJson(attributesMap);

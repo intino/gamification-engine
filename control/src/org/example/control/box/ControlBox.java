@@ -1,7 +1,6 @@
 package org.example.control.box;
 
 import io.intino.gamification.Engine;
-import io.intino.gamification.core.box.launcher.Launcher;
 import io.intino.gamification.core.Archetype;
 import io.intino.magritte.framework.Graph;
 import org.example.control.graph.ControlGraph;

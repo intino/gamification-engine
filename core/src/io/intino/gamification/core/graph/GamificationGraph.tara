@@ -3,12 +3,12 @@ dsl Proteo
 Concept Match
 	var string id
 
-Concept AchievementDefinition is decorable
+Concept Achievement is decorable
 	var string id
 	var string typeName
 	var string description
 
-Concept AchievementChecked is decorable
+Concept AchievementState is decorable
 	var string id
 	var string match
 	var string player

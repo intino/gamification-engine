@@ -15,7 +15,7 @@ public class EngineTerminal {
         this.box = box;
     }
 
-    public void feed(Achievement event) {
+    public void feed(ModifyAchievement event) {
         box.mounter(AchievementMounter.class).handle(event);
     }
 

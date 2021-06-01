@@ -1,5 +1,5 @@
 package io.intino.gamification.core.box.events.enumerates;
 
-public enum AchievementStatus {
+public enum AchievementState {
     Achieved, Failed, Pending;
 }

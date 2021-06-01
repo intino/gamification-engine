@@ -1,7 +1,9 @@
 package io.intino.gamification.core.graph;
 
 import com.google.gson.Gson;
+import io.intino.gamification.core.box.events.AchievementNewStatus;
 import io.intino.gamification.core.box.events.CreateEntity;
+import io.intino.gamification.core.box.events.ModifyAchievement;
 import io.intino.magritte.framework.Graph;
 
 import java.util.ArrayList;
@@ -20,11 +22,19 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return entityList(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public AchievementDefinition getAchievementDefinition(String id) {
+	public Achievement getAchievementDefinition(String id) {
 		return achievementDefinitionList(a -> a.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public io.intino.gamification.core.graph.Entity entity(CreateEntity event) {
+	public Entity entity(CreateEntity event) {
 		return create("Entity").entity(event.id(), event.type().name(), new Gson().toJson(event.attributes()), null, new ArrayList<>());
+	}
+
+	public Achievement achivementDefinition(ModifyAchievement event) {
+		return create("AchievementDefinition").achievementDefinition(event.id(), event.type().name(), event.description());
+	}
+
+	public AchievementState achievementChecked(AchievementNewStatus event) {
+		return create("AchievementChecked").achievementChecked(event.id(), event.match(), event.player(), event.status().name());
 	}
 }

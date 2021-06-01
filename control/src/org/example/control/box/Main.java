@@ -21,12 +21,10 @@ public class Main {
 		Engine engine = new Engine(box.configuration());
 		box.put(engine);
 
-		engine.onStart(() -> {
+		engine.launch(() -> {
 			box.start();
 			Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 		});
-
-		engine.start();
 	}
 
 	private static FileSystemStore store(File datamartFolder) {

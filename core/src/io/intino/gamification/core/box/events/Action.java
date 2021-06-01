@@ -58,7 +58,7 @@ public class Action extends GamificationEvent {
         return this;
     }
 
-    public Action operationType(String operationType) {
+    public Action operationType(OperationType operationType) {
         set("operationType", operationType);
         return this;
     }

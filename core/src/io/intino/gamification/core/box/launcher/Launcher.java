@@ -12,7 +12,7 @@ import java.util.Map;
 public class Launcher extends Async {
 
     private static final String Gamification = "Gamification";
-    private static final String[] StartUpStashes = {Gamification, "Entity", "Mission", "Achievement", "Match"};
+    private static final String[] StartUpStashes = {Gamification, "Entity", "Mission", "AchievementDefinition", "AchievementStatus", "Match"};
 
     private final String[] args;
     private CoreBox box;

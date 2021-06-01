@@ -34,6 +34,10 @@ public class Action extends GamificationEvent {
         return get("value");
     }
 
+    public OperationType operationType() {
+        return getAsEnum("operationType", OperationType.class);
+    }
+
     public Action srcEntity(String srcEntity) {
         set("srcEntity", srcEntity);
         return this;
@@ -51,6 +55,11 @@ public class Action extends GamificationEvent {
 
     public Action value(String value) {
         set("value", value);
+        return this;
+    }
+
+    public Action operationType(String operationType) {
+        set("operationType", operationType);
         return this;
     }
 }

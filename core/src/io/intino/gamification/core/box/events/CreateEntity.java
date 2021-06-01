@@ -5,7 +5,7 @@ import java.util.Map;
 public class CreateEntity extends GamificationEvent {
 
     public enum Type {
-        Player, Npc
+        Player, Npc, Enemy, Item
     }
 
     public CreateEntity() {

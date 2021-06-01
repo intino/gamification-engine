@@ -1,10 +1,9 @@
 package org.example.control.box.subscribers;
 
 import io.intino.gamification.Engine;
-import io.intino.gamification.api.EngineDatamart;
 import io.intino.gamification.core.box.events.Action;
 import io.intino.gamification.core.box.events.CreateEntity;
-import io.intino.gamification.core.graph.Entity;
+import io.intino.gamification.core.box.events.enumerates.EntityType;
 import org.example.control.box.ControlBox;
 import org.example.control.box.graph.mounters.VaccineMounter;
 import org.example.control.graph.ControlGraph;
@@ -17,7 +16,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.intino.gamification.core.box.events.CreateEntity.Type.*;
+import static io.intino.gamification.core.box.events.enumerates.EntityType.*;
 
 public class VaccineSubscriber implements java.util.function.Consumer<org.example.datahub.events.example.Vaccine> {
 
@@ -35,6 +34,7 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		return box.engine();
 	}
 
+	@Override
 	public void accept(org.example.datahub.events.example.Vaccine event) {
 		treatHospital(event);
 		treatPatient(event);
@@ -88,7 +88,7 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		createEntity(event.patientName(), Item, attributes);
 	}
 
-	private void createEntity(String id, CreateEntity.Type type, Map<String, String> attributes) {
+	private void createEntity(String id, EntityType type, Map<String, String> attributes) {
 		CreateEntity entity = new CreateEntity();
 		entity.id(id);
 		entity.ss("Example");

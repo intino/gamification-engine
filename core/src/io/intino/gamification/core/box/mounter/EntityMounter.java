@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
-import io.intino.gamification.core.box.events.enumerates.ActionOperationType;
 import io.intino.gamification.core.graph.Entity;
 
 import java.util.Map;
@@ -26,8 +25,8 @@ public class EntityMounter extends Mounter {
 
     protected void handle(Action event) {
 
-        Entity dest = box.graph().getEntity(event.destEntity());
-        changeAttribute(dest, event.destEntityAttribute(), event.value(), event.operationType());
+        Entity dest = box.graph().getEntity(event.entity());
+        changeAttribute(dest, event.attribute(), event.value());
         dest.save$();
     }
 
@@ -82,22 +81,9 @@ public class EntityMounter extends Mounter {
         box.graph().entity(event).save$();
     }
 
-    private void changeAttribute(Entity entity, String key, String value, ActionOperationType type) {
+    private void changeAttribute(Entity entity, String key, String value) {
 
         Map<String, String> attributes = new Gson().fromJson(entity.attributes(), new TypeToken<Map<String, String>>(){}.getType());
-
-        switch (type) {
-            case Add:
-                break;
-            case Remove:
-                break;
-            case Replace:
-                break;
-            case Sum:
-                break;
-            case Subtract:
-                break;
-        }
 
         attributes.put(key, value);
     }

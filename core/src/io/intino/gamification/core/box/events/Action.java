@@ -31,4 +31,13 @@ public class Action extends GamificationEvent {
         set("value", value);
         return this;
     }
+
+    public String attribute() {
+        return get("attribute");
+    }
+
+    public Action attribute(String attribute) {
+        set("attribute", attribute);
+        return this;
+    }
 }

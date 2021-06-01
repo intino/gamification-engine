@@ -36,7 +36,7 @@ public class EngineDatamart {
     }
 
     public List<Achievement> achievementDefinitions() {
-        return box.graph().achievementDefinitionList();
+        return box.graph().achievementList();
     }
 
     public List<Match> matches() {

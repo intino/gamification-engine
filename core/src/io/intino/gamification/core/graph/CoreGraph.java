@@ -23,7 +23,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Achievement getAchievementDefinition(String id) {
-		return achievementDefinitionList(a -> a.id().equals(id)).findFirst().orElse(null);
+		return achievementList(a -> a.id().equals(id)).findFirst().orElse(null);
 	}
 
 	public Entity entity(CreateEntity event) {
@@ -31,10 +31,10 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Achievement achivementDefinition(ModifyAchievement event) {
-		return create("AchievementDefinition").achievementDefinition(event.id(), event.type().name(), event.description());
+		return create("AchievementDefinition").achievement(event.id(), event.type().name(), event.description());
 	}
 
 	public AchievementState achievementChecked(AchievementNewStatus event) {
-		return create("AchievementChecked").achievementChecked(event.id(), event.match(), event.player(), event.status().name());
+		return create("AchievementChecked").achievementState(event.id(), event.match(), event.player(), event.status().name());
 	}
 }

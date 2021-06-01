@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.terminal;
+package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
@@ -7,11 +7,11 @@ import io.intino.gamification.core.box.mounter.EntityMounter;
 import io.intino.gamification.core.box.mounter.MatchMounter;
 import io.intino.gamification.core.box.mounter.MissionMounter;
 
-public class Terminal {
+public class EngineTerminal {
 
     private final CoreBox box;
 
-    public Terminal(CoreBox box) {
+    public EngineTerminal(CoreBox box) {
         this.box = box;
     }
 

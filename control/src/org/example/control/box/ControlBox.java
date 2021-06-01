@@ -1,5 +1,6 @@
 package org.example.control.box;
 
+import io.intino.gamification.Engine;
 import io.intino.gamification.core.box.launcher.Launcher;
 import io.intino.gamification.core.Archetype;
 import io.intino.magritte.framework.Graph;
@@ -8,7 +9,7 @@ import org.example.control.graph.ControlGraph;
 public class ControlBox extends AbstractBox {
 
 	private final Archetype archetype;
-	private Launcher engine;
+	private Engine engine;
 	private ControlGraph graph;
 
 	public ControlBox(String[] args) {
@@ -23,7 +24,7 @@ public class ControlBox extends AbstractBox {
 	@Override
 	public io.intino.alexandria.core.Box put(Object o) {
 		super.put(o);
-		if(o instanceof Launcher) engine = (Launcher) o;
+		if(o instanceof Engine) engine = (Engine) o;
 		if(o instanceof Graph) graph = ((Graph) o).as(ControlGraph.class);
 		return this;
 	}
@@ -52,7 +53,7 @@ public class ControlBox extends AbstractBox {
 		return archetype.datamart().example();
 	}
 
-	public Launcher engine() {
+	public Engine engine() {
 		return this.engine;
 	}
 

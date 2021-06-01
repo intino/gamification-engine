@@ -1,14 +1,9 @@
 package io.intino.gamification.core.box.events;
 
+import io.intino.gamification.core.box.events.enumerates.MissionDifficulty;
+import io.intino.gamification.core.box.events.enumerates.MissionType;
+
 public class Mission extends GamificationEvent {
-
-    public enum Difficulty {
-        Easy, Medium, Hard
-    }
-
-    public enum Type {
-        Primary, Secondary, Special
-    }
 
     public Mission() {
         super("Mission");
@@ -26,12 +21,12 @@ public class Mission extends GamificationEvent {
         return get("player");
     }
 
-    public Difficulty difficulty() {
-        return getAsEnum("difficulty", Difficulty.class);
+    public MissionDifficulty difficulty() {
+        return getAsEnum("difficulty", MissionDifficulty.class);
     }
 
-    public Type type() {
-        return getAsEnum("type", Type.class);
+    public MissionType type() {
+        return getAsEnum("type", MissionType.class);
     }
 
     public String description() {
@@ -43,12 +38,12 @@ public class Mission extends GamificationEvent {
         return this;
     }
 
-    public Mission difficulty(Difficulty difficulty) {
+    public Mission difficulty(MissionDifficulty difficulty) {
         set("difficulty", difficulty);
         return this;
     }
 
-    public Mission type(Type type) {
+    public Mission type(MissionType type) {
         set("type", type);
         return this;
     }

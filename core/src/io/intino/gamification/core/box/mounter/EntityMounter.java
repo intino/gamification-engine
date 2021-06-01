@@ -21,28 +21,27 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(Action event) {
-
+        Entity entity;
     }
 
     protected void handle(AttachEntity event) {
-
         Entity parent = box.graph().getEntity(event.parent());
         Entity child = box.graph().getEntity(event.child());
 
-        if(parent != null && child != null) {
+        if(child == null) return;
+        if(child.parent() == parent) return;
 
-            Entity childParent = child.parent();
+        if(child.parent() != null) {
+            child.parent().children().remove(child);
+            child.parent().save$();
+        }
 
-            if(childParent != null) {
-                childParent.childs().remove(child);
-                childParent.save$();
-            }
+        child.parent(parent);
+        child.save$();
 
-            parent.childs().add(child);
+        if(parent != null) {
+            parent.children().add(child);
             parent.save$();
-
-            child.parent(parent);
-            child.save$();
         }
     }
 
@@ -52,19 +51,17 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DetachEntity event) {
-
         Entity parent = box.graph().getEntity(event.parent());
-
         Entity child = box.graph().getEntity(event.child());
 
-        if(parent != null && child != null) {
+        if(child == null || parent == null) return;
+        if(child.parent() != parent) return;
 
-            parent.childs().remove(child);
-            parent.save$();
+        child.parent(null);
+        child.save$();
 
-            child.parent(null);
-            child.save$();
-        }
+        parent.children().remove(child);
+        parent.save$();
     }
 
     protected void handle(CreateEntity event) {

@@ -3,7 +3,7 @@ dsl Konos
 Datalake(path = "{datalake_path}") as Local
 
 Datamart(type = Graph) graph
-	Mounter Vaccine as Event
+	Mounter VaccineMounter as Event
     	Require("example.Vaccine")
 
 Subscriber(event = "example.Vaccine", subscriberId = "Vaccine") vaccineSubscriber

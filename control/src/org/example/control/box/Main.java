@@ -4,6 +4,7 @@ import io.intino.gamification.Engine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
+import org.example.control.graph.ControlGraph;
 
 import java.io.File;
 
@@ -15,7 +16,7 @@ public class Main {
 	public static void main(String[] args) {
 		ControlBox box = new ControlBox(args);
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
-		box.put(graph);
+		box.put(new ControlGraph(graph));
 
 		Engine engine = new Engine(box.configuration());
 		box.put(engine);

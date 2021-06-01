@@ -1,8 +1,8 @@
 package org.example.control.box;
 
-import groovyjarjarantlr4.v4.misc.Graph;
 import io.intino.gamification.Engine;
 import io.intino.gamification.core.Archetype;
+import io.intino.magritte.framework.Graph;
 import org.example.control.graph.ControlGraph;
 
 public class ControlBox extends AbstractBox {
@@ -24,7 +24,7 @@ public class ControlBox extends AbstractBox {
 	public io.intino.alexandria.core.Box put(Object o) {
 		super.put(o);
 		if(o instanceof Engine) engine = (Engine) o;
-		if(o instanceof Graph) graph = ((ControlGraph) o).a$(ControlGraph.class);
+		if(o instanceof Graph) graph = ((Graph) o).as(ControlGraph.class);
 		return this;
 	}
 

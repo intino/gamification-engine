@@ -77,7 +77,7 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
     }
 
     protected void set(String attribute, Map<String, String> value) {
-        set(attribute, new  Gson().toJson(value));
+        set(attribute, new Gson().toJson(value));
     }
 
     @Override

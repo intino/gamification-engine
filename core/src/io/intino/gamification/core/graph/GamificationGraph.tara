@@ -3,10 +3,13 @@ dsl Proteo
 Concept Match
 	var string id
 
-Concept Achievement
+Concept AchievementDefinition
 	var string id
 	var word:AchievementType type
 	var string description
+
+Concept AchievementStatus
+	var string id
 	var string match
 	var string player
 	var word:AchievementStatus status

@@ -24,8 +24,8 @@ public class AchievementNewState extends GamificationEvent {
         return get("player");
     }
 
-    public AchievementState status() {
-        return getAsEnum("status", AchievementState.class);
+    public AchievementState state() {
+        return getAsEnum("state", AchievementState.class);
     }
 
     public AchievementNewState match(String match) {
@@ -38,8 +38,8 @@ public class AchievementNewState extends GamificationEvent {
         return this;
     }
 
-    public AchievementNewState status(AchievementState status) {
-        set("status", status);
+    public AchievementNewState state(AchievementState state) {
+        set("state", state);
         return this;
     }
 }

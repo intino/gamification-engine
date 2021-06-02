@@ -16,12 +16,12 @@ public class MissionNewState extends GamificationEvent {
         super(message);
     }
 
-    public MissionState status() {
-        return getAsEnum("status", MissionState.class);
+    public MissionState state() {
+        return getAsEnum("state", MissionState.class);
     }
 
-    public MissionNewState status(MissionState status) {
-        set("status", status);
+    public MissionNewState state(MissionState state) {
+        set("state", state);
         return this;
     }
 }

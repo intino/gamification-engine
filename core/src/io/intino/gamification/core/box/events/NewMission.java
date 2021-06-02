@@ -3,17 +3,17 @@ package io.intino.gamification.core.box.events;
 import io.intino.gamification.core.box.events.attributes.MissionDifficulty;
 import io.intino.gamification.core.box.events.attributes.MissionType;
 
-public class Mission extends GamificationEvent {
+public class NewMission extends GamificationEvent {
 
-    public Mission() {
-        super("Mission");
+    public NewMission() {
+        super("NewMission");
     }
 
-    public Mission(io.intino.alexandria.event.Event event) {
+    public NewMission(io.intino.alexandria.event.Event event) {
         this(event.toMessage());
     }
 
-    public Mission(io.intino.alexandria.message.Message message) {
+    public NewMission(io.intino.alexandria.message.Message message) {
         super(message);
     }
 
@@ -33,22 +33,22 @@ public class Mission extends GamificationEvent {
         return get("description");
     }
 
-    public Mission player(String player) {
+    public NewMission player(String player) {
         set("player", player);
         return this;
     }
 
-    public Mission difficulty(MissionDifficulty difficulty) {
+    public NewMission difficulty(MissionDifficulty difficulty) {
         set("difficulty", difficulty);
         return this;
     }
 
-    public Mission type(MissionType type) {
+    public NewMission type(MissionType type) {
         set("type", type);
         return this;
     }
 
-    public Mission description(String description) {
+    public NewMission description(String description) {
         set("description", description);
         return this;
     }

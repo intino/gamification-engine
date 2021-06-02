@@ -2,6 +2,17 @@ dsl Ness
 
 Namespace example
 
+	Event CreateHospital
+		Attribute name as Text
+		Attribute location as Text
+
+	Event CreateVaccine
+		Attribute name as Text
+		Attribute illness as Text
+		Attribute requiredDoseCount as Integer
+		Attribute effectiveness as Real
+		Attribute price as Real
+
 	Event Vaccine
 		Attribute vaccineName as Text
 		Attribute patientName as Text

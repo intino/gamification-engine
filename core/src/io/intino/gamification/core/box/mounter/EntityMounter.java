@@ -24,7 +24,6 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DestroyEntity event) {
-
         Entity entity = box.graph().getEntity(event.id());
         if(entity == null) return;
         entity.children().forEach(c -> c.parent(null).save$());
@@ -32,21 +31,18 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(Action event) {
-
         Entity entity = box.graph().getEntity(event.entity());
-
         if(entity == null) return;
 
-        if(event instanceof Action.CustomAction) entity.set(((Action.CustomAction) event).attribute(), ((Action.CustomAction) event).value());
-        else if(event instanceof Action.ChangeLevel) entity.level(((Action.ChangeLevel) event).level());
-        else if(event instanceof Action.ChangeScore) entity.score(((Action.ChangeScore) event).score());
-        else if(event instanceof Action.ChangeHealth) entity.health(((Action.ChangeHealth) event).health());
+        final String oldValue = entity.get(event.attribute());
+        final String newValue = event.value();
 
-        entity.save$();
+        Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
+
+        entity.set(event.attribute(), event.value()).save$();
     }
 
     protected void handle(AttachEntity event) {
-
         Entity parent = box.graph().getEntity(event.parent());
         Entity child = box.graph().getEntity(event.child());
 
@@ -68,7 +64,6 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DetachEntity event) {
-
         Entity parent = box.graph().getEntity(event.parent());
         Entity child = box.graph().getEntity(event.child());
 

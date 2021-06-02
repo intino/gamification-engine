@@ -37,6 +37,11 @@ public class EntityMounter extends Mounter {
 
         if(entity == null) return;
 
+        final String oldValue = entity.get(event.attribute());
+        final String newValue = event.value();
+
+        Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
+
         if(event.toMessage().type().equals("Action")) entity.set(event.attribute(), event.value());
         else if(event.toMessage().type().equals("ChangeLevel")) entity.level(Integer.parseInt(event.value()));
         else if(event.toMessage().type().equals("ChangeScore")) entity.score(Integer.parseInt(event.value()));

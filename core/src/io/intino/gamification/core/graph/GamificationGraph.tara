@@ -27,6 +27,9 @@ Concept Mission is decorable
 
 Concept Entity is decorable
 	var string id
+	var integer level
+	var double health
+	var integer score
 	var string typeName
 	var string attributes
 	var Entity parent

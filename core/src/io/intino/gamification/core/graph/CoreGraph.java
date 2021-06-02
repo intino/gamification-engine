@@ -6,7 +6,6 @@ import io.intino.gamification.core.box.events.attributes.MatchState;
 import io.intino.gamification.core.box.events.attributes.MissionState;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
-import io.intino.magritte.framework.Layer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,16 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Match match(MatchBegin event) {
-		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name(), new ArrayList<>());
+
+		List<EntityState> entities = entityList().stream()
+				.filter(e -> event.entities().contains(e.id()))
+				.map(e -> {
+					EntityState entity = create(Stash.EntityState.name()).entityState(e.id(), 0);
+					entity.save$();
+					return entity;
+				}).collect(Collectors.toList());
+
+		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name(), entities);
 	}
 
 	public Mission mission(NewMission event) {

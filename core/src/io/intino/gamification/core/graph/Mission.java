@@ -1,8 +1,8 @@
 package io.intino.gamification.core.graph;
 
-import io.intino.gamification.core.box.events.enumerates.MissionStatus;
-import io.intino.gamification.core.box.events.enumerates.MissionDifficulty;
-import io.intino.gamification.core.box.events.enumerates.MissionType;
+import io.intino.gamification.core.box.events.attributes.MissionStatus;
+import io.intino.gamification.core.box.events.attributes.MissionDifficulty;
+import io.intino.gamification.core.box.events.attributes.MissionType;
 
 public class Mission extends AbstractMission {
 

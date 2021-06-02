@@ -1,7 +1,7 @@
 package io.intino.gamification.core.box.events;
 
-import io.intino.gamification.core.box.events.enumerates.MissionDifficulty;
-import io.intino.gamification.core.box.events.enumerates.MissionType;
+import io.intino.gamification.core.box.events.attributes.MissionDifficulty;
+import io.intino.gamification.core.box.events.attributes.MissionType;
 
 public class Mission extends GamificationEvent {
 

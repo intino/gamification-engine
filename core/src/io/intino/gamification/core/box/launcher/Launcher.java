@@ -2,17 +2,17 @@ package io.intino.gamification.core.box.launcher;
 
 import io.intino.alexandria.core.BoxConfiguration;
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
-import io.intino.magritte.io.Stash;
 
 import java.io.File;
 import java.util.Map;
 
 public class Launcher extends Async {
 
-    private static final String Gamification = "Gamification";
-    private static final String[] StartUpStashes = {Gamification, "Entity", "Mission", "AchievementDefinition", "AchievementChecked", "Match"};
+    private static final String Gamification = Stash.main();
+    private static final String[] StartUpStashes = Stash.stashes();
 
     private final String[] args;
     private CoreBox box;
@@ -38,14 +38,14 @@ public class Launcher extends Async {
         return new FileSystemStore(datamartFolder) {
 
             @Override
-            public Stash stashFrom(String path) {
-                Stash stash = super.stashFrom(path);
+            public io.intino.magritte.io.Stash stashFrom(String path) {
+                io.intino.magritte.io.Stash stash = super.stashFrom(path);
                 if (stash != null && stash.language == null) stash.language = Gamification;
                 return stash;
             }
 
             @Override
-            public void writeStash(Stash stash, String path) {
+            public void writeStash(io.intino.magritte.io.Stash stash, String path) {
                 stash.language = stash.language == null || stash.language.isEmpty() ? Gamification : stash.language;
                 super.writeStash(stash, path);
             }

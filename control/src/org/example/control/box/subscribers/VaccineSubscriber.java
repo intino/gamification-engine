@@ -75,6 +75,7 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		Action action = new Action();
 		action.ss("Example");
 		action.ts(Instant.now());
+		action.attribute("doseCount");
 		action.entity(event.patientName());
 		action.value(String.valueOf(doseCount));
 

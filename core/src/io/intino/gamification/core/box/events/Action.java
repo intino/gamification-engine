@@ -45,8 +45,12 @@ public class Action extends GamificationEvent {
         return new Action("ChangeLevel").entity(entity).attribute("level").attribute(String.valueOf(level));
     }
 
-    public static Action changeScore(String entity, Integer score) {
-        return new Action("ChangeScore").entity(entity).attribute("score").attribute(String.valueOf(score));
+    public static Action gainScore(String entity, Integer score) {
+        return new Action("GainScore").entity(entity).attribute("score").attribute(String.valueOf(score));
+    }
+
+    public static Action lossScore(String entity, Integer score) {
+        return new Action("LossScore").entity(entity).attribute("score").attribute(String.valueOf(score));
     }
 
     public static Action changeHealth(String entity, Integer health) {

@@ -43,7 +43,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Entity entity(CreateEntity event) {
-		return create(Stash.Entity.name()).entity(event.id(), event.type().name(), new Gson().toJson(event.attributes()), null, new ArrayList<>());
+		return create(Stash.Entity.name()).entity(event.id(), event.type().name(), 1, 0, 100, new Gson().toJson(event.attributes()), null, new ArrayList<>());
 	}
 
 	public Achievement achievement(CreateAchievement event) {
@@ -55,7 +55,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Match match(MatchBegin event) {
-		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name());
+		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name(), new ArrayList<>());
 	}
 
 	public Mission mission(NewMission event) {

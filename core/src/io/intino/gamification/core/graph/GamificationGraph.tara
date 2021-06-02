@@ -5,6 +5,11 @@ Concept Match is decorable
 	var instant from
 	var instant to
 	var string stateName
+	var EntityState[] entitiesState
+
+Concept EntityState
+	var string id
+	var integer score
 
 Concept Achievement is decorable
 	var string id

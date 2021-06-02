@@ -22,14 +22,14 @@ Concept Achievement is decorable
 	var string description
 
 Concept AchievementState is decorable
-	var string id
+	var Achievement achievement
 	var string match
 	var string player
 	var string stateName
 
 Concept Mission is decorable
 	var string id
-	var string player
+	var Entity player
 	var string difficultyName
 	var string typeName
 	var string description

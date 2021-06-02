@@ -37,10 +37,12 @@ public class EntityMounter extends Mounter {
 
         if(entity == null) return;
 
-        if(event instanceof Action.CustomAction) entity.set(((Action.CustomAction) event).attribute(), ((Action.CustomAction) event).value());
-        else if(event instanceof Action.ChangeLevel) entity.level(((Action.ChangeLevel) event).level());
-        else if(event instanceof Action.ChangeScore) entity.score(((Action.ChangeScore) event).score());
-        else if(event instanceof Action.ChangeHealth) entity.health(((Action.ChangeHealth) event).health());
+        if(event.toMessage().type().equals("Action")) entity.set(event.attribute(), event.value());
+        else if(event.toMessage().type().equals("ChangeLevel")) entity.level(Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("ChangeScore")) entity.score(Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("ChangeHealth")) changeHealth(entity, Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("Attack")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("Heal")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
 
         entity.save$();
     }
@@ -80,5 +82,9 @@ public class EntityMounter extends Mounter {
 
         parent.children().remove(child);
         parent.save$();
+    }
+
+    private void changeHealth(Entity entity, int newHealth) {
+        entity.health(Math.max(0, Math.min(100, newHealth)));
     }
 }

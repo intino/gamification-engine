@@ -104,9 +104,7 @@ public class EntityMounter extends Mounter {
     }
 
     private void changeMatchRelativeScore(Entity entity, int scoreDiff) {
-        Match match = box.graph().getCurrentMatch();
-        if(match == null) return;
-        EntityState entityState = match.entitiesState().stream()
+        EntityState entityState = entity.world().match().entitiesState().stream()
                 .filter(e -> e.id().equals(entity.id()))
                 .findFirst().orElse(null);
         if(entityState == null) {

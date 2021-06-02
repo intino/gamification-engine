@@ -4,6 +4,7 @@ import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
 import io.intino.gamification.core.box.events.attributes.MatchState;
 import io.intino.gamification.core.graph.Match;
+import io.intino.gamification.core.graph.World;
 
 public class MatchMounter extends Mounter {
 
@@ -19,15 +20,19 @@ public class MatchMounter extends Mounter {
 
     protected void handle(MatchBegin event) {
 
-        Match match = box.graph().getMatch(event.id());
+        World world = box.graph().getWorld(event.world());
+
+        if(world == null) return;
+
+        Match match = world.match();
 
         if(match != null) return;
 
-        Match currentMatch = box.graph().getCurrentMatch();
+        match = box.graph().match(event);
+        world.match(match);
 
-        if(currentMatch != null) return;
-
-        box.graph().match(event).save$();
+        match.save$();
+        world.save$();
     }
 
     protected void handle(MatchEnd event) {
@@ -37,5 +42,8 @@ public class MatchMounter extends Mounter {
         if(match == null) return;
 
         match.to(event.ts()).state(MatchState.Finished).save$();
+
+        World world = box.graph().getWorld(match);
+        if(world != null) world.match(null).save$();
     }
 }

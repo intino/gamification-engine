@@ -48,7 +48,7 @@ public class AchievementMounter extends Mounter {
 
         if(achievement == null) return;
 
-        List<AchievementState> states = box.graph().getAchievementStates(achievement.id());
+        List<AchievementState> states = box.graph().getAchievementStates(achievement);
 
         achievement.delete$();
         states.forEach(Layer::delete$);
@@ -60,6 +60,6 @@ public class AchievementMounter extends Mounter {
 
         if(achievement == null) return;
 
-        box.graph().achievementState(event).save$();
+        box.graph().achievementState(event, achievement).save$();
     }
 }

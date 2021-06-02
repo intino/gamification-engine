@@ -29,16 +29,12 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return achievementList(a -> a.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public List<AchievementState> getAchievementStates(String id) {
-		return achievementStateList(a -> a.id().equals(id)).collect(Collectors.toList());
+	public List<AchievementState> getAchievementStates(Achievement achievement) {
+		return achievementStateList(a -> a.achievement().equals(achievement)).collect(Collectors.toList());
 	}
 
 	public Match getMatch(String id) {
 		return matchList(m -> m.id().equals(id)).findFirst().orElse(null);
-	}
-
-	public Match getCurrentMatch() {
-		return matchList(m -> m.state().equals(MatchState.Started)).findFirst().orElse(null);
 	}
 
 	public Mission getMission(String id) {
@@ -47,6 +43,10 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	public World getWorld(String id) {
 		return worldList(w -> w.id().equals(id)).findFirst().orElse(null);
+	}
+
+	public World getWorld(Match match) {
+		return worldList(w -> w.match().id().equals(match.id())).findFirst().orElse(null);
 	}
 
 	public Entity entity(CreateEntity event, World world) {
@@ -61,15 +61,15 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return create(Stash.Achievement.name()).achievement(event.id(), event.type().name(), event.description());
 	}
 
-	public AchievementState achievementState(AchievementNewState event) {
-		return create(Stash.AchievementState.name()).achievementState(event.id(), event.match(), event.player(), event.state().name());
+	public AchievementState achievementState(AchievementNewState event, Achievement achievement) {
+		return create(Stash.AchievementState.name()).achievementState(achievement, event.match(), event.player(), event.state().name());
 	}
 
 	public Match match(MatchBegin event) {
 		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name(), new ArrayList<>());
 	}
 
-	public Mission mission(NewMission event) {
-		return create(Stash.Mission.name()).mission(event.id(), event.player(), event.difficulty().name(), event.type().name(), event.description(), MissionState.Pending.name());
+	public Mission mission(NewMission event, Entity player) {
+		return create(Stash.Mission.name()).mission(event.id(), player, event.difficulty().name(), event.type().name(), event.description(), MissionState.Pending.name());
 	}
 }

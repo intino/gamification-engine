@@ -20,8 +20,17 @@ public class MatchBegin extends GamificationEvent {
         return getAsList("entities");
     }
 
+    public String world() {
+        return get("world");
+    }
+
     public MatchBegin entities(List<String> entities) {
         set("entities", entities);
+        return this;
+    }
+
+    public MatchBegin world(String world) {
+        set("world", world);
         return this;
     }
 }

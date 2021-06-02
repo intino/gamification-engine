@@ -2,17 +2,17 @@ package io.intino.gamification.core.box.events;
 
 import io.intino.gamification.core.box.events.attributes.AchievementState;
 
-public class AchievementNewStatus extends GamificationEvent {
+public class AchievementNewState extends GamificationEvent {
 
-    public AchievementNewStatus() {
-        super("AchievementNewStatus");
+    public AchievementNewState() {
+        super("AchievementNewState");
     }
 
-    public AchievementNewStatus(io.intino.alexandria.event.Event event) {
+    public AchievementNewState(io.intino.alexandria.event.Event event) {
         super(event);
     }
 
-    public AchievementNewStatus(io.intino.alexandria.message.Message message) {
+    public AchievementNewState(io.intino.alexandria.message.Message message) {
         super(message);
     }
 
@@ -28,17 +28,17 @@ public class AchievementNewStatus extends GamificationEvent {
         return getAsEnum("status", AchievementState.class);
     }
 
-    public AchievementNewStatus match(String match) {
+    public AchievementNewState match(String match) {
         set("match", match);
         return this;
     }
 
-    public AchievementNewStatus player(String player) {
+    public AchievementNewState player(String player) {
         set("player", player);
         return this;
     }
 
-    public AchievementNewStatus status(AchievementState status) {
+    public AchievementNewState status(AchievementState status) {
         set("status", status);
         return this;
     }

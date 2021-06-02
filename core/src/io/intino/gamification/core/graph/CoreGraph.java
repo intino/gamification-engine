@@ -1,9 +1,11 @@
 package io.intino.gamification.core.graph;
 
 import com.google.gson.Gson;
-import io.intino.gamification.core.box.events.AchievementNewStatus;
+import io.intino.gamification.core.box.events.AchievementNewState;
 import io.intino.gamification.core.box.events.CreateAchievement;
 import io.intino.gamification.core.box.events.CreateEntity;
+import io.intino.gamification.core.box.events.MatchBegin;
+import io.intino.gamification.core.box.events.attributes.MatchState;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
 
@@ -33,6 +35,10 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return achievementStateList(a -> a.id().equals(id)).collect(Collectors.toList());
 	}
 
+	public Match getMatch(String id) {
+		return matchList(m -> m.id().equals(id)).findFirst().orElse(null);
+	}
+
 	public Entity entity(CreateEntity event) {
 		return create(Stash.Entity.name()).entity(event.id(), event.type().name(), new Gson().toJson(event.attributes()), null, new ArrayList<>());
 	}
@@ -41,7 +47,11 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return create(Stash.Achievement.name()).achievement(event.id(), event.type().name(), event.description());
 	}
 
-	public AchievementState achievementState(AchievementNewStatus event) {
+	public AchievementState achievementState(AchievementNewState event) {
 		return create(Stash.AchievementState.name()).achievementState(event.id(), event.match(), event.player(), event.status().name());
+	}
+
+	public Match match(MatchBegin event) {
+		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name());
 	}
 }

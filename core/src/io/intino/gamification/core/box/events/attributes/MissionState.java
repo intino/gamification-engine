@@ -1,5 +1,5 @@
 package io.intino.gamification.core.box.events.attributes;
 
-public enum MissionStatus {
+public enum MissionState {
     Pending, Completed, Cancelled, Failed;
 }

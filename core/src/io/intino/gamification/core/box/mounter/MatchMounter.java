@@ -2,6 +2,8 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
+import io.intino.gamification.core.box.events.attributes.MatchState;
+import io.intino.gamification.core.graph.Match;
 
 public class MatchMounter extends Mounter {
 
@@ -17,9 +19,19 @@ public class MatchMounter extends Mounter {
 
     protected void handle(MatchBegin event) {
 
+        Match match = box.graph().getMatch(event.id());
+
+        if(match != null) return;
+
+        box.graph().match(event).save$();
     }
 
     protected void handle(MatchEnd event) {
 
+        Match match = box.graph().getMatch(event.id());
+
+        if(match == null) return;
+
+        match.to(event.ts()).state(MatchState.Finished).save$();
     }
 }

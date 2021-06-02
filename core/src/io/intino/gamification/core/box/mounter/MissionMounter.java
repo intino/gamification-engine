@@ -12,14 +12,14 @@ public class MissionMounter extends Mounter {
     @Override
     public void handle(GamificationEvent event) {
         if(event instanceof Mission) handle((Mission) event);
-        if(event instanceof MissionNewStatus) handle((MissionNewStatus) event);
+        if(event instanceof MissionNewState) handle((MissionNewState) event);
     }
 
     protected void handle(Mission event) {
 
     }
 
-    protected void handle(MissionNewStatus event) {
+    protected void handle(MissionNewState event) {
 
     }
 }

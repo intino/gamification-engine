@@ -1,7 +1,10 @@
 dsl Proteo
 
-Concept Match
+Concept Match is decorable
 	var string id
+	var instant from
+	var instant to
+	var string stateName
 
 Concept Achievement is decorable
 	var string id
@@ -12,7 +15,7 @@ Concept AchievementState is decorable
 	var string id
 	var string match
 	var string player
-	var string statusName
+	var string stateName
 
 Concept Mission is decorable
 	var string id
@@ -20,7 +23,7 @@ Concept Mission is decorable
 	var string difficultyName
 	var string typeName
 	var string description
-	var string statusName
+	var string stateName
 
 Concept Entity is decorable
 	var string id

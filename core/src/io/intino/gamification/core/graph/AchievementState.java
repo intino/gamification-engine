@@ -6,12 +6,12 @@ public class AchievementState extends AbstractAchievementState {
 		super(node);
 	}
 
-	public io.intino.gamification.core.box.events.attributes.AchievementState status() {
-		return io.intino.gamification.core.box.events.attributes.AchievementState.valueOf(statusName);
+	public io.intino.gamification.core.box.events.attributes.AchievementState state() {
+		return io.intino.gamification.core.box.events.attributes.AchievementState.valueOf(stateName);
 	}
 
-	public AchievementState status(io.intino.gamification.core.box.events.attributes.AchievementState status) {
-		statusName(status.name());
+	public AchievementState state(io.intino.gamification.core.box.events.attributes.AchievementState status) {
+		stateName(status.name());
 		return this;
 	}
 }

@@ -1,11 +1,11 @@
 package io.intino.gamification.core.box.events;
 
-import io.intino.gamification.core.box.events.enumerates.AchievementState;
+import io.intino.gamification.core.box.events.attributes.AchievementState;
 
 public class AchievementNewStatus extends GamificationEvent {
 
     public AchievementNewStatus() {
-        super("AchievementStatus");
+        super("AchievementNewStatus");
     }
 
     public AchievementNewStatus(io.intino.alexandria.event.Event event) {
@@ -33,7 +33,7 @@ public class AchievementNewStatus extends GamificationEvent {
         return this;
     }
 
-    public AchievementNewStatus points(String player) {
+    public AchievementNewStatus player(String player) {
         set("player", player);
         return this;
     }

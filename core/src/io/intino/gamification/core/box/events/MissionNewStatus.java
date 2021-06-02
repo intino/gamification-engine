@@ -1,11 +1,11 @@
 package io.intino.gamification.core.box.events;
 
-import io.intino.gamification.core.box.events.enumerates.MissionStatus;
+import io.intino.gamification.core.box.events.attributes.MissionStatus;
 
 public class MissionNewStatus extends GamificationEvent {
 
     public MissionNewStatus() {
-        super("MissionStatus");
+        super("MissionNewStatus");
     }
 
     public MissionNewStatus(io.intino.alexandria.event.Event event) {

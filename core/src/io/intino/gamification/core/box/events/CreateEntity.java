@@ -1,13 +1,13 @@
 package io.intino.gamification.core.box.events;
 
-import io.intino.gamification.core.box.events.enumerates.EntityType;
+import io.intino.gamification.core.box.events.attributes.EntityType;
 
 import java.util.Map;
 
 public class CreateEntity extends GamificationEvent {
 
     public CreateEntity() {
-        super("Entity");
+        super("CreateEntity");
     }
 
     public CreateEntity(io.intino.alexandria.event.Event event) {

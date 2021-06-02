@@ -2,17 +2,17 @@ package io.intino.gamification.core.box.events;
 
 import io.intino.gamification.core.box.events.attributes.AchievementType;
 
-public class ModifyAchievement extends GamificationEvent {
+public class CreateAchievement extends GamificationEvent {
 
-    public ModifyAchievement() {
-        super("ModifyAchievement");
+    public CreateAchievement() {
+        super("CreateAchievement");
     }
 
-    public ModifyAchievement(io.intino.alexandria.event.Event event) {
+    public CreateAchievement(io.intino.alexandria.event.Event event) {
         super(event);
     }
 
-    public ModifyAchievement(io.intino.alexandria.message.Message message) {
+    public CreateAchievement(io.intino.alexandria.message.Message message) {
         super(message);
     }
 
@@ -24,12 +24,12 @@ public class ModifyAchievement extends GamificationEvent {
         return getAsEnum("type", AchievementType.class);
     }
 
-    public ModifyAchievement description(String description) {
+    public CreateAchievement description(String description) {
         set("description", description);
         return this;
     }
 
-    public ModifyAchievement type(AchievementType type) {
+    public CreateAchievement type(AchievementType type) {
         set("type", type);
         return this;
     }

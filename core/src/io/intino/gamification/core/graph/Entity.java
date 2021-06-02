@@ -51,7 +51,7 @@ public class Entity extends AbstractEntity {
 		switch(name) {
 			case "level":  return level(asInt(value)) != null;
 			case "score":  return score(asInt(value)) != null;
-			case "health": return  health(asDouble(value)) != null;
+			case "health": return health(clamp(asDouble(value), MIN_HEALTH, MAX_HEALTH)) != null;
 		}
 		return false;
 	}
@@ -99,5 +99,9 @@ public class Entity extends AbstractEntity {
 		public String onAttributeChange(Entity entity, String oldValue, String newValue) {
 			return String.valueOf(listener.onAttributeChange(entity, mapper.apply(oldValue), mapper.apply(newValue)));
 		}
+	}
+
+	private double clamp(double value, double min, double max) {
+		return Math.min(Math.max(min, value), max);
 	}
 }

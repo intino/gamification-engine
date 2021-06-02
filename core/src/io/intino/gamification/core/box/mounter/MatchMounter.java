@@ -23,6 +23,10 @@ public class MatchMounter extends Mounter {
 
         if(match != null) return;
 
+        Match currentMatch = box.graph().getCurrentMatch();
+
+        if(currentMatch != null) return;
+
         box.graph().match(event).save$();
     }
 

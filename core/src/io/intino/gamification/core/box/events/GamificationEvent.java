@@ -58,10 +58,10 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
         return new Gson().fromJson(get(parameter), new TypeToken<List<String>>(){}.getType());
     }
 
-    public GamificationEvent id(String id) {
+    public <T extends GamificationEvent> T id(String id) {
         if (id == null) this.message.remove("id");
         else this.message.set("id", id);
-        return this;
+        return (T) this;
     }
 
     protected void set(String attribute, String value) {

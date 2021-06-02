@@ -1,0 +1,18 @@
+package io.intino.gamification.core.box.events.match;
+
+import io.intino.gamification.core.box.events.GamificationEvent;
+
+public class EndMatch extends GamificationEvent {
+
+    public EndMatch() {
+        super("EndMatch");
+    }
+
+    public EndMatch(io.intino.alexandria.event.Event event) {
+        this(event.toMessage());
+    }
+
+    public EndMatch(io.intino.alexandria.message.Message message) {
+        super(message);
+    }
+}

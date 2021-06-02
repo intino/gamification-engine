@@ -1,6 +1,6 @@
 package io.intino.gamification.core.graph;
 
-import io.intino.gamification.core.box.events.attributes.MissionStatus;
+import io.intino.gamification.core.box.events.attributes.MissionState;
 import io.intino.gamification.core.box.events.attributes.MissionDifficulty;
 import io.intino.gamification.core.box.events.attributes.MissionType;
 
@@ -18,8 +18,8 @@ public class Mission extends AbstractMission {
 		return MissionType.valueOf(typeName);
 	}
 
-	public MissionStatus status() {
-		return MissionStatus.valueOf(statusName);
+	public MissionState status() {
+		return MissionState.valueOf(stateName);
 	}
 
 	public AbstractMission difficulty(MissionDifficulty difficulty) {
@@ -32,8 +32,8 @@ public class Mission extends AbstractMission {
 		return this;
 	}
 
-	public AbstractMission status(MissionStatus status) {
-		statusName(status.name());
+	public AbstractMission status(MissionState status) {
+		stateName(status.name());
 		return this;
 	}
 }

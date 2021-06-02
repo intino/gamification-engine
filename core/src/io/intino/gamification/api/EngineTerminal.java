@@ -19,7 +19,7 @@ public class EngineTerminal {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
-    public void feed(AchievementNewStatus event) {
+    public void feed(AchievementNewState event) {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
@@ -55,7 +55,7 @@ public class EngineTerminal {
         box.mounter(MissionMounter.class).handle(event);
     }
 
-    public void feed(MissionNewStatus event) {
+    public void feed(MissionNewState event) {
         box.mounter(MissionMounter.class).handle(event);
     }
 }

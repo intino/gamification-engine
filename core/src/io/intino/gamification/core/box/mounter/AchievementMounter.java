@@ -19,7 +19,7 @@ public class AchievementMounter extends Mounter {
         if(event instanceof CreateAchievement) handle((CreateAchievement) event);
         if(event instanceof ModifyAchievement) handle((ModifyAchievement) event);
         if(event instanceof DeleteAchievement) handle((DeleteAchievement) event);
-        if(event instanceof AchievementNewStatus) handle((AchievementNewStatus) event);
+        if(event instanceof AchievementNewState) handle((AchievementNewState) event);
     }
 
     protected void handle(CreateAchievement event) {
@@ -54,7 +54,7 @@ public class AchievementMounter extends Mounter {
         states.forEach(Layer::delete$);
     }
 
-    protected void handle(AchievementNewStatus event) {
+    protected void handle(AchievementNewState event) {
 
         Achievement achievement = box.graph().getAchievement(event.id());
 

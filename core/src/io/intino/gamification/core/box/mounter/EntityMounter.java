@@ -1,12 +1,8 @@
 package io.intino.gamification.core.box.mounter;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
 import io.intino.gamification.core.graph.Entity;
-
-import java.util.Map;
 
 public class EntityMounter extends Mounter {
 
@@ -16,18 +12,35 @@ public class EntityMounter extends Mounter {
 
     @Override
     public void handle(GamificationEvent event) {
+        if(event instanceof CreateEntity) handle((CreateEntity) event);
+        if(event instanceof DestroyEntity) handle((DestroyEntity) event);
         if(event instanceof Action) handle((Action) event);
         if(event instanceof AttachEntity) handle((AttachEntity) event);
-        if(event instanceof DestroyEntity) handle((DestroyEntity) event);
         if(event instanceof DetachEntity) handle((DetachEntity) event);
-        if(event instanceof CreateEntity) handle((CreateEntity) event);
+    }
+
+    protected void handle(CreateEntity event) {
+        box.graph().entity(event).save$();
+    }
+
+    protected void handle(DestroyEntity event) {
+
+        Entity entity = box.graph().getEntity(event.id());
+
+        if(entity == null) return;
+
+        entity.children().forEach(c -> c.parent(null).save$());
+        entity.delete$();
     }
 
     protected void handle(Action event) {
 
-        Entity dest = box.graph().getEntity(event.entity());
-        changeAttribute(dest, event.attribute(), event.value());
-        dest.save$();
+        Entity entity = box.graph().getEntity(event.entity());
+
+        if(entity == null) return;
+
+        entity.set(event.attribute(), event.value())
+                .save$();
     }
 
     protected void handle(AttachEntity event) {
@@ -52,16 +65,6 @@ public class EntityMounter extends Mounter {
         }
     }
 
-    protected void handle(DestroyEntity event) {
-
-        Entity entity = box.graph().getEntity(event.id());
-
-        if(entity == null) return;
-
-        entity.children().forEach(c -> c.parent(null).save$());
-        entity.delete$();
-    }
-
     protected void handle(DetachEntity event) {
 
         Entity parent = box.graph().getEntity(event.parent());
@@ -75,16 +78,5 @@ public class EntityMounter extends Mounter {
 
         parent.children().remove(child);
         parent.save$();
-    }
-
-    protected void handle(CreateEntity event) {
-        box.graph().entity(event).save$();
-    }
-
-    private void changeAttribute(Entity entity, String key, String value) {
-
-        Map<String, String> attributes = new Gson().fromJson(entity.attributes(), new TypeToken<Map<String, String>>(){}.getType());
-
-        attributes.put(key, value);
     }
 }

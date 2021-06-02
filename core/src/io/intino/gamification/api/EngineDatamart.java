@@ -1,10 +1,7 @@
 package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.graph.Achievement;
-import io.intino.gamification.core.graph.Entity;
-import io.intino.gamification.core.graph.Match;
-import io.intino.gamification.core.graph.Mission;
+import io.intino.gamification.core.graph.*;
 
 import java.util.List;
 import java.util.Map;
@@ -31,11 +28,19 @@ public class EngineDatamart {
         return entity;
     }
 
+    public List<World> worlds() {
+        return box.graph().worldList();
+    }
+
+    public World world(String id) {
+        return worlds().stream().filter(w -> w.id().equals(id)).findFirst().orElse(null);
+    }
+
     public List<Mission> missions() {
         return box.graph().missionList();
     }
 
-    public List<Achievement> achievementDefinitions() {
+    public List<Achievement> achievements() {
         return box.graph().achievementList();
     }
 

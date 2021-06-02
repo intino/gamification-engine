@@ -15,7 +15,7 @@ public class Entity extends AbstractEntity {
 	private static final Map<String, AttributeListener<String>> AttributeListeners = new ConcurrentHashMap<>();
 
 	public static AttributeListener<String> getAttributeListener(String attributeName) {
-		return AttributeListeners.get(attributeName);
+		return AttributeListeners.getOrDefault(attributeName, AttributeListener.empty());
 	}
 
 	public static <T> void setAttributeListener(String attributeName, AttributeListener<T> listener, Function<String, T> mapper) {
@@ -82,6 +82,11 @@ public class Entity extends AbstractEntity {
 	}
 
 	public interface AttributeListener<T> {
+
+		static <E> AttributeListener<E> empty() {
+			return (entity, oldValue, newValue) -> newValue;
+		}
+
 		T onAttributeChange(Entity entity, T oldValue, T newValue);
 	}
 

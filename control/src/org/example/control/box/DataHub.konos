@@ -4,6 +4,10 @@ Datalake(path = "{datalake_path}") as Local
 
 Datamart(type = Graph) graph
 	Mounter VaccineMounter as Event
+		Require("example.CreateHospital")
+		Require("example.CreateVaccine")
     	Require("example.Vaccine")
 
+Subscriber(event = "example.CreateHospital", subscriberId = "CreateHospital") createHospitalSubscriber
+Subscriber(event = "example.CreateVaccine", subscriberId = "CreateVaccine") createVaccineSubscriber
 Subscriber(event = "example.Vaccine", subscriberId = "Vaccine") vaccineSubscriber

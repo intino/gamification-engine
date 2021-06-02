@@ -2,7 +2,10 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
+import io.intino.gamification.core.box.events.attributes.MatchState;
 import io.intino.gamification.core.graph.Entity;
+
+import java.util.Objects;
 
 public class EntityMounter extends Mounter {
 
@@ -44,7 +47,8 @@ public class EntityMounter extends Mounter {
 
         if(event.toMessage().type().equals("Action")) entity.set(event.attribute(), event.value());
         else if(event.toMessage().type().equals("ChangeLevel")) entity.level(Integer.parseInt(event.value()));
-        else if(event.toMessage().type().equals("ChangeScore")) entity.score(Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("GainScore")) changeScore(entity, Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("LossScore")) changeScore(entity, Integer.parseInt(event.value()));
         else if(event.toMessage().type().equals("ChangeHealth")) changeHealth(entity, Integer.parseInt(event.value()));
         else if(event.toMessage().type().equals("Attack")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
         else if(event.toMessage().type().equals("Heal")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
@@ -91,5 +95,15 @@ public class EntityMounter extends Mounter {
 
     private void changeHealth(Entity entity, int newHealth) {
         entity.health(Math.max(0, Math.min(100, newHealth)));
+    }
+
+    private void changeScore(Entity entity, int scoreDiff) {
+        entity.score(entity.score() + scoreDiff);
+        box.graph().matchList(m -> m.state().equals(MatchState.Started))
+                .map(m -> m.entitiesState().stream()
+                        .filter(e -> e.id().equals(entity.id()))
+                        .findFirst().orElse(null))
+                .filter(Objects::nonNull)
+                .forEach(e -> e.score(e.score() + scoreDiff));
     }
 }

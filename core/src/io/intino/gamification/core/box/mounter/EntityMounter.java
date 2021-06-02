@@ -24,6 +24,7 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DestroyEntity event) {
+
         Entity entity = box.graph().getEntity(event.id());
         if(entity == null) return;
         entity.children().forEach(c -> c.parent(null).save$());
@@ -31,18 +32,23 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(Action event) {
+
         Entity entity = box.graph().getEntity(event.entity());
+
         if(entity == null) return;
 
-        final String oldValue = entity.get(event.attribute());
-        final String newValue = event.value();
+        if(event.toMessage().type().equals("Action")) entity.set(event.attribute(), event.value());
+        else if(event.toMessage().type().equals("ChangeLevel")) entity.level(Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("ChangeScore")) entity.score(Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("ChangeHealth")) changeHealth(entity, Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("Attack")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
+        else if(event.toMessage().type().equals("Heal")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
 
-        Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
-
-        entity.set(event.attribute(), event.value()).save$();
+        entity.save$();
     }
 
     protected void handle(AttachEntity event) {
+
         Entity parent = box.graph().getEntity(event.parent());
         Entity child = box.graph().getEntity(event.child());
 
@@ -64,6 +70,7 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DetachEntity event) {
+
         Entity parent = box.graph().getEntity(event.parent());
         Entity child = box.graph().getEntity(event.child());
 
@@ -75,5 +82,9 @@ public class EntityMounter extends Mounter {
 
         parent.children().remove(child);
         parent.save$();
+    }
+
+    private void changeHealth(Entity entity, int newHealth) {
+        entity.health(Math.max(0, Math.min(100, newHealth)));
     }
 }

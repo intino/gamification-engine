@@ -1,6 +1,10 @@
 package io.intino.gamification.core.box.events;
 
-public abstract class Action extends GamificationEvent {
+public class Action extends GamificationEvent {
+
+    public Action() {
+        super("Action");
+    }
 
     public Action(String type) {
         super(type);
@@ -19,132 +23,41 @@ public abstract class Action extends GamificationEvent {
         return this;
     }
 
-    protected String attribute() {
+    public String attribute() {
         return get("attribute");
     }
 
-    protected Action attribute(String attribute) {
+    public Action attribute(String attribute) {
         set("attribute", attribute);
         return this;
     }
 
-    protected String value() {
+    public String value() {
         return get("value");
     }
 
-    protected Action value(String value) {
+    public Action value(String value) {
         set("value", value);
         return this;
     }
 
-    public class CustomAction extends Action {
-
-        public CustomAction() {
-            super("Action");
-        }
-
-        public CustomAction(io.intino.alexandria.event.Event event) {
-            this(event.toMessage());
-        }
-
-        public CustomAction(io.intino.alexandria.message.Message message) {
-            super(message);
-        }
-
-        public CustomAction attribute(String attribute) {
-            super.attribute(attribute);
-            return this;
-        }
-
-        public String attribute() {
-            return super.attribute();
-        }
-
-        public CustomAction value(String value) {
-            super.value(value);
-            return this;
-        }
-
-        public String value() {
-            return value();
-        }
+    public static Action changeLevel(String entity, Integer level) {
+        return new Action("ChangeLevel").entity(entity).attribute("level").attribute(String.valueOf(level));
     }
 
-    public class ChangeLevel extends Action {
-
-        public ChangeLevel() {
-            super("ChangeLevel");
-            super.attribute("level");
-        }
-
-        public ChangeLevel(io.intino.alexandria.event.Event event) {
-            this(event.toMessage());
-        }
-
-        public ChangeLevel(io.intino.alexandria.message.Message message) {
-            super(message);
-            super.attribute("level");
-        }
-
-        public ChangeLevel level(Integer value) {
-            super.value(String.valueOf(value));
-            return this;
-        }
-
-        public Integer level() {
-            return super.getAsInt("level");
-        }
+    public static Action changeScore(String entity, Integer score) {
+        return new Action("ChangeScore").entity(entity).attribute("score").attribute(String.valueOf(score));
     }
 
-    public class ChangeScore extends Action {
-
-        public ChangeScore() {
-            super("ChangeScore");
-            super.attribute("score");
-        }
-
-        public ChangeScore(io.intino.alexandria.event.Event event) {
-            this(event.toMessage());
-        }
-
-        public ChangeScore(io.intino.alexandria.message.Message message) {
-            super(message);
-            super.attribute("score");
-        }
-
-        public ChangeScore score(Integer value) {
-            super.value(String.valueOf(value));
-            return this;
-        }
-
-        public Integer score() {
-            return super.getAsInt("score");
-        }
+    public static Action changeHealth(String entity, Integer health) {
+        return new Action("ChangeHealth").entity(entity).attribute("health").attribute(String.valueOf(health));
     }
 
-    public class ChangeHealth extends Action {
+    public static Action attack(String entity, Integer damage) {
+        return new Action("Attack").entity(entity).attribute("health").attribute(String.valueOf(damage));
+    }
 
-        public ChangeHealth() {
-            super("ChangeHealth");
-            super.attribute("health");
-        }
-
-        public ChangeHealth(io.intino.alexandria.event.Event event) {
-            this(event.toMessage());
-        }
-
-        public ChangeHealth(io.intino.alexandria.message.Message message) {
-            super(message);
-            super.attribute("health");
-        }
-
-        public ChangeHealth health(Integer value) {
-            super.value(String.valueOf(value));
-            return this;
-        }
-
-        public Integer health() {
-            return super.getAsInt("health");
-        }
+    public static Action heal(String entity, Integer health) {
+        return new Action("Heal").entity(entity).attribute("health").attribute(String.valueOf(health));
     }
 }

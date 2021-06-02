@@ -23,21 +23,21 @@ public class Action extends GamificationEvent {
         return this;
     }
 
-    public String value() {
-        return get("value");
-    }
-
-    public Action value(String value) {
-        set("value", value);
-        return this;
-    }
-
     public String attribute() {
         return get("attribute");
     }
 
     public Action attribute(String attribute) {
         set("attribute", attribute);
+        return this;
+    }
+
+    public String value() {
+        return get("value");
+    }
+
+    public Action value(String value) {
+        set("value", value);
         return this;
     }
 }

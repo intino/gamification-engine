@@ -1,6 +1,6 @@
 package io.intino.gamification.core.graph;
 
-import io.intino.gamification.core.box.events.attributes.MatchState;
+import io.intino.gamification.core.box.events.match.MatchState;
 
 public class Match extends AbstractMatch {
 

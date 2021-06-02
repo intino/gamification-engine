@@ -7,14 +7,33 @@ Concept World
 
 Concept Match is decorable
 	var string id
+	var World world
 	var instant from
 	var instant to
 	var string stateName
+	var Mission[] missions
 	var EntityState[] entitiesState
 
-Concept EntityState
+Concept Mission is decorable
 	var string id
+	var string difficultyName
+	var string typeName
+	var string description
+
+Concept MissionState is decorable
+	var Mission mission
+	var string stateName
+
+
+
+
+
+
+
+Concept EntityState
+	var Entity player
 	var integer score
+	var MissionState[] missionState
 
 Concept Achievement is decorable
 	var string id
@@ -25,14 +44,6 @@ Concept AchievementState is decorable
 	var Achievement achievement
 	var string match
 	var string player
-	var string stateName
-
-Concept Mission is decorable
-	var string id
-	var Entity player
-	var string difficultyName
-	var string typeName
-	var string description
 	var string stateName
 
 Concept Entity is decorable

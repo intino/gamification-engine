@@ -51,7 +51,7 @@ public class EngineTerminal {
         box.mounter(MatchMounter.class).handle(event);
     }
 
-    public void feed(Mission event) {
+    public void feed(NewMission event) {
         box.mounter(MissionMounter.class).handle(event);
     }
 

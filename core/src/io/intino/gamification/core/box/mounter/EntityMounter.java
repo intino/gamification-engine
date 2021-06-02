@@ -33,6 +33,12 @@ public class EntityMounter extends Mounter {
     protected void handle(Action event) {
         Entity entity = box.graph().getEntity(event.entity());
         if(entity == null) return;
+
+        final String oldValue = entity.get(event.attribute());
+        final String newValue = event.value();
+
+        Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
+
         entity.set(event.attribute(), event.value()).save$();
     }
 

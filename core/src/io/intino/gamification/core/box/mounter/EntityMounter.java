@@ -2,10 +2,10 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
-import io.intino.gamification.core.box.events.attributes.MatchState;
 import io.intino.gamification.core.graph.Entity;
 
-import java.util.Objects;
+import static io.intino.gamification.core.graph.Entity.MAX_HEALTH;
+import static io.intino.gamification.core.graph.Entity.MIN_HEALTH;
 
 public class EntityMounter extends Mounter {
 
@@ -40,15 +40,18 @@ public class EntityMounter extends Mounter {
 
         if(entity == null) return;
 
-        if(event.toMessage().type().equals("Action")) entity.set(event.attribute(), event.value());
-        else if(event.toMessage().type().equals("ChangeLevel")) entity.level(Integer.parseInt(event.value()));
-        else if(event.toMessage().type().equals("GainScore")) changeScore(entity, Integer.parseInt(event.value()));
-        else if(event.toMessage().type().equals("LossScore")) changeScore(entity, Integer.parseInt(event.value()));
-        else if(event.toMessage().type().equals("ChangeHealth")) changeHealth(entity, Integer.parseInt(event.value()));
-        else if(event.toMessage().type().equals("Attack")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
-        else if(event.toMessage().type().equals("Heal")) changeHealth(entity, entity.health() + Integer.parseInt(event.value()));
+        String oldValue = entity.get(event.attribute());
+        String newValue = applyAction(entity, event.toMessage().type(), event.value());
+        newValue = Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
 
+        entity.set(event.attribute(), newValue);
         entity.save$();
+    }
+
+    private String applyAction(Entity entity, String type, String value) {
+        return (type.equals("Attack") || type.equals("Heal"))
+                ? String.valueOf(clamp(entity.health() + Double.parseDouble(value), MIN_HEALTH, MAX_HEALTH))
+                : value;
     }
 
     protected void handle(AttachEntity event) {
@@ -88,17 +91,7 @@ public class EntityMounter extends Mounter {
         parent.save$();
     }
 
-    private void changeHealth(Entity entity, int newHealth) {
-        entity.health(Math.max(0, Math.min(100, newHealth)));
-    }
-
-    private void changeScore(Entity entity, int scoreDiff) {
-        entity.score(entity.score() + scoreDiff);
-        box.graph().matchList(m -> m.state().equals(MatchState.Started))
-                .map(m -> m.entitiesState().stream()
-                        .filter(e -> e.id().equals(entity.id()))
-                        .findFirst().orElse(null))
-                .filter(Objects::nonNull)
-                .forEach(e -> e.score(e.score() + scoreDiff));
+    private double clamp(double value, double min, double max) {
+        return Math.min(Math.max(min, value), max);
     }
 }

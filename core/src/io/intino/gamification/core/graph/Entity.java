@@ -3,13 +3,16 @@ package io.intino.gamification.core.graph;
 import com.google.gson.Gson;
 import io.intino.gamification.core.box.events.attributes.EntityType;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class Entity extends AbstractEntity {
 
-	private static final Map<String, AttributeListener<String>> AttributeListeners = new HashMap<>();
+	public static final double MIN_HEALTH = 0.0;
+	public static final double MAX_HEALTH = 100.0;
+
+	private static final Map<String, AttributeListener<String>> AttributeListeners = new ConcurrentHashMap<>();
 
 	public static AttributeListener<String> getAttributeListener(String attributeName) {
 		return AttributeListeners.get(attributeName);
@@ -39,8 +42,28 @@ public class Entity extends AbstractEntity {
 	}
 
 	public Entity set(String name, Object value) {
+		if(isPrimaryAttribute(name, value)) return this;
 		attributesMap.put(name, String.valueOf(value));
 		return this;
+	}
+
+	private boolean isPrimaryAttribute(String name, Object value) {
+		switch(name) {
+			case "level":  return level(asInt(value)) != null;
+			case "score":  return score(asInt(value)) != null;
+			case "health": return  health(asDouble(value)) != null;
+		}
+		return false;
+	}
+
+	private double asDouble(Object value) {
+		if(value == null) return 0.0;
+		return value instanceof Number ? ((Number)value).doubleValue() : Double.parseDouble(String.valueOf(value));
+	}
+
+	private int asInt(Object value) {
+		if(value == null) return 0;
+		return value instanceof Number ? ((Number)value).intValue() : Integer.parseInt(String.valueOf(value));
 	}
 
 	@Override
@@ -59,12 +82,7 @@ public class Entity extends AbstractEntity {
 	}
 
 	public interface AttributeListener<T> {
-
-		static <T> AttributeListener<T> empty() {
-			return (a, b, c) -> {};
-		}
-
-		void onAttributeChange(Entity entity, T oldValue, T newValue);
+		T onAttributeChange(Entity entity, T oldValue, T newValue);
 	}
 
 	private static class AttributeListenerWrapper<T> implements AttributeListener<String> {
@@ -78,8 +96,8 @@ public class Entity extends AbstractEntity {
 		}
 
 		@Override
-		public void onAttributeChange(Entity entity, String oldValue, String newValue) {
-			listener.onAttributeChange(entity, mapper.apply(oldValue), mapper.apply(newValue));
+		public String onAttributeChange(Entity entity, String oldValue, String newValue) {
+			return String.valueOf(listener.onAttributeChange(entity, mapper.apply(oldValue), mapper.apply(newValue)));
 		}
 	}
 }

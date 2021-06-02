@@ -37,12 +37,24 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return matchList(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
 
+	public Match getCurrentMatch() {
+		return matchList(m -> m.state().equals(MatchState.Started)).findFirst().orElse(null);
+	}
+
 	public Mission getMission(String id) {
 		return missionList(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Entity entity(CreateEntity event) {
-		return create(Stash.Entity.name()).entity(event.id(), event.type().name(), 1, 0, 100, new Gson().toJson(event.attributes()), null, new ArrayList<>());
+	public World getWorld(String id) {
+		return worldList(w -> w.id().equals(id)).findFirst().orElse(null);
+	}
+
+	public Entity entity(CreateEntity event, World world) {
+		return create(Stash.Entity.name()).entity(event.id(), event.type().name(), true, world, 1, 0, 100, new Gson().toJson(event.attributes()), null, new ArrayList<>());
+	}
+
+	public EntityState entityState(Entity event) {
+		return create(Stash.EntityState.name()).entityState(event.id(), 0);
 	}
 
 	public Achievement achievement(CreateAchievement event) {
@@ -54,16 +66,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Match match(MatchBegin event) {
-
-		List<EntityState> entities = entityList().stream()
-				.filter(e -> event.entities().contains(e.id()))
-				.map(e -> {
-					EntityState entity = create(Stash.EntityState.name()).entityState(e.id(), 0);
-					entity.save$();
-					return entity;
-				}).collect(Collectors.toList());
-
-		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name(), entities);
+		return create(Stash.Match.name()).match(event.id(), event.ts(), null, MatchState.Started.name(), new ArrayList<>());
 	}
 
 	public Mission mission(NewMission event) {

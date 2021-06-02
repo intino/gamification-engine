@@ -2,10 +2,13 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
+import io.intino.gamification.core.box.events.attributes.MatchState;
 import io.intino.gamification.core.graph.Entity;
+import io.intino.gamification.core.graph.EntityState;
+import io.intino.gamification.core.graph.Match;
+import io.intino.gamification.core.graph.World;
 
-import static io.intino.gamification.core.graph.Entity.MAX_HEALTH;
-import static io.intino.gamification.core.graph.Entity.MIN_HEALTH;
+import java.util.Objects;
 
 public class EntityMounter extends Mounter {
 
@@ -23,7 +26,9 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(CreateEntity event) {
-        box.graph().entity(event).save$();
+        World world = box.graph().getWorld(event.world());
+        if(world == null) return;
+        box.graph().entity(event, world).save$();
     }
 
     protected void handle(DestroyEntity event) {
@@ -49,9 +54,16 @@ public class EntityMounter extends Mounter {
     }
 
     private String applyAction(Entity entity, String type, String value) {
-        return (type.equals("Attack") || type.equals("Heal"))
-                ? String.valueOf(clamp(entity.health() + Double.parseDouble(value), MIN_HEALTH, MAX_HEALTH))
-                : value;
+        switch (type) {
+            case "Attack":
+            case "Heal":
+                return String.valueOf(entity.health() + Double.parseDouble(value));
+            case "ChangeScore":
+                changeMatchRelativeScore(entity, Integer.parseInt(value));
+                return String.valueOf(entity.score() + Integer.parseInt(value));
+            default:
+                return value;
+        }
     }
 
     protected void handle(AttachEntity event) {
@@ -91,7 +103,16 @@ public class EntityMounter extends Mounter {
         parent.save$();
     }
 
-    private double clamp(double value, double min, double max) {
-        return Math.min(Math.max(min, value), max);
+    private void changeMatchRelativeScore(Entity entity, int scoreDiff) {
+        Match match = box.graph().getCurrentMatch();
+        if(match == null) return;
+        EntityState entityState = match.entitiesState().stream()
+                .filter(e -> e.id().equals(entity.id()))
+                .findFirst().orElse(null);
+        if(entityState == null) {
+            box.graph().entityState(entity).score(scoreDiff).save$();
+        } else {
+            entityState.score(entityState.score() + scoreDiff).save$();
+        }
     }
 }

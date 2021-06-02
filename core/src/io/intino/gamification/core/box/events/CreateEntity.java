@@ -1,6 +1,7 @@
 package io.intino.gamification.core.box.events;
 
 import io.intino.gamification.core.box.events.attributes.EntityType;
+import io.intino.gamification.core.graph.World;
 
 import java.util.Map;
 
@@ -26,6 +27,10 @@ public class CreateEntity extends GamificationEvent {
         return getAsMap("attributes");
     }
 
+    public String world() {
+        return get("world");
+    }
+
     public CreateEntity type(EntityType type) {
         set("type", type);
         return this;
@@ -33,6 +38,11 @@ public class CreateEntity extends GamificationEvent {
 
     public CreateEntity attributes(Map<String, String> attributes) {
         set("attributes", attributes);
+        return this;
+    }
+
+    public CreateEntity world(String world) {
+        set("world", world);
         return this;
     }
 }

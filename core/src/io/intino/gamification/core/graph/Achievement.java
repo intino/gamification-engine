@@ -16,4 +16,5 @@ public class Achievement extends AbstractAchievement {
 		typeName(type.name());
 		return this;
 	}
+
 }

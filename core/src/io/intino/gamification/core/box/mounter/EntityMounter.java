@@ -24,32 +24,24 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DestroyEntity event) {
-
         Entity entity = box.graph().getEntity(event.id());
-
         if(entity == null) return;
-
         entity.children().forEach(c -> c.parent(null).save$());
         entity.delete$();
     }
 
     protected void handle(Action event) {
-
         Entity entity = box.graph().getEntity(event.entity());
-
         if(entity == null) return;
-
-        entity.set(event.attribute(), event.value())
-                .save$();
+        entity.set(event.attribute(), event.value()).save$();
     }
 
     protected void handle(AttachEntity event) {
-
         Entity parent = box.graph().getEntity(event.parent());
         Entity child = box.graph().getEntity(event.child());
 
         if(child == null) return;
-        if(child.parent() == parent) return;
+        for(Entity p = parent;p != null; p = p.parent()) if(p == child) return;
 
         if(child.parent() != null) {
             child.parent().children().remove(child);
@@ -66,7 +58,6 @@ public class EntityMounter extends Mounter {
     }
 
     protected void handle(DetachEntity event) {
-
         Entity parent = box.graph().getEntity(event.parent());
         Entity child = box.graph().getEntity(event.child());
 

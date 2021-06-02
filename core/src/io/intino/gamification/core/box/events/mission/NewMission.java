@@ -1,7 +1,6 @@
-package io.intino.gamification.core.box.events;
+package io.intino.gamification.core.box.events.mission;
 
-import io.intino.gamification.core.box.events.attributes.MissionDifficulty;
-import io.intino.gamification.core.box.events.attributes.MissionType;
+import io.intino.gamification.core.box.events.GamificationEvent;
 
 public class NewMission extends GamificationEvent {
 
@@ -17,8 +16,8 @@ public class NewMission extends GamificationEvent {
         super(message);
     }
 
-    public String player() {
-        return get("player");
+    public String match() {
+        return get("match");
     }
 
     public MissionDifficulty difficulty() {
@@ -33,8 +32,8 @@ public class NewMission extends GamificationEvent {
         return get("description");
     }
 
-    public NewMission player(String player) {
-        set("player", player);
+    public NewMission match(String match) {
+        set("match", match);
         return this;
     }
 

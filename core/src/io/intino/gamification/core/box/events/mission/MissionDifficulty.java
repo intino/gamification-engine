@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.events.attributes;
+package io.intino.gamification.core.box.events.mission;
 
 public enum MissionDifficulty {
     Easy, Medium, Hard;

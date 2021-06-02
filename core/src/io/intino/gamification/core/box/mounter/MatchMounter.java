@@ -2,7 +2,9 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
-import io.intino.gamification.core.box.events.attributes.MatchState;
+import io.intino.gamification.core.box.events.match.BeginMatch;
+import io.intino.gamification.core.box.events.match.EndMatch;
+import io.intino.gamification.core.box.events.match.MatchState;
 import io.intino.gamification.core.graph.Match;
 import io.intino.gamification.core.graph.World;
 
@@ -14,13 +16,13 @@ public class MatchMounter extends Mounter {
 
     @Override
     public void handle(GamificationEvent event) {
-        if(event instanceof MatchBegin) handle((MatchBegin) event);
-        if(event instanceof MatchEnd) handle((MatchEnd) event);
+        if(event instanceof BeginMatch) handle((BeginMatch) event);
+        if(event instanceof EndMatch) handle((EndMatch) event);
     }
 
-    protected void handle(MatchBegin event) {
+    protected void handle(BeginMatch event) {
 
-        World world = box.graph().getWorld(event.world());
+        World world = box.graph().world(event.world());
 
         if(world == null) return;
 
@@ -28,22 +30,22 @@ public class MatchMounter extends Mounter {
 
         if(match != null) return;
 
-        match = box.graph().match(event);
+        match = box.graph().match(event, world);
         world.match(match);
 
         match.save$();
         world.save$();
     }
 
-    protected void handle(MatchEnd event) {
+    protected void handle(EndMatch event) {
 
-        Match match = box.graph().getMatch(event.id());
+        Match match = box.graph().match(event.id());
 
         if(match == null) return;
 
         match.to(event.ts()).state(MatchState.Finished).save$();
 
-        World world = box.graph().getWorld(match);
-        if(world != null) world.match(null).save$();
+        World world = match.world();
+        if(world.match().id().equals(match.id())) world.match(null).save$();
     }
 }

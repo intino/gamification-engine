@@ -9,7 +9,6 @@ import org.example.control.box.graph.mounters.VaccineMounter;
 import org.example.control.graph.ControlGraph;
 import org.example.control.graph.Hospital;
 import org.example.control.graph.Patient;
-import org.example.control.util.HospitalRegistry;
 import org.example.datahub.events.example.Vaccine;
 
 import java.time.Instant;
@@ -36,14 +35,9 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 
 	@Override
 	public void accept(org.example.datahub.events.example.Vaccine event) {
-		treatHospital(event);
 		treatPatient(event);
 		treatVaccine(event);
 		new VaccineMounter(box).handle(event);
-	}
-
-	private void treatHospital(Vaccine event) {
-		if(!graph().contains(event.hospitalName(), Hospital.class)) createHospitalEntity(event);
 	}
 
 	private void treatPatient(Vaccine event) {
@@ -53,13 +47,6 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 
 	private void treatVaccine(Vaccine event) {
 		if(!graph().contains(event.vaccineName(), Vaccine.class)) createVaccineEntity(event);
-	}
-
-	private void createHospitalEntity(org.example.datahub.events.example.Vaccine event) {
-		Map<String, String> attributes = new HashMap<>();
-		attributes.put("name", event.hospitalName());
-		attributes.put("location", HospitalRegistry.locationOf(event.hospitalName()));
-		createEntity(event.hospitalName(), Player, attributes);
 	}
 
 	private void createPatientEntity(org.example.datahub.events.example.Vaccine event) {

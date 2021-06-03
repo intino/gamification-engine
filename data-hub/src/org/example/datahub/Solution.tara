@@ -7,8 +7,10 @@ Broker(path = empty, port = empty, secondaryPort = empty)
 
 Datalake(scale = Month, path = empty) dl
 
+	Tank createHospital as Event(example.CreateHospital)
+	Tank createVaccine as Event(example.CreateVaccine)
 	Tank vaccine as Event(example.Vaccine)
 
 Terminal exampleTerminal
-	Publish (dl.vaccine)
-	Subscribe (dl.vaccine)
+	Publish (dl.createHospital dl.createVaccine dl.vaccine)
+	Subscribe (dl.createHospital dl.createVaccine dl.vaccine)

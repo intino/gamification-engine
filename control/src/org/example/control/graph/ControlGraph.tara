@@ -6,7 +6,14 @@ Concept Hospital
 
 Concept Vaccine
 	var string name
+	var string illness
 	var integer requiredDoseCount
+	var double effectiveness
+	var double price
+
+Concept Illness
+	var string name
+	var double mortality
 
 Concept Patient
 	var string name

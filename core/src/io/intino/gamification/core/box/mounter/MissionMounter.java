@@ -2,6 +2,7 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.box.events.entity.EntityType;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.graph.*;
@@ -35,6 +36,7 @@ public class MissionMounter extends Mounter {
         Entity player = box.graph().entity(event.player());
         Mission mission = box.graph().mission(event.mission());
         if(player == null || mission == null) return;
+        if(!player.type().equals(EntityType.Player)) return;
 
         Match match = player.world().match();
         if(match == null) return;

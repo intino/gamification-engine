@@ -1,7 +1,7 @@
 package io.intino.gamification.core.graph;
 
 import com.google.gson.Gson;
-import io.intino.gamification.core.box.events.attributes.EntityType;
+import io.intino.gamification.core.box.events.entity.EntityType;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

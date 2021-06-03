@@ -1,9 +1,9 @@
 package org.example.control.box.subscribers;
 
 import io.intino.gamification.Engine;
-import io.intino.gamification.core.box.events.Action;
-import io.intino.gamification.core.box.events.CreateEntity;
-import io.intino.gamification.core.box.events.attributes.EntityType;
+import io.intino.gamification.core.box.events.entity.Action;
+import io.intino.gamification.core.box.events.entity.CreateEntity;
+import io.intino.gamification.core.box.events.entity.EntityType;
 import org.example.control.box.ControlBox;
 import org.example.control.box.graph.mounters.VaccineMounter;
 import org.example.control.graph.ControlGraph;
@@ -16,7 +16,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.intino.gamification.core.box.events.attributes.EntityType.*;
+import static io.intino.gamification.core.box.events.entity.EntityType.*;
 
 public class VaccineSubscriber implements java.util.function.Consumer<org.example.datahub.events.example.Vaccine> {
 

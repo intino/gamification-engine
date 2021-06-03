@@ -20,14 +20,13 @@ public class MatchMounter extends Mounter {
         if(event instanceof EndMatch) handle((EndMatch) event);
     }
 
-    protected void handle(BeginMatch event) {
+    private void handle(BeginMatch event) {
+        if(box.graph().existsMatch(event.id())) return;
 
         World world = box.graph().world(event.world());
-
         if(world == null) return;
 
         Match match = world.match();
-
         if(match != null) return;
 
         match = box.graph().match(event, world);
@@ -37,10 +36,9 @@ public class MatchMounter extends Mounter {
         world.save$();
     }
 
-    protected void handle(EndMatch event) {
+    private void handle(EndMatch event) {
 
         Match match = box.graph().match(event.id());
-
         if(match == null) return;
 
         match.to(event.ts()).state(MatchState.Finished).save$();

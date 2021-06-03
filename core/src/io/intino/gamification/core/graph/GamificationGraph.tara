@@ -24,16 +24,30 @@ Concept MissionState is decorable
 	var Mission mission
 	var string stateName
 
-
-
-
-
-
+Concept Entity is decorable
+	var string id
+	var string typeName
+	var boolean enabled = true
+	var World world
+	var integer level = 1
+	var integer score = 0
+	var double health = 100
+	var string attributes
+	var Entity parent
+	var Entity[] children
 
 Concept EntityState
 	var Entity player
 	var integer score
 	var MissionState[] missionState
+
+
+
+
+
+
+
+
 
 Concept Achievement is decorable
 	var string id
@@ -45,15 +59,3 @@ Concept AchievementState is decorable
 	var string match
 	var string player
 	var string stateName
-
-Concept Entity is decorable
-	var string id
-	var string typeName
-	var boolean enabled
-	var World world
-	var integer level
-	var integer score
-	var double health
-	var string attributes
-	var Entity parent
-	var Entity[] children

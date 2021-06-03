@@ -1,4 +1,6 @@
-package io.intino.gamification.core.box.events;
+package io.intino.gamification.core.box.events.entity;
+
+import io.intino.gamification.core.box.events.GamificationEvent;
 
 public class DetachEntity extends GamificationEvent {
 

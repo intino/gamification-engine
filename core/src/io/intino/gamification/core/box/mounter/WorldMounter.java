@@ -1,7 +1,7 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.DestroyEntity;
+import io.intino.gamification.core.box.events.entity.DestroyEntity;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
@@ -24,7 +24,8 @@ public class WorldMounter extends Mounter {
     }
 
     private void handle(CreateWorld event) {
-        if(!box.graph().existWorld(event.id())) box.graph().world(event).save$();
+        if(box.graph().existsWorld(event.id())) return;
+        box.graph().world(event).save$();
     }
 
     private void handle(DestroyWorld event) {

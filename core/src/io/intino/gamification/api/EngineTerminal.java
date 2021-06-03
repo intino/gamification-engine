@@ -2,14 +2,14 @@ package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
+import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.events.mission.NewMission;
-import io.intino.gamification.core.box.mounter.AchievementMounter;
-import io.intino.gamification.core.box.mounter.EntityMounter;
-import io.intino.gamification.core.box.mounter.MatchMounter;
-import io.intino.gamification.core.box.mounter.MissionMounter;
+import io.intino.gamification.core.box.events.world.CreateWorld;
+import io.intino.gamification.core.box.events.world.DestroyWorld;
+import io.intino.gamification.core.box.mounter.*;
 
 public class EngineTerminal {
 
@@ -19,32 +19,12 @@ public class EngineTerminal {
         this.box = box;
     }
 
-    public void feed(ModifyAchievement event) {
-        box.mounter(AchievementMounter.class).handle(event);
+    public void feed(CreateWorld event) {
+        box.mounter(WorldMounter.class).handle(event);
     }
 
-    public void feed(AchievementNewState event) {
-        box.mounter(AchievementMounter.class).handle(event);
-    }
-
-    public void feed(Action event) {
-        box.mounter(EntityMounter.class).handle(event);
-    }
-
-    public void feed(AttachEntity event) {
-        box.mounter(EntityMounter.class).handle(event);
-    }
-
-    public void feed(DestroyEntity event) {
-        box.mounter(EntityMounter.class).handle(event);
-    }
-
-    public void feed(DetachEntity event) {
-        box.mounter(EntityMounter.class).handle(event);
-    }
-
-    public void feed(CreateEntity event) {
-        box.mounter(EntityMounter.class).handle(event);
+    public void feed(DestroyWorld event) {
+        box.mounter(WorldMounter.class).handle(event);
     }
 
     public void feed(BeginMatch event) {
@@ -61,5 +41,38 @@ public class EngineTerminal {
 
     public void feed(NewStateMission event) {
         box.mounter(MissionMounter.class).handle(event);
+    }
+
+    public void feed(CreateEntity event) {
+        box.mounter(EntityMounter.class).handle(event);
+    }
+
+    public void feed(DestroyEntity event) {
+        box.mounter(EntityMounter.class).handle(event);
+    }
+
+    public void feed(AttachEntity event) {
+        box.mounter(EntityMounter.class).handle(event);
+    }
+
+    public void feed(DetachEntity event) {
+        box.mounter(EntityMounter.class).handle(event);
+    }
+
+    public void feed(Action event) {
+        box.mounter(EntityMounter.class).handle(event);
+    }
+
+
+
+
+
+
+    public void feed(ModifyAchievement event) {
+        box.mounter(AchievementMounter.class).handle(event);
+    }
+
+    public void feed(AchievementNewState event) {
+        box.mounter(AchievementMounter.class).handle(event);
     }
 }

@@ -1,7 +1,6 @@
-package io.intino.gamification.core.box.events;
+package io.intino.gamification.core.box.events.entity;
 
-import io.intino.gamification.core.box.events.attributes.EntityType;
-import io.intino.gamification.core.graph.World;
+import io.intino.gamification.core.box.events.GamificationEvent;
 
 import java.util.Map;
 

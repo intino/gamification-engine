@@ -1,5 +1,7 @@
 package io.intino.gamification.core.graph;
 
+import com.google.gson.Gson;
+import io.intino.gamification.core.box.events.entity.CreateEntity;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.MatchState;
 import io.intino.gamification.core.box.events.mission.NewMission;
@@ -34,30 +36,6 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return achievementStateList(a -> a.achievement().equals(achievement)).collect(Collectors.toList());
 	}
 
-	public Match getMatch(String id) {
-		return matchList(m -> m.id().equals(id)).findFirst().orElse(null);
-	}
-
-	public Mission getMission(String id) {
-		return missionList(m -> m.id().equals(id)).findFirst().orElse(null);
-	}
-
-	public World getWorld(String id) {
-		return worldList(w -> w.id().equals(id)).findFirst().orElse(null);
-	}
-
-	public World getWorld(Match match) {
-		return worldList(w -> w.match().id().equals(match.id())).findFirst().orElse(null);
-	}
-
-	public Entity entity(CreateEntity event, World world) {
-		return create(Stash.Entity.name()).entity(event.id(), event.type().name(), true, world, 1, 0, 100, new Gson().toJson(event.attributes()), null, new ArrayList<>());
-	}
-
-	public EntityState entityState(Entity event) {
-		return create(Stash.EntityState.name()).entityState(event.id(), 0);
-	}
-
 	public Achievement achievement(CreateAchievement event) {
 		return create(Stash.Achievement.name()).achievement(event.id(), event.type().name(), event.description());
 	}
@@ -66,9 +44,16 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return create(Stash.AchievementState.name()).achievementState(achievement, event.match(), event.player(), event.state().name());
 	}
 
+	public EntityState entityState(String id) {
+		return entityStateList(e -> e.player().id().equals(id)).findFirst().orElse(null);
+	}
+
 	*/
 
-	public boolean existWorld(String id) {
+
+
+
+	public boolean existsWorld(String id) {
 		return worldList().stream().anyMatch(w -> w.id().equals(id));
 	}
 
@@ -78,6 +63,10 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	public World world(CreateWorld event) {
 		return create(Stash.World.name()).world(event.id(), new ArrayList<>(), null);
+	}
+
+	public boolean existsMatch(String id) {
+		return matchList().stream().anyMatch(m -> m.id().equals(id));
 	}
 
 	public Match match(String id) {
@@ -92,6 +81,14 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return create(Stash.Match.name()).match(event.id(), world, event.ts(), null, MatchState.Started.name(), new ArrayList<>(), new ArrayList<>());
 	}
 
+	public boolean existsMission(String id) {
+		return missionList().stream().anyMatch(m -> m.id().equals(id));
+	}
+
+	public Mission mission(String id) {
+		return missionList(m -> m.id().equals(id)).findFirst().orElse(null);
+	}
+
 	public Mission mission(NewMission event) {
 		return create(Stash.Mission.name()).mission(event.id(), event.difficulty().name(), event.type().name(), event.description());
 	}
@@ -100,11 +97,19 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return create(Stash.MissionState.name()).missionState(mission, event.state().name());
 	}
 
-	public EntityState entityState(String id) {
-		return entityStateList(e -> e.player().id().equals(id)).findFirst().orElse(null);
+	public boolean existsEntity(String id) {
+		return entityList().stream().anyMatch(e -> e.id().equals(id));
 	}
 
-	public EntityState entityState(NewStateMission event) {
-		return create(Stash.EntityState.name())
+	public Entity entity(String id) {
+		return entityList(e -> e.id().equals(id)).findFirst().orElse(null);
+	}
+
+	public Entity entity(CreateEntity event, World world) {
+		return create(Stash.Entity.name()).entity(event.id(), event.type().name(), world, new Gson().toJson(event.attributes()), null, new ArrayList<>());
+	}
+
+	public EntityState entityState(Entity player) {
+		return create(Stash.EntityState.name()).entityState(player, 0, new ArrayList<>());
 	}
 }

@@ -18,10 +18,10 @@ public class MissionMounter extends Mounter {
         if(event instanceof NewStateMission) handle((NewStateMission) event);
     }
 
-    protected void handle(NewMission event) {
+    private void handle(NewMission event) {
+        if(box.graph().existsMission(event.id())) return;
 
         Match match = box.graph().match(event.match());
-
         if(match == null) return;
 
         Mission mission = box.graph().mission(event);
@@ -31,22 +31,32 @@ public class MissionMounter extends Mounter {
         match.save$();
     }
 
-    protected void handle(NewStateMission event) {
+    private void handle(NewStateMission event) {
+        Entity player = box.graph().entity(event.player());
+        Mission mission = box.graph().mission(event.mission());
+        if(player == null || mission == null) return;
 
-        EntityState playerState = box.graph().entityState(event.player());
+        Match match = player.world().match();
+        if(match == null) return;
 
-        if(playerState == null) {
-            playerState = box.graph().entityState(event);
-            playerState.save$();
-        }
-
-        MissionState missionState = playerState.missionState(m -> m.mission().id().equals(event.mission())).stream()
+        EntityState entityState = match.entitiesState().stream()
+                .filter(es -> es.player().id().equals(event.player()))
                 .findFirst().orElse(null);
 
-        if(missionState == null) {
-            missionState = box.graph().missionState(event);
+        if(entityState == null) entityState = box.graph().entityState(player);
+
+        MissionState missionState = entityState.missionState().stream()
+                .filter(ms -> ms.mission().id().equals(event.mission()))
+                .findFirst().orElse(null);
+
+        if(missionState != null) {
+            missionState.state(event.state());
+            missionState.save$();
+        } else {
+            missionState = box.graph().missionState(event, mission);
         }
 
-        missionState.state(event.state()).save$();
+        entityState.missionState().add(missionState);
+        entityState.save$();
     }
 }

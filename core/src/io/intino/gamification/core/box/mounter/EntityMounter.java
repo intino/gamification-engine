@@ -2,6 +2,7 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.*;
+import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.graph.Entity;
 import io.intino.gamification.core.graph.EntityState;
 import io.intino.gamification.core.graph.World;
@@ -21,13 +22,20 @@ public class EntityMounter extends Mounter {
         else if(event instanceof DetachEntity) handle((DetachEntity) event);
     }
 
-    protected void handle(CreateEntity event) {
-        World world = box.graph().getWorld(event.world());
+    private void handle(CreateEntity event) {
+        if(box.graph().existsEntity(event.id())) return;
+
+        World world = box.graph().world(event.world());
         if(world == null) return;
-        box.graph().entity(event, world).save$();
+
+        Entity entity = box.graph().entity(event, world);
+        world.entities().add(entity);
+
+        entity.save$();
+        world.save$();
     }
 
-    protected void handle(DestroyEntity event) {
+    /*private void handle(DestroyEntity event) {
 
         Entity entity = box.graph().getEntity(event.id());
         if(entity == null) return;
@@ -35,7 +43,7 @@ public class EntityMounter extends Mounter {
         entity.delete$();
     }
 
-    protected void handle(Action event) {
+    private void handle(Action event) {
 
         Entity entity = box.graph().getEntity(event.entity());
 
@@ -47,6 +55,53 @@ public class EntityMounter extends Mounter {
 
         entity.set(event.attribute(), newValue);
         entity.save$();
+    }*/
+
+    private void handle(AttachEntity event) {
+
+        Entity parent = box.graph().entity(event.parent());
+        Entity child = box.graph().entity(event.child());
+
+        if(child == null || parent == null) return;
+        if(child.parent().id().equals(parent.id())) return;
+        for(Entity p = parent; p != null; p = p.parent()) if(p.id().equals(child.id())) return;
+
+        if(child.parent() != null) {
+            child.parent().children().remove(child);
+            child.parent().save$();
+        }
+
+        child.parent(parent);
+        parent.children().add(child);
+
+        child.save$();
+        parent.save$();
+    }
+
+    /*private void handle(DetachEntity event) {
+
+        Entity parent = box.graph().getEntity(event.parent());
+        Entity child = box.graph().getEntity(event.child());
+
+        if(child == null || parent == null) return;
+        if(child.parent() != parent) return;
+
+        child.parent(null);
+        child.save$();
+
+        parent.children().remove(child);
+        parent.save$();
+    }*/
+
+    /*private void changeMatchRelativeScore(Entity entity, int scoreDiff) {
+        EntityState entityState = entity.world().match().entitiesState().stream()
+                .filter(e -> e.id().equals(entity.id()))
+                .findFirst().orElse(null);
+        if(entityState == null) {
+            box.graph().entityState(entity).score(scoreDiff).save$();
+        } else {
+            entityState.score(entityState.score() + scoreDiff).save$();
+        }
     }
 
     private String applyAction(Entity entity, String type, String value) {
@@ -60,53 +115,5 @@ public class EntityMounter extends Mounter {
             default:
                 return value;
         }
-    }
-
-    protected void handle(AttachEntity event) {
-
-        Entity parent = box.graph().getEntity(event.parent());
-        Entity child = box.graph().getEntity(event.child());
-
-        if(child == null) return;
-        for(Entity p = parent;p != null; p = p.parent()) if(p == child) return;
-
-        if(child.parent() != null) {
-            child.parent().children().remove(child);
-            child.parent().save$();
-        }
-
-        child.parent(parent);
-        child.save$();
-
-        if(parent != null) {
-            parent.children().add(child);
-            parent.save$();
-        }
-    }
-
-    protected void handle(DetachEntity event) {
-
-        Entity parent = box.graph().getEntity(event.parent());
-        Entity child = box.graph().getEntity(event.child());
-
-        if(child == null || parent == null) return;
-        if(child.parent() != parent) return;
-
-        child.parent(null);
-        child.save$();
-
-        parent.children().remove(child);
-        parent.save$();
-    }
-
-    private void changeMatchRelativeScore(Entity entity, int scoreDiff) {
-        EntityState entityState = entity.world().match().entitiesState().stream()
-                .filter(e -> e.id().equals(entity.id()))
-                .findFirst().orElse(null);
-        if(entityState == null) {
-            box.graph().entityState(entity).score(scoreDiff).save$();
-        } else {
-            entityState.score(entityState.score() + scoreDiff).save$();
-        }
-    }
+    }*/
 }

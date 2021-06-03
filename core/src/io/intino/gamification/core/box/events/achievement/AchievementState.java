@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.events.attributes;
+package io.intino.gamification.core.box.events.achievement;
 
 public enum AchievementState {
     Achieved, Failed, Pending;

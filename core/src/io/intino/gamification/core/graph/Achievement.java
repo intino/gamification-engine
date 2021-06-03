@@ -1,6 +1,6 @@
 package io.intino.gamification.core.graph;
 
-import io.intino.gamification.core.box.events.attributes.AchievementType;
+import io.intino.gamification.core.box.events.achievement.AchievementType;
 
 public class Achievement extends AbstractAchievement {
 

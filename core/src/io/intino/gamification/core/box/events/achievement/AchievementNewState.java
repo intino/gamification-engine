@@ -1,6 +1,6 @@
-package io.intino.gamification.core.box.events;
+package io.intino.gamification.core.box.events.achievement;
 
-import io.intino.gamification.core.box.events.attributes.AchievementState;
+import io.intino.gamification.core.box.events.GamificationEvent;
 
 public class AchievementNewState extends GamificationEvent {
 
@@ -16,21 +16,12 @@ public class AchievementNewState extends GamificationEvent {
         super(message);
     }
 
-    public String match() {
-        return get("match");
-    }
-
     public String player() {
         return get("player");
     }
 
     public AchievementState state() {
         return getAsEnum("state", AchievementState.class);
-    }
-
-    public AchievementNewState match(String match) {
-        set("match", match);
-        return this;
     }
 
     public AchievementNewState player(String player) {

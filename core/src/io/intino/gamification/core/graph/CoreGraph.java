@@ -1,5 +1,7 @@
 package io.intino.gamification.core.graph;
 
+import io.intino.gamification.core.box.events.achievement.AchievementNewState;
+import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.entity.CreateEntity;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.MatchState;
@@ -78,6 +80,10 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	public Player player(String id) {
 		return playerList(p -> p.id().equals(id)).findFirst().orElse(null);
+	}
+
+	public Player player(List<Entity> entities, String id) {
+		return entities.stream().filter(e -> e instanceof Player).map(e -> (Player) e).filter(p -> p.id().equals(id)).findFirst().orElse(null);
 	}
 
 	//Get por evento
@@ -184,15 +190,35 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return create(Stash.MissionState.name()).missionState(mission, event.state().name());
 	}
 
-	/* ACHIEVEMENT ------------------------------------------------------------------------------------------------------ */
+    /* ACHIEVEMENT ------------------------------------------------------------------------------------------------------ */
 
 	//Exists
 
-	//Get por id
+	public Achievement achievement(String id) {
+		return achievementList(a -> a.id().equals(id)).findFirst().orElse(null);
+	}
 
 	//Get por evento
 
 	//Get list
 
-	//Create
+	public Achievement achievement(CreateAchievement event) {
+		return create(Stash.Achievement.name()).achievement(event.id(), event.context(), event.type().name(), event.description());
+	}
+
+	/* ACHIEVEMENT STATE ------------------------------------------------------------------------------------------------------ */
+
+	//Exists
+
+	public AchievementState achievementState(List<AchievementState> achievementState, String id) {
+		return achievementState.stream().filter(as -> as.achievement().id().equals(id)).findFirst().orElse(null);
+	}
+
+	//Get por evento
+
+	//Get list
+
+	public AchievementState achievementState(AchievementNewState event, Achievement achievement) {
+		return create(Stash.AchievementState.name()).achievementState(achievement, event.state().name());
+	}
 }

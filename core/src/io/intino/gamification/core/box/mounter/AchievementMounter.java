@@ -1,12 +1,12 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.*;
-import io.intino.gamification.core.graph.Achievement;
-import io.intino.gamification.core.graph.AchievementState;
-import io.intino.magritte.framework.Layer;
-
-import java.util.List;
+import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.box.events.achievement.AchievementNewState;
+import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.box.events.achievement.CreateAchievement;
+import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
+import io.intino.gamification.core.graph.*;
 
 public class AchievementMounter extends Mounter {
 
@@ -17,49 +17,72 @@ public class AchievementMounter extends Mounter {
     @Override
     public void handle(GamificationEvent event) {
         if(event instanceof CreateAchievement) handle((CreateAchievement) event);
-        if(event instanceof ModifyAchievement) handle((ModifyAchievement) event);
-        if(event instanceof DeleteAchievement) handle((DeleteAchievement) event);
-        if(event instanceof AchievementNewState) handle((AchievementNewState) event);
+        else if(event instanceof DeleteAchievement) handle((DeleteAchievement) event);
+        else if(event instanceof AchievementNewState) handle((AchievementNewState) event);
     }
 
-    protected void handle(CreateAchievement event) {
-
-        Achievement achievement = box.graph().getAchievement(event.id());
-
+    private void handle(CreateAchievement event) {
+        Achievement achievement = box.graph().achievement(event.id());
         if(achievement != null) return;
 
-        box.graph().achievement(event).save$();
+        achievement = box.graph().achievement(event);
+        if(event.type().equals(AchievementType.Local)) {
+            Match match = box.graph().match(event.context());
+            if(match == null) return;
+            match.localAchievements().add(achievement);
+            match.save$();
+        } else {
+            World world = box.graph().world(event.context());
+            if(world == null) return;
+            world.globalAchievements().add(achievement);
+            world.save$();
+        }
+        achievement.save$();
     }
 
-    protected void handle(ModifyAchievement event) {
-
-        Achievement achievement = box.graph().getAchievement(event.id());
-
+    private void handle(DeleteAchievement event) {
+        Achievement achievement = box.graph().achievement(event.id());
         if(achievement == null) return;
-
-        achievement.type(event.type())
-                .description(event.description())
-                .save$();
-    }
-
-    protected void handle(DeleteAchievement event) {
-
-        Achievement achievement = box.graph().getAchievement(event.id());
-
-        if(achievement == null) return;
-
-        List<AchievementState> states = box.graph().getAchievementStates(achievement);
-
+        if(achievement.type().equals(AchievementType.Local)) {
+            Match match = box.graph().match(achievement.context());
+            match.localAchievements().remove(achievement);
+            match.playersState().forEach(ps -> {
+                AchievementState achievementState = box.graph().achievementState(ps.localAchievementState(), achievement.id());
+                if(achievementState != null) achievementState.delete$();
+            });
+            match.save$();
+        } else {
+            World world = box.graph().world(achievement.context());
+            world.globalAchievements().remove(achievement);
+            //TODO
+            world.entities(e -> e instanceof Player).stream().
+                    map(e -> (Player) e)
+                    .forEach(p -> {
+                        AchievementState achievementState = box.graph().achievementState(p.globalAchievementState(), achievement.id());
+                        if(achievementState != null) achievementState.delete$();
+                    });
+            world.save$();
+        }
         achievement.delete$();
-        states.forEach(Layer::delete$);
     }
 
-    protected void handle(AchievementNewState event) {
-
-        Achievement achievement = box.graph().getAchievement(event.id());
-
+    private void handle(AchievementNewState event) {
+        Achievement achievement = box.graph().achievement(event.id());
         if(achievement == null) return;
-
-        box.graph().achievementState(event, achievement).save$();
+        if(achievement.type().equals(AchievementType.Local)) {
+            Match match = box.graph().match(achievement.context());
+            PlayerState playerState = box.graph().playerState(match.playersState(), event.player());
+            if(playerState == null) return;
+            AchievementState achievementState = box.graph().achievementState(event, achievement);
+            playerState.localAchievementState().add(achievementState);
+            playerState.save$();
+        } else {
+            World world = box.graph().world(achievement.context());
+            Player player = box.graph().player(world.entities(), event.player());
+            if(player == null) return;
+            AchievementState achievementState = box.graph().achievementState(event, achievement);
+            player.globalAchievementState().add(achievementState);
+            player.save$();
+        }
     }
 }

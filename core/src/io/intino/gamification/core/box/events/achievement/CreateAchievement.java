@@ -1,6 +1,6 @@
-package io.intino.gamification.core.box.events;
+package io.intino.gamification.core.box.events.achievement;
 
-import io.intino.gamification.core.box.events.attributes.AchievementType;
+import io.intino.gamification.core.box.events.GamificationEvent;
 
 public class CreateAchievement extends GamificationEvent {
 
@@ -16,12 +16,21 @@ public class CreateAchievement extends GamificationEvent {
         super(message);
     }
 
+    public String context() {
+        return get("context");
+    }
+
     public String description() {
         return get("description");
     }
 
     public AchievementType type() {
         return getAsEnum("type", AchievementType.class);
+    }
+
+    public CreateAchievement context(String context) {
+        set("context", context);
+        return this;
     }
 
     public CreateAchievement description(String description) {

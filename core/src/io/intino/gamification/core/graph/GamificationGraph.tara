@@ -55,7 +55,7 @@ Concept PlayerState
 
 Concept Achievement is decorable
 	var string id
-	//var World world
+	var string context
 	var string typeName
 	var string description
 

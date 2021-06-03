@@ -1,10 +1,12 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.entity.DestroyEntity;
+import io.intino.gamification.core.box.events.DeleteAchievement;
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.box.events.entity.DestroyEntity;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
+import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Entity;
 import io.intino.gamification.core.graph.World;
 import io.intino.magritte.framework.Layer;
@@ -30,22 +32,34 @@ public class WorldMounter extends Mounter {
 
     private void handle(DestroyWorld event) {
         World world = box.graph().world(event.id());
-        if(world != null) {
-            world.entities().forEach(e -> box.engineTerminal().feed(destroyEntityEvent(e)));
+        if(world == null) return;
 
-            box.graph().matchesIn(world).forEach(m -> {
-                m.missions().forEach(Layer::delete$);
+        world.globalAchievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
+        world.entities().forEach(e -> box.engineTerminal().feed(destroyEntityEvent(e)));
 
-                m.entitiesState().forEach(es -> {
-                    es.missionState().forEach(Layer::delete$);
-                    es.delete$();
-                });
-
-                m.delete$();
+        box.graph().matchesIn(world).forEach(ma -> {
+            ma.missions().forEach(mi -> {
+                box.graph().missionStateOf(mi).forEach(Layer::delete$);
+                mi.delete$();
             });
 
-            world.delete$();
-        }
+            ma.localAchievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
+
+            ma.playersState().forEach(ps -> {
+                ps.missionState().forEach(Layer::delete$);
+                ps.localAchievementState().forEach(Layer::delete$);
+                ps.delete$();
+            });
+
+            ma.delete$();
+        });
+
+        world.delete$();
+    }
+
+    private DeleteAchievement deleteAchievement(Achievement achievement) {
+        //TODO
+        return null;
     }
 
     private DestroyEntity destroyEntityEvent(Entity entity) {

@@ -51,11 +51,11 @@ public class EngineTerminal {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void feed(AttachEntity event) {
+    public void feed(PickUpItem event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void feed(DetachEntity event) {
+    public void feed(DropItem event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 
@@ -69,6 +69,10 @@ public class EngineTerminal {
 
 
     public void feed(ModifyAchievement event) {
+        box.mounter(AchievementMounter.class).handle(event);
+    }
+
+    public void feed(DeleteAchievement event) {
         box.mounter(AchievementMounter.class).handle(event);
     }
 

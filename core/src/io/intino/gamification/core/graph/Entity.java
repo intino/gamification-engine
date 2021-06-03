@@ -1,13 +1,13 @@
 package io.intino.gamification.core.graph;
 
-import com.google.gson.Gson;
-import io.intino.gamification.core.box.events.entity.EntityType;
-
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-public class Entity extends AbstractEntity {
+import static io.intino.gamification.core.box.events.helper.Math.*;
+
+public abstract class Entity extends AbstractEntity {
 
 	public static final double MIN_HEALTH = 0.0;
 	public static final double MAX_HEALTH = 100.0;
@@ -25,59 +25,42 @@ public class Entity extends AbstractEntity {
 			AttributeListeners.remove(attributeName);
 	}
 
-	private final Map<String, String> attributesMap;
+	protected Map<String, AttributeHandler> attributesMap = new HashMap<>();
 
-	@SuppressWarnings("unchecked")
 	public Entity(io.intino.magritte.framework.Node node) {
 		super(node);
-		attributesMap = (Map<String, String>) new Gson().fromJson(attributes(), Map.class);
+		this.attributesMap.put("level", new AttributeHandler() {
+			@Override
+			public void set(Object value) {
+				level(asInt(value));
+			}
+
+			@Override
+			public String get() {
+				return String.valueOf(level());
+			}
+		});
+
+		this.attributesMap.put("health", new AttributeHandler() {
+			@Override
+			public void set(Object value) {
+				health(clamp(asDouble(value), MIN_HEALTH, MAX_HEALTH));
+			}
+
+			@Override
+			public String get() {
+				return String.valueOf(health());
+			}
+		});
 	}
 
 	public String get(String name) {
-		return attributesMap.get(name);
-	}
-
-	public <T> T get(String name, Function<String, T> mapper) {
-		return mapper.apply(get(name));
+		return attributesMap.get(name).get();
 	}
 
 	public Entity set(String name, Object value) {
-		if(isPrimaryAttribute(name, value)) return this;
-		attributesMap.put(name, String.valueOf(value));
-		return this;
-	}
-
-	private boolean isPrimaryAttribute(String name, Object value) {
-		switch(name) {
-			case "level":  return level(asInt(value)) != null;
-			case "score":  return score(asInt(value)) != null;
-			case "health": return health(clamp(asDouble(value), MIN_HEALTH, MAX_HEALTH)) != null;
-		}
-		return false;
-	}
-
-	private double asDouble(Object value) {
-		if(value == null) return 0.0;
-		return value instanceof Number ? ((Number)value).doubleValue() : Double.parseDouble(String.valueOf(value));
-	}
-
-	private int asInt(Object value) {
-		if(value == null) return 0;
-		return value instanceof Number ? ((Number)value).intValue() : Integer.parseInt(String.valueOf(value));
-	}
-
-	@Override
-	public void save$() {
-		attributes = new Gson().toJson(attributesMap);
-		super.save$();
-	}
-
-	public EntityType type() {
-		return EntityType.valueOf(typeName);
-	}
-
-	public Entity type(EntityType type) {
-		typeName(type.name());
+		AttributeHandler consumer = attributesMap.get(name);
+		if(consumer != null) consumer.set(value);
 		return this;
 	}
 
@@ -106,7 +89,8 @@ public class Entity extends AbstractEntity {
 		}
 	}
 
-	private double clamp(double value, double min, double max) {
-		return Math.min(Math.max(min, value), max);
+	protected interface AttributeHandler {
+		void set(Object value);
+		String get();
 	}
 }

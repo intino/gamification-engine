@@ -2,7 +2,6 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.entity.EntityType;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.graph.*;
@@ -33,32 +32,21 @@ public class MissionMounter extends Mounter {
     }
 
     private void handle(NewStateMission event) {
-        Entity player = box.graph().entity(event.player());
+        Player player = box.graph().player(event.player());
         Mission mission = box.graph().mission(event.mission());
         if(player == null || mission == null) return;
-        if(!player.type().equals(EntityType.Player)) return;
 
         Match match = player.world().match();
         if(match == null) return;
 
-        EntityState entityState = match.entitiesState().stream()
-                .filter(es -> es.player().id().equals(event.player()))
-                .findFirst().orElse(null);
+        PlayerState playerState = box.graph().playerState(match.playersState(), event.player());
+        if(playerState == null) playerState = box.graph().playerState(player, match);
 
-        if(entityState == null) entityState = box.graph().entityState(player);
+        MissionState missionState = box.graph().missionState(playerState.missionState(), event.mission());
+        if(missionState == null) missionState = box.graph().missionState(event, mission);
 
-        MissionState missionState = entityState.missionState().stream()
-                .filter(ms -> ms.mission().id().equals(event.mission()))
-                .findFirst().orElse(null);
-
-        if(missionState != null) {
-            missionState.state(event.state());
-            missionState.save$();
-        } else {
-            missionState = box.graph().missionState(event, mission);
-        }
-
-        entityState.missionState().add(missionState);
-        entityState.save$();
+        missionState.state(event.state()).save$();
+        playerState.missionState().add(missionState);
+        playerState.save$();
     }
 }

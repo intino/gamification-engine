@@ -2,20 +2,23 @@ dsl Proteo
 
 Concept World
 	var string id
-	var Entity[] entities
-	var Match match
+	var Achievement[] globalAchievements = empty
+	var Entity[] entities = empty
+	var Match match = empty
 
 Concept Match is decorable
 	var string id
 	var World world
 	var instant from
-	var instant to
+	var instant to = empty
 	var string stateName
-	var Mission[] missions
-	var EntityState[] entitiesState
+	var Mission[] missions = empty
+	var Achievement[] localAchievements = empty
+	var PlayerState[] playersState = empty
 
 Concept Mission is decorable
 	var string id
+	//var World world
 	var string difficultyName
 	var string typeName
 	var string description
@@ -24,38 +27,38 @@ Concept MissionState is decorable
 	var Mission mission
 	var string stateName
 
-Concept Entity is decorable
+Concept Entity is abstract decorable
 	var string id
-	var string typeName
-	var boolean enabled = true
 	var World world
+	var boolean enabled = true
 	var integer level = 1
-	var integer score = 0
 	var double health = 100
-	var string attributes
-	var Entity parent
-	var Entity[] children
 
-Concept EntityState
-	var Entity player
-	var integer score
-	var MissionState[] missionState
+Concept Player extends Entity
+	var integer score = 0
+	var Item[] inventory = empty
+	var AchievementState[] globalAchievementState = empty
 
+Concept Enemy extends Entity
 
+Concept Npc extends Entity
 
+Concept Item extends Entity
+	var Player owner = empty
 
-
-
-
-
+Concept PlayerState
+	var Match match
+	var Player player
+	var integer score = 0
+	var MissionState[] missionState = empty
+	var AchievementState[] localAchievementState = empty
 
 Concept Achievement is decorable
 	var string id
+	//var World world
 	var string typeName
 	var string description
 
 Concept AchievementState is decorable
 	var Achievement achievement
-	var string match
-	var string player
 	var string stateName

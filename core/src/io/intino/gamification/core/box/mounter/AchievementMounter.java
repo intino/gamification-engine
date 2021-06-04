@@ -29,12 +29,12 @@ public class AchievementMounter extends Mounter {
         if(event.type().equals(AchievementType.Local)) {
             Match match = box.graph().match(event.context());
             if(match == null) return;
-            match.localAchievements().add(achievement);
+            match.achievements().add(achievement);
             match.save$();
         } else {
             World world = box.graph().world(event.context());
             if(world == null) return;
-            world.globalAchievements().add(achievement);
+            world.achievements().add(achievement);
             world.save$();
         }
         achievement.save$();
@@ -45,20 +45,20 @@ public class AchievementMounter extends Mounter {
         if(achievement == null) return;
         if(achievement.type().equals(AchievementType.Local)) {
             Match match = box.graph().match(achievement.context());
-            match.localAchievements().remove(achievement);
+            match.achievements().remove(achievement);
             match.playersState().forEach(ps -> {
-                AchievementState achievementState = box.graph().achievementState(ps.localAchievementState(), achievement.id());
+                AchievementState achievementState = box.graph().achievementState(ps.achievements(), achievement.id());
                 if(achievementState != null) achievementState.delete$();
             });
             match.save$();
         } else {
             World world = box.graph().world(achievement.context());
-            world.globalAchievements().remove(achievement);
+            world.achievements().remove(achievement);
             //TODO
             world.entities(e -> e instanceof Player).stream().
                     map(e -> (Player) e)
                     .forEach(p -> {
-                        AchievementState achievementState = box.graph().achievementState(p.globalAchievementState(), achievement.id());
+                        AchievementState achievementState = box.graph().achievementState(p.achievements(), achievement.id());
                         if(achievementState != null) achievementState.delete$();
                     });
             world.save$();
@@ -74,14 +74,14 @@ public class AchievementMounter extends Mounter {
             PlayerState playerState = box.graph().playerState(match.playersState(), event.player());
             if(playerState == null) return;
             AchievementState achievementState = box.graph().achievementState(event, achievement);
-            playerState.localAchievementState().add(achievementState);
+            playerState.achievements().add(achievementState);
             playerState.save$();
         } else {
             World world = box.graph().world(achievement.context());
             Player player = box.graph().player(world.entities(), event.player());
             if(player == null) return;
             AchievementState achievementState = box.graph().achievementState(event, achievement);
-            player.globalAchievementState().add(achievementState);
+            player.achievements().add(achievementState);
             player.save$();
         }
     }

@@ -59,8 +59,8 @@ public abstract class Entity extends AbstractEntity {
 	}
 
 	public Entity set(String name, Object value) {
-		AttributeHandler consumer = attributesMap.get(name);
-		if(consumer != null) consumer.set(value);
+		AttributeHandler handler = attributesMap.get(name);
+		if(handler != null) handler.set(value);
 		return this;
 	}
 

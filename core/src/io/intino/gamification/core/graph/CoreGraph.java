@@ -83,6 +83,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Player player(List<Entity> entities, String id) {
+		//TODO
 		return entities.stream().filter(e -> e instanceof Player).map(e -> (Player) e).filter(p -> p.id().equals(id)).findFirst().orElse(null);
 	}
 

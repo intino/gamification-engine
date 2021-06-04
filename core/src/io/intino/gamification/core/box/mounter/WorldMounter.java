@@ -34,7 +34,7 @@ public class WorldMounter extends Mounter {
         World world = box.graph().world(event.id());
         if(world == null) return;
 
-        world.globalAchievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
+        world.achievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
         world.entities().forEach(e -> box.engineTerminal().feed(destroyEntityEvent(e)));
 
         box.graph().matchesIn(world).forEach(ma -> {
@@ -43,11 +43,11 @@ public class WorldMounter extends Mounter {
                 mi.delete$();
             });
 
-            ma.localAchievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
+            ma.achievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
 
             ma.playersState().forEach(ps -> {
                 ps.missionState().forEach(Layer::delete$);
-                ps.localAchievementState().forEach(Layer::delete$);
+                ps.achievements().forEach(Layer::delete$);
                 ps.delete$();
             });
 

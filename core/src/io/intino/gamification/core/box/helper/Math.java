@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.events.helper;
+package io.intino.gamification.core.box.helper;
 
 public class Math {
 

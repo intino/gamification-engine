@@ -57,10 +57,11 @@ Concept Achievement is decorable
 	var string context
 	var string typeName
 	var string description
-	//var string eventName
-	//var integer maxCount
+	var string eventName
+	var integer maxCount
 
 Concept AchievementState is decorable
 	var Achievement achievement
+	var string context
 	var string stateName
-	//var integer count = 0
+	var integer count = 0

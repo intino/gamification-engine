@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class PickUpItem extends GamificationEvent {
 
     public PickUpItem() {
-        super("PickUpItem");
+        super(PickUpItem.class);
     }
 
     public PickUpItem(io.intino.alexandria.event.Event event) {

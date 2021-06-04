@@ -1,11 +1,12 @@
 package io.intino.gamification.core.box.events.achievement;
 
+import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 
 public class CreateAchievement extends GamificationEvent {
 
     public CreateAchievement() {
-        super("CreateAchievement");
+        super(CreateAchievement.class);
     }
 
     public CreateAchievement(io.intino.alexandria.event.Event event) {
@@ -28,6 +29,14 @@ public class CreateAchievement extends GamificationEvent {
         return getAsEnum("type", AchievementType.class);
     }
 
+    public EventType event() {
+        return getAsEnum("event", EventType.class);
+    }
+
+    public int maxCount() {
+        return getAsInt("maxCount");
+    }
+
     public CreateAchievement context(String context) {
         set("context", context);
         return this;
@@ -40,6 +49,16 @@ public class CreateAchievement extends GamificationEvent {
 
     public CreateAchievement type(AchievementType type) {
         set("type", type);
+        return this;
+    }
+
+    public CreateAchievement event(EventType event) {
+        set("event", event);
+        return this;
+    }
+
+    public CreateAchievement maxCount(int maxCount) {
+        set("maxCount", maxCount);
         return this;
     }
 }

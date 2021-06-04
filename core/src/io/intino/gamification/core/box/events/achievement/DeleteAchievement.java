@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class DeleteAchievement extends GamificationEvent {
 
     public DeleteAchievement() {
-        super("DeleteAchievement");
+        super(DeleteAchievement.class);
     }
 
     public DeleteAchievement(io.intino.alexandria.event.Event event) {

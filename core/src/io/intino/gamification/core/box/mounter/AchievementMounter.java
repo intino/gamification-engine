@@ -15,7 +15,7 @@ public class AchievementMounter extends Mounter {
     }
 
     @Override
-    public void handle(GamificationEvent event) {
+    public void mount(GamificationEvent event) {
         if(event instanceof CreateAchievement) handle((CreateAchievement) event);
         else if(event instanceof DeleteAchievement) handle((DeleteAchievement) event);
         else if(event instanceof AchievementNewState) handle((AchievementNewState) event);
@@ -73,16 +73,26 @@ public class AchievementMounter extends Mounter {
             Match match = box.graph().match(achievement.context());
             PlayerState playerState = box.graph().playerState(match.playersState(), event.player());
             if(playerState == null) return;
-            AchievementState achievementState = box.graph().achievementState(event, achievement);
-            playerState.achievements().add(achievementState);
-            playerState.save$();
+            AchievementState achievementState = box.graph().achievementState(playerState.achievements(), achievement.id());
+            if(achievementState == null) {
+                achievementState = box.graph().achievementState(event, achievement);
+                playerState.achievements().add(achievementState);
+                playerState.save$();
+            }
+            achievementState.state(event.state());
+            achievementState.save$();
         } else {
             World world = box.graph().world(achievement.context());
             Player player = box.graph().player(world.entities(), event.player());
             if(player == null) return;
-            AchievementState achievementState = box.graph().achievementState(event, achievement);
-            player.achievements().add(achievementState);
-            player.save$();
+            AchievementState achievementState = box.graph().achievementState(player.achievements(), achievement.id());
+            if(achievementState == null) {
+                achievementState = box.graph().achievementState(event, achievement);
+                player.achievements().add(achievementState);
+                player.save$();
+            }
+            achievementState.state(event.state());
+            achievementState.save$();
         }
     }
 }

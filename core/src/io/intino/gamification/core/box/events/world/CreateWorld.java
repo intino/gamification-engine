@@ -7,7 +7,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class CreateWorld extends GamificationEvent {
 
     public CreateWorld() {
-        super("CreateWorld");
+        super(CreateWorld.class);
     }
 
     public CreateWorld(Event event) {

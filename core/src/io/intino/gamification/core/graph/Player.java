@@ -1,6 +1,6 @@
 package io.intino.gamification.core.graph;
 
-import static io.intino.gamification.core.box.events.helper.Math.*;
+import static io.intino.gamification.core.box.helper.Math.*;
 
 public class Player extends AbstractPlayer {
 

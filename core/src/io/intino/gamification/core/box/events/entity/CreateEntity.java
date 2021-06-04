@@ -7,7 +7,7 @@ import java.util.Map;
 public class CreateEntity extends GamificationEvent {
 
     public CreateEntity() {
-        super("CreateEntity");
+        super(CreateEntity.class);
     }
 
     public CreateEntity(io.intino.alexandria.event.Event event) {

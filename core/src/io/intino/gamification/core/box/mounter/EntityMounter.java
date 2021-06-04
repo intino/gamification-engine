@@ -12,7 +12,7 @@ public class EntityMounter extends Mounter {
     }
 
     @Override
-    public void handle(GamificationEvent event) {
+    public void mount(GamificationEvent event) {
         if(event instanceof CreateEntity) handle((CreateEntity) event);
         else if(event instanceof DestroyEntity) handle((DestroyEntity) event);
         else if(event instanceof Action) handle((Action) event);

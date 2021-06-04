@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class EndMatch extends GamificationEvent {
 
     public EndMatch() {
-        super("EndMatch");
+        super(EndMatch.class);
     }
 
     public EndMatch(io.intino.alexandria.event.Event event) {

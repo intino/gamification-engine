@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class NewStateMission extends GamificationEvent {
 
     public NewStateMission() {
-        super("NewStateMission");
+        super(NewStateMission.class);
     }
 
     public NewStateMission(io.intino.alexandria.event.Event event) {

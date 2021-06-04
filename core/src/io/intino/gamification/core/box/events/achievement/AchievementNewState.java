@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class AchievementNewState extends GamificationEvent {
 
     public AchievementNewState() {
-        super("AchievementNewState");
+        super(AchievementNewState.class);
     }
 
     public AchievementNewState(io.intino.alexandria.event.Event event) {

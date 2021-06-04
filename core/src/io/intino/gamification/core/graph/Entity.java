@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
-import static io.intino.gamification.core.box.events.helper.Math.*;
+import static io.intino.gamification.core.box.helper.Math.*;
 
 public abstract class Entity extends AbstractEntity {
 

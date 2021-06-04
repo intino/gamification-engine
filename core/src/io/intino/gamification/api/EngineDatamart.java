@@ -42,4 +42,8 @@ public class EngineDatamart {
     public List<Match> matches() {
         return box.graph().matchList();
     }
+
+    public Achievement achievement(String id) {
+        return box.graph().achievement(id);
+    }
 }

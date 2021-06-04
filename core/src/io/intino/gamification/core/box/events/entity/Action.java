@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class Action extends GamificationEvent {
 
     public Action() {
-        super("Action");
+        super(Action.class);
     }
 
     public Action(String type) {

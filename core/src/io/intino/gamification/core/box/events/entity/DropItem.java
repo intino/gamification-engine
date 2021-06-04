@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 public class DropItem extends GamificationEvent {
 
     public DropItem() {
-        super("DropItem");
+        super(DropItem.class);
     }
 
     public DropItem(io.intino.alexandria.event.Event event) {

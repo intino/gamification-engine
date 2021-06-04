@@ -1,5 +1,7 @@
 package io.intino.gamification.core.graph;
 
+import io.intino.gamification.core.box.events.EventType;
+import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.entity.CreateEntity;
@@ -12,6 +14,7 @@ import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
@@ -203,8 +206,13 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	//Get list
 
+	public Map<Achievement, List<AchievementState>> achievement(Class<? extends GamificationEvent> clazz) {
+		return achievementList(a -> a.event().equals(EventType.get(clazz)))
+				.collect(Collectors.toMap(a -> a, this::achievementState));
+	}
+
 	public Achievement achievement(CreateAchievement event) {
-		return create(Stash.Achievement.name()).achievement(event.id(), event.context(), event.type().name(), event.description());
+		return create(Stash.Achievement.name()).achievement(event.id(), event.context(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
 	}
 
 	/* ACHIEVEMENT STATE ------------------------------------------------------------------------------------------------------ */
@@ -217,9 +225,12 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	//Get por evento
 
-	//Get list
+	public List<AchievementState> achievementState(Achievement achievement) {
+		return achievementStateList(as -> as.achievement().id().equals(achievement.id()))
+				.collect(Collectors.toList());
+	}
 
 	public AchievementState achievementState(AchievementNewState event, Achievement achievement) {
-		return create(Stash.AchievementState.name()).achievementState(achievement, event.state().name());
+		return create(Stash.AchievementState.name()).achievementState(achievement, event.state().name(), event.player());
 	}
 }

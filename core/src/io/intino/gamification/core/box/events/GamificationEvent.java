@@ -2,11 +2,16 @@ package io.intino.gamification.core.box.events;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 
 import java.util.List;
 import java.util.Map;
 
 public abstract class GamificationEvent extends io.intino.alexandria.event.Event implements java.io.Serializable {
+
+    public GamificationEvent(Class<? extends GamificationEvent> clazz) {
+        super(clazz.getCanonicalName());
+    }
 
     public GamificationEvent(String type) {
         super(type);

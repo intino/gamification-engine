@@ -20,21 +20,12 @@ public class NewStateMission extends GamificationEvent {
         return get("player");
     }
 
-    public String mission() {
-        return get("mission");
-    }
-
     public MissionState state() {
         return getAsEnum("state", MissionState.class);
     }
 
     public NewStateMission player(String player) {
         set("player", player);
-        return this;
-    }
-
-    public NewStateMission mission(String mission) {
-        set("mission", mission);
         return this;
     }
 

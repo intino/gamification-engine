@@ -61,11 +61,11 @@ public class EntityMounter extends Mounter {
 
     private void handle(PickUpItem event) {
 
-        Player player = box.graph().player(event.player());
-        Item item = box.graph().item(event.item());
+        Item item = box.graph().item(event.id());
+        if(item == null || item.owner() != null) return;
 
-        if(player == null || item == null) return;
-        if(item.owner() != null) return;
+        Player player = box.graph().player(event.player());
+        if(player == null) return;
 
         player.inventory().add(item);
         item.owner(player);
@@ -76,7 +76,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(DropItem event) {
 
-        Item item = box.graph().item(event.item());
+        Item item = box.graph().item(event.id());
         if(item == null) return;
 
         Player player = item.owner();

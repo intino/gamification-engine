@@ -9,6 +9,8 @@ import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
 import io.intino.gamification.core.graph.*;
 import io.intino.magritte.framework.Layer;
 
+import static io.intino.gamification.core.box.events.achievement.AchievementState.Pending;
+
 public class AchievementMounter extends Mounter {
 
     public AchievementMounter(CoreBox box) {
@@ -76,7 +78,7 @@ public class AchievementMounter extends Mounter {
                 playerState.save$();
             }
         } else {
-            achievementState.state(event.state());
+            if(achievementState.state().equals(Pending)) achievementState.state(event.state());
         }
 
         achievementState.save$();

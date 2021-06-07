@@ -9,6 +9,8 @@ import io.intino.gamification.core.graph.*;
 
 import java.time.Instant;
 
+import static io.intino.gamification.core.box.events.mission.MissionState.Pending;
+
 public class MissionMounter extends Mounter {
 
     public MissionMounter(CoreBox box) {
@@ -28,7 +30,7 @@ public class MissionMounter extends Mounter {
         Match match = box.graph().match(event.match());
         if(match == null) return;
 
-        mission = box.graph().mission(event);
+        mission = box.graph().mission(event, match);
         match.missions().add(mission);
 
         mission.save$();
@@ -54,7 +56,7 @@ public class MissionMounter extends Mounter {
             playerState.missionState().add(missionState);
             playerState.save$();
         } else {
-            missionState.state(event.state());
+            if(missionState.state().equals(Pending)) missionState.state(event.state());
         }
 
         missionState.save$();

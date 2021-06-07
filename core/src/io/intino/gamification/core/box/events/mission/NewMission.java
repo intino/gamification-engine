@@ -1,5 +1,6 @@
 package io.intino.gamification.core.box.events.mission;
 
+import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 
 public class NewMission extends GamificationEvent {
@@ -32,6 +33,14 @@ public class NewMission extends GamificationEvent {
         return get("description");
     }
 
+    public EventType event() {
+        return getAsEnum("event", EventType.class);
+    }
+
+    public int maxCount() {
+        return getAsInt("maxCount");
+    }
+
     public NewMission match(String match) {
         set("match", match);
         return this;
@@ -49,6 +58,16 @@ public class NewMission extends GamificationEvent {
 
     public NewMission description(String description) {
         set("description", description);
+        return this;
+    }
+
+    public NewMission event(EventType event) {
+        set("event", event);
+        return this;
+    }
+
+    public NewMission maxCount(int maxCount) {
+        set("maxCount", maxCount);
         return this;
     }
 }

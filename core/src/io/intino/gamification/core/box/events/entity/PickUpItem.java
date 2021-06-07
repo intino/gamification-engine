@@ -20,17 +20,8 @@ public class PickUpItem extends GamificationEvent {
         return get("player");
     }
 
-    public String item() {
-        return get("item");
-    }
-
     public PickUpItem player(String player) {
         set("player", player);
-        return this;
-    }
-
-    public PickUpItem item(String item) {
-        set("item", item);
         return this;
     }
 }

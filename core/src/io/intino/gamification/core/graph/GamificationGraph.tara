@@ -56,7 +56,6 @@ Concept PlayerState
 Concept Achievement is decorable
 	var string id
 	var Context context
-	//var string typeName
 	var string description
 	var string eventName
 	var integer maxCount

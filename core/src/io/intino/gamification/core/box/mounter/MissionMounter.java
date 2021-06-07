@@ -33,7 +33,7 @@ public class MissionMounter extends Mounter {
     }
 
     private void handle(NewStateMission event) {
-        Mission mission = box.graph().mission(event.mission());
+        Mission mission = box.graph().mission(event.id());
         if(mission == null) return;
 
         Player player = box.graph().player(event.player());

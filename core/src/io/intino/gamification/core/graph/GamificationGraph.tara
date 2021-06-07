@@ -1,19 +1,19 @@
 dsl Proteo
 
-Concept World
+Concept Context is abstract decorable
 	var string id
 	var Achievement[] achievements = empty
+
+Concept World extends Context
 	var Entity[] entities = empty
 	var Match match = empty
 
-Concept Match is decorable
-	var string id
+Concept Match extends Context
 	var World world
 	var instant from
 	var instant to = empty
 	var string stateName
 	var Mission[] missions = empty
-	var Achievement[] achievements = empty
 	var PlayerState[] playersState = empty
 
 Concept Mission is decorable
@@ -24,6 +24,7 @@ Concept Mission is decorable
 
 Concept MissionState is decorable
 	var Mission mission
+	var Player player
 	var string stateName
 
 Concept Entity is abstract decorable
@@ -54,14 +55,14 @@ Concept PlayerState
 
 Concept Achievement is decorable
 	var string id
-	var string context
-	var string typeName
+	var Context context
+	//var string typeName
 	var string description
 	var string eventName
 	var integer maxCount
 
 Concept AchievementState is decorable
 	var Achievement achievement
-	var string context
+	var Player player
 	var string stateName
 	var integer count = 0

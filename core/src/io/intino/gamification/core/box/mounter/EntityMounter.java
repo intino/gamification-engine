@@ -21,11 +21,16 @@ public class EntityMounter extends Mounter {
     }
 
     private void handle(CreateEntity event) {
-        if(box.graph().existsEntity(event.id())) return;
+        Entity entity = box.graph().entity(event.id());
+        if(entity != null) return;
 
         World world = box.graph().world(event.world());
         if(world == null) return;
-        world.entities().add(createEntity(event, world));
+
+        entity = createEntity(event, world);
+        world.entities().add(entity);
+
+        entity.save$();
         world.save$();
     }
 
@@ -36,11 +41,12 @@ public class EntityMounter extends Mounter {
         World world = entity.world();
         world.entities().remove(entity);
         destroyEntity(entity);
+
         world.save$();
+        entity.delete$();
     }
 
     private void handle(Action event) {
-
         Entity entity = box.graph().entity(event.entity());
         if(entity == null) return;
 
@@ -89,8 +95,6 @@ public class EntityMounter extends Mounter {
         else if(event.type().equals(EntityType.Enemy)) entity = box.graph().enemy(event, world);
         else if(event.type().equals(EntityType.Npc)) entity = box.graph().npc(event, world);
         else entity = box.graph().item(event, world);
-
-        entity.save$();
         return entity;
     }
 
@@ -103,8 +107,6 @@ public class EntityMounter extends Mounter {
             item.owner().inventory().remove(item);
             item.owner().save$();
         }
-
-        entity.delete$();
     }
 
     private String applyAction(Entity entity, String type, String value) {
@@ -130,14 +132,16 @@ public class EntityMounter extends Mounter {
     }
 
     private void changeMatchRelativeScore(Player player, int scoreDiff) {
-        //TODO
-        /*EntityState entityState = entity.world().match().entitiesState().stream()
-                .filter(e -> e.player().id().equals(entity.id()))
+        Match match = player.world().match();
+        if(match == null) return;
+
+        PlayerState playerState = match.playersState(ps -> ps.player().id().equals(player.id())).stream()
                 .findFirst().orElse(null);
-        if(entityState == null) {
-            box.graph().playerState(entity).score(scoreDiff).save$();
-        } else {
-            entityState.score(entityState.score() + scoreDiff).save$();
-        }*/
+        if(playerState == null) {
+            playerState = box.graph().playerState(player, match);
+            match.playersState().add(playerState);
+            match.save$();
+        }
+        playerState.score(playerState.score() + scoreDiff).save$();
     }
 }

@@ -28,7 +28,7 @@ public class Test {
         engine.terminal().feed(createAchievement);
 
         Achievement achievement = engine.datamart().achievement("id1");
-        if(achievement != null) achievement.progressIf((CheckerHandler.Checker<BeginMatch>) event -> true);
+        if(achievement != null) achievement.progressIf((CheckerHandler.Checker<BeginMatch>) (event, player) -> true);
     }
 }
 

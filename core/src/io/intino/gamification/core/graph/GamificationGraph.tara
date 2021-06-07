@@ -31,7 +31,7 @@ Concept Entity is abstract decorable
 	var string id
 	var World world
 	var boolean enabled = true
-	var integer level = 1
+	//var integer level = 1
 	var double health = 100
 
 Concept Player extends Entity

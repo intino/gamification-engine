@@ -29,7 +29,7 @@ public abstract class Entity extends AbstractEntity {
 
 	public Entity(io.intino.magritte.framework.Node node) {
 		super(node);
-		this.attributesMap.put("level", new AttributeHandler() {
+		/*this.attributesMap.put("level", new AttributeHandler() {
 			@Override
 			public void set(Object value) {
 				level(asInt(value));
@@ -39,7 +39,7 @@ public abstract class Entity extends AbstractEntity {
 			public String get() {
 				return String.valueOf(level());
 			}
-		});
+		});*/
 
 		this.attributesMap.put("health", new AttributeHandler() {
 			@Override

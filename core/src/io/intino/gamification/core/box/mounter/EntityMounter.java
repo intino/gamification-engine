@@ -135,13 +135,13 @@ public class EntityMounter extends Mounter {
         Match match = player.world().match();
         if(match == null) return;
 
-        PlayerState playerState = match.playersState(ps -> ps.player().id().equals(player.id())).stream()
-                .findFirst().orElse(null);
+        PlayerState playerState = box.graph().playerState(match.playersState(), player.id());
         if(playerState == null) {
             playerState = box.graph().playerState(player, match);
             match.playersState().add(playerState);
             match.save$();
         }
+
         playerState.score(playerState.score() + scoreDiff).save$();
     }
 }

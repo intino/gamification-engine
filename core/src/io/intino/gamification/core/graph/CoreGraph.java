@@ -91,6 +91,10 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* PLAYER STATE ------------------------------------------------------------------------------------------------------ */
 
+	public PlayerState playerState(List<PlayerState> playersState, String playerId) {
+		return playersState.stream().filter(ps -> ps.player().id().equals(playerId)).findFirst().orElse(null);
+	}
+
 	public PlayerState playerState(Player player, Match match) {
 		return create(Stash.PlayerState.name()).playerState(match, player);
 	}

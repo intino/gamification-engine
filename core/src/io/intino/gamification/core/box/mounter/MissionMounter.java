@@ -19,12 +19,13 @@ public class MissionMounter extends Mounter {
     }
 
     private void handle(NewMission event) {
-        if(box.graph().existsMission(event.id())) return;
+        Mission mission = box.graph().mission(event.id());
+        if(mission != null) return;
 
         Match match = box.graph().match(event.match());
         if(match == null) return;
 
-        Mission mission = box.graph().mission(event);
+        mission = box.graph().mission(event);
         match.missions().add(mission);
 
         mission.save$();
@@ -32,21 +33,27 @@ public class MissionMounter extends Mounter {
     }
 
     private void handle(NewStateMission event) {
-        Player player = box.graph().player(event.player());
         Mission mission = box.graph().mission(event.mission());
-        if(player == null || mission == null) return;
+        if(mission == null) return;
 
-        Match match = player.world().match();
-        if(match == null) return;
+        Player player = box.graph().player(event.player());
+        if(player == null) return;
 
-        PlayerState playerState = box.graph().playerState(match.playersState(), event.player());
-        if(playerState == null) playerState = box.graph().playerState(player, match);
+        PlayerState playerState = box.graph().playerState(player, player.world().match());
+        if(playerState == null) {
+            playerState = box.graph().playerState(player, player.world().match());
+            playerState.save$();
+        }
 
-        MissionState missionState = box.graph().missionState(playerState.missionState(), event.mission());
-        if(missionState == null) missionState = box.graph().missionState(event, mission);
+        MissionState missionState = box.graph().missionState(playerState.missionState(), mission.id());
+        if(missionState == null) {
+            missionState = box.graph().missionState(event, mission, player);
+            playerState.missionState().add(missionState);
+            playerState.save$();
+        } else {
+            missionState.state(event.state());
+        }
 
-        missionState.state(event.state()).save$();
-        playerState.missionState().add(missionState);
-        playerState.save$();
+        missionState.save$();
     }
 }

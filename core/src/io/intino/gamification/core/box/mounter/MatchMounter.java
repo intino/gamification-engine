@@ -21,13 +21,11 @@ public class MatchMounter extends Mounter {
     }
 
     private void handle(BeginMatch event) {
-        if(box.graph().existsMatch(event.id())) return;
+        Match match = box.graph().match(event.id());
+        if(match != null) return;
 
         World world = box.graph().world(event.world());
-        if(world == null) return;
-
-        Match match = world.match();
-        if(match != null) return;
+        if(world == null || world.match() != null) return;
 
         match = box.graph().match(event, world);
         world.match(match);
@@ -45,5 +43,7 @@ public class MatchMounter extends Mounter {
 
         World world = match.world();
         if(world.match().id().equals(match.id())) world.match(null).save$();
+
+        //TODO Misiones y logros restantes fallidos
     }
 }

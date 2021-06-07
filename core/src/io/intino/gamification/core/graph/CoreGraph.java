@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static io.intino.gamification.core.box.events.achievement.AchievementState.Pending;
+
 public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	public CoreGraph(Graph graph) {
@@ -27,17 +29,9 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	    super(graph, wrapper);
 	}
 
-	public boolean existsWorld(String id) {
-		return worldList().stream().anyMatch(w -> w.id().equals(id));
-	}
-
 	public World world(String id) {
 		return worldList(w -> w.id().equals(id)).findFirst().orElse(null);
 	}
-
-	//Get por evento
-
-	//Get list
 
 	public World world(CreateWorld event) {
 		return create(Stash.World.name()).world(event.id());
@@ -45,15 +39,9 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* MATCH ------------------------------------------------------------------------------------------------------ */
 
-	public boolean existsMatch(String id) {
-		return matchList().stream().anyMatch(m -> m.id().equals(id));
-	}
-
 	public Match match(String id) {
 		return matchList(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
-
-	//Get por evento
 
 	public List<Match> matchesIn(World world) {
 		return matchList(m -> m.world().id().equals(world.id())).collect(Collectors.toList());
@@ -65,34 +53,15 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* ENTITY ------------------------------------------------------------------------------------------------------ */
 
-	public boolean existsEntity(String id) {
-		return entityList().stream().anyMatch(e -> e.id().equals(id));
-	}
-
 	public Entity entity(String id) {
 		return entityList(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 
-	//Get por evento
-
-	//Get list
-
 	/* PLAYER ------------------------------------------------------------------------------------------------------ */
-
-	//Exists
 
 	public Player player(String id) {
 		return playerList(p -> p.id().equals(id)).findFirst().orElse(null);
 	}
-
-	public Player player(List<Entity> entities, String id) {
-		//TODO
-		return entities.stream().filter(e -> e instanceof Player).map(e -> (Player) e).filter(p -> p.id().equals(id)).findFirst().orElse(null);
-	}
-
-	//Get por evento
-
-	//Get list
 
 	public Player player(CreateEntity event, World world) {
 		return create(Stash.Player.name()).player(event.id(), world);
@@ -100,27 +69,11 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* ENEMY ------------------------------------------------------------------------------------------------------ */
 
-	//Exists
-
-	//Get por id
-
-	//Get por evento
-
-	//Get list
-
 	public Enemy enemy(CreateEntity event, World world) {
 		return create(Stash.Enemy.name()).enemy(event.id(), world);
 	}
 
 	/* NPC ------------------------------------------------------------------------------------------------------ */
-
-	//Exists
-
-	//Get por id
-
-	//Get por evento
-
-	//Get list
 
 	public Npc npc(CreateEntity event, World world) {
 		return create(Stash.Npc.name()).npc(event.id(), world);
@@ -128,15 +81,9 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* ITEM ------------------------------------------------------------------------------------------------------ */
 
-	//Exists
-
 	public Item item(String id) {
 		return itemList(i -> i.id().equals(id)).findFirst().orElse(null);
 	}
-
-	//Get por evento
-
-	//Get list
 
 	public Item item(CreateEntity event, World world) {
 		return create(Stash.Item.name()).item(event.id(), world);
@@ -144,33 +91,15 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* PLAYER STATE ------------------------------------------------------------------------------------------------------ */
 
-	//Exists
-
-	public PlayerState playerState(List<PlayerState> playersState, String id) {
-		return playersState.stream().filter(ps -> ps.player().id().equals(id)).findFirst().orElse(null);
-	}
-
-	//Get por evento
-
-	//Get list
-
 	public PlayerState playerState(Player player, Match match) {
 		return create(Stash.PlayerState.name()).playerState(match, player);
 	}
 
 	/* MISSION ------------------------------------------------------------------------------------------------------ */
 
-	public boolean existsMission(String id) {
-		return missionList().stream().anyMatch(m -> m.id().equals(id));
-	}
-
 	public Mission mission(String id) {
 		return missionList(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
-
-	//Get evento
-
-	//Get lista
 
 	public Mission mission(NewMission event) {
 		return create(Stash.Mission.name()).mission(event.id(), event.difficulty().name(), event.type().name(), event.description());
@@ -178,59 +107,52 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* MISSION STATE ------------------------------------------------------------------------------------------------------ */
 
-	//Exists
-
 	public MissionState missionState(List<MissionState> missionState, String id) {
 		return missionState.stream().filter(ms -> ms.mission().id().equals(id)).findFirst().orElse(null);
 	}
 
-	//Get por evento
-
-	public List<MissionState> missionStateOf(Mission mission) {
-		return missionStateList(ms -> ms.mission().id().equals(mission.id())).collect(Collectors.toList());
+	public List<MissionState> missionState(String id) {
+		return missionStateList(ms -> ms.mission().id().equals(id)).collect(Collectors.toList());
 	}
 
-	public MissionState missionState(NewStateMission event, Mission mission) {
-		return create(Stash.MissionState.name()).missionState(mission, event.state().name());
+	public MissionState missionState(NewStateMission event, Mission mission, Player player) {
+		return create(Stash.MissionState.name()).missionState(mission, player, event.state().name());
 	}
 
     /* ACHIEVEMENT ------------------------------------------------------------------------------------------------------ */
-
-	//Exists
 
 	public Achievement achievement(String id) {
 		return achievementList(a -> a.id().equals(id)).findFirst().orElse(null);
 	}
 
-	//Get por evento
-
-	//Get list
-
-	public Map<Achievement, List<AchievementState>> achievement(Class<? extends GamificationEvent> clazz) {
+	public Map<Achievement, List<Player>> achievement(Class<? extends GamificationEvent> clazz) {
 		return achievementList(a -> a.event().equals(EventType.get(clazz)))
-				.collect(Collectors.toMap(a -> a, this::achievementState));
+				.collect(Collectors.toMap(a -> a, a -> a.context().players()));
 	}
 
-	public Achievement achievement(CreateAchievement event) {
-		return create(Stash.Achievement.name()).achievement(event.id(), event.context(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
+	public Achievement achievement(CreateAchievement event, Context context) {
+		return create(Stash.Achievement.name()).achievement(event.id(), context, event.description(), event.event().clazzName(), event.maxCount());
 	}
 
 	/* ACHIEVEMENT STATE ------------------------------------------------------------------------------------------------------ */
 
-	//Exists
-
-	public AchievementState achievementState(List<AchievementState> achievementState, String id) {
-		return achievementState.stream().filter(as -> as.achievement().id().equals(id)).findFirst().orElse(null);
+	public AchievementState achievementState(String achievementId, String playerId) {
+		return achievementStateList().stream()
+				.filter(as -> as.achievement().id().equals(achievementId))
+				.filter(as -> as.player().id().equals(playerId))
+				.findFirst().orElse(null);
 	}
 
-	//Get por evento
-
-	public List<AchievementState> achievementState(Achievement achievement) {
-		return achievementStateList(as -> as.achievement().id().equals(achievement.id()))
+	public List<AchievementState> achievementState(String id) {
+		return achievementStateList(as -> as.achievement().id().equals(id))
 				.collect(Collectors.toList());
 	}
 
-	public AchievementState achievementState(AchievementNewState event, Achievement achievement) {
-		return create(Stash.AchievementState.name()).achievementState(achievement, event.state().name(), event.player());
+	public AchievementState achievementState(AchievementNewState event, Achievement achievement, Player player) {
+		return create(Stash.AchievementState.name()).achievementState(achievement, player, event.state().name());
+	}
+
+	public AchievementState achievementState(Achievement achievement, Player player) {
+		return create(Stash.AchievementState.name()).achievementState(achievement, player, Pending.name());
 	}
 }

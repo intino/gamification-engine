@@ -26,7 +26,8 @@ public class WorldMounter extends Mounter {
     }
 
     private void handle(CreateWorld event) {
-        if(box.graph().existsWorld(event.id())) return;
+        World world = box.graph().world(event.id());
+        if(world != null) return;
         box.graph().world(event).save$();
     }
 
@@ -39,7 +40,7 @@ public class WorldMounter extends Mounter {
 
         box.graph().matchesIn(world).forEach(ma -> {
             ma.missions().forEach(mi -> {
-                box.graph().missionStateOf(mi).forEach(Layer::delete$);
+                box.graph().missionState(mi.id()).forEach(Layer::delete$);
                 mi.delete$();
             });
 
@@ -58,8 +59,8 @@ public class WorldMounter extends Mounter {
     }
 
     private DeleteAchievement deleteAchievement(Achievement achievement) {
-        //TODO
-        return null;
+        return new DeleteAchievement().ts(Instant.now())
+                .id(achievement.id());
     }
 
     private DestroyEntity destroyEntityEvent(Entity entity) {

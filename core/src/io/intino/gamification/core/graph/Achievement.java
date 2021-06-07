@@ -2,7 +2,6 @@ package io.intino.gamification.core.graph;
 
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.logic.CheckerHandler;
 
 public class Achievement extends AbstractAchievement {
@@ -11,17 +10,8 @@ public class Achievement extends AbstractAchievement {
 		super(node);
 	}
 
-	public AchievementType type() {
-		return AchievementType.valueOf(typeName);
-	}
-
 	public EventType event() {
 		return EventType.valueOf(eventName);
-	}
-
-	public Achievement type(AchievementType type) {
-		typeName(type.name());
-		return this;
 	}
 
 	public Achievement event(EventType event) {
@@ -29,8 +19,8 @@ public class Achievement extends AbstractAchievement {
 		return this;
 	}
 
-	public boolean check(GamificationEvent event) {
-		return CheckerHandler.check(this, event);
+	public boolean check(GamificationEvent event, Player player) {
+		return CheckerHandler.check(this, event, player);
 	}
 
 	public void progressIf(CheckerHandler.Checker<? extends GamificationEvent> checker) {

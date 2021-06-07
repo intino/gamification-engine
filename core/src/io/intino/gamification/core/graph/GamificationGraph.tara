@@ -18,14 +18,18 @@ Concept Match extends Context
 
 Concept Mission is decorable
 	var string id
+	var Match match
 	var string difficultyName
 	var string typeName
 	var string description
+	var string eventName
+	var integer maxCount
 
 Concept MissionState is decorable
 	var Mission mission
 	var Player player
 	var string stateName
+	var integer count = 0
 
 Concept Entity is abstract decorable
 	var string id

@@ -1,5 +1,15 @@
 package io.intino.gamification.core.box.events.mission;
 
 public enum MissionState {
-    Completed, Cancelled, Failed;
+    Completed(2), Cancelled(0), Failed(-1);
+
+    private final int multiplier;
+
+    MissionState(int multiplier) {
+        this.multiplier = multiplier;
+    }
+
+    public int multiplier() {
+        return multiplier;
+    }
 }

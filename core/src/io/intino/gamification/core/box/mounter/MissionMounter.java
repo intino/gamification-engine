@@ -2,9 +2,12 @@ package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.box.events.entity.Action;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.graph.*;
+
+import java.time.Instant;
 
 public class MissionMounter extends Mounter {
 
@@ -55,5 +58,13 @@ public class MissionMounter extends Mounter {
         }
 
         missionState.save$();
+
+        changeScore(missionState, player);
+    }
+
+    private void changeScore(MissionState missionState, Player player) {
+        Action action = (Action) Action.changeScore(player.id(), player.world().scoreOf(missionState))
+                .ts(Instant.now());
+        box.engineTerminal().feed(action);
     }
 }

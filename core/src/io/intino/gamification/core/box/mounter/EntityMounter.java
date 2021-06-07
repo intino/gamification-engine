@@ -1,7 +1,7 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.*;
+import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.graph.*;
 
@@ -13,21 +13,66 @@ public class EntityMounter extends Mounter {
 
     @Override
     public void mount(GamificationEvent event) {
-        if(event instanceof CreateEntity) handle((CreateEntity) event);
+        if(event instanceof CreatePlayer) handle((CreatePlayer) event);
+        else if(event instanceof CreateEnemy) handle((CreateEnemy) event);
+        else if(event instanceof CreateNpc) handle((CreateNpc) event);
+        else if(event instanceof CreateItem) handle((CreateItem) event);
         else if(event instanceof DestroyEntity) handle((DestroyEntity) event);
         else if(event instanceof Action) handle((Action) event);
         else if(event instanceof PickUpItem) handle((PickUpItem) event);
         else if(event instanceof DropItem) handle((DropItem) event);
     }
 
-    private void handle(CreateEntity event) {
+    private void handle(CreatePlayer event) {
         Entity entity = box.graph().entity(event.id());
         if(entity != null) return;
 
         World world = box.graph().world(event.world());
         if(world == null) return;
 
-        entity = createEntity(event, world);
+        entity = box.graph().player(event, world);
+        world.entities().add(entity);
+
+        entity.save$();
+        world.save$();
+    }
+
+    private void handle(CreateEnemy event) {
+        Entity entity = box.graph().entity(event.id());
+        if(entity != null) return;
+
+        World world = box.graph().world(event.world());
+        if(world == null) return;
+
+        entity = box.graph().enemy(event, world);
+        world.entities().add(entity);
+
+        entity.save$();
+        world.save$();
+    }
+
+    private void handle(CreateNpc event) {
+        Entity entity = box.graph().entity(event.id());
+        if(entity != null) return;
+
+        World world = box.graph().world(event.world());
+        if(world == null) return;
+
+        entity = box.graph().npc(event, world);
+        world.entities().add(entity);
+
+        entity.save$();
+        world.save$();
+    }
+
+    private void handle(CreateItem event) {
+        Entity entity = box.graph().entity(event.id());
+        if(entity != null) return;
+
+        World world = box.graph().world(event.world());
+        if(world == null) return;
+
+        entity = box.graph().item(event, world);
         world.entities().add(entity);
 
         entity.save$();
@@ -47,7 +92,7 @@ public class EntityMounter extends Mounter {
     }
 
     private void handle(Action event) {
-        Entity entity = box.graph().entity(event.entity());
+        Entity entity = box.graph().entity(event.entityDest());
         if(entity == null) return;
 
         String oldValue = entity.get(event.attribute());
@@ -87,15 +132,6 @@ public class EntityMounter extends Mounter {
 
         item.save$();
         player.save$();
-    }
-
-    private Entity createEntity(CreateEntity event, World world) {
-        Entity entity;
-        if(event.type().equals(EntityType.Player)) entity = box.graph().player(event, world);
-        else if(event.type().equals(EntityType.Enemy)) entity = box.graph().enemy(event, world);
-        else if(event.type().equals(EntityType.Npc)) entity = box.graph().npc(event, world);
-        else entity = box.graph().item(event, world);
-        return entity;
     }
 
     private void destroyEntity(Entity entity) {

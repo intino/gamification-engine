@@ -49,6 +49,7 @@ Concept Npc extends Entity
 
 Concept Item extends Entity
 	var Player owner = empty
+	var string name
 
 Concept PlayerState
 	var Match match

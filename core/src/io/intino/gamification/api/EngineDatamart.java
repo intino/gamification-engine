@@ -46,4 +46,12 @@ public class EngineDatamart {
     public Achievement achievement(String id) {
         return box.graph().achievement(id);
     }
+
+    public Mission mission(String id) {
+        return box.graph().mission(id);
+    }
+
+    public Item item(String id) {
+        return box.graph().item(id);
+    }
 }

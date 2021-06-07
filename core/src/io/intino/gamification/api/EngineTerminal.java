@@ -40,7 +40,19 @@ public class EngineTerminal {
         box.mounter(MissionMounter.class).mount(event);
     }
 
-    public void feed(CreateEntity event) {
+    public void feed(CreatePlayer event) {
+        box.mounter(EntityMounter.class).mount(event);
+    }
+
+    public void feed(CreateEnemy event) {
+        box.mounter(EntityMounter.class).mount(event);
+    }
+
+    public void feed(CreateNpc event) {
+        box.mounter(EntityMounter.class).mount(event);
+    }
+
+    public void feed(CreateItem event) {
         box.mounter(EntityMounter.class).mount(event);
     }
 

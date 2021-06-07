@@ -4,7 +4,7 @@ import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
-import io.intino.gamification.core.box.events.entity.CreateEntity;
+import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.MatchState;
 import io.intino.gamification.core.box.events.mission.NewMission;
@@ -63,19 +63,19 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return playerList(p -> p.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Player player(CreateEntity event, World world) {
+	public Player player(CreatePlayer event, World world) {
 		return create(Stash.Player.name()).player(event.id(), world);
 	}
 
 	/* ENEMY ------------------------------------------------------------------------------------------------------ */
 
-	public Enemy enemy(CreateEntity event, World world) {
+	public Enemy enemy(CreateEnemy event, World world) {
 		return create(Stash.Enemy.name()).enemy(event.id(), world);
 	}
 
 	/* NPC ------------------------------------------------------------------------------------------------------ */
 
-	public Npc npc(CreateEntity event, World world) {
+	public Npc npc(CreateNpc event, World world) {
 		return create(Stash.Npc.name()).npc(event.id(), world);
 	}
 
@@ -85,8 +85,8 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return itemList(i -> i.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Item item(CreateEntity event, World world) {
-		return create(Stash.Item.name()).item(event.id(), world);
+	public Item item(CreateItem event, World world) {
+		return create(Stash.Item.name()).item(event.id(), world, event.name());
 	}
 
 	/* PLAYER STATE ------------------------------------------------------------------------------------------------------ */

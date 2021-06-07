@@ -16,12 +16,21 @@ public class Action extends GamificationEvent {
         super(message);
     }
 
-    public String entity() {
-        return get("entity");
+    public String entitySrc() {
+        return get("entitySrc");
     }
 
-    public Action entity(String entity) {
-        set("entity", entity);
+    public Action entitySrc(String entitySrc) {
+        set("entitySrc", entitySrc);
+        return this;
+    }
+
+    public String entityDest() {
+        return get("entityDest");
+    }
+
+    public Action entityDest(String entityDest) {
+        set("entityDest", entityDest);
         return this;
     }
 
@@ -43,23 +52,15 @@ public class Action extends GamificationEvent {
         return this;
     }
 
-    /*public static Action changeLevel(String entity, int level) {
-        return new Action("ChangeLevel").entity(entity).attribute("level").attribute(String.valueOf(level));
-    }
-
-    public static Action changeHealth(String entity, int health) {
-        return new Action("ChangeHealth").entity(entity).attribute("health").attribute(String.valueOf(health));
-    }*/
-
     public static Action changeScore(String entity, int score) {
-        return new Action("ChangeScore").entity(entity).attribute("score").attribute(String.valueOf(score));
+        return new Action("ChangeScore").entityDest(entity).attribute("score").attribute(String.valueOf(score));
     }
 
-    public static Action attack(String entity, int damage) {
-        return new Action("Attack").entity(entity).attribute("health").attribute(String.valueOf(damage));
+    public static Action attack(String entitySrc, String entityDest, int damage) {
+        return new Action("Attack").entitySrc(entitySrc).entityDest(entityDest).attribute("health").attribute(String.valueOf(damage));
     }
 
-    public static Action heal(String entity, int health) {
-        return new Action("Heal").entity(entity).attribute("health").attribute(String.valueOf(health));
+    public static Action heal(String entitySrc, String entityDest, int health) {
+        return new Action("Heal").entitySrc(entitySrc).entityDest(entityDest).attribute("health").attribute(String.valueOf(health));
     }
 }

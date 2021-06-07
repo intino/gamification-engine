@@ -42,4 +42,8 @@ public class Mission extends AbstractMission {
 	public boolean check(GamificationEvent event, Player player) {
 		return CheckerHandler.check(this, event, player);
 	}
+
+	public void progressIf(CheckerHandler.Checker<? extends GamificationEvent> checker) {
+		CheckerHandler.progressIf(this, checker);
+	}
 }

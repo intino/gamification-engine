@@ -15,4 +15,13 @@ public class DropItem extends GamificationEvent {
     public DropItem(io.intino.alexandria.message.Message message) {
         super(message);
     }
+
+    public String world() {
+        return get("world");
+    }
+
+    public DropItem world(String world) {
+        set("world", world);
+        return this;
+    }
 }

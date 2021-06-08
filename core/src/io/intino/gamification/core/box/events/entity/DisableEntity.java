@@ -2,17 +2,17 @@ package io.intino.gamification.core.box.events.entity;
 
 import io.intino.gamification.core.box.events.GamificationEvent;
 
-public class DestroyEntity extends GamificationEvent {
+public class DisableEntity extends GamificationEvent {
 
-    public DestroyEntity() {
-        super(DestroyEntity.class);
+    public DisableEntity() {
+        super(DisableEntity.class);
     }
 
-    public DestroyEntity(io.intino.alexandria.event.Event event) {
+    public DisableEntity(io.intino.alexandria.event.Event event) {
         this(event.toMessage());
     }
 
-    public DestroyEntity(io.intino.alexandria.message.Message message) {
+    public DisableEntity(io.intino.alexandria.message.Message message) {
         super(message);
     }
 
@@ -20,7 +20,7 @@ public class DestroyEntity extends GamificationEvent {
         return get("world");
     }
 
-    public DestroyEntity world(String world) {
+    public DisableEntity world(String world) {
         set("world", world);
         return this;
     }

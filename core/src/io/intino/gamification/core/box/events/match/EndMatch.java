@@ -15,4 +15,13 @@ public class EndMatch extends GamificationEvent {
     public EndMatch(io.intino.alexandria.message.Message message) {
         super(message);
     }
+
+    public String world() {
+        return get("world");
+    }
+
+    public EndMatch world(String world) {
+        set("world", world);
+        return this;
+    }
 }

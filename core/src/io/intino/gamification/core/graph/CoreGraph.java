@@ -57,10 +57,20 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return entityList(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 
+	public Entity entity(List<Entity> entities, String id) {
+		return entities.stream().filter(e -> e.id().equals(id)).findFirst().orElse(null);
+	}
+
 	/* PLAYER ------------------------------------------------------------------------------------------------------ */
 
 	public Player player(String id) {
-		return playerList(p -> p.id().equals(id)).findFirst().orElse(null);
+		//TODO
+		return entityList(e -> e.id().equals(id) && e instanceof Player)
+				.map(e -> (Player) e).findFirst().orElse(null);
+	}
+
+	public Player player(List<Player> players, String id) {
+		return players.stream().filter(p -> p.id().equals(id)).findFirst().orElse(null);
 	}
 
 	public Player player(CreatePlayer event, World world) {
@@ -69,11 +79,23 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	/* ENEMY ------------------------------------------------------------------------------------------------------ */
 
+	public Enemy enemy(String id) {
+		//TODO
+		return entityList(e -> e.id().equals(id) && e instanceof Enemy)
+				.map(e -> (Enemy) e).findFirst().orElse(null);
+	}
+
 	public Enemy enemy(CreateEnemy event, World world) {
 		return create(Stash.Enemy.name()).enemy(event.id(), world);
 	}
 
 	/* NPC ------------------------------------------------------------------------------------------------------ */
+
+	public Npc npc(String id) {
+		//TODO
+		return entityList(e -> e.id().equals(id) && e instanceof Npc)
+				.map(e -> (Npc) e).findFirst().orElse(null);
+	}
 
 	public Npc npc(CreateNpc event, World world) {
 		return create(Stash.Npc.name()).npc(event.id(), world);
@@ -82,7 +104,15 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	/* ITEM ------------------------------------------------------------------------------------------------------ */
 
 	public Item item(String id) {
-		return itemList(i -> i.id().equals(id)).findFirst().orElse(null);
+		//TODO
+		return entityList(e -> e.id().equals(id) && e instanceof Item)
+				.map(e -> (Item) e).findFirst().orElse(null);
+	}
+
+	public Item item(List<Entity> entities, String id) {
+		//TODO
+		return entities.stream().filter(e -> e.id().equals(id) && e instanceof Item)
+				.map(e -> (Item) e).findFirst().orElse(null);
 	}
 
 	public Item item(CreateItem event, World world) {
@@ -103,6 +133,10 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 	public Mission mission(String id) {
 		return missionList(m -> m.id().equals(id)).findFirst().orElse(null);
+	}
+
+	public Mission mission(List<Mission> missions, String id) {
+		return missions.stream().filter(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
 
 	public Map<Mission, List<Player>> mission(Class<? extends GamificationEvent> clazz) {

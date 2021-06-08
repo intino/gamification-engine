@@ -1,18 +1,16 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.*;
-import io.intino.gamification.core.box.events.achievement.AchievementNewState;
-import io.intino.gamification.core.box.events.achievement.AchievementState;
+import io.intino.gamification.core.box.events.EventBuilder;
+import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
-import io.intino.gamification.core.box.events.match.MatchState;
-import io.intino.gamification.core.box.events.mission.MissionState;
-import io.intino.gamification.core.box.events.mission.NewStateMission;
+import io.intino.gamification.core.box.mounter.builder.MatchFilter;
 import io.intino.gamification.core.graph.*;
 
-import java.time.Instant;
 import java.util.List;
+
+import static io.intino.gamification.core.box.events.match.MatchState.Finished;
 
 public class MatchMounter extends Mounter {
 
@@ -27,62 +25,45 @@ public class MatchMounter extends Mounter {
     }
 
     private void handle(BeginMatch event) {
-        Match match = box.graph().match(event.id());
-        if(match != null) return;
+        MatchFilter filter = new MatchFilter(box, event);
+        if(!filter.beginMatchCanMount()) return;
 
-        World world = box.graph().world(event.world());
-        if(world == null || world.match() != null) return;
+        World world = filter.world();
+        Match match = box.graph().match(event, world);
 
-        match = box.graph().match(event, world);
         world.match(match);
 
-        match.save$();
         world.save$();
+        match.save$();
     }
 
     private void handle(EndMatch event) {
+        MatchFilter filter = new MatchFilter(box, event);
+        if(!filter.endMatchCanMount()) return;
 
-        Match match = box.graph().match(event.id());
-        if(match == null) return;
+        World world = filter.world();
+        Match match = filter.match();
 
-        match.to(event.ts()).state(MatchState.Finished).save$();
-
-        World world = match.world();
-        if(world.match().id().equals(match.id())) world.match(null).save$();
-
+        world.match(null);
+        match.to(event.ts()).state(Finished);
         fail(match);
+
+        world.save$();
+        match.save$();
     }
 
     private void fail(Match match) {
-        match.players().forEach(p -> {
+        match.players().stream().filter(AbstractEntity::enabled).forEach(p -> {
             failMissions(match.missions(), p.id());
             failAchievements(match.achievements(), p.id());
         });
     }
 
     private void failMissions(List<Mission> missions, String playerId) {
-        missions.forEach(m -> box.engineTerminal().feed(getNewStateMission(m.id(), playerId)));
+        missions.forEach(m -> box.engineTerminal().feed(EventBuilder.newStateMission(m.id(), playerId)));
     }
 
     private void failAchievements(List<Achievement> achievements, String playerId) {
-        achievements.forEach(a -> box.engineTerminal().feed(getNewStateAchievement(a.id(), playerId)));
-    }
-
-    private NewStateMission getNewStateMission(String missionId, String playerId) {
-        NewStateMission newStateMission = new NewStateMission();
-        newStateMission.ts(Instant.now());
-        newStateMission.id(missionId);
-        newStateMission.player(playerId);
-        newStateMission.state(MissionState.Failed);
-        return newStateMission;
-    }
-
-    private AchievementNewState getNewStateAchievement(String achievementId, String playerId) {
-        AchievementNewState achievementNewState = new AchievementNewState();
-        achievementNewState.ts(Instant.now());
-        achievementNewState.id(achievementId);
-        achievementNewState.player(playerId);
-        achievementNewState.state(AchievementState.Failed);
-        return achievementNewState;
+        achievements.forEach(a -> box.engineTerminal().feed(EventBuilder.newStateAchievement(a.id(), playerId)));
     }
 }

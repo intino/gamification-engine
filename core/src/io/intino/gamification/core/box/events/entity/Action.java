@@ -16,6 +16,15 @@ public class Action extends GamificationEvent {
         super(message);
     }
 
+    public String world() {
+        return get("world");
+    }
+
+    public Action world(String world) {
+        set("world", world);
+        return this;
+    }
+
     public String entitySrc() {
         return get("entitySrc");
     }
@@ -52,15 +61,29 @@ public class Action extends GamificationEvent {
         return this;
     }
 
-    public static Action changeScore(String entity, int score) {
-        return new Action("ChangeScore").entityDest(entity).attribute("score").attribute(String.valueOf(score));
+    public static Action changeScore(String world, String entity, int score) {
+        return new Action("ChangeScore")
+                .world(world)
+                .entityDest(entity)
+                .attribute("score")
+                .value(String.valueOf(score));
     }
 
-    public static Action attack(String entitySrc, String entityDest, int damage) {
-        return new Action("Attack").entitySrc(entitySrc).entityDest(entityDest).attribute("health").attribute(String.valueOf(damage));
+    public static Action attack(String world, String entitySrc, String entityDest, int damage) {
+        return new Action("Attack")
+                .world(world)
+                .entitySrc(entitySrc)
+                .entityDest(entityDest)
+                .attribute("health")
+                .value(String.valueOf(damage));
     }
 
-    public static Action heal(String entitySrc, String entityDest, int health) {
-        return new Action("Heal").entitySrc(entitySrc).entityDest(entityDest).attribute("health").attribute(String.valueOf(health));
+    public static Action heal(String world, String entitySrc, String entityDest, int health) {
+        return new Action("Heal")
+                .world(world)
+                .entitySrc(entitySrc)
+                .entityDest(entityDest)
+                .attribute("health")
+                .value(String.valueOf(health));
     }
 }

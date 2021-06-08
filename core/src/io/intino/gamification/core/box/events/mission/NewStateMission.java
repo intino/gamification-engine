@@ -24,6 +24,10 @@ public class NewStateMission extends GamificationEvent {
         return getAsEnum("state", MissionState.class);
     }
 
+    public String match() {
+        return get("match");
+    }
+
     public NewStateMission player(String player) {
         set("player", player);
         return this;
@@ -31,6 +35,11 @@ public class NewStateMission extends GamificationEvent {
 
     public NewStateMission state(MissionState state) {
         set("state", state);
+        return this;
+    }
+
+    public NewStateMission match(String match) {
+        set("match", match);
         return this;
     }
 }

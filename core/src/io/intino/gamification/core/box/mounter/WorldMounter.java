@@ -1,17 +1,13 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
+import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.entity.DestroyEntity;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
-import io.intino.gamification.core.graph.Achievement;
-import io.intino.gamification.core.graph.Entity;
+import io.intino.gamification.core.box.mounter.builder.WorldFilter;
 import io.intino.gamification.core.graph.World;
 import io.intino.magritte.framework.Layer;
-
-import java.time.Instant;
 
 public class WorldMounter extends Mounter {
 
@@ -26,17 +22,19 @@ public class WorldMounter extends Mounter {
     }
 
     private void handle(CreateWorld event) {
-        World world = box.graph().world(event.id());
-        if(world != null) return;
+        WorldFilter filter = new WorldFilter(box, event);
+        if(!filter.createWorldCanMount()) return;
         box.graph().world(event).save$();
     }
 
     private void handle(DestroyWorld event) {
-        World world = box.graph().world(event.id());
-        if(world == null) return;
+        WorldFilter filter = new WorldFilter(box, event);
+        if(!filter.destroyWorldCanMount()) return;
 
-        world.achievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
-        world.entities().forEach(e -> box.engineTerminal().feed(destroyEntityEvent(e)));
+        World world = filter.world();
+
+        world.achievements().forEach(a -> box.engineTerminal().feed(EventBuilder.deleteAchievement(a.id())));
+        world.entities().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyEntity(world.id(), e.id())));
 
         box.graph().matchesIn(world).forEach(ma -> {
             ma.missions().forEach(mi -> {
@@ -44,7 +42,7 @@ public class WorldMounter extends Mounter {
                 mi.delete$();
             });
 
-            ma.achievements().forEach(a -> box.engineTerminal().feed(deleteAchievement(a)));
+            ma.achievements().forEach(a -> box.engineTerminal().feed(EventBuilder.deleteAchievement(a.id())));
 
             ma.playersState().forEach(ps -> {
                 ps.missionState().forEach(Layer::delete$);
@@ -56,15 +54,5 @@ public class WorldMounter extends Mounter {
         });
 
         world.delete$();
-    }
-
-    private DeleteAchievement deleteAchievement(Achievement achievement) {
-        return new DeleteAchievement().ts(Instant.now())
-                .id(achievement.id());
-    }
-
-    private DestroyEntity destroyEntityEvent(Entity entity) {
-        return new DestroyEntity().ts(Instant.now())
-                .id(entity.id());
     }
 }

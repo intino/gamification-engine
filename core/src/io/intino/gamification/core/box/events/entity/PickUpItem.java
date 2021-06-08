@@ -16,6 +16,15 @@ public class PickUpItem extends GamificationEvent {
         super(message);
     }
 
+    public String world() {
+        return get("world");
+    }
+
+    public PickUpItem world(String world) {
+        set("world", world);
+        return this;
+    }
+
     public String player() {
         return get("player");
     }

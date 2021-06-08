@@ -3,6 +3,7 @@ package io.intino.gamification.core.box.mounter;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.entity.*;
+import io.intino.gamification.core.box.mounter.builder.EntityFilter;
 import io.intino.gamification.core.graph.*;
 
 public class EntityMounter extends Mounter {
@@ -21,69 +22,69 @@ public class EntityMounter extends Mounter {
         else if(event instanceof Action) handle((Action) event);
         else if(event instanceof PickUpItem) handle((PickUpItem) event);
         else if(event instanceof DropItem) handle((DropItem) event);
+        else if(event instanceof EnableEntity) handle((EnableEntity) event);
+        else if(event instanceof DisableEntity) handle((DisableEntity) event);
     }
 
     private void handle(CreatePlayer event) {
-        Entity entity = box.graph().entity(event.id());
-        if(entity != null) return;
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.createPlayerCanMount()) return;
 
-        World world = box.graph().world(event.world());
-        if(world == null) return;
+        World world = filter.world();
+        Player player = box.graph().player(event, world);
 
-        entity = box.graph().player(event, world);
-        world.entities().add(entity);
+        world.entities().add(player);
 
-        entity.save$();
         world.save$();
+        player.save$();
     }
 
     private void handle(CreateEnemy event) {
-        Entity entity = box.graph().entity(event.id());
-        if(entity != null) return;
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.createEnemyCanMount()) return;
 
-        World world = box.graph().world(event.world());
-        if(world == null) return;
+        World world = filter.world();
+        Enemy enemy = box.graph().enemy(event, world);
 
-        entity = box.graph().enemy(event, world);
-        world.entities().add(entity);
+        world.entities().add(enemy);
 
-        entity.save$();
         world.save$();
+        enemy.save$();
     }
 
     private void handle(CreateNpc event) {
-        Entity entity = box.graph().entity(event.id());
-        if(entity != null) return;
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.createNpcCanMount()) return;
 
-        World world = box.graph().world(event.world());
-        if(world == null) return;
+        World world = filter.world();
+        Npc npc = box.graph().npc(event, world);
 
-        entity = box.graph().npc(event, world);
-        world.entities().add(entity);
+        world.entities().add(npc);
 
-        entity.save$();
         world.save$();
+        npc.save$();
     }
 
     private void handle(CreateItem event) {
-        Entity entity = box.graph().entity(event.id());
-        if(entity != null) return;
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.createItemCanMount()) return;
 
-        World world = box.graph().world(event.world());
-        if(world == null) return;
+        World world = filter.world();
+        Item item = box.graph().item(event, world);
 
-        entity = box.graph().item(event, world);
-        world.entities().add(entity);
+        world.entities().add(item);
 
-        entity.save$();
         world.save$();
+        item.save$();
     }
 
     private void handle(DestroyEntity event) {
-        Entity entity = box.graph().entity(event.id());
-        if(entity == null) return;
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.destroyEntityCanMount()) return;
 
-        World world = entity.world();
+        World world = filter.world();
+        Entity entity = filter.entity();
+
         world.entities().remove(entity);
         destroyEntity(entity);
 
@@ -92,25 +93,26 @@ public class EntityMounter extends Mounter {
     }
 
     private void handle(Action event) {
-        Entity entity = box.graph().entity(event.entityDest());
-        if(entity == null) return;
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.actionCanMount()) return;
+
+        Entity entity = filter.entity();
 
         String oldValue = entity.get(event.attribute());
         String newValue = applyAction(entity, event.toMessage().type(), event.value());
         if(newValue == null) return;
         newValue = Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
-
         entity.set(event.attribute(), newValue);
+
         entity.save$();
     }
 
     private void handle(PickUpItem event) {
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.pickUpItemCanMount()) return;
 
-        Item item = box.graph().item(event.id());
-        if(item == null || item.owner() != null) return;
-
-        Player player = box.graph().player(event.player());
-        if(player == null) return;
+        Player player = filter.player();
+        Item item = filter.item();
 
         player.inventory().add(item);
         item.owner(player);
@@ -120,18 +122,39 @@ public class EntityMounter extends Mounter {
     }
 
     private void handle(DropItem event) {
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.dropItemCanMount()) return;
 
-        Item item = box.graph().item(event.id());
-        if(item == null) return;
+        Player player = filter.player();
+        Item item = filter.item();
 
-        Player player = item.owner();
-        if(player == null) return;
-
-        item.owner(null);
         player.inventory().remove(item);
+        item.owner(null);
 
-        item.save$();
         player.save$();
+        item.save$();
+    }
+
+    private void handle(EnableEntity event) {
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.enableEntityCanMount()) return;
+
+        Entity entity = filter.entity();
+
+        entity.enabled(true);
+
+        entity.save$();
+    }
+
+    private void handle(DisableEntity event) {
+        EntityFilter filter = new EntityFilter(box, event);
+        if(!filter.disableEntityCanMount()) return;
+
+        Entity entity = filter.entity();
+
+        entity.enabled(false);
+
+        entity.save$();
     }
 
     private void destroyEntity(Entity entity) {

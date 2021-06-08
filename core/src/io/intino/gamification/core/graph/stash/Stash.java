@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public enum Stash {
 
-    Gamification, World, Match, Entity, Player, Enemy, Npc, Item, PlayerState, Mission, MissionState, Achievement, AchievementState;
+    Gamification, Context, World, Match, Entity, Player, Enemy, Npc, Item, PlayerState, Mission, MissionState, Achievement, AchievementState;
 
     public static String main() {
         return Gamification.name();

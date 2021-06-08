@@ -16,26 +16,10 @@ Concept Match extends Context
 	var Mission[] missions = empty
 	var PlayerState[] playersState = empty
 
-Concept Mission is decorable
-	var string id
-	var Match match
-	var string difficultyName
-	var string typeName
-	var string description
-	var string eventName
-	var integer maxCount
-
-Concept MissionState is decorable
-	var Mission mission
-	var Player player
-	var string stateName
-	var integer count = 0
-
 Concept Entity is abstract decorable
 	var string id
 	var World world
 	var boolean enabled = true
-	//var integer level = 1
 	var double health = 100
 
 Concept Player extends Entity
@@ -57,6 +41,21 @@ Concept PlayerState
 	var integer score = 0
 	var MissionState[] missionState = empty
 	var AchievementState[] achievements = empty
+
+Concept Mission is decorable
+	var string id
+	var Match match
+	var string difficultyName
+	var string typeName
+	var string description
+	var string eventName
+	var integer maxCount
+
+Concept MissionState is decorable
+	var Mission mission
+	var Player player
+	var string stateName
+	var integer count = 0
 
 Concept Achievement is decorable
 	var string id

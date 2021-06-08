@@ -1,13 +1,12 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.entity.Action;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
+import io.intino.gamification.core.box.mounter.builder.MissionFilter;
 import io.intino.gamification.core.graph.*;
-
-import java.time.Instant;
 
 import static io.intino.gamification.core.box.events.mission.MissionState.Pending;
 
@@ -24,49 +23,45 @@ public class MissionMounter extends Mounter {
     }
 
     private void handle(NewMission event) {
-        Mission mission = box.graph().mission(event.id());
-        if(mission != null) return;
+        MissionFilter filter = new MissionFilter(box, event);
+        if(!filter.newMissionCanMount()) return;
 
-        Match match = box.graph().match(event.match());
-        if(match == null) return;
+        Match match = filter.match();
+        Mission mission = box.graph().mission(event, match);
 
-        mission = box.graph().mission(event, match);
-        match.missions().add(mission);
-
-        mission.save$();
         match.save$();
+        mission.save$();
     }
 
     private void handle(NewStateMission event) {
-        Mission mission = box.graph().mission(event.id());
-        if(mission == null) return;
+        MissionFilter filter = new MissionFilter(box, event);
+        if(!filter.newStateMissionCanMount()) return;
 
-        Player player = box.graph().player(event.player());
-        if(player == null) return;
+        World world = filter.world();
+        Match match = filter.match();
+        Player player = filter.player();
+        Mission mission = filter.mission();
 
-        PlayerState playerState = box.graph().playerState(player, player.world().match());
+        PlayerState playerState = box.graph().playerState(match.playersState(), player.id());
         if(playerState == null) {
-            playerState = box.graph().playerState(player, player.world().match());
-            playerState.save$();
+            playerState = box.graph().playerState(player, match);
+            match.playersState().add(playerState);
         }
 
         MissionState missionState = box.graph().missionState(playerState.missionState(), mission.id());
         if(missionState == null) {
             missionState = box.graph().missionState(event, mission, player);
             playerState.missionState().add(missionState);
-            playerState.save$();
         } else {
-            if(missionState.state().equals(Pending)) missionState.state(event.state());
+            if(missionState.state().equals(Pending)) {
+                missionState.state(event.state());
+            }
         }
 
+        box.engineTerminal().feed(EventBuilder.changeScore(world.id(), player.id(), player.world().scoreOf(missionState)));
+
+        match.save$();
+        playerState.save$();
         missionState.save$();
-
-        changeScore(missionState, player);
-    }
-
-    private void changeScore(MissionState missionState, Player player) {
-        Action action = (Action) Action.changeScore(player.id(), player.world().scoreOf(missionState))
-                .ts(Instant.now());
-        box.engineTerminal().feed(action);
     }
 }

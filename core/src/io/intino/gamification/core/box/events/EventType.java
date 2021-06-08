@@ -21,6 +21,8 @@ public enum EventType {
     DestroyEntity(DestroyEntity.class),
     DropItem(DropItem.class),
     PickUpItem(PickUpItem.class),
+    EnableEntity(EnableEntity.class),
+    DisableEntity(DisableEntity.class),
     BeginMatch(BeginMatch.class),
     EndMatch(EndMatch.class),
     NewMission(NewMission.class),

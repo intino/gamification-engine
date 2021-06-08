@@ -6,7 +6,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 
 public class DestroyWorld extends GamificationEvent {
 
-    public DestroyWorld(String type) {
+    public DestroyWorld() {
         super(DestroyWorld.class);
     }
 

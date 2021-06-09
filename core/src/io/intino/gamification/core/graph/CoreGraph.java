@@ -121,7 +121,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Item item(CreateItem event, String worldId) {
-		return create(Stash.Items.name()).item(event.id(), worldId, event.name());
+		return create(Stash.Items.name()).item(event.id(), worldId);
 	}
 
 	/* PLAYER STATE ------------------------------------------------------------------------------------------------------ */
@@ -177,12 +177,12 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return missionStateList(ms -> ms.missionId().equals(id)).collect(Collectors.toList());
 	}
 
-	public MissionState missionState(NewStateMission event, String missionId, String playerId) {
-		return create(Stash.MissionsState.name()).missionState(missionId, playerId, event.state().name());
+	public MissionState missionState(NewStateMission event, String matchId, String missionId, String playerId) {
+		return create(Stash.MissionsState.name()).missionState(matchId, missionId, playerId, event.state().name());
 	}
 
-	public MissionState missionState(String missionId, String playerId) {
-		return create(Stash.MissionsState.name()).missionState(missionId, playerId, io.intino.gamification.core.box.events.mission.MissionState.Pending.name());
+	public MissionState missionState(String worldId, String missionId, String playerId) {
+		return create(Stash.MissionsState.name()).missionState(worldId, missionId, playerId, io.intino.gamification.core.box.events.mission.MissionState.Pending.name());
 	}
 
 	/* ACHIEVEMENT ------------------------------------------------------------------------------------------------------ */

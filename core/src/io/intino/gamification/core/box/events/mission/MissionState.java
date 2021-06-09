@@ -3,13 +3,13 @@ package io.intino.gamification.core.box.events.mission;
 public enum MissionState {
     Completed(2), Cancelled(0), Failed(-1), Pending(0);
 
-    private final int multiplier;
+    private final float multiplier;
 
-    MissionState(int multiplier) {
+    MissionState(float multiplier) {
         this.multiplier = multiplier;
     }
 
-    public int multiplier() {
+    public float multiplier() {
         return multiplier;
     }
 }

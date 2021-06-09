@@ -32,7 +32,6 @@ Concept Enemy extends Entity
 Concept Npc extends Entity
 
 Concept Item extends Entity
-	var string name
 
 Concept PlayerState
 	var string playerId
@@ -49,6 +48,7 @@ Concept Mission is decorable
 	var integer maxCount
 
 Concept MissionState is decorable
+	var string worldId
 	var string missionId
 	var string playerId
 	var string stateName

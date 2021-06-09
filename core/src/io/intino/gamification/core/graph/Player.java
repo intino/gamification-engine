@@ -20,7 +20,7 @@ public class Player extends AbstractPlayer {
 	}
 
 	public int level() {
-		return graph().world(worldId).getLevelOf(score);
+		return World.levelOf(score);
 	}
 
 	public Integer matchLevel() {
@@ -32,7 +32,7 @@ public class Player extends AbstractPlayer {
 		if(playerState == null) {
 			return 1;
 		} else {
-			return world.getLevelOf(playerState.score());
+			return World.levelOf(playerState.score());
 		}
 	}
 }

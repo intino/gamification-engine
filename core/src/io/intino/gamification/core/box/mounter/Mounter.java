@@ -55,7 +55,7 @@ public abstract class Mounter {
                 if(mission.check(event, player)) {
                     MissionState missionState = box.graph().missionStateOf(mission.id(), player.id());
                     if(missionState == null) {
-                        missionState = box.graph().missionState(mission.id(), player.id());
+                        missionState = box.graph().missionState(player.worldId(), mission.id(), player.id());
                         missionState.save$();
                     }
 

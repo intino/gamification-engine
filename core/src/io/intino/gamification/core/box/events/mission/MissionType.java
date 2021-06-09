@@ -3,13 +3,13 @@ package io.intino.gamification.core.box.events.mission;
 public enum MissionType {
     Primary(2), Secondary(1), Special(3);
 
-    private final int multiplier;
+    private final float multiplier;
 
-    MissionType(int multiplier) {
+    MissionType(float multiplier) {
         this.multiplier = multiplier;
     }
 
-    public int multiplier() {
+    public float multiplier() {
         return multiplier;
     }
 }

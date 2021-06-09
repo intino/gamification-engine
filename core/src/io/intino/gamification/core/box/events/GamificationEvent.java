@@ -2,7 +2,7 @@ package io.intino.gamification.core.box.events;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.intino.gamification.core.box.events.achievement.CreateAchievement;
+import io.intino.alexandria.message.Message;
 
 import java.util.List;
 import java.util.Map;
@@ -40,15 +40,23 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
     }
 
     protected String get(String parameter) {
-        return message.get(parameter).asString();
+        Message.Value value = message.get(parameter);
+        return value != null ? value.asString() : null;
     }
 
     protected Integer getAsInt(String parameter) {
-        return message.get(parameter).asInteger();
+        Message.Value value = message.get(parameter);
+        return value != null ? value.asInteger() : null;
     }
 
     protected Double getAsDouble(String parameter) {
-        return message.get(parameter).asDouble();
+        Message.Value value = message.get(parameter);
+        return value != null ? value.asDouble() : null;
+    }
+
+    protected Boolean getAsBoolean(String parameter) {
+        Message.Value value = message.get(parameter);
+        return value != null ? value.asBoolean() : null;
     }
 
     protected <T extends Enum<T>> T getAsEnum(String parameter, Class<T> enumClass) {
@@ -73,11 +81,15 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
         this.message.set(attribute, value);
     }
 
-    protected void set(String attribute, Integer value) {
+    protected void set(String attribute, int value) {
         this.message.set(attribute, value);
     }
 
-    protected void set(String attribute, Double value) {
+    protected void set(String attribute, double value) {
+        this.message.set(attribute, value);
+    }
+
+    protected void set(String attribute, boolean value) {
         this.message.set(attribute, value);
     }
 

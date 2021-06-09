@@ -34,6 +34,8 @@ public class EntityMounter extends Mounter {
         Player player = box.graph().player(event, world.id());
 
         world.entities().add(player);
+        if(event.enabled() != null) player.enabled(event.enabled());
+        if(event.health() != null) player.health(event.health());
 
         world.save$();
         player.save$();
@@ -47,6 +49,8 @@ public class EntityMounter extends Mounter {
         Enemy enemy = box.graph().enemy(event, world.id());
 
         world.entities().add(enemy);
+        if(event.enabled() != null) enemy.enabled(event.enabled());
+        if(event.health() != null) enemy.health(event.health());
 
         world.save$();
         enemy.save$();
@@ -60,6 +64,8 @@ public class EntityMounter extends Mounter {
         Npc npc = box.graph().npc(event, world.id());
 
         world.entities().add(npc);
+        if(event.enabled() != null) npc.enabled(event.enabled());
+        if(event.health() != null) npc.health(event.health());
 
         world.save$();
         npc.save$();
@@ -73,6 +79,8 @@ public class EntityMounter extends Mounter {
         Item item = box.graph().item(event, world.id());
 
         world.entities().add(item);
+        if(event.enabled() != null) item.enabled(event.enabled());
+        if(event.health() != null) item.health(event.health());
 
         world.save$();
         item.save$();

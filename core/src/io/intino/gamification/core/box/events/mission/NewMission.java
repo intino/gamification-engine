@@ -37,7 +37,7 @@ public class NewMission extends GamificationEvent {
         return getAsEnum("event", EventType.class);
     }
 
-    public int maxCount() {
+    public Integer maxCount() {
         return getAsInt("maxCount");
     }
 

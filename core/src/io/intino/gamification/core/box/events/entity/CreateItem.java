@@ -1,8 +1,6 @@
 package io.intino.gamification.core.box.events.entity;
 
-import io.intino.gamification.core.box.events.GamificationEvent;
-
-public class CreateItem extends GamificationEvent {
+public class CreateItem extends CreateEntity {
 
     public CreateItem() {
         super(CreateItem.class);
@@ -20,17 +18,8 @@ public class CreateItem extends GamificationEvent {
         return get("name");
     }
 
-    public String world() {
-        return get("world");
-    }
-
     public CreateItem name(String name) {
         set("name", name);
-        return this;
-    }
-
-    public CreateItem world(String world) {
-        set("world", world);
         return this;
     }
 }

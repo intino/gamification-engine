@@ -20,13 +20,14 @@ public class Player extends AbstractPlayer {
 	}
 
 	public int level() {
-		return world.getLevelOf(score);
+		return graph().world(worldId).getLevelOf(score);
 	}
 
 	public Integer matchLevel() {
+		World world = graph().world(worldId);
 		Match match = world.match();
 		if(match == null) return null;
-		PlayerState playerState = match.playersState(ps -> ps.player().id().equals(id)).stream()
+		PlayerState playerState = match.playersState(ps -> ps.playerId().equals(id)).stream()
 				.findFirst().orElse(null);
 		if(playerState == null) {
 			return 1;

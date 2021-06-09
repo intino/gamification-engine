@@ -11,10 +11,9 @@ import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.logic.CheckerHandler;
-import io.intino.gamification.core.graph.Achievement;
-import io.intino.gamification.core.graph.Entity;
-import io.intino.gamification.core.graph.Mission;
-import io.intino.gamification.core.graph.Player;
+import io.intino.gamification.core.graph.*;
+
+import java.util.function.Function;
 
 public class Test {
 
@@ -25,7 +24,7 @@ public class Test {
         Entity.setAttributeListener("test", (entity, oldValue, newValue) -> oldValue, Integer::parseInt);
 
         CreateAchievement createAchievement = new CreateAchievement()
-                .context("context")
+                .world("context")
                 .description("description")
                 .type(AchievementType.Global)
                 .event(EventType.BeginMatch)

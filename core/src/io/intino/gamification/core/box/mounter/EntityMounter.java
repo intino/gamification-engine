@@ -31,7 +31,7 @@ public class EntityMounter extends Mounter {
         if(!filter.createPlayerCanMount()) return;
 
         World world = filter.world();
-        Player player = box.graph().player(event, world);
+        Player player = box.graph().player(event, world.id());
 
         world.entities().add(player);
 
@@ -44,7 +44,7 @@ public class EntityMounter extends Mounter {
         if(!filter.createEnemyCanMount()) return;
 
         World world = filter.world();
-        Enemy enemy = box.graph().enemy(event, world);
+        Enemy enemy = box.graph().enemy(event, world.id());
 
         world.entities().add(enemy);
 
@@ -57,7 +57,7 @@ public class EntityMounter extends Mounter {
         if(!filter.createNpcCanMount()) return;
 
         World world = filter.world();
-        Npc npc = box.graph().npc(event, world);
+        Npc npc = box.graph().npc(event, world.id());
 
         world.entities().add(npc);
 
@@ -70,7 +70,7 @@ public class EntityMounter extends Mounter {
         if(!filter.createItemCanMount()) return;
 
         World world = filter.world();
-        Item item = box.graph().item(event, world);
+        Item item = box.graph().item(event, world.id());
 
         world.entities().add(item);
 
@@ -86,7 +86,7 @@ public class EntityMounter extends Mounter {
         Entity entity = filter.entity();
 
         world.entities().remove(entity);
-        destroyEntity(entity);
+        destroyEntity(world, entity);
 
         world.save$();
         entity.delete$();
@@ -96,10 +96,11 @@ public class EntityMounter extends Mounter {
         EntityFilter filter = new EntityFilter(box, event);
         if(!filter.actionCanMount()) return;
 
+        Match match = filter.match();
         Entity entity = filter.entity();
 
         String oldValue = entity.get(event.attribute());
-        String newValue = applyAction(entity, event.toMessage().type(), event.value());
+        String newValue = applyAction(match, entity, event.toMessage().type(), event.value());
         if(newValue == null) return;
         newValue = Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
         entity.set(event.attribute(), newValue);
@@ -115,7 +116,6 @@ public class EntityMounter extends Mounter {
         Item item = filter.item();
 
         player.inventory().add(item);
-        item.owner(player);
 
         player.save$();
         item.save$();
@@ -129,7 +129,6 @@ public class EntityMounter extends Mounter {
         Item item = filter.item();
 
         player.inventory().remove(item);
-        item.owner(null);
 
         player.save$();
         item.save$();
@@ -157,18 +156,20 @@ public class EntityMounter extends Mounter {
         entity.save$();
     }
 
-    private void destroyEntity(Entity entity) {
+    private void destroyEntity(World world, Entity entity) {
         //TODO
-        if(entity instanceof Player) {
-            ((Player) entity).inventory().forEach(i -> i.owner(null).save$());
-        } else if(entity instanceof Item) {
-            Item item = (Item) entity;
-            item.owner().inventory().remove(item);
-            item.owner().save$();
+        if(entity instanceof Item) {
+            world.players().forEach(p -> {
+                if(p.inventory().stream().anyMatch(i -> i.id().equals(entity.id()))) {
+                    Item itemToRemove = p.inventory().stream().filter(i -> i.id().equals(entity.id())).findFirst().orElse(null);
+                    p.inventory().remove(itemToRemove);
+                    p.save$();
+                }
+            });
         }
     }
 
-    private String applyAction(Entity entity, String type, String value) {
+    private String applyAction(Match match, Entity entity, String type, String value) {
         switch (type) {
             case "Attack":
             case "Heal":
@@ -176,7 +177,7 @@ public class EntityMounter extends Mounter {
             case "ChangeScore":
                 //TODO
                 if(entity instanceof Player) {
-                    return applyChangeScore((Player) entity, Integer.parseInt(value));
+                    return applyChangeScore(match, (Player) entity, Integer.parseInt(value));
                 } else {
                     return null;
                 }
@@ -185,18 +186,15 @@ public class EntityMounter extends Mounter {
         }
     }
 
-    private String applyChangeScore(Player entity, int value) {
-        changeMatchRelativeScore(entity, value);
+    private String applyChangeScore(Match match, Player entity, int value) {
+        changeMatchRelativeScore(match, entity, value);
         return String.valueOf(entity.score() + value);
     }
 
-    private void changeMatchRelativeScore(Player player, int scoreDiff) {
-        Match match = player.world().match();
-        if(match == null) return;
-
+    private void changeMatchRelativeScore(Match match, Player player, int scoreDiff) {
         PlayerState playerState = box.graph().playerState(match.playersState(), player.id());
         if(playerState == null) {
-            playerState = box.graph().playerState(player, match);
+            playerState = box.graph().playerState(player.id());
             match.playersState().add(playerState);
             match.save$();
         }

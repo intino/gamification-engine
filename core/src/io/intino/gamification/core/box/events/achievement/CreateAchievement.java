@@ -17,8 +17,8 @@ public class CreateAchievement extends GamificationEvent {
         super(message);
     }
 
-    public String context() {
-        return get("context");
+    public String world() {
+        return get("world");
     }
 
     public String description() {
@@ -37,8 +37,8 @@ public class CreateAchievement extends GamificationEvent {
         return getAsInt("maxCount");
     }
 
-    public CreateAchievement context(String context) {
-        set("context", context);
+    public CreateAchievement world(String world) {
+        set("world", world);
         return this;
     }
 

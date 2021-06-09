@@ -11,7 +11,7 @@ import io.intino.gamification.core.graph.World;
 public class MissionFilter extends Filter {
 
     private World world;
-    private final Match match;
+    private Match match;
     private Mission mission;
     private Player player;
 
@@ -25,12 +25,12 @@ public class MissionFilter extends Filter {
 
     public MissionFilter(CoreBox box, NewStateMission event) {
         super(box);
-        this.match = box.graph().match(event.match());
-        if(match != null) {
-            this.mission = box.graph().mission(match.missions(), event.id());
-            this.world = match.world();
-            if(world != null) {
-                this.player.graph().player(world.players(), event.player());
+        this.world = box.graph().world(event.world());
+        if(world != null) {
+            this.player.graph().player(world.players(), event.player());
+            this.match = world.match();
+            if(match != null) {
+                this.mission = box.graph().mission(match.missions(), event.id());
             }
         }
     }

@@ -6,6 +6,8 @@ import io.intino.gamification.api.EngineTerminal;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.launcher.Launcher;
 
+import java.util.Map;
+
 public class Engine {
 
     private final Launcher launcher;
@@ -15,14 +17,21 @@ public class Engine {
         this.launcher = new Launcher(configuration);
     }
 
+    public Engine(Map<String, String> arguments) {
+        this.launcher = new Launcher(arguments);
+    }
+
     public void launch() {
+        launcher.onStart(() -> box = launcher.box());
         launcher.start();
-        box = launcher.box();
     }
 
     public void launch(Runnable onStartCallback) {
-        launcher.onStart(onStartCallback);
-        launch();
+        launcher.onStart(() -> {
+            box = launcher.box();
+            onStartCallback.run();
+        });
+        launcher.start();
     }
 
     public EngineTerminal terminal() {

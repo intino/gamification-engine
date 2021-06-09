@@ -21,6 +21,6 @@ public class Match extends AbstractMatch {
 
 	@Override
 	public List<Player> players() {
-		return world.players();
+		return graph().world(worldId).players();
 	}
 }

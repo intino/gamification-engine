@@ -15,4 +15,22 @@ public class DeleteAchievement extends GamificationEvent {
     public DeleteAchievement(io.intino.alexandria.message.Message message) {
         super(message);
     }
+
+    public String world() {
+        return get("world");
+    }
+
+    public AchievementType type() {
+        return getAsEnum("type", AchievementType.class);
+    }
+
+    public DeleteAchievement world(String world) {
+        set("world", world);
+        return this;
+    }
+
+    public DeleteAchievement type(AchievementType type) {
+        set("type", type);
+        return this;
+    }
 }

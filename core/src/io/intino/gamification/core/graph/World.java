@@ -13,7 +13,7 @@ public class World extends AbstractWorld {
 		super(node);
 		levelFunction(score -> Math.toIntExact(Math.max(1, Math.round(5.7 * Math.log(Math.max(score, 1)) - 24.5))));
 		missionScoreFunction(missionState -> {
-			Mission mission = missionState.mission();
+			Mission mission = graph().mission(match.missions(), missionState.missionId());
 			return 100 * mission.difficulty().multiplier() * mission.type().multiplier() * missionState.state().multiplier();
 		});
 	}

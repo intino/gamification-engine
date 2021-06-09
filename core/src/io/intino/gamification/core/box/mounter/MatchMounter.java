@@ -29,7 +29,7 @@ public class MatchMounter extends Mounter {
         if(!filter.beginMatchCanMount()) return;
 
         World world = filter.world();
-        Match match = box.graph().match(event, world);
+        Match match = box.graph().match(event, world.id());
 
         world.match(match);
 

@@ -33,7 +33,7 @@ public abstract class Mounter {
                 if(achievement.check(event, player)) {
                     AchievementState achievementState = box.graph().achievementState(achievement.id(), player.id());
                     if(achievementState == null) {
-                        achievementState = box.graph().achievementState(achievement, player);
+                        achievementState = box.graph().achievementState(achievement.id(), player.id());
                         achievementState.save$();
                     }
 
@@ -53,9 +53,9 @@ public abstract class Mounter {
         missions.forEach((mission, players) -> {
             players.forEach(player -> {
                 if(mission.check(event, player)) {
-                    MissionState missionState = box.graph().missionState(mission.id(), player.id());
+                    MissionState missionState = box.graph().missionStateOf(mission.id(), player.id());
                     if(missionState == null) {
-                        missionState = box.graph().missionState(mission, player);
+                        missionState = box.graph().missionState(mission.id(), player.id());
                         missionState.save$();
                     }
 

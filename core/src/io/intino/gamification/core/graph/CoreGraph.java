@@ -4,7 +4,10 @@ import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
-import io.intino.gamification.core.box.events.entity.*;
+import io.intino.gamification.core.box.events.entity.CreateEnemy;
+import io.intino.gamification.core.box.events.entity.CreateItem;
+import io.intino.gamification.core.box.events.entity.CreateNpc;
+import io.intino.gamification.core.box.events.entity.CreatePlayer;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.MatchState;
 import io.intino.gamification.core.box.events.mission.NewMission;
@@ -13,8 +16,10 @@ import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static io.intino.gamification.core.box.events.achievement.AchievementState.Pending;
@@ -26,7 +31,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public CoreGraph(io.intino.magritte.framework.Graph graph, CoreGraph wrapper) {
-	    super(graph, wrapper);
+		super(graph, wrapper);
 	}
 
 	public World world(String id) {
@@ -34,7 +39,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public World world(CreateWorld event) {
-		return create(Stash.World.name()).world(event.id());
+		return create(Stash.Worlds.name()).world(event.id());
 	}
 
 	/* MATCH ------------------------------------------------------------------------------------------------------ */
@@ -44,11 +49,11 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public List<Match> matchesIn(World world) {
-		return matchList(m -> m.world().id().equals(world.id())).collect(Collectors.toList());
+		return matchList(m -> m.worldId().equals(world.id())).collect(Collectors.toList());
 	}
 
-	public Match match(BeginMatch event, World world) {
-		return create(Stash.Match.name()).match(event.id(), world, event.ts(), MatchState.Started.name());
+	public Match match(BeginMatch event, String worldId) {
+		return create(Stash.Matches.name()).match(event.id(), worldId, event.ts(), MatchState.Started.name());
 	}
 
 	/* ENTITY ------------------------------------------------------------------------------------------------------ */
@@ -73,8 +78,8 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return players.stream().filter(p -> p.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Player player(CreatePlayer event, World world) {
-		return create(Stash.Player.name()).player(event.id(), world);
+	public Player player(CreatePlayer event, String worldId) {
+		return create(Stash.Players.name()).player(event.id(), worldId);
 	}
 
 	/* ENEMY ------------------------------------------------------------------------------------------------------ */
@@ -85,8 +90,8 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 				.map(e -> (Enemy) e).findFirst().orElse(null);
 	}
 
-	public Enemy enemy(CreateEnemy event, World world) {
-		return create(Stash.Enemy.name()).enemy(event.id(), world);
+	public Enemy enemy(CreateEnemy event, String worldId) {
+		return create(Stash.Enemies.name()).enemy(event.id(), worldId);
 	}
 
 	/* NPC ------------------------------------------------------------------------------------------------------ */
@@ -97,8 +102,8 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 				.map(e -> (Npc) e).findFirst().orElse(null);
 	}
 
-	public Npc npc(CreateNpc event, World world) {
-		return create(Stash.Npc.name()).npc(event.id(), world);
+	public Npc npc(CreateNpc event, String worldId) {
+		return create(Stash.Npcs.name()).npc(event.id(), worldId);
 	}
 
 	/* ITEM ------------------------------------------------------------------------------------------------------ */
@@ -115,18 +120,18 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 				.map(e -> (Item) e).findFirst().orElse(null);
 	}
 
-	public Item item(CreateItem event, World world) {
-		return create(Stash.Item.name()).item(event.id(), world, event.name());
+	public Item item(CreateItem event, String worldId) {
+		return create(Stash.Items.name()).item(event.id(), worldId, event.name());
 	}
 
 	/* PLAYER STATE ------------------------------------------------------------------------------------------------------ */
 
 	public PlayerState playerState(List<PlayerState> playersState, String playerId) {
-		return playersState.stream().filter(ps -> ps.player().id().equals(playerId)).findFirst().orElse(null);
+		return playersState.stream().filter(ps -> ps.playerId().equals(playerId)).findFirst().orElse(null);
 	}
 
-	public PlayerState playerState(Player player, Match match) {
-		return create(Stash.PlayerState.name()).playerState(match, player);
+	public PlayerState playerState(String playerId) {
+		return create(Stash.PlayersState.name()).playerState(playerId);
 	}
 
 	/* MISSION ------------------------------------------------------------------------------------------------------ */
@@ -140,71 +145,96 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Map<Mission, List<Player>> mission(Class<? extends GamificationEvent> clazz) {
-		return missionList(m -> m.event().equals(EventType.get(clazz)))
-				.collect(Collectors.toMap(m -> m, m -> m.match().players()));
+		Map<Mission, List<Player>> missionMap = new HashMap<>();
+
+		for (Match match : worldList().stream().map(AbstractWorld::match).filter(Objects::nonNull).collect(Collectors.toList())) {
+			for (Mission mission : match.missions()) {
+				if(mission.event().equals(EventType.get(clazz))) {
+					missionMap.put(mission, match.players());
+				}
+			}
+		}
+
+		return missionMap;
 	}
 
-	public Mission mission(NewMission event, Match match) {
-		return create(Stash.Mission.name()).mission(event.id(), match, event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
+	public Mission mission(NewMission event) {
+		return create(Stash.Missions.name()).mission(event.id(), event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
 	}
 
 	/* MISSION STATE ------------------------------------------------------------------------------------------------------ */
 
-	public MissionState missionState(String missionId, String playerId) {
-		return missionStateList(ms -> ms.mission().id().equals(missionId) && ms.player().id().equals(playerId))
+	public MissionState missionStateOf(String missionId, String playerId) {
+		return missionStateList(ms -> ms.missionId().equals(missionId) && ms.playerId().equals(playerId))
 				.findFirst().orElse(null);
 	}
 
 	public MissionState missionState(List<MissionState> missionState, String id) {
-		return missionState.stream().filter(ms -> ms.mission().id().equals(id)).findFirst().orElse(null);
+		return missionState.stream().filter(ms -> ms.missionId().equals(id)).findFirst().orElse(null);
 	}
 
 	public List<MissionState> missionState(String id) {
-		return missionStateList(ms -> ms.mission().id().equals(id)).collect(Collectors.toList());
+		return missionStateList(ms -> ms.missionId().equals(id)).collect(Collectors.toList());
 	}
 
-	public MissionState missionState(NewStateMission event, Mission mission, Player player) {
-		return create(Stash.MissionState.name()).missionState(mission, player, event.state().name());
+	public MissionState missionState(NewStateMission event, String missionId, String playerId) {
+		return create(Stash.MissionsState.name()).missionState(missionId, playerId, event.state().name());
 	}
 
-	public MissionState missionState(Mission mission, Player player) {
-		return create(Stash.MissionState.name()).missionState(mission, player, io.intino.gamification.core.box.events.mission.MissionState.Pending.name());
+	public MissionState missionState(String missionId, String playerId) {
+		return create(Stash.MissionsState.name()).missionState(missionId, playerId, io.intino.gamification.core.box.events.mission.MissionState.Pending.name());
 	}
 
-    /* ACHIEVEMENT ------------------------------------------------------------------------------------------------------ */
+	/* ACHIEVEMENT ------------------------------------------------------------------------------------------------------ */
 
 	public Achievement achievement(String id) {
 		return achievementList(a -> a.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Map<Achievement, List<Player>> achievement(Class<? extends GamificationEvent> clazz) {
-		return achievementList(a -> a.event().equals(EventType.get(clazz)))
-				.collect(Collectors.toMap(a -> a, a -> a.context().players()));
+	public Achievement achievement(List<Achievement> achievements, String id) {
+		return achievements.stream().filter(a -> a.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Achievement achievement(CreateAchievement event, Context context) {
-		return create(Stash.Achievement.name()).achievement(event.id(), context, event.description(), event.event().clazzName(), event.maxCount());
+	public Map<Achievement, List<Player>> achievement(Class<? extends GamificationEvent> clazz) {
+		Map<Achievement, List<Player>> achievementMap = new HashMap<>();
+
+		for (World world : worldList()) {
+			List<Achievement> achievements = world.achievements();
+			if(world.match() != null) achievements.addAll(world.match().achievements());
+
+			for (Achievement achievement : achievements) {
+				if(achievement.event().equals(EventType.get(clazz))) {
+					achievementMap.put(achievement, world.players());
+				}
+			}
+		}
+
+		return achievementMap;
+	}
+
+	public Achievement achievement(CreateAchievement event) {
+		return create(Stash.Achievements.name()).achievement(event.id(), event.description(), event.event().clazzName(), event.maxCount());
 	}
 
 	/* ACHIEVEMENT STATE ------------------------------------------------------------------------------------------------------ */
 
-	public AchievementState achievementState(String achievementId, String playerId) {
+	public AchievementState achievementStateOf(String achievementId, String playerId) {
 		return achievementStateList().stream()
-				.filter(as -> as.achievement().id().equals(achievementId))
-				.filter(as -> as.player().id().equals(playerId))
+				.filter(as -> as.achievementId().equals(achievementId))
+				.filter(as -> as.playerId().equals(playerId))
 				.findFirst().orElse(null);
 	}
 
 	public List<AchievementState> achievementState(String id) {
-		return achievementStateList(as -> as.achievement().id().equals(id))
+		return achievementStateList(as -> as.achievementId().equals(id))
 				.collect(Collectors.toList());
 	}
 
-	public AchievementState achievementState(AchievementNewState event, Achievement achievement, Player player) {
-		return create(Stash.AchievementState.name()).achievementState(achievement, player, event.state().name());
+	public AchievementState achievementState(AchievementNewState event, String achievementId, String playerId) {
+		return create(Stash.AchievementsState.name()).achievementState(achievementId, playerId, event.state().name());
 	}
 
-	public AchievementState achievementState(Achievement achievement, Player player) {
-		return create(Stash.AchievementState.name()).achievementState(achievement, player, Pending.name());
+	public AchievementState achievementState(String achievementId, String playerId) {
+		return create(Stash.AchievementsState.name()).achievementState(achievementId, playerId, Pending.name());
 	}
 }

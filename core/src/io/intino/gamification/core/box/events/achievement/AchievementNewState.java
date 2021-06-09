@@ -33,4 +33,13 @@ public class AchievementNewState extends GamificationEvent {
         set("state", state);
         return this;
     }
+
+    public AchievementType type() {
+        return getAsEnum("type", AchievementType.class);
+    }
+
+    public AchievementNewState type(AchievementType type) {
+        set("type", type);
+        return this;
+    }
 }

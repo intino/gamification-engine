@@ -21,6 +21,10 @@ public class Launcher extends Async {
         this.args = argsFrom(configuration.args());
     }
 
+    public Launcher(Map<String, String> arguments) {
+        this.args = argsFrom(arguments);
+    }
+
     @Override
     protected void run() {
         this.box = new CoreBox(args);

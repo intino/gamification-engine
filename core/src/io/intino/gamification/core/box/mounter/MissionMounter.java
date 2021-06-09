@@ -27,7 +27,9 @@ public class MissionMounter extends Mounter {
         if(!filter.newMissionCanMount()) return;
 
         Match match = filter.match();
-        Mission mission = box.graph().mission(event, match);
+        Mission mission = box.graph().mission(event);
+
+        match.missions().add(mission);
 
         match.save$();
         mission.save$();
@@ -44,13 +46,13 @@ public class MissionMounter extends Mounter {
 
         PlayerState playerState = box.graph().playerState(match.playersState(), player.id());
         if(playerState == null) {
-            playerState = box.graph().playerState(player, match);
+            playerState = box.graph().playerState(player.id());
             match.playersState().add(playerState);
         }
 
         MissionState missionState = box.graph().missionState(playerState.missionState(), mission.id());
         if(missionState == null) {
-            missionState = box.graph().missionState(event, mission, player);
+            missionState = box.graph().missionState(event, mission.id(), player.id());
             playerState.missionState().add(missionState);
         } else {
             if(missionState.state().equals(Pending)) {
@@ -58,7 +60,7 @@ public class MissionMounter extends Mounter {
             }
         }
 
-        box.engineTerminal().feed(EventBuilder.changeScore(world.id(), player.id(), player.world().scoreOf(missionState)));
+        box.engineTerminal().feed(EventBuilder.changeScore(world.id(), player.id(), world.scoreOf(missionState)));
 
         match.save$();
         playerState.save$();

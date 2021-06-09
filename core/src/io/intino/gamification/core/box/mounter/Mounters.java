@@ -21,6 +21,7 @@ public class Mounters {
         builder.put(EntityMounter.class, new EntityMounter(box));
         builder.put(MatchMounter.class, new MatchMounter(box));
         builder.put(MissionMounter.class, new MissionMounter(box));
+        builder.put(WorldMounter.class, new WorldMounter(box));
     }
 
     public <T extends Mounter> T mounter(Class<T> clazz) {

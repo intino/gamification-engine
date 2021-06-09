@@ -3,9 +3,9 @@ package io.intino.gamification.core.box.mounter;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
+import io.intino.gamification.core.box.mounter.builder.AchievementFilter;
 import io.intino.gamification.core.graph.*;
 import io.intino.magritte.framework.Layer;
 
@@ -25,55 +25,50 @@ public class AchievementMounter extends Mounter {
     }
 
     private void handle(CreateAchievement event) {
-        Achievement achievement = box.graph().achievement(event.id());
-        if(achievement != null) return;
+        AchievementFilter filter = new AchievementFilter(box, event);
+        if(!filter.createAchievementCanMount()) return;
 
-        Context context;
-        if(event.type().equals(AchievementType.Local)) {
-            context = box.graph().match(event.context());
-        } else {
-            context = box.graph().world(event.context());
-        }
-        if(context == null) return;
+        Context context = filter.context();
+        Achievement achievement = box.graph().achievement(event);
 
-        achievement = box.graph().achievement(event, context);
         context.achievements().add(achievement);
 
-        achievement.save$();
         context.save$();
+        achievement.save$();
     }
 
     private void handle(DeleteAchievement event) {
-        Achievement achievement = box.graph().achievement(event.id());
-        if(achievement == null) return;
+        AchievementFilter filter = new AchievementFilter(box, event);
+        if(!filter.deleteAchievementCanMount()) return;
 
-        Context context = achievement.context();
+        Context context = filter.context();
+        Achievement achievement = filter.achievement();
+
         context.achievements().remove(achievement);
-        context.save$();
-
         box.graph().achievementState(achievement.id()).forEach(Layer::delete$);
 
+        context.save$();
         achievement.delete$();
     }
 
     private void handle(AchievementNewState event) {
-        Achievement achievement = box.graph().achievement(event.id());
-        if(achievement == null) return;
+        AchievementFilter filter = new AchievementFilter(box, event);
+        if(!filter.achievementNewStateCanMount()) return;
 
-        Player player = box.graph().player(event.player());
-        if(player == null) return;
+        Context context = filter.context();
+        Achievement achievement = filter.achievement();
+        Player player = filter.player();
 
-        AchievementState achievementState = box.graph().achievementState(achievement.id(), player.id());
+        AchievementState achievementState = box.graph().achievementStateOf(achievement.id(), player.id());
         if(achievementState == null) {
-            achievementState = box.graph().achievementState(event, achievement, player);
-
-            Context context = achievement.context();
+            achievementState = box.graph().achievementState(event, achievement.id(), player.id());
+            //TODO
             if(context instanceof World) {
                 player.achievements().add(achievementState);
                 player.save$();
             } else {
-                PlayerState playerState = box.graph().playerState(player, player.world().match());
-                if(playerState == null) playerState = box.graph().playerState(player, player.world().match());
+                PlayerState playerState = box.graph().playerState(((Match) context).playersState(), player.id());
+                if(playerState == null) playerState = box.graph().playerState(player.id());
                 playerState.achievements().add(achievementState);
                 playerState.save$();
             }

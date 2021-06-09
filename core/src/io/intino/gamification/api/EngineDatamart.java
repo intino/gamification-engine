@@ -47,6 +47,10 @@ public class EngineDatamart {
         return box.graph().achievement(id);
     }
 
+    public Match match(String id) {
+        return box.graph().match(id);
+    }
+
     public Mission mission(String id) {
         return box.graph().mission(id);
     }

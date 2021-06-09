@@ -7,6 +7,7 @@ import io.intino.gamification.core.graph.*;
 public class EntityFilter extends Filter {
 
     private final World world;
+    private Match match;
     private Entity entity;
     private Player player;
     private Enemy enemy;
@@ -50,6 +51,7 @@ public class EntityFilter extends Filter {
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.entity = box.graph().entity(world.entities(), event.entityDest());
+            this.match = world.match();
         }
     }
 
@@ -99,6 +101,7 @@ public class EntityFilter extends Filter {
         return player;
     }
 
+
     /*public Enemy enemy() {
         return enemy;
     }
@@ -106,9 +109,12 @@ public class EntityFilter extends Filter {
     public Npc npc() {
         return npc;
     }*/
-
     public Item item() {
         return item;
+    }
+
+    public Match match() {
+        return match;
     }
 
     public boolean createPlayerCanMount() {
@@ -132,7 +138,7 @@ public class EntityFilter extends Filter {
     }
 
     public boolean actionCanMount() {
-        return entity != null;
+        return entity != null && match != null;
     }
 
     public boolean pickUpItemCanMount() {

@@ -13,13 +13,4 @@ public class CreateItem extends CreateEntity {
     public CreateItem(io.intino.alexandria.message.Message message) {
         super(message);
     }
-
-    public String name() {
-        return get("name");
-    }
-
-    public CreateItem name(String name) {
-        set("name", name);
-        return this;
-    }
 }

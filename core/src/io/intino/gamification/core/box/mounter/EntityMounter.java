@@ -180,6 +180,7 @@ public class EntityMounter extends Mounter {
     private String applyAction(Match match, Entity entity, String type, String value) {
         switch (type) {
             case "Attack":
+                return String.valueOf(entity.health() - Double.parseDouble(value));
             case "Heal":
                 return String.valueOf(entity.health() + Double.parseDouble(value));
             case "ChangeScore":

@@ -69,7 +69,7 @@ public class Action extends GamificationEvent {
                 .value(String.valueOf(score));
     }
 
-    public static Action attack(String world, String entitySrc, String entityDest, int damage) {
+    public static Action attack(String world, String entitySrc, String entityDest, double damage) {
         return new Action("Attack")
                 .world(world)
                 .entitySrc(entitySrc)
@@ -78,12 +78,12 @@ public class Action extends GamificationEvent {
                 .value(String.valueOf(damage));
     }
 
-    public static Action heal(String world, String entitySrc, String entityDest, int health) {
+    public static Action heal(String world, String entitySrc, String entityDest, double healedHealth) {
         return new Action("Heal")
                 .world(world)
                 .entitySrc(entitySrc)
                 .entityDest(entityDest)
                 .attribute("health")
-                .value(String.valueOf(health));
+                .value(String.valueOf(healedHealth));
     }
 }

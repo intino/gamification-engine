@@ -16,7 +16,7 @@ public class EmployeeMounter implements Mounter {
 	public void handle(org.example.cinepolis.datahub.events.cinepolis.HireEmployee event) {
 		Employee employee = box.graph().employee(event.id());
 		if(employee != null) return;
-		box.graph().create("Employees").employee(event.id(), event.name(), event.age(), event.phone());
+		box.graph().create("Employees").employee(event.id(), event.name(), event.age(), event.phone(), event.area());
 	}
 
 	public void handle(org.example.cinepolis.datahub.events.cinepolis.DismissEmployee event) {

@@ -11,5 +11,6 @@ public class FixedAssetSubscriber implements java.util.function.Consumer<org.exa
 
 	public void accept(org.example.cinepolis.datahub.events.cinepolis.FixedAsset event) {
 		box.mounter().handle(event);
+		box.adapter().adapt(event);
 	}
 }

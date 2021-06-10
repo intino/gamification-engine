@@ -7,7 +7,6 @@ import io.intino.gamification.core.box.events.entity.Action;
 import io.intino.gamification.core.box.events.entity.DestroyEntity;
 import io.intino.gamification.core.box.events.mission.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
-import io.intino.gamification.core.graph.Player;
 
 import java.time.Instant;
 

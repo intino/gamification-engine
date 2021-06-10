@@ -7,6 +7,7 @@ Namespace cinepolis
 		Attribute name as Text
 		Attribute phone as Text
 		Attribute age as Integer
+		Attribute area as Text
 
 	Event DismissEmployee
 		Attribute id as Text
@@ -14,6 +15,7 @@ Namespace cinepolis
 	Event RegisterAsset
 		Attribute id as Text
 		Attribute name as Text
+		Attribute area as Text
 
 	Event DeregisterAsset
 		Attribute id as Text

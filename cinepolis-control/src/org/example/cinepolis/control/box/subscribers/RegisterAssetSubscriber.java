@@ -11,5 +11,6 @@ public class RegisterAssetSubscriber implements java.util.function.Consumer<org.
 
 	public void accept(org.example.cinepolis.datahub.events.cinepolis.RegisterAsset event) {
 		box.mounter().handle(event);
+		box.adapter().adapt(event);
 	}
 }

@@ -5,10 +5,12 @@ Concept Employee
 	var string name
 	var integer age
 	var string phone
+	var string area
 
 Concept Asset
 	var string id
 	var string name
+	var string area
 	var Alert[] alerts = empty
 
 Concept Alert

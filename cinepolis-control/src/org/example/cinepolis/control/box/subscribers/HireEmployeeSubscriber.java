@@ -11,5 +11,6 @@ public class HireEmployeeSubscriber implements java.util.function.Consumer<org.e
 
 	public void accept(org.example.cinepolis.datahub.events.cinepolis.HireEmployee event) {
 		box.mounter().handle(event);
+		box.adapter().adapt(event);
 	}
 }

@@ -1,6 +1,7 @@
 package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.graph.Mission;
 
 public class EngineDatamart {
 
@@ -10,12 +11,16 @@ public class EngineDatamart {
         this.box = box;
     }
 
+    public Mission mission(String id) {
+        return box.graph().mission(id);
+    }
+
     /*public List<World> worlds() {
         return box.graph().worldList();
     }
 
     public World world(String id) {
-        return worlds().stream().filter(w -> w.id().equals(id)).findFirst().orElse(null);
+        return box.graph().worldList(w -> w.id().equals(id)).findFirst().orElse(null);
     }
 
     public List<Entity> entities() {

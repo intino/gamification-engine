@@ -20,13 +20,29 @@ public class Action extends GamificationEvent {
         return get("world");
     }
 
+    public String entitySrc() {
+        return get("entitySrc");
+    }
+
+    public String entityDest() {
+        return get("entityDest");
+    }
+
+    public String type() {
+        return get("type");
+    }
+
+    public String attribute() {
+        return get("attribute");
+    }
+
+    public String value() {
+        return get("value");
+    }
+
     public Action world(String world) {
         set("world", world);
         return this;
-    }
-
-    public String entitySrc() {
-        return get("entitySrc");
     }
 
     public Action entitySrc(String entitySrc) {
@@ -34,17 +50,14 @@ public class Action extends GamificationEvent {
         return this;
     }
 
-    public String entityDest() {
-        return get("entityDest");
-    }
-
     public Action entityDest(String entityDest) {
         set("entityDest", entityDest);
         return this;
     }
 
-    public String attribute() {
-        return get("attribute");
+    public Action type(String type) {
+        set("type", type);
+        return this;
     }
 
     public Action attribute(String attribute) {
@@ -52,37 +65,40 @@ public class Action extends GamificationEvent {
         return this;
     }
 
-    public String value() {
-        return get("value");
-    }
-
     public Action value(String value) {
         set("value", value);
         return this;
     }
 
-    public static Action changeScore(String world, String entity, int score) {
+    public static Action changeScore(String world, String entity, String type, int score) {
         return new Action("ChangeScore")
                 .world(world)
                 .entityDest(entity)
+                .type(type)
                 .attribute("score")
                 .value(String.valueOf(score));
     }
 
-    public static Action attack(String world, String entitySrc, String entityDest, double damage) {
+    public static Action changeScore(String world, String entity, int score) {
+        return changeScore(world, entity, "ChangeScore", score);
+    }
+
+    public static Action attack(String world, String entitySrc, String entityDest, String type, double damage) {
         return new Action("Attack")
                 .world(world)
                 .entitySrc(entitySrc)
                 .entityDest(entityDest)
+                .type(type)
                 .attribute("health")
                 .value(String.valueOf(damage));
     }
 
-    public static Action heal(String world, String entitySrc, String entityDest, double healedHealth) {
+    public static Action heal(String world, String entitySrc, String entityDest, String type, double healedHealth) {
         return new Action("Heal")
                 .world(world)
                 .entitySrc(entitySrc)
                 .entityDest(entityDest)
+                .type(type)
                 .attribute("health")
                 .value(String.valueOf(healedHealth));
     }

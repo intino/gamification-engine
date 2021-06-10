@@ -52,7 +52,7 @@ public abstract class Mounter {
 
         missions.forEach((mission, players) -> {
             players.forEach(player -> {
-                if(mission.check(event, player)) {
+                if(mission.players().contains(player.id()) && mission.check(event, player)) {
                     MissionState missionState = box.graph().missionStateOf(mission.id(), player.id());
                     if(missionState == null) {
                         missionState = box.graph().missionState(player.worldId(), mission.id(), player.id());

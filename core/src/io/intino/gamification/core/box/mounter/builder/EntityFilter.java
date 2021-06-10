@@ -59,7 +59,7 @@ public class EntityFilter extends Filter {
         super(box);
         this.world = box.graph().world(event.world());
         if(world != null) {
-            this.item = box.graph().item(world.entities(), event.id());
+            this.item = box.graph().item(world.items(), event.id());
             this.player = box.graph().player(world.players(), event.id());
         }
     }
@@ -68,7 +68,7 @@ public class EntityFilter extends Filter {
         super(box);
         this.world = box.graph().world(event.world());
         if(world != null) {
-            this.item = box.graph().item(world.entities(), event.id());
+            this.item = box.graph().item(world.items(), event.id());
             this.player = box.graph().player(world.players(), event.id());
         }
     }
@@ -101,14 +101,6 @@ public class EntityFilter extends Filter {
         return player;
     }
 
-
-    /*public Enemy enemy() {
-        return enemy;
-    }
-
-    public Npc npc() {
-        return npc;
-    }*/
     public Item item() {
         return item;
     }

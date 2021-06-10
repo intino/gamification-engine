@@ -33,7 +33,7 @@ public class EntityMounter extends Mounter {
         World world = filter.world();
         Player player = box.graph().player(event, world.id());
 
-        world.entities().add(player);
+        world.players().add(player);
         if(event.enabled() != null) player.enabled(event.enabled());
         if(event.health() != null) player.health(event.health());
 
@@ -48,7 +48,7 @@ public class EntityMounter extends Mounter {
         World world = filter.world();
         Enemy enemy = box.graph().enemy(event, world.id());
 
-        world.entities().add(enemy);
+        world.enemies().add(enemy);
         if(event.enabled() != null) enemy.enabled(event.enabled());
         if(event.health() != null) enemy.health(event.health());
 
@@ -63,7 +63,7 @@ public class EntityMounter extends Mounter {
         World world = filter.world();
         Npc npc = box.graph().npc(event, world.id());
 
-        world.entities().add(npc);
+        world.npcs().add(npc);
         if(event.enabled() != null) npc.enabled(event.enabled());
         if(event.health() != null) npc.health(event.health());
 
@@ -78,7 +78,7 @@ public class EntityMounter extends Mounter {
         World world = filter.world();
         Item item = box.graph().item(event, world.id());
 
-        world.entities().add(item);
+        world.items().add(item);
         if(event.enabled() != null) item.enabled(event.enabled());
         if(event.health() != null) item.health(event.health());
 
@@ -93,7 +93,6 @@ public class EntityMounter extends Mounter {
         World world = filter.world();
         Entity entity = filter.entity();
 
-        world.entities().remove(entity);
         destroyEntity(world, entity);
 
         world.save$();
@@ -166,7 +165,11 @@ public class EntityMounter extends Mounter {
 
     private void destroyEntity(World world, Entity entity) {
         //TODO
-        if(entity instanceof Item) {
+        if(entity instanceof Player) {
+            world.players().remove(entity);
+        } else if(entity instanceof Item) {
+            world.items().remove(entity);
+
             world.players().forEach(p -> {
                 if(p.inventory().stream().anyMatch(i -> i.id().equals(entity.id()))) {
                     Item itemToRemove = p.inventory().stream().filter(i -> i.id().equals(entity.id())).findFirst().orElse(null);
@@ -174,6 +177,10 @@ public class EntityMounter extends Mounter {
                     p.save$();
                 }
             });
+        } else if(entity instanceof Enemy) {
+            world.enemies().remove(entity);
+        } else if(entity instanceof Npc) {
+            world.npcs().remove(entity);
         }
     }
 

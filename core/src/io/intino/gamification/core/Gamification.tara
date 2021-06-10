@@ -5,7 +5,10 @@ Concept Context is abstract decorable
 	var Achievement[] achievements = empty
 
 Concept World extends Context
-	var Entity[] entities = empty
+	var Player[] players = empty
+	var Enemy[] enemies = empty
+	var Npc[] npcs = empty
+	var Item[] items = empty
 	var Match match = empty
 
 Concept Match extends Context

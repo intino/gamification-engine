@@ -11,7 +11,7 @@ import java.io.File;
 public class Main {
 
 	private static final String Stashes = "Control";
-	private static final String[] StartUpStashes = {Stashes};
+	private static final String[] StartUpStashes = {Stashes, "Employees", "Assets", "Alerts"};
 
 	public static void main(String[] args) {
 		ControlBox box = new ControlBox(args);

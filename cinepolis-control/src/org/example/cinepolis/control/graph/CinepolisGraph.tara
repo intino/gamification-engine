@@ -1,0 +1,17 @@
+dsl Proteo
+
+Concept Employee
+	var string id
+	var string name
+	var integer age
+	var string phone
+
+Concept Asset
+	var string id
+	var string name
+	var Alert[] alerts = empty
+
+Concept Alert
+	var instant limitHour
+	var string description
+	var word:AlertImportance importance

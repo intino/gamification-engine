@@ -1,0 +1,21 @@
+dsl Konos
+
+Datalake(path = "{datalake_path}") as Local
+
+Datamart(type = Graph) graph
+	Mounter EmployeeMounter as Event
+		Require("cinepolis.HireEmployee")
+		Require("cinepolis.DismissEmployee")
+	Mounter AssetMounter as Event
+		Require("cinepolis.RegisterAsset")
+		Require("cinepolis.DeregisterAsset")
+	Mounter AlertMounter as Event
+		Require("cinepolis.AssetAlert")
+		Require("cinepolis.FixedAsset")
+
+Subscriber(event = "cinepolis.HireEmployee", subscriberId = "HireEmployee") hireEmployeeSubscriber
+Subscriber(event = "cinepolis.DismissEmployee", subscriberId = "DismissEmployee") dismissEmployeeSubscriber
+Subscriber(event = "cinepolis.RegisterAsset", subscriberId = "RegisterAsset") registerAssetSubscriber
+Subscriber(event = "cinepolis.DeregisterAsset", subscriberId = "DeregisterAsset") deregisterAssetSubscriber
+Subscriber(event = "cinepolis.AssetAlert", subscriberId = "AssetAlert") assetAlertSubscriber
+Subscriber(event = "cinepolis.FixedAsset", subscriberId = "FixedAsset") fixedAssetSubscriber

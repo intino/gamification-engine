@@ -1,0 +1,19 @@
+dsl Ness
+
+use CinepolisEvents
+
+Broker(path = empty, port = empty, secondaryPort = empty)
+	User("cinepolis", "cinepolis")
+
+Datalake(scale = Month, path = empty) dl
+
+	Tank hireEmployee as Event(cinepolis.HireEmployee)
+	Tank dismissEmployee as Event(cinepolis.DismissEmployee)
+	Tank registerAsset as Event(cinepolis.RegisterAsset)
+	Tank deregisterAsset as Event(cinepolis.DeregisterAsset)
+	Tank assetAlert as Event(cinepolis.AssetAlert)
+	Tank fixedAsset as Event(cinepolis.FixedAsset)
+
+Terminal cinepolisTerminal
+	Publish (dl.hireEmployee dl.dismissEmployee dl.registerAsset dl.deregisterAsset dl.assetAlert dl.fixedAsset)
+	Subscribe (dl.hireEmployee dl.dismissEmployee dl.registerAsset dl.deregisterAsset dl.assetAlert dl.fixedAsset)

@@ -1,0 +1,28 @@
+dsl Ness
+
+Namespace cinepolis
+
+	Event HireEmployee
+		Attribute id as Text
+		Attribute name as Text
+		Attribute phone as Text
+		Attribute age as Integer
+
+	Event DismissEmployee
+		Attribute id as Text
+
+	Event RegisterAsset
+		Attribute id as Text
+		Attribute name as Text
+
+	Event DeregisterAsset
+		Attribute id as Text
+
+	Event AssetAlert
+		Attribute asset as Text
+		Attribute importance as Word("Low" "Medium" "Important")
+		Attribute limitHours as Integer
+
+	Event FixedAsset
+		Attribute asset as Text
+		Attribute employee as Text

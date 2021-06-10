@@ -11,5 +11,6 @@ public class DeregisterAssetSubscriber implements java.util.function.Consumer<or
 
 	public void accept(org.example.cinepolis.datahub.events.cinepolis.DeregisterAsset event) {
 		box.mounter().handle(event);
+		box.adapter().adapt(event);
 	}
 }

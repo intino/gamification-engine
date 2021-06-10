@@ -3,6 +3,8 @@ package io.intino.gamification.core.box.events.mission;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 
+import java.util.List;
+
 public class NewMission extends GamificationEvent {
 
     public NewMission() {
@@ -17,8 +19,12 @@ public class NewMission extends GamificationEvent {
         super(message);
     }
 
-    public String match() {
-        return get("match");
+    public String world() {
+        return get("world");
+    }
+
+    public List<String> players() {
+        return getAsList("players");
     }
 
     public MissionDifficulty difficulty() {
@@ -41,8 +47,13 @@ public class NewMission extends GamificationEvent {
         return getAsInt("maxCount");
     }
 
-    public NewMission match(String match) {
-        set("match", match);
+    public NewMission world(String world) {
+        set("world", world);
+        return this;
+    }
+
+    public NewMission players(List<String> players) {
+        set("players", players);
         return this;
     }
 

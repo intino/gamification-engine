@@ -149,7 +149,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		for (Match match : worldList().stream().map(World::match).filter(Objects::nonNull).collect(Collectors.toList())) {
 			for (Mission mission : match.missions()) {
 				if(mission.event().equals(EventType.get(clazz))) {
-					missionMap.put(mission, match.players());
+					missionMap.put(mission, match.players().stream().filter(p -> mission.players().contains(p.id())).collect(Collectors.toList()));
 				}
 			}
 		}
@@ -158,7 +158,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Mission mission(NewMission event) {
-		return create(Stash.Missions.name()).mission(event.id(), event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
+		return create(Stash.Missions.name()).mission(event.id(), event.players(), event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
 	}
 
 	/* MISSION STATE ------------------------------------------------------------------------------------------------------ */

@@ -10,16 +10,19 @@ import io.intino.gamification.core.graph.World;
 
 public class MissionFilter extends Filter {
 
-    private World world;
+    private final World world;
     private Match match;
     private Mission mission;
     private Player player;
 
     public MissionFilter(CoreBox box, NewMission event) {
         super(box);
-        this.match = box.graph().match(event.match());
-        if(match != null) {
-            this.mission = box.graph().mission(match.missions(), event.id());
+        this.world = box.graph().world(event.world());
+        if(world != null) {
+            this.match = world.match();
+            if(match != null) {
+                this.mission = box.graph().mission(match.missions(), event.id());
+            }
         }
     }
 
@@ -27,10 +30,12 @@ public class MissionFilter extends Filter {
         super(box);
         this.world = box.graph().world(event.world());
         if(world != null) {
-            this.player.graph().player(world.players(), event.player());
             this.match = world.match();
             if(match != null) {
                 this.mission = box.graph().mission(match.missions(), event.id());
+                if(mission.players().contains(event.player())) {
+                    this.player.graph().player(world.players(), event.player());
+                }
             }
         }
     }
@@ -52,7 +57,7 @@ public class MissionFilter extends Filter {
     }
 
     public boolean newMissionCanMount() {
-        return match != null && mission == null;
+        return world != null && match != null && mission == null;
     }
 
     public boolean newStateMissionCanMount() {

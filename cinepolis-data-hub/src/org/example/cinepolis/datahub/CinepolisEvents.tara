@@ -19,10 +19,13 @@ Namespace cinepolis
 		Attribute id as Text
 
 	Event AssetAlert
+		Attribute id as Text
 		Attribute asset as Text
+		Attribute description as Text
 		Attribute importance as Word("Low" "Medium" "Important")
 		Attribute limitHours as Integer
 
 	Event FixedAsset
+		Attribute alert as Text
 		Attribute asset as Text
 		Attribute employee as Text

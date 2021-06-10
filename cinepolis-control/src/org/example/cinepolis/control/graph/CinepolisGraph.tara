@@ -12,6 +12,7 @@ Concept Asset
 	var Alert[] alerts = empty
 
 Concept Alert
+	var string id
 	var instant limitHour
 	var string description
 	var word:AlertImportance importance

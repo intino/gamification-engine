@@ -114,10 +114,9 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 				.map(e -> (Item) e).findFirst().orElse(null);
 	}
 
-	public Item item(List<Entity> entities, String id) {
+	public Item item(List<Item> items, String id) {
 		//TODO
-		return entities.stream().filter(e -> e.id().equals(id) && e instanceof Item)
-				.map(e -> (Item) e).findFirst().orElse(null);
+		return items.stream().filter(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 
 	public Item item(CreateItem event, String worldId) {
@@ -147,7 +146,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	public Map<Mission, List<Player>> mission(Class<? extends GamificationEvent> clazz) {
 		Map<Mission, List<Player>> missionMap = new HashMap<>();
 
-		for (Match match : worldList().stream().map(AbstractWorld::match).filter(Objects::nonNull).collect(Collectors.toList())) {
+		for (Match match : worldList().stream().map(World::match).filter(Objects::nonNull).collect(Collectors.toList())) {
 			for (Mission mission : match.missions()) {
 				if(mission.event().equals(EventType.get(clazz))) {
 					missionMap.put(mission, match.players());

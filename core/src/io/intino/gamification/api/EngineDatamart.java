@@ -1,11 +1,6 @@
 package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.graph.*;
-
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
 
 public class EngineDatamart {
 
@@ -13,6 +8,14 @@ public class EngineDatamart {
 
     public EngineDatamart(CoreBox box) {
         this.box = box;
+    }
+
+    /*public List<World> worlds() {
+        return box.graph().worldList();
+    }
+
+    public World world(String id) {
+        return worlds().stream().filter(w -> w.id().equals(id)).findFirst().orElse(null);
     }
 
     public List<Entity> entities() {
@@ -23,13 +26,9 @@ public class EngineDatamart {
         return entities().stream().filter(e -> e.id().equals(name)).findFirst().orElse(null);
     }
 
-    public List<World> worlds() {
-        return box.graph().worldList();
-    }
 
-    public World world(String id) {
-        return worlds().stream().filter(w -> w.id().equals(id)).findFirst().orElse(null);
-    }
+
+
 
     public List<Mission> missions() {
         return box.graph().missionList();
@@ -57,5 +56,5 @@ public class EngineDatamart {
 
     public Item item(String id) {
         return box.graph().item(id);
-    }
+    }*/
 }

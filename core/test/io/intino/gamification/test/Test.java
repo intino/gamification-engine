@@ -19,7 +19,7 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Engine engine = null;
+        /*Engine engine = null;
 
         Entity.setAttributeListener("test", (entity, oldValue, newValue) -> oldValue, Integer::parseInt);
 
@@ -48,12 +48,12 @@ public class Test {
         engine.terminal().feed(newMission);
 
         Mission mission = engine.datamart().mission("id2");
-        if(mission != null) mission.progressIf((CheckerHandler.Checker<PickUpItem>) (event, player) -> checkPlayerGetMedkit(engine, event, player.id()));
+        if(mission != null) mission.progressIf((CheckerHandler.Checker<PickUpItem>) (event, player) -> checkPlayerGetMedkit(engine, event, player.id()));*/
     }
 
-    private static boolean checkPlayerGetMedkit(Engine engine, PickUpItem event, String playerId) {
+    /*private static boolean checkPlayerGetMedkit(Engine engine, PickUpItem event, String playerId) {
         //return event.player().equals(playerId) && engine.datamart().item(event.id()).name().equals("Medkit");
         return true;
-    }
+    }*/
 }
 

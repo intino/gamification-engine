@@ -2,7 +2,6 @@ package io.intino.gamification.core.box.events;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.intino.alexandria.message.Message;
 
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,7 @@ import java.util.Map;
 public abstract class GamificationEvent extends io.intino.alexandria.event.Event implements java.io.Serializable {
 
     public GamificationEvent(Class<? extends GamificationEvent> clazz) {
-        super(clazz.getCanonicalName());
+        super(clazz.getSimpleName());
     }
 
     public GamificationEvent(String type) {
@@ -40,23 +39,19 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
     }
 
     protected String get(String parameter) {
-        Message.Value value = message.get(parameter);
-        return value != null ? value.asString() : null;
+        return !message.contains(parameter) ? null : message.get(parameter).asString();
     }
 
     protected Integer getAsInt(String parameter) {
-        Message.Value value = message.get(parameter);
-        return value != null ? value.asInteger() : null;
+        return !message.contains(parameter) ? null : message.get(parameter).asInteger();
     }
 
     protected Double getAsDouble(String parameter) {
-        Message.Value value = message.get(parameter);
-        return value != null ? value.asDouble() : null;
+        return !message.contains(parameter) ? null : message.get(parameter).asDouble();
     }
 
     protected Boolean getAsBoolean(String parameter) {
-        Message.Value value = message.get(parameter);
-        return value != null ? value.asBoolean() : null;
+        return !message.contains(parameter) ? null : message.get(parameter).asBoolean();
     }
 
     protected <T extends Enum<T>> T getAsEnum(String parameter, Class<T> enumClass) {
@@ -64,11 +59,11 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
     }
 
     protected Map<String, String> getAsMap(String parameter) {
-        return new Gson().fromJson(get(parameter), new TypeToken<Map<String, String>>(){}.getType());
+        return !message.contains(parameter) ? null : new Gson().fromJson(get(parameter), new TypeToken<Map<String, String>>(){}.getType());
     }
 
     protected List<String> getAsList(String parameter) {
-        return new Gson().fromJson(get(parameter), new TypeToken<List<String>>(){}.getType());
+        return !message.contains(parameter) ? null : new Gson().fromJson(get(parameter), new TypeToken<List<String>>(){}.getType());
     }
 
     public <T extends GamificationEvent> T id(String id) {

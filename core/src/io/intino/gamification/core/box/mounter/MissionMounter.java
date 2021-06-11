@@ -53,7 +53,7 @@ public class MissionMounter extends Mounter {
 
         MissionState missionState = box.graph().missionState(playerState.missionState(), mission.id());
         if(missionState == null) {
-            missionState = box.graph().missionState(event, match.id(), mission.id(), player.id());
+            missionState = box.graph().missionState(event, world.id(), mission.id(), player.id());
             playerState.missionState().add(missionState);
         } else {
             if(missionState.state().equals(Pending)) {

@@ -45,6 +45,6 @@ public enum EventType {
     }
 
     public String clazzName() {
-        return clazz.getCanonicalName();
+        return clazz.getSimpleName();
     }
 }

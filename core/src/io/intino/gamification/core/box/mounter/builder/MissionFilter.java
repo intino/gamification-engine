@@ -33,8 +33,8 @@ public class MissionFilter extends Filter {
             this.match = world.match();
             if(match != null) {
                 this.mission = box.graph().mission(match.missions(), event.id());
-                if(mission.players().contains(event.player())) {
-                    this.player.graph().player(world.players(), event.player());
+                if(mission.players().isEmpty() || mission.players().contains(event.player())) {
+                    this.player = box.graph().player(world.players(), event.player());
                 }
             }
         }

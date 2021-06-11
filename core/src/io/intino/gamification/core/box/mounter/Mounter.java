@@ -1,6 +1,7 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
@@ -9,6 +10,9 @@ import io.intino.gamification.core.graph.*;
 import java.time.Instant;
 import java.util.List;
 import java.util.Map;
+
+import static io.intino.gamification.core.box.events.achievement.AchievementState.Achieved;
+import static io.intino.gamification.core.box.events.mission.MissionState.Completed;
 
 public abstract class Mounter {
 
@@ -39,7 +43,7 @@ public abstract class Mounter {
 
                     achievementState.count(achievementState.count() + 1).save$();
                     if(achievementState.count() >= achievement.maxCount()) {
-                        box.engineTerminal().feed(getAchievementNewState(achievement.id(), player.id()));
+                        box.engineTerminal().feed(EventBuilder.newStateAchievement(achievement.id(), player.id(), Achieved));
                     }
                 }
             });
@@ -48,43 +52,27 @@ public abstract class Mounter {
 
     private void checkMissions(GamificationEvent event) {
 
-        Map<Mission, List<Player>> missions = box.graph().mission(event.getClass());
+        Map<String, Map<Mission, List<Player>>> missions = box.graph().mission(event.getClass());
 
-        missions.forEach((mission, players) -> {
-            players.forEach(player -> {
-                if(mission.players().contains(player.id()) && mission.check(event, player)) {
-                    MissionState missionState = box.graph().missionStateOf(mission.id(), player.id());
-                    if(missionState == null) {
-                        missionState = box.graph().missionState(player.worldId(), mission.id(), player.id());
-                        missionState.save$();
-                    }
+        missions.forEach((worldId, value) -> {
+            value.forEach((mission, players) -> {
+                players.forEach(player -> {
+                    if(mission.check(event, player)) {
+                        MissionState missionState = box.graph().missionStateOf(mission.id(), player.id());
+                        if(missionState == null) {
+                            missionState = box.graph().missionState(player.worldId(), mission.id(), player.id());
+                            missionState.save$();
+                        }
 
-                    missionState.count(missionState.count() + 1).save$();
-                    if(missionState.count() >= mission.maxCount()) {
-                        box.engineTerminal().feed(getMissionNewState(mission.id(), player.id()));
+                        missionState.count(missionState.count() + 1).save$();
+                        if(missionState.count() >= mission.maxCount()) {
+                            box.engineTerminal().feed(EventBuilder.newStateMission(worldId, mission.id(), player.id(), Completed));
+                        }
                     }
-                }
+                });
             });
         });
     }
 
     protected abstract void mount(GamificationEvent event);
-
-    private AchievementNewState getAchievementNewState(String achievementId, String playerId) {
-        AchievementNewState achievementNewState = new AchievementNewState();
-        achievementNewState.ts(Instant.now());
-        achievementNewState.id(achievementId);
-        achievementNewState.state(io.intino.gamification.core.box.events.achievement.AchievementState.Achieved);
-        achievementNewState.player(playerId);
-        return achievementNewState;
-    }
-
-    private NewStateMission getMissionNewState(String missionId, String playerId) {
-        NewStateMission newStateMission = new NewStateMission();
-        newStateMission.ts(Instant.now());
-        newStateMission.id(missionId);
-        newStateMission.state(io.intino.gamification.core.box.events.mission.MissionState.Completed);
-        newStateMission.player(playerId);
-        return newStateMission;
-    }
 }

@@ -17,7 +17,7 @@ public class AssetMounter implements Mounter {
 	public void handle(org.example.cinepolis.datahub.events.cinepolis.RegisterAsset event) {
 		Asset asset = box.graph().asset(event.id());
 		if(asset != null) return;
-		box.graph().create("Assets").asset(event.id(), event.name(), event.area());
+		box.graph().create("Assets").asset(event.id(), event.name(), event.area()).save$();
 	}
 
 	public void handle(org.example.cinepolis.datahub.events.cinepolis.DeregisterAsset event) {

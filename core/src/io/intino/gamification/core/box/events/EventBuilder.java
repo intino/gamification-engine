@@ -26,12 +26,13 @@ public class EventBuilder {
         return destroyEntity;
     }
 
-    public static NewStateMission newStateMission(String missionId, String playerId) {
+    public static NewStateMission newStateMission(String worldId, String missionId, String playerId, MissionState state) {
         NewStateMission newStateMission = new NewStateMission();
         newStateMission.ts(instant());
         newStateMission.id(missionId);
+        newStateMission.world(worldId);
         newStateMission.player(playerId);
-        newStateMission.state(MissionState.Failed);
+        newStateMission.state(state);
         return newStateMission;
     }
 
@@ -42,12 +43,12 @@ public class EventBuilder {
         return deleteAchievement;
     }
 
-    public static AchievementNewState newStateAchievement(String achievementId, String playerId) {
+    public static AchievementNewState newStateAchievement(String achievementId, String playerId, AchievementState state) {
         AchievementNewState achievementNewState = new AchievementNewState();
         achievementNewState.ts(instant());
         achievementNewState.id(achievementId);
         achievementNewState.player(playerId);
-        achievementNewState.state(AchievementState.Failed);
+        achievementNewState.state(state);
         return achievementNewState;
     }
 

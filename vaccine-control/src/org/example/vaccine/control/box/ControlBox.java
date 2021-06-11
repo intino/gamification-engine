@@ -5,6 +5,8 @@ import io.intino.gamification.core.Archetype;
 import io.intino.magritte.framework.Graph;
 import org.example.cinepolis.control.box.AbstractBox;
 import org.example.cinepolis.control.box.ControlConfiguration;
+import org.example.cinepolis.control.box.mounters.MounterFactory;
+import org.example.vaccine.control.box.mounters.MounterFactory;
 import org.example.vaccine.control.graph.ControlGraph;
 
 public class ControlBox extends AbstractBox {
@@ -12,6 +14,7 @@ public class ControlBox extends AbstractBox {
 	private final Archetype archetype;
 	private Engine engine;
 	private ControlGraph graph;
+	private MounterFactory mounter;
 
 	public ControlBox(String[] args) {
 		this(new ControlConfiguration(args));
@@ -31,7 +34,7 @@ public class ControlBox extends AbstractBox {
 	}
 
 	public void beforeStart() {
-
+		this.mounter = new MounterFactory(this);
 	}
 
 	public void afterStart() {
@@ -60,5 +63,9 @@ public class ControlBox extends AbstractBox {
 
 	public ControlGraph graph() {
 		return this.graph;
+	}
+
+	public MounterFactory mounter() {
+		return mounter;
 	}
 }

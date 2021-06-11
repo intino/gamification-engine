@@ -16,10 +16,7 @@ import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static io.intino.gamification.core.box.events.achievement.AchievementState.Pending;
@@ -143,13 +140,16 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return missions.stream().filter(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Map<Mission, List<Player>> mission(Class<? extends GamificationEvent> clazz) {
-		Map<Mission, List<Player>> missionMap = new HashMap<>();
+	public Map<String, Map<Mission, List<Player>>> mission(Class<? extends GamificationEvent> clazz) {
+		Map<String, Map<Mission, List<Player>>> missionMap = new HashMap<>();
 
-		for (Match match : worldList().stream().map(World::match).filter(Objects::nonNull).collect(Collectors.toList())) {
-			for (Mission mission : match.missions()) {
+		for (World world : worldList(w -> w.match() != null).collect(Collectors.toList())) {
+			missionMap.put(world.id(), new HashMap<>());
+			for (Mission mission : world.match().missions()) {
 				if(mission.event().equals(EventType.get(clazz))) {
-					missionMap.put(mission, match.players().stream().filter(p -> mission.players().contains(p.id())).collect(Collectors.toList()));
+					missionMap.get(world.id()).put(mission, world.match().players().stream()
+							.filter(p -> mission.players().contains(p.id()))
+							.collect(Collectors.toList()));
 				}
 			}
 		}
@@ -158,7 +158,9 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Mission mission(NewMission event) {
-		return create(Stash.Missions.name()).mission(event.id(), event.players(), event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
+		List<String> players = event.players();
+		if(players == null) players = new ArrayList<>();
+		return create(Stash.Missions.name()).mission(event.id(), players, event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
 	}
 
 	/* MISSION STATE ------------------------------------------------------------------------------------------------------ */
@@ -176,8 +178,8 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return missionStateList(ms -> ms.missionId().equals(id)).collect(Collectors.toList());
 	}
 
-	public MissionState missionState(NewStateMission event, String matchId, String missionId, String playerId) {
-		return create(Stash.MissionsState.name()).missionState(matchId, missionId, playerId, event.state().name());
+	public MissionState missionState(NewStateMission event, String worldId, String missionId, String playerId) {
+		return create(Stash.MissionsState.name()).missionState(worldId, missionId, playerId, event.state().name());
 	}
 
 	public MissionState missionState(String worldId, String missionId, String playerId) {

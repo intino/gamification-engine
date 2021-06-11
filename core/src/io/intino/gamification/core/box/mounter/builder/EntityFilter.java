@@ -60,7 +60,7 @@ public class EntityFilter extends Filter {
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.item = box.graph().item(world.items(), event.id());
-            this.player = box.graph().player(world.players(), event.id());
+            this.player = box.graph().player(world.players(), event.player());
         }
     }
 
@@ -69,7 +69,7 @@ public class EntityFilter extends Filter {
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.item = box.graph().item(world.items(), event.id());
-            this.player = box.graph().player(world.players(), event.id());
+            this.player = box.graph().player(world.players(), event.player());
         }
     }
 

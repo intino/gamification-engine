@@ -9,6 +9,7 @@ import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.logic.CheckerHandler;
 import io.intino.gamification.core.graph.Mission;
+import io.intino.gamification.core.graph.Player;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
@@ -36,10 +37,9 @@ public class Adapter {
     }
 
     public void adapt(AssetAlert event) {
-        Asset asset = box.graph().asset(event.id());
+        Asset asset = box.graph().asset(event.asset());
         if(asset == null) return;
 
-        String id = UUID.randomUUID().toString();
         List<String> employees = box.graph().employeesByArea(asset.area()).stream()
                 .map(Employee::id)
                 .collect(Collectors.toList());
@@ -52,14 +52,20 @@ public class Adapter {
                 .players(employees)
                 .event(EventType.Action)
                 .maxCount(1)
-                .id(id)
+                .id(event.id())
                 .ts(Instant.now());
 
         box.engine().terminal().feed(nm);
 
-        Mission mission = box.engine().datamart().mission(id);
+        Mission mission = box.engine().datamart().mission(event.id());
         if(mission != null) {
-            mission.progressIf((CheckerHandler.Checker<Action>) (a, p) -> a.type().equals("FixAsset") && a.entitySrc().equals(p.id()));
+            mission.progressIf(new CheckerHandler.Checker<Action>() {
+                @Override
+                public boolean check(Action a, Player p) {
+                    return a.type().equals("FixAsset") && a.entitySrc().equals(p.id()) && p.inventory().stream().anyMatch(i -> i.id().equals(a.entityDest()));
+                }
+            });
+            //mission.progressIf((CheckerHandler.Checker<Action>) (a, p) -> a.type().equals("FixAsset") && a.entitySrc().equals(p.id()));
         }
     }
 
@@ -90,6 +96,16 @@ public class Adapter {
                 .id(event.id())
                 .ts(Instant.now());
         box.engine().terminal().feed(cp);
+
+        List<Asset> assets = box.graph().assetsByArea(event.area());
+        assets.forEach(a -> {
+            PickUpItem pui = (PickUpItem) new PickUpItem()
+                    .world(GamificationConfig.WorldId)
+                    .player(event.id())
+                    .id(a.id())
+                    .ts(Instant.now());
+            box.engine().terminal().feed(pui);
+        });
     }
 
     public void adapt(RegisterAsset event) {
@@ -97,13 +113,15 @@ public class Adapter {
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
                 .ts(Instant.now());
+        box.engine().terminal().feed(ci);
+
+        Employee employee = box.graph().employeeByArea(event.area());
+        if(employee == null) return;
         PickUpItem pui = (PickUpItem) new PickUpItem()
                 .world(GamificationConfig.WorldId)
-                .player(box.graph().employeeByArea(event.area()).id())
+                .player(employee.id())
                 .id(event.id())
                 .ts(Instant.now());
-
-        box.engine().terminal().feed(ci);
         box.engine().terminal().feed(pui);
     }
 

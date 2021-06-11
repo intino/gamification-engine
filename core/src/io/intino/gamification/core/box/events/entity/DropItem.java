@@ -20,8 +20,17 @@ public class DropItem extends GamificationEvent {
         return get("world");
     }
 
+    public String player() {
+        return get("player");
+    }
+
     public DropItem world(String world) {
         set("world", world);
+        return this;
+    }
+
+    public DropItem player(String player) {
+        set("player", player);
         return this;
     }
 }

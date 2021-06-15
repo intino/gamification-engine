@@ -1,10 +1,6 @@
 package org.example.vaccine.control.graph;
 
 import io.intino.magritte.framework.Graph;
-import org.example.cinepolis.control.graph.AbstractGraph;
-import org.example.cinepolis.control.graph.Hospital;
-import org.example.cinepolis.control.graph.Patient;
-import org.example.cinepolis.control.graph.Vaccine;
 
 import java.util.HashMap;
 import java.util.Map;

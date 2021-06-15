@@ -1,6 +1,6 @@
 dsl Ness
 
-Namespace example
+Namespace vaccines
 
 	Event CreateHospital
 		Attribute name as Text
@@ -11,9 +11,15 @@ Namespace example
 		Attribute illness as Text
 		Attribute requiredDoseCount as Integer
 		Attribute effectiveness as Real
-		Attribute price as Real
 
-	Event Vaccine
+	Event VaccineSupply
+		Attribute vaccineName as Text
+		Attribute hospitalName as Text
+		Attribute costPerUnit as Real
+		Attribute units as Integer
+		Attribute date as DateTime
+
+	Event Vaccination
 		Attribute vaccineName as Text
 		Attribute patientName as Text
 		Attribute patientAge as Integer

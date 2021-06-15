@@ -1,16 +1,12 @@
 package org.example.vaccine.control.box.subscribers;
 
-import io.intino.gamification.api.EngineDatamart;
-import io.intino.gamification.core.box.events.CreateEntity;
-import org.example.cinepolis.control.graph.Hospital;
-import org.example.datahub.events.example.CreateHospital;
 import org.example.vaccine.control.box.ControlBox;
-import org.example.vaccine.control.box.graph.mounters.VaccineMounter;
+import org.example.vaccine.control.box.adapter.CreateHospitalAdapter;
 import org.example.vaccine.control.graph.ControlGraph;
+import org.example.vaccine.control.graph.Hospital;
+import org.example.vaccine.datahub.events.vaccines.CreateHospital;
 
-import static io.intino.gamification.core.box.events.attributes.EntityType.Player;
-
-public class CreateHospitalSubscriber implements java.util.function.Consumer<org.example.datahub.events.example.CreateHospital> {
+public class CreateHospitalSubscriber implements java.util.function.Consumer<CreateHospital> {
 
 	private final ControlBox box;
 
@@ -22,28 +18,17 @@ public class CreateHospitalSubscriber implements java.util.function.Consumer<org
 		return box.graph();
 	}
 
-	private EngineDatamart game() {
-		return box.engine().datamart();
+	public void accept(CreateHospital event) {
+		createHospitalPlayer(event);
+		box.mounter().handle(event);
 	}
 
-	public void accept(org.example.datahub.events.example.CreateHospital event) {
-		createHospitalEntity(event);
-		new VaccineMounter(box).handle(event);
+	private void createHospitalPlayer(CreateHospital event) {
+		if(hospitalPlayerExists(event.name())) return;
+		new CreateHospitalAdapter(box).adapt(event);
 	}
 
-	private void createHospitalEntity(CreateHospital event) {
-		if(graph().contains(event.name(), Hospital.class)) return;
-
-		if(game().world(event.location()) == null) {
-			CreateWorld world = new CreateWorld();
-			world.id(event.location());
-			box.engine().terminal().feed(world);
-		}
-
-		CreateEntity entity = new CreateEntity();
-		entity.id(event.name());
-		entity.type(Player);
-
-		box.engine().terminal().feed(entity);
+	private boolean hospitalPlayerExists(String name) {
+		return graph().contains(name, Hospital.class);
 	}
 }

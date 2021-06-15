@@ -7,6 +7,7 @@ import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
+import io.intino.gamification.core.box.helper.Time;
 import io.intino.gamification.core.box.logic.CheckerHandler;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.Player;
@@ -29,8 +30,8 @@ public class Adapter {
     }
 
     public void initialize() {
-        CreateWorld cw = (CreateWorld) new CreateWorld().id(GamificationConfig.WorldId).ts(Instant.now());
-        BeginMatch bm = (BeginMatch) new BeginMatch().world(GamificationConfig.WorldId).id(UUID.randomUUID().toString()).ts(Instant.now());
+        CreateWorld cw = (CreateWorld) new CreateWorld().id(GamificationConfig.WorldId).ts(Time.currentInstant());
+        BeginMatch bm = (BeginMatch) new BeginMatch().world(GamificationConfig.WorldId).id(UUID.randomUUID().toString()).ts(Time.currentInstant());
 
         box.engine().terminal().feed(cw);
         box.engine().terminal().feed(bm);
@@ -53,7 +54,7 @@ public class Adapter {
                 .event(EventType.Action)
                 .maxCount(1)
                 .id(event.id())
-                .ts(Instant.now());
+                .ts(Time.currentInstant());
 
         box.engine().terminal().feed(nm);
 
@@ -65,7 +66,6 @@ public class Adapter {
                     return a.type().equals("FixAsset") && a.entitySrc().equals(p.id()) && p.inventory().stream().anyMatch(i -> i.id().equals(a.entityDest()));
                 }
             });
-            //mission.progressIf((CheckerHandler.Checker<Action>) (a, p) -> a.type().equals("FixAsset") && a.entitySrc().equals(p.id()));
         }
     }
 
@@ -73,7 +73,7 @@ public class Adapter {
         DestroyEntity de = (DestroyEntity) new DestroyEntity()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Instant.now());
+                .ts(Time.currentInstant());
         box.engine().terminal().feed(de);
     }
 
@@ -81,7 +81,7 @@ public class Adapter {
         DestroyEntity de = (DestroyEntity) new DestroyEntity()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Instant.now());
+                .ts(Time.currentInstant());
         box.engine().terminal().feed(de);
     }
 
@@ -94,7 +94,7 @@ public class Adapter {
         CreatePlayer cp = (CreatePlayer) new CreatePlayer()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Instant.now());
+                .ts(Time.currentInstant());
         box.engine().terminal().feed(cp);
 
         List<Asset> assets = box.graph().assetsByArea(event.area());
@@ -103,7 +103,7 @@ public class Adapter {
                     .world(GamificationConfig.WorldId)
                     .player(event.id())
                     .id(a.id())
-                    .ts(Instant.now());
+                    .ts(Time.currentInstant());
             box.engine().terminal().feed(pui);
         });
     }
@@ -112,7 +112,7 @@ public class Adapter {
         CreateItem ci = (CreateItem) new CreateItem()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Instant.now());
+                .ts(Time.currentInstant());
         box.engine().terminal().feed(ci);
 
         Employee employee = box.graph().employeeByArea(event.area());
@@ -121,7 +121,7 @@ public class Adapter {
                 .world(GamificationConfig.WorldId)
                 .player(employee.id())
                 .id(event.id())
-                .ts(Instant.now());
+                .ts(Time.currentInstant());
         box.engine().terminal().feed(pui);
     }
 

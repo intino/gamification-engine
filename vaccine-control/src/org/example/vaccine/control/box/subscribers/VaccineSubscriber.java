@@ -4,6 +4,7 @@ import io.intino.gamification.Engine;
 import io.intino.gamification.core.box.events.entity.Action;
 import io.intino.gamification.core.box.events.entity.CreateEntity;
 import io.intino.gamification.core.box.events.entity.EntityType;
+import io.intino.gamification.core.box.helper.Time;
 import org.example.cinepolis.control.graph.Patient;
 import org.example.datahub.events.example.Vaccine;
 import org.example.vaccine.control.box.ControlBox;
@@ -60,7 +61,7 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 
 		Action action = new Action();
 		action.ss("Example");
-		action.ts(Instant.now());
+		action.ts(Time.currentInstant());
 		action.attribute("doseCount");
 		action.entity(event.patientName());
 		action.value(String.valueOf(doseCount));
@@ -79,7 +80,7 @@ public class VaccineSubscriber implements java.util.function.Consumer<org.exampl
 		CreateEntity entity = new CreateEntity();
 		entity.id(id);
 		entity.ss("Example");
-		entity.ts(Instant.now());
+		entity.ts(Time.currentInstant());
 		entity.type(type);
 		entity.attributes(attributes);
 

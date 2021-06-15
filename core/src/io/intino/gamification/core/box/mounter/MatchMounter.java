@@ -57,15 +57,10 @@ public class MatchMounter extends Mounter {
     private void fail(Match match) {
         match.players().stream().filter(AbstractEntity::enabled).forEach(p -> {
             failMissions(match.missions(), match.worldId(), p.id());
-            failAchievements(match.achievements(), p.id());
         });
     }
 
     private void failMissions(List<Mission> missions, String worldId, String playerId) {
         missions.forEach(m -> box.engineTerminal().feed(EventBuilder.newStateMission(worldId, m.id(), playerId, Failed)));
-    }
-
-    private void failAchievements(List<Achievement> achievements, String playerId) {
-        achievements.forEach(a -> box.engineTerminal().feed(EventBuilder.newStateAchievement(a.id(), playerId, AchievementState.Failed)));
     }
 }

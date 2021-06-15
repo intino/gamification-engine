@@ -8,15 +8,14 @@ import io.intino.gamification.core.box.events.mission.MissionType;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.helper.Time;
+import io.intino.gamification.core.box.logic.CheckResult;
 import io.intino.gamification.core.box.logic.CheckerHandler;
 import io.intino.gamification.core.graph.Mission;
-import io.intino.gamification.core.graph.Player;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -60,11 +59,13 @@ public class Adapter {
 
         Mission mission = box.engine().datamart().mission(event.id());
         if(mission != null) {
-            mission.progressIf(new CheckerHandler.Checker<Action>() {
-                @Override
-                public boolean check(Action a, Player p) {
-                    return a.type().equals("FixAsset") && a.entitySrc().equals(p.id()) && p.inventory().stream().anyMatch(i -> i.id().equals(a.entityDest()));
+            mission.progressIf((CheckerHandler.Checker<Action>) (a, p) -> {
+                if(a.type().equals("FixAsset") &&
+                        a.entitySrc().equals(p.id()) &&
+                        p.inventory().stream().anyMatch(i -> i.id().equals(a.entityDest()))) {
+                    return CheckResult.Progress;
                 }
+                return CheckResult.Skip;
             });
         }
     }

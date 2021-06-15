@@ -2,6 +2,7 @@ package io.intino.gamification.core.graph;
 
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.box.logic.CheckResult;
 import io.intino.gamification.core.box.logic.CheckerHandler;
 
 public class Achievement extends AbstractAchievement {
@@ -19,7 +20,7 @@ public class Achievement extends AbstractAchievement {
 		return this;
 	}
 
-	public CheckerHandler.AchievementProgress check(GamificationEvent event, Player player) {
+	public CheckResult check(GamificationEvent event, Player player) {
 		return CheckerHandler.check(this, event, player);
 	}
 

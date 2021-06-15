@@ -14,8 +14,8 @@ public class ExpireMissionsAction {
 
 	public void execute() {
 
-		to = Time.truncateTo(Time.currentInstant(), Time.Scale.D);
-		from = Time.previousInstant(to, Time.Scale.D);
+		from = Time.truncateTo(Time.currentInstant(), Time.Scale.D);
+		to = Time.nextInstant(from, Time.Scale.D);
 
 		box.graph().worldList().stream()
 				.filter(w -> w.match() != null)

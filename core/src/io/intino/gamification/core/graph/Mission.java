@@ -5,6 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
 import io.intino.gamification.core.box.helper.Time;
+import io.intino.gamification.core.box.logic.CheckResult;
 import io.intino.gamification.core.box.logic.CheckerHandler;
 
 public class Mission extends AbstractMission {
@@ -40,7 +41,7 @@ public class Mission extends AbstractMission {
 		return this;
 	}
 
-	public boolean check(GamificationEvent event, Player player) {
+	public CheckResult check(GamificationEvent event, Player player) {
 		return CheckerHandler.check(this, event, player);
 	}
 

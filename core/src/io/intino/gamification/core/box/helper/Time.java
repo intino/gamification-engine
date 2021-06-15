@@ -123,7 +123,7 @@ public class Time {
 		return instant;
 	}
 
-	/*public static Instant nextInstant(Instant instant, Scale scale) {
+	public static Instant nextInstant(Instant instant, Scale scale) {
 		return nextInstant(instant, scale, 1);
 	}
 
@@ -135,7 +135,7 @@ public class Time {
 		if(scale.equals(Scale.M)) return plusMonths(instant, n);
 		if(scale.equals(Scale.Y)) return plusYears(instant, n);
 		return instant;
-	}*/
+	}
 
 	/*-------------------------------------------------------------------------------------------------------*/
 
@@ -298,9 +298,9 @@ public class Time {
 		return offsetMonth(instant, -nMonth);
 	}
 
-	/*private static Instant plusMonths(Instant instant, int nMonth) {
+	private static Instant plusMonths(Instant instant, int nMonth) {
 		return offsetMonth(instant, nMonth);
-	}*/
+	}
 
 	private static Instant offsetMonth(Instant instant, int nMonth) {
 		int day = monthDayOf(instant);
@@ -326,9 +326,9 @@ public class Time {
 		return offsetYear(instant, -nYears);
 	}
 
-	/*private static Instant plusYears(Instant instant, int nYears) {
+	private static Instant plusYears(Instant instant, int nYears) {
 		return offsetYear(instant, nYears);
-	}*/
+	}
 
 	private static Instant offsetYear(Instant instant, int nYears) {
 		int day = monthDayOf(instant);

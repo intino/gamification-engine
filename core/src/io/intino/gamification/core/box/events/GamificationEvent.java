@@ -3,6 +3,7 @@ package io.intino.gamification.core.box.events;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +67,10 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
         return !message.contains(parameter) ? null : new Gson().fromJson(get(parameter), new TypeToken<List<String>>(){}.getType());
     }
 
+    protected Instant getAsInstant(String parameter) {
+        return !message.contains(parameter) ? null : message.get(parameter).asInstant();
+    }
+
     public <T extends GamificationEvent> T id(String id) {
         if (id == null) this.message.remove("id");
         else this.message.set("id", id);
@@ -99,6 +104,10 @@ public abstract class GamificationEvent extends io.intino.alexandria.event.Event
 
     protected void set(String attribute, List<String> value) {
         set(attribute, new Gson().toJson(value));
+    }
+
+    protected void set(String attribute, Instant value) {
+        this.message.set(attribute, value);
     }
 
     @Override

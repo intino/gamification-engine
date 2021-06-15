@@ -3,6 +3,7 @@ package io.intino.gamification.core.box.events.mission;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 
+import java.time.Instant;
 import java.util.List;
 
 public class NewMission extends GamificationEvent {
@@ -25,6 +26,10 @@ public class NewMission extends GamificationEvent {
 
     public List<String> players() {
         return getAsList("players");
+    }
+
+    public Instant to() {
+        return getAsInstant("to");
     }
 
     public MissionDifficulty difficulty() {
@@ -54,6 +59,11 @@ public class NewMission extends GamificationEvent {
 
     public NewMission players(List<String> players) {
         set("players", players);
+        return this;
+    }
+
+    public NewMission to(Instant to) {
+        set("to", to);
         return this;
     }
 

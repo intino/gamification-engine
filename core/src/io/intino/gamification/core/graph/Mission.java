@@ -4,6 +4,7 @@ import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
+import io.intino.gamification.core.box.helper.Time;
 import io.intino.gamification.core.box.logic.CheckerHandler;
 
 public class Mission extends AbstractMission {
@@ -45,5 +46,9 @@ public class Mission extends AbstractMission {
 
 	public void progressIf(CheckerHandler.Checker<? extends GamificationEvent> checker) {
 		CheckerHandler.progressIf(this, checker);
+	}
+
+	public boolean isActive() {
+		return to == null || to.isAfter(Time.currentInstant());
 	}
 }

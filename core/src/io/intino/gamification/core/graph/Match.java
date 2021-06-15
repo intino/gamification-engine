@@ -3,6 +3,7 @@ package io.intino.gamification.core.graph;
 import io.intino.gamification.core.box.events.match.MatchState;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Match extends AbstractMatch {
 
@@ -22,5 +23,9 @@ public class Match extends AbstractMatch {
 	@Override
 	public List<Player> players() {
 		return graph().world(worldId).players();
+	}
+
+	public List<Mission> activeMissions() {
+		return missions.stream().filter(Mission::isActive).collect(Collectors.toList());
 	}
 }

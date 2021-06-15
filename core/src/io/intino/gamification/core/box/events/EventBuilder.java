@@ -7,6 +7,7 @@ import io.intino.gamification.core.box.events.entity.Action;
 import io.intino.gamification.core.box.events.entity.DestroyEntity;
 import io.intino.gamification.core.box.events.mission.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
+import io.intino.gamification.core.box.helper.Time;
 
 import java.time.Instant;
 
@@ -53,6 +54,6 @@ public class EventBuilder {
     }
 
     private static Instant instant() {
-        return Instant.now();
+        return Time.currentInstant();
     }
 }

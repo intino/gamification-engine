@@ -19,7 +19,7 @@ public class Achievement extends AbstractAchievement {
 		return this;
 	}
 
-	public boolean check(GamificationEvent event, Player player) {
+	public CheckerHandler.AchievementProgress check(GamificationEvent event, Player player) {
 		return CheckerHandler.check(this, event, player);
 	}
 

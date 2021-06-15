@@ -1,18 +1,16 @@
 package io.intino.gamification.core.box.mounter;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.achievement.AchievementState;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
+import io.intino.gamification.core.box.logic.FailMission;
 import io.intino.gamification.core.box.mounter.builder.MatchFilter;
-import io.intino.gamification.core.graph.*;
-
-import java.util.List;
+import io.intino.gamification.core.graph.Match;
+import io.intino.gamification.core.graph.Mission;
+import io.intino.gamification.core.graph.World;
 
 import static io.intino.gamification.core.box.events.match.MatchState.Finished;
-import static io.intino.gamification.core.box.events.mission.MissionState.Failed;
 
 public class MatchMounter extends Mounter {
 
@@ -48,19 +46,9 @@ public class MatchMounter extends Mounter {
 
         world.match(null);
         match.to(event.ts()).state(Finished);
-        fail(match);
+        FailMission.get(box).failMissions(world, Mission::isActive);
 
         world.save$();
         match.save$();
-    }
-
-    private void fail(Match match) {
-        match.players().stream().filter(AbstractEntity::enabled).forEach(p -> {
-            failMissions(match.missions(), match.worldId(), p.id());
-        });
-    }
-
-    private void failMissions(List<Mission> missions, String worldId, String playerId) {
-        missions.forEach(m -> box.engineTerminal().feed(EventBuilder.newStateMission(worldId, m.id(), playerId, Failed)));
     }
 }

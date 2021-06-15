@@ -39,7 +39,7 @@ public class Time {
 		return getInstantOf(getCanaryZonedDateTimeOf());
 	}
 
-	/*public static Instant getInstantOf(int year, int month, int day, int hour, int minute) {
+	public static Instant getInstantOf(int year, int month, int day, int hour, int minute) {
 		return getInstantOf(getLocalDateTimeOf(year, month, day, hour, minute));
 	}
 
@@ -55,19 +55,19 @@ public class Time {
 		return getInstantOf(year, month, 1);
 	}
 
-	public static Instant getInstantOfWeeks(int year, int week) {
+	/*public static Instant getInstantOfWeeks(int year, int week) {
 		if(week <= 0) return null;
 		return nextInstant(truncateTo(getInstantOf(year), Scale.W), Scale.W, week - 1);
-	}
+	}*/
 
 	public static Instant getInstantOf(int year) {
 		if(year < 0) return null;
 		return getInstantOf(year, 1);
-	}*/
+	}
 
 	/* COMPONENT OF --------------------------------------------------------------------------------------------------*/
 
-	/*public static int minuteOf(Instant instant) {
+	public static int minuteOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getMinute();
 	}
 
@@ -83,9 +83,9 @@ public class Time {
 		return getLocalDateTimeOf(instant).getDayOfMonth();
 	}
 
-	public static int yearWeekOf(Instant instant) {
+	/*public static int yearWeekOf(Instant instant) {
 		return getLocalDateTimeOf(instant).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-	}
+	}*/
 
 	public static int monthOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getMonth().getValue();
@@ -93,11 +93,11 @@ public class Time {
 
 	public static int yearOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getYear();
-	}*/
+	}
 
 	/* TRUNCATE ------------------------------------------------------------------------------------------------------*/
 
-	/*public static Instant truncateTo(Instant instant, Scale scale) {
+	public static Instant truncateTo(Instant instant, Scale scale) {
 
 		if(scale.equals(Scale.H)) return instant.truncatedTo(ChronoUnit.HOURS);
 		if(scale.equals(Scale.D)) return instant.truncatedTo(ChronoUnit.DAYS);
@@ -105,11 +105,11 @@ public class Time {
 		if(scale.equals(Scale.M)) return truncateToMonth(instant);
 		if(scale.equals(Scale.Y)) return truncateToYear(instant);
 		return instant;
-	}*/
+	}
 
 	/* OFFSET INSTANT ------------------------------------------------------------------------------------------------*/
 
-	/*public static Instant previousInstant(Instant instant, Scale scale) {
+	public static Instant previousInstant(Instant instant, Scale scale) {
 		return previousInstant(instant, scale, 1);
 	}
 
@@ -123,7 +123,7 @@ public class Time {
 		return instant;
 	}
 
-	public static Instant nextInstant(Instant instant, Scale scale) {
+	/*public static Instant nextInstant(Instant instant, Scale scale) {
 		return nextInstant(instant, scale, 1);
 	}
 
@@ -145,9 +145,9 @@ public class Time {
 		return timeUnit.convert(diffInSeconds, TimeUnit.SECONDS);
 	}*/
 
-	/*public static boolean instantIsInRange(Instant instant, Instant from, Instant to) {
+	public static boolean instantIsInRange(Instant instant, Instant from, Instant to) {
 		return !instant.isBefore(from) && instant.isBefore(to);
-	}*/
+	}
 
 	/*public static List<Instant> getInstantsBetween(Instant from, Instant to, Scale scale) {
 
@@ -213,16 +213,16 @@ public class Time {
 		return Instant.parse(zdt.toString().split("Z|[+-]\\d*:")[0] + "Z");
 	}
 
-	/*private static Instant getInstantOf(LocalDateTime localDateTime) {
+	private static Instant getInstantOf(LocalDateTime localDateTime) {
 		if(localDateTime == null) return null;
 		return localDateTime.toInstant(ZoneOffset.UTC);
-	}*/
+	}
 
 	private static ZonedDateTime getCanaryZonedDateTimeOf() {
 		return ZonedDateTime.now(ZoneId.of("Atlantic/Canary"));
 	}
 
-	/*private static LocalDateTime getLocalDateTimeOf(Instant instant) {
+	private static LocalDateTime getLocalDateTimeOf(Instant instant) {
 		return LocalDateTime.of(getYearOf(instant), getMonthOf(instant), getDayOf(instant), getHourOf(instant), getMinuteOf(instant));
 	}
 
@@ -267,7 +267,7 @@ public class Time {
 		return Integer.parseInt(ret);
 	}
 
-	private static String timeComponentStyled(int component, int nDigits) {
+	/*private static String timeComponentStyled(int component, int nDigits) {
 
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < nDigits - 1; i++) {
@@ -277,7 +277,7 @@ public class Time {
 
 		String timeComponentStyled = sb.toString();
 		return timeComponentStyled.substring(timeComponentStyled.length() - nDigits);
-	}
+	}*/
 
 	private static Instant truncateToWeek(Instant instant) {
 
@@ -298,9 +298,9 @@ public class Time {
 		return offsetMonth(instant, -nMonth);
 	}
 
-	private static Instant plusMonths(Instant instant, int nMonth) {
+	/*private static Instant plusMonths(Instant instant, int nMonth) {
 		return offsetMonth(instant, nMonth);
-	}
+	}*/
 
 	private static Instant offsetMonth(Instant instant, int nMonth) {
 		int day = monthDayOf(instant);
@@ -326,9 +326,9 @@ public class Time {
 		return offsetYear(instant, -nYears);
 	}
 
-	private static Instant plusYears(Instant instant, int nYears) {
+	/*private static Instant plusYears(Instant instant, int nYears) {
 		return offsetYear(instant, nYears);
-	}
+	}*/
 
 	private static Instant offsetYear(Instant instant, int nYears) {
 		int day = monthDayOf(instant);
@@ -342,12 +342,12 @@ public class Time {
 	private static int adjustedDay(int day, int month, int year) {
 		switch (month) {
 			case 2:
-				return Math.min(day, getFebruaryDaysOf(year));
+				return java.lang.Math.min(day, getFebruaryDaysOf(year));
 			case 4:
 			case 6:
 			case 9:
 			case 11:
-				return Math.min(day, 30);
+				return java.lang.Math.min(day, 30);
 			default:
 				return day;
 		}
@@ -355,7 +355,7 @@ public class Time {
 
 	private static int getFebruaryDaysOf(int year) {
 		return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 29 : 28;
-	}*/
+	}
 
 	/*--------------------------------------------------------------------------------------------*/
 

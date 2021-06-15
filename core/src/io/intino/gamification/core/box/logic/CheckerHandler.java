@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class CheckerHandler {
 
-    private static final Map<String, Checker<? extends GamificationEvent>>  AchievementCheckerMap = new HashMap<>();
+    private static final Map<String, Checker<? extends GamificationEvent>> AchievementCheckerMap = new HashMap<>();
     private static final Map<String, Checker<? extends GamificationEvent>> MissionCheckerMap = new HashMap<>();
 
     @SuppressWarnings("unchecked")

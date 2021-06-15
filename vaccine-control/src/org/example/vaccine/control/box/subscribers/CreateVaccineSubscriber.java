@@ -1,9 +1,10 @@
 package org.example.vaccine.control.box.subscribers;
 
 import org.example.vaccine.control.box.ControlBox;
-import org.example.vaccine.control.box.graph.mounters.VaccineMounter;
+import org.example.vaccine.control.box.adapter.CreateVaccineDoseAdapter;
+import org.example.vaccine.datahub.events.vaccines.CreateVaccine;
 
-public class CreateVaccineSubscriber implements java.util.function.Consumer<org.example.datahub.events.example.CreateVaccine> {
+public class CreateVaccineSubscriber implements java.util.function.Consumer<CreateVaccine> {
 
 	private final ControlBox box;
 
@@ -11,7 +12,7 @@ public class CreateVaccineSubscriber implements java.util.function.Consumer<org.
 		this.box = box;
 	}
 
-	public void accept(org.example.datahub.events.example.CreateVaccine event) {
-		new VaccineMounter(box).handle(event);
+	public void accept(CreateVaccine event) {
+		box.mounter().handle(event);
 	}
 }

@@ -3,7 +3,7 @@ dsl Legio
 Artifact("org.example.vaccine", "1.0.0-SNAPSHOT") control as Product
 	Model("Proteo", "3.0.2", "4.1.1")
 	Box("Konos", "8.11.0")
-	DataHub("org.example.vaccine.datahub", "example-terminal", "1.0.0-SNAPSHOT")
+	DataHub("org.example.vaccine.datahub", "vaccine-terminal", "1.0.0-SNAPSHOT")
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
     	Compile("io.intino.alexandria", "datalake", "4.0.2")

@@ -3,13 +3,15 @@ dsl Proteo
 Concept Hospital
 	var string name
 	var string location
+	Concept Inventory
+		var string name
+		var integer count
 
 Concept Vaccine
 	var string name
 	var string illness
 	var integer requiredDoseCount
 	var double effectiveness
-	var double price
 
 Concept Illness
 	var string name
@@ -20,5 +22,3 @@ Concept Patient
 	var integer age
 	var string vaccine
 	var integer doseCount
-
-

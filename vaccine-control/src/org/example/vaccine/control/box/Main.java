@@ -1,6 +1,7 @@
 package org.example.vaccine.control.box;
 
 import io.intino.gamification.Engine;
+import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
@@ -21,10 +22,12 @@ public class Main {
 		Engine engine = new Engine(box.configuration());
 		box.put(engine);
 
-		engine.launch(() -> {
-			box.start();
-			Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
-		});
+		engine.launch(() -> onInit(box));
+	}
+
+	private static void onInit(ControlBox box) {
+		box.start();
+		Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 	}
 
 	private static FileSystemStore store(File datamartFolder) {

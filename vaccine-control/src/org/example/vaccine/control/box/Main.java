@@ -11,7 +11,7 @@ import java.io.File;
 
 public class Main {
 
-	private static final String Stashes = "Gamification";
+	private static final String Stashes = "Control";
 	private static final String[] StartUpStashes = {Stashes};
 
 	public static void main(String[] args) {

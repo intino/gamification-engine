@@ -19,6 +19,7 @@ public class HospitalMockGenerator {
     }
 
     public void execute() {
+        System.out.println("Creating hospitals...");
         for(String location : locations()) {
             createHospitals(location, random.nextInt(5) + 1);
         }

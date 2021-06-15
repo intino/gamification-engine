@@ -18,6 +18,7 @@ public class VaccineMockGenerator {
     }
 
     public void execute() {
+        System.out.println("Creating vaccines...");
         int count = random.nextInt(20);
         for(int i = 0;i < count;i++) createVaccine(i);
     }
@@ -25,7 +26,7 @@ public class VaccineMockGenerator {
     private void createVaccine(int index) {
         CreateVaccine vaccine = new CreateVaccine();
         vaccine.name("Vaccine_" + index);
-        vaccine.illness("Illness_" + random.nextInt(index));
+        vaccine.illness("Illness_" + random.nextInt(index + 1));
         vaccine.effectiveness(random.nextDouble());
         vaccine.requiredDoseCount(random.nextInt(3)+1);
 

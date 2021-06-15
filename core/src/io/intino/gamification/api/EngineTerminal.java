@@ -96,7 +96,7 @@ public class EngineTerminal {
     }
 
     public <T extends Event> void feed(T event) {
-        feedFunctionOf(event.getClass()).accept(this, event);
+        this.<T>feedFunctionOf(event.getClass()).accept(this, event);
     }
 
     @SuppressWarnings("unchecked")
@@ -109,22 +109,22 @@ public class EngineTerminal {
 
     private static final Map<Class<? extends Event>, BiConsumer<EngineTerminal, ? extends Event>> FeedFunctions = new HashMap<>(){
         {
-            put(CreateWorld.class, EngineTerminal::feed);
-            put(DestroyWorld.class, EngineTerminal::feed);
-            put(BeginMatch.class, EngineTerminal::feed);
-            put(EndMatch.class, EngineTerminal::feed);
-            put(NewMission.class, EngineTerminal::feed);
-            put(NewStateMission.class, EngineTerminal::feed);
-            put(CreatePlayer.class, EngineTerminal::feed);
-            put(CreateEnemy.class, EngineTerminal::feed);
-            put(CreateNpc.class, EngineTerminal::feed);
-            put(CreateItem.class, EngineTerminal::feed);
-            put(DestroyEntity.class, EngineTerminal::feed);
-            put(PickUpItem.class, EngineTerminal::feed);
-            put(DropItem.class, EngineTerminal::feed);
-            put(Action.class, EngineTerminal::feed);
-            put(CreateAchievement.class, EngineTerminal::feed);
-            put(DeleteAchievement.class, EngineTerminal::feed);
-            put(AchievementNewState.class,EngineTerminal::feed);
+            put(CreateWorld.class, (BiConsumer<EngineTerminal, CreateWorld>)EngineTerminal::feed);
+            put(DestroyWorld.class, (BiConsumer<EngineTerminal, DestroyWorld>)EngineTerminal::feed);
+            put(BeginMatch.class, (BiConsumer<EngineTerminal, BeginMatch>)EngineTerminal::feed);
+            put(EndMatch.class, (BiConsumer<EngineTerminal, EndMatch>)EngineTerminal::feed);
+            put(NewMission.class, (BiConsumer<EngineTerminal, NewMission>)EngineTerminal::feed);
+            put(NewStateMission.class, (BiConsumer<EngineTerminal, NewStateMission>)EngineTerminal::feed);
+            put(CreatePlayer.class, (BiConsumer<EngineTerminal, CreatePlayer>)EngineTerminal::feed);
+            put(CreateEnemy.class, (BiConsumer<EngineTerminal, CreateEnemy>)EngineTerminal::feed);
+            put(CreateNpc.class, (BiConsumer<EngineTerminal, CreateNpc>)EngineTerminal::feed);
+            put(CreateItem.class, (BiConsumer<EngineTerminal, CreateItem>)EngineTerminal::feed);
+            put(DestroyEntity.class, (BiConsumer<EngineTerminal, DestroyEntity>)EngineTerminal::feed);
+            put(PickUpItem.class, (BiConsumer<EngineTerminal, PickUpItem>)EngineTerminal::feed);
+            put(DropItem.class, (BiConsumer<EngineTerminal, DropItem>)EngineTerminal::feed);
+            put(Action.class, (BiConsumer<EngineTerminal, Action>)EngineTerminal::feed);
+            put(CreateAchievement.class, (BiConsumer<EngineTerminal, CreateAchievement>)EngineTerminal::feed);
+            put(DeleteAchievement.class, (BiConsumer<EngineTerminal, DeleteAchievement>)EngineTerminal::feed);
+            put(AchievementNewState.class, (BiConsumer<EngineTerminal, AchievementNewState>)EngineTerminal::feed);
         }};
 }

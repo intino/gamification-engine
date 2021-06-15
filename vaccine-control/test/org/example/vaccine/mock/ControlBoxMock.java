@@ -11,11 +11,11 @@ import java.io.File;
 
 public class ControlBoxMock {
 
-    private static final String Stashes = "Gamification";
+    private static final String Stashes = "Control";
     private static final String[] StartUpStashes = {Stashes};
 
     public static ControlBox getControlBox() {
-        ControlBox box = new ControlBox(new String[]{
+        ControlBox box = new ControlBox(new String[] {
                 "home=temp",
                 "datahub_url=failover:(tcp://localhost:63000)",
                 "datahub_user=example",
@@ -36,7 +36,7 @@ public class ControlBoxMock {
             Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
         });
 
-        box.start();
+        engine.waitFor();
 
         return box;
     }

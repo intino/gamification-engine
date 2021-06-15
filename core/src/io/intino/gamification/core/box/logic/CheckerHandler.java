@@ -14,12 +14,12 @@ public class CheckerHandler {
     private static final Map<String, Checker<? extends GamificationEvent>> MissionCheckerMap = new HashMap<>();
 
     @SuppressWarnings("unchecked")
-    public static <T extends GamificationEvent> boolean check(Achievement achievement, T event, Player player) {
+    public static <T extends GamificationEvent> AchievementProgress check(Achievement achievement, T event, Player player) {
         try {
             Checker<T> checker = (Checker<T>) AchievementCheckerMap.get(achievement.id());
-            return checker.check(event, player);
+            return checker.checkAchievement(event, player);
         } catch(ClassCastException e) {
-            return false;
+            return AchievementProgress.NotProgress;
         }
     }
 
@@ -27,7 +27,7 @@ public class CheckerHandler {
     public static <T extends GamificationEvent> boolean check(Mission mission, T event, Player player) {
         try {
             Checker<T> checker = (Checker<T>) MissionCheckerMap.get(mission.id());
-            return checker.check(event, player);
+            return checker.checkMission(event, player);
         } catch(ClassCastException e) {
             return false;
         }
@@ -42,6 +42,11 @@ public class CheckerHandler {
     }
 
     public interface Checker<T> {
-        boolean check(T event, Player player);
+        AchievementProgress checkAchievement(T event, Player player);
+        boolean checkMission(T event, Player player);
+    }
+
+    public enum AchievementProgress {
+        Progress, NotProgress, Cancel
     }
 }

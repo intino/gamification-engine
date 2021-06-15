@@ -3,16 +3,14 @@ package io.intino.gamification.core.box.mounter;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.achievement.AchievementNewState;
-import io.intino.gamification.core.box.events.mission.NewStateMission;
+import io.intino.gamification.core.box.logic.CheckerHandler;
 import io.intino.gamification.core.graph.*;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 
 import static io.intino.gamification.core.box.events.achievement.AchievementState.Achieved;
+import static io.intino.gamification.core.box.events.achievement.AchievementState.Failed;
 import static io.intino.gamification.core.box.events.mission.MissionState.Completed;
 
 public abstract class Mounter {
@@ -35,16 +33,21 @@ public abstract class Mounter {
 
         achievements.forEach((achievement, players) -> {
             players.forEach(player -> {
-                if(achievement.check(event, player)) {
+                CheckerHandler.AchievementProgress achievementProgress = achievement.check(event, player);
+                if(!achievementProgress.equals(CheckerHandler.AchievementProgress.NotProgress)) {
                     AchievementState achievementState = box.graph().achievementState(achievement.id(), player.id());
                     if(achievementState == null) {
                         achievementState = box.graph().achievementState(achievement.id(), player.id());
                         achievementState.save$();
                     }
 
-                    achievementState.count(achievementState.count() + 1).save$();
-                    if(achievementState.count() >= achievement.maxCount()) {
-                        box.engineTerminal().feed(EventBuilder.newStateAchievement(achievement.id(), player.id(), Achieved));
+                    if(achievementProgress.equals(CheckerHandler.AchievementProgress.Progress)) {
+                        achievementState.count(achievementState.count() + 1).save$();
+                        if(achievementState.count() >= achievement.maxCount()) {
+                            box.engineTerminal().feed(EventBuilder.newStateAchievement(achievement.id(), player.id(), Achieved));
+                        }
+                    } else if(achievementProgress.equals(CheckerHandler.AchievementProgress.Cancel)) {
+                        box.engineTerminal().feed(EventBuilder.newStateAchievement(achievement.id(), player.id(), Failed));
                     }
                 }
             });

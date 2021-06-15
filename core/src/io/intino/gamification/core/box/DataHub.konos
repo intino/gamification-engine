@@ -1,5 +1,6 @@
 dsl Konos
 
-Datalake(path = "{datalake_path}") as Local
+Sentinel ExpireMissions as ClockListener(pattern = "0 0 0 1/1 * ? *", timeZone = "Atlantic/Canary")
+	mean = "Cada día"
 
-//Datamart(type = Graph) graph
+Datalake(path = "{datalake_path}") as Local

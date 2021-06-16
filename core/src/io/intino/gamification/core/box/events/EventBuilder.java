@@ -2,6 +2,7 @@ package io.intino.gamification.core.box.events;
 
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.AchievementState;
+import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.mission.MissionState;
@@ -82,12 +83,14 @@ public class EventBuilder {
         return deleteAchievement;
     }
 
-    public static AchievementNewState newStateAchievement(String achievementId, String playerId, AchievementState state) {
+    public static AchievementNewState newStateAchievement(String achievementId, String contextId, String playerId, AchievementState state, AchievementType type) {
         AchievementNewState achievementNewState = new AchievementNewState();
         achievementNewState.ts(instant());
         achievementNewState.id(achievementId);
+        achievementNewState.world(contextId);
         achievementNewState.player(playerId);
         achievementNewState.state(state);
+        achievementNewState.type(type);
         return achievementNewState;
     }
 

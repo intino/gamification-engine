@@ -4,6 +4,7 @@ import io.intino.gamification.api.EngineConfiguration;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
+import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.entity.CreateItem;
 import io.intino.gamification.core.box.events.entity.CreateNpc;
@@ -13,6 +14,7 @@ import io.intino.gamification.core.box.events.match.MatchState;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
+import io.intino.gamification.core.box.helper.AchievementEntry;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
 
@@ -206,18 +208,26 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return achievements.stream().filter(a -> a.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Map<Achievement, List<Player>> achievement(Class<? extends GamificationEvent> clazz) {
-		Map<Achievement, List<Player>> achievementMap = new HashMap<>();
+	public List<AchievementEntry> achievement(Class<? extends GamificationEvent> clazz) {
+		List<AchievementEntry> achievementEntries = new ArrayList<>();
 
 		for (World world : worldList()) {
-			for (Achievement achievement : world.allAchievements()) {
+			for (Achievement achievement : world.achievements()) {
 				if(achievement.event().equals(EventType.get(clazz))) {
-					achievementMap.put(achievement, world.players());
+					achievementEntries.add(new AchievementEntry(achievement, world.id(), AchievementType.Global, world.players()));
+				}
+			}
+
+			if(world.match() != null) {
+				for (Achievement achievement : world.match().achievements()) {
+					if(achievement.event().equals(EventType.get(clazz))) {
+						achievementEntries.add(new AchievementEntry(achievement, world.id(), AchievementType.Local, world.players()));
+					}
 				}
 			}
 		}
 
-		return achievementMap;
+		return achievementEntries;
 	}
 
 	public Achievement achievement(CreateAchievement event) {

@@ -16,6 +16,15 @@ public class AchievementNewState extends GamificationEvent {
         super(message);
     }
 
+    public String world() {
+        return get("context");
+    }
+
+    public AchievementNewState world(String context) {
+        set("context", context);
+        return this;
+    }
+
     public String player() {
         return get("player");
     }

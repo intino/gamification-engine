@@ -32,7 +32,7 @@ public class AchievementFilter extends Filter {
 
     public AchievementFilter(CoreBox box, AchievementNewState event) {
         super(box);
-        this.context = getContextOf(event.id(), event.type());
+        this.context = getContextOf(event.world(), event.type());
         if(context != null) {
             this.achievement = box.graph().achievement(context.achievements(), event.id());
             this.player = box.graph().player(context.players(), event.player());
@@ -63,11 +63,11 @@ public class AchievementFilter extends Filter {
         return context != null && achievement != null && player != null;
     }
 
-    private Context getContextOf(String contextId, AchievementType type) {
+    private Context getContextOf(String worldId, AchievementType type) {
         if(type.equals(AchievementType.Global)) {
-            return box.graph().world(contextId);
+            return box.graph().world(worldId);
         } else if(type.equals(AchievementType.Local)) {
-            World world = box.graph().world(contextId);
+            World world = box.graph().world(worldId);
             if(world != null) {
                 return world.match();
             }

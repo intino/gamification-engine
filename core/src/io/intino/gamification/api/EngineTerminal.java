@@ -120,7 +120,6 @@ public class EngineTerminal {
             put(NewMission.class, (BiConsumer<EngineTerminal, NewMission>)EngineTerminal::feed);
             put(NewStateMission.class, (BiConsumer<EngineTerminal, NewStateMission>)EngineTerminal::feed);
             put(CreatePlayer.class, (BiConsumer<EngineTerminal, CreatePlayer>)EngineTerminal::feed);
-            put(CreateEnemy.class, (BiConsumer<EngineTerminal, CreateEnemy>)EngineTerminal::feed);
             put(CreateNpc.class, (BiConsumer<EngineTerminal, CreateNpc>)EngineTerminal::feed);
             put(CreateItem.class, (BiConsumer<EngineTerminal, CreateItem>)EngineTerminal::feed);
             put(DestroyEntity.class, (BiConsumer<EngineTerminal, DestroyEntity>)EngineTerminal::feed);

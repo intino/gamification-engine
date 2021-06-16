@@ -34,7 +34,9 @@ public class WorldMounter extends Mounter {
         World world = filter.world();
 
         world.achievements().forEach(a -> box.engineTerminal().feed(EventBuilder.deleteAchievement(a.id())));
-        world.entities().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyEntity(world.id(), e.id())));
+        world.players().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyPlayer(world.id(), e.id())));
+        world.npcs().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyNpc(world.id(), e.id())));
+        world.items().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyItem(world.id(), e.id())));
 
         box.graph().matchesIn(world).forEach(ma -> {
             ma.missions().forEach(mi -> {

@@ -1,16 +1,17 @@
 dsl Ness
 
-use ExampleEvents
+use VaccineEvents
 
 Broker(path = empty, port = empty, secondaryPort = empty)
 	User("example", "example")
 
 Datalake(scale = Month, path = empty) dl
 
-	Tank createHospital as Event(example.CreateHospital)
-	Tank createVaccine as Event(example.CreateVaccine)
-	Tank vaccine as Event(example.Vaccine)
+	Tank createHospital as Event(vaccines.CreateHospital)
+	Tank createVaccine as Event(vaccines.CreateVaccine)
+	Tank vaccineSupply as Event(vaccines.VaccineSupply)
+	Tank vaccination as Event(vaccines.Vaccination)
 
-Terminal exampleTerminal
-	Publish (dl.createHospital dl.createVaccine dl.vaccine)
-	Subscribe (dl.createHospital dl.createVaccine dl.vaccine)
+Terminal vaccineTerminal
+	Publish (dl.createHospital dl.createVaccine dl.vaccineSupply dl.vaccination)
+	Subscribe (dl.createHospital dl.createVaccine dl.vaccineSupply dl.vaccination)

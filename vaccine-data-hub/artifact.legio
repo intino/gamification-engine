@@ -6,7 +6,7 @@ Artifact(groupId = "org.example.vaccine", version = "1.0.0-SNAPSHOT") data-hub a
 		Test("junit", "junit", "4.13.2")
 		Test("org.assertj", "assertj-core", "3.19.0")
 
-	Package(LibrariesLinkedByManifest) as Runnable("org.example.datahub.Main")
+	Package(LibrariesLinkedByManifest) as Runnable("org.example.vaccine.datahub.Main")
 	IntinoPlugin(artifact = "io.intino.ness:data-hub-terminal-plugin:3.0.3", pluginClass = "io.intino.ness.datahubterminalplugin.DataHubTerminalsPluginLauncher", phase = Export)
 
 	Parameter("home")

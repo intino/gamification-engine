@@ -2,10 +2,8 @@ package org.example.vaccine.control.box;
 
 import io.intino.gamification.Engine;
 import io.intino.gamification.core.Archetype;
-import io.intino.magritte.framework.Graph;
-import org.example.cinepolis.control.box.AbstractBox;
-import org.example.cinepolis.control.box.ControlConfiguration;
-import org.example.cinepolis.control.box.mounters.MounterFactory;
+import io.intino.gamification.core.box.events.world.CreateWorld;
+import org.example.vaccine.control.box.gamification.GameWorld;
 import org.example.vaccine.control.box.mounters.MounterFactory;
 import org.example.vaccine.control.graph.ControlGraph;
 
@@ -29,12 +27,13 @@ public class ControlBox extends AbstractBox {
 	public io.intino.alexandria.core.Box put(Object o) {
 		super.put(o);
 		if(o instanceof Engine) engine = (Engine) o;
-		if(o instanceof Graph) graph = ((Graph) o).as(ControlGraph.class);
+		if(o instanceof ControlGraph) graph = (ControlGraph) o;
 		return this;
 	}
 
 	public void beforeStart() {
 		this.mounter = new MounterFactory(this);
+		initGamificationDatamart();
 	}
 
 	public void afterStart() {
@@ -67,5 +66,19 @@ public class ControlBox extends AbstractBox {
 
 	public MounterFactory mounter() {
 		return mounter;
+	}
+
+	private void initGamificationDatamart() {
+		if(hospitalsWorldDoesNotExist()) createHospitalsWorld();
+	}
+
+	private boolean hospitalsWorldDoesNotExist() {
+		return engine().datamart().world(GameWorld.getID()) == null;
+	}
+
+	private void createHospitalsWorld() {
+		CreateWorld world = new CreateWorld();
+		world.id("Hospitals");
+		engine().terminal().feed(world);
 	}
 }

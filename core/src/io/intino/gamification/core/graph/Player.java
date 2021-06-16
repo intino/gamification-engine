@@ -22,7 +22,7 @@ public class Player extends AbstractPlayer {
 	}
 
 	public int level() {
-		return EngineConfiguration.levelOf(score);
+		return EngineConfiguration.levelOf(this, score);
 	}
 
 	public Integer matchLevel() {
@@ -34,7 +34,7 @@ public class Player extends AbstractPlayer {
 		if(playerState == null) {
 			return 1;
 		} else {
-			return EngineConfiguration.levelOf(playerState.score());
+			return EngineConfiguration.levelOf(this, playerState.score());
 		}
 	}
 }

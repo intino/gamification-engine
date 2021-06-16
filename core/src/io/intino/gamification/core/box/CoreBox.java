@@ -1,17 +1,19 @@
 package io.intino.gamification.core.box;
 
+import io.intino.gamification.api.EngineConfiguration;
 import io.intino.gamification.api.EngineDatamart;
 import io.intino.gamification.api.EngineTerminal;
-import io.intino.gamification.core.Archetype;
 import io.intino.gamification.core.box.mounter.Mounter;
 import io.intino.gamification.core.box.mounter.Mounters;
 import io.intino.gamification.core.graph.CoreGraph;
 import io.intino.magritte.framework.Graph;
 
+import java.io.File;
+
 public class CoreBox extends AbstractBox {
 
-	private final Archetype archetype;
 	private CoreGraph graph;
+	private EngineConfiguration engineConfiguration;
 	private EngineTerminal terminal;
 	private EngineDatamart datamart;
 	private Mounters mounters;
@@ -22,7 +24,6 @@ public class CoreBox extends AbstractBox {
 
 	public CoreBox(CoreConfiguration configuration) {
 		super(configuration);
-		this.archetype = new Archetype(configuration.home());
 	}
 
 	@Override
@@ -33,6 +34,7 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public void beforeStart() {
+		this.engineConfiguration = new EngineConfiguration(this);
 		this.terminal = new EngineTerminal(this);
 		this.datamart = new EngineDatamart(this);
 		this.mounters = new Mounters(this);
@@ -50,12 +52,16 @@ public class CoreBox extends AbstractBox {
 
 	}
 
-	public Archetype.Datamart.Gamification datamart() {
-		return archetype.datamart().gamification();
+	public File datamart() {
+		return new File(configuration.datamartPath());
 	}
 
 	public CoreGraph graph() {
 		return graph;
+	}
+
+	public EngineConfiguration engineConfiguration() {
+		return engineConfiguration;
 	}
 
 	public EngineTerminal engineTerminal() {

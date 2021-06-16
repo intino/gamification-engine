@@ -1,6 +1,5 @@
 package io.intino.gamification.core.box.launcher;
 
-import io.intino.alexandria.core.BoxConfiguration;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
@@ -17,10 +16,6 @@ public class Launcher extends Async {
     private final String[] args;
     private CoreBox box;
 
-    public Launcher(BoxConfiguration configuration) {
-        this.args = argsFrom(configuration.args());
-    }
-
     public Launcher(Map<String, String> arguments) {
         this.args = argsFrom(arguments);
     }
@@ -28,7 +23,7 @@ public class Launcher extends Async {
     @Override
     protected void run() {
         this.box = new CoreBox(args);
-        Graph graph = new Graph(store(this.box.datamart().root())).loadStashes(false, StartUpStashes);
+        Graph graph = new Graph(store(this.box.datamart())).loadStashes(false, StartUpStashes);
         this.box.put(graph);
         this.box.start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -59,7 +54,8 @@ public class Launcher extends Async {
     private String[] argsFrom(Map<String, String> args) {
         return new String[] {
                 "home=" + args.get("home"),
-                "datalake_path=" + args.get("datalake_path")
+                "datalake_path=" + args.get("datalake_path"),
+                "datamart_path=" + args.get("gamification_datamart_path")
         };
     }
 

@@ -1,6 +1,5 @@
 package io.intino.gamification.core.box.mounter;
 
-import io.intino.gamification.api.EngineConfiguration;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
@@ -61,7 +60,7 @@ public class MissionMounter extends Mounter {
             }
         }
 
-        int score = box.engineConfiguration().scoreOf(player, mission, missionState.state());
+        int score = box.engineConfiguration().missionScoreMapper.get().score(player, mission, missionState.state());
         box.engineTerminal().feed(EventBuilder.changeScore(world.id(), player.id(), score));
 
         match.save$();

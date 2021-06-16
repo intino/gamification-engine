@@ -1,7 +1,5 @@
 package io.intino.gamification.core.graph;
 
-import io.intino.gamification.api.EngineConfiguration;
-
 import static io.intino.gamification.core.box.helper.Math.asInt;
 
 public class Player extends AbstractPlayer {
@@ -22,11 +20,13 @@ public class Player extends AbstractPlayer {
 	}
 
 	public int level() {
-		return EngineConfiguration.levelOf(this, score);
+		return 1;
+		//return graph().engineConfig().playerLevelMapper().levelOf(this, score);
 	}
 
 	public Integer matchLevel() {
-		World world = graph().world(worldId);
+		return 1;
+		/*World world = graph().world(worldId);
 		Match match = world.match();
 		if(match == null) return null;
 		PlayerState playerState = match.playersState(ps -> ps.playerId().equals(id)).stream()
@@ -35,6 +35,6 @@ public class Player extends AbstractPlayer {
 			return 1;
 		} else {
 			return EngineConfiguration.levelOf(this, playerState.score());
-		}
+		}*/
 	}
 }

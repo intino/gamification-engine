@@ -13,7 +13,7 @@ import java.io.File;
 public class CoreBox extends AbstractBox {
 
 	private CoreGraph graph;
-	private EngineConfiguration engineConfiguration;
+	private EngineConfiguration engineConfig;
 	private EngineTerminal terminal;
 	private EngineDatamart datamart;
 	private Mounters mounters;
@@ -34,7 +34,8 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public void beforeStart() {
-		this.engineConfiguration = new EngineConfiguration(this);
+		this.engineConfig = new EngineConfiguration(this);
+		if(graph != null) this.graph.engineConfig(engineConfig);
 		this.terminal = new EngineTerminal(this);
 		this.datamart = new EngineDatamart(this);
 		this.mounters = new Mounters(this);
@@ -61,7 +62,7 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public EngineConfiguration engineConfiguration() {
-		return engineConfiguration;
+		return engineConfig;
 	}
 
 	public EngineTerminal engineTerminal() {

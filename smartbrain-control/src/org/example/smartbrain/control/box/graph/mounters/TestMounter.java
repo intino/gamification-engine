@@ -6,6 +6,7 @@ import io.intino.alexandria.event.Event;
 import org.example.smartbrain.control.box.mounters.Mounter;
 
 public class TestMounter implements Mounter {
+
 	private final ControlBox box;
 
 	public TestMounter(ControlBox box) {

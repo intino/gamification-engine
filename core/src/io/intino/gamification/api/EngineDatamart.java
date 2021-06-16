@@ -1,6 +1,7 @@
 package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.World;
 
@@ -28,6 +29,10 @@ public class EngineDatamart {
 
     public void clear() {
         box.graph().clear();
+    }
+
+    public Achievement achievement(String id) {
+        return box.graph().achievement(id);
     }
 
     /*

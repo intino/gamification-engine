@@ -16,7 +16,6 @@ public enum EventType {
     Action(Action.class),
     CreatePlayer(CreatePlayer.class),
     CreateNpc(CreateNpc.class),
-    CreateEnemy(CreateEnemy.class),
     CreateItem(CreateItem.class),
     DestroyEntity(DestroyEntity.class),
     DropItem(DropItem.class),

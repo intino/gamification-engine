@@ -36,7 +36,7 @@ public abstract class Mounter {
             players.forEach(player -> {
                 CheckResult checkResult = achievement.check(event, player);
                 if(checkResult != CheckResult.Skip) {
-                    AchievementState achievementState = box.graph().achievementState(achievement.id(), player.id());
+                    AchievementState achievementState = box.graph().achievementStateOf(achievement.id(), player.id());
                     if(achievementState == null) {
                         achievementState = box.graph().achievementState(achievement.id(), player.id());
                         achievementState.save$();

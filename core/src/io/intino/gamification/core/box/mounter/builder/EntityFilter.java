@@ -10,7 +10,6 @@ public class EntityFilter extends Filter {
     private Match match;
     private Entity entity;
     private Player player;
-    private Enemy enemy;
     private Npc npc;
     private Item item;
 
@@ -18,12 +17,6 @@ public class EntityFilter extends Filter {
         super(box);
         this.world = box.graph().world(event.world());
         this.player = box.graph().player(event.id());
-    }
-
-    public EntityFilter(CoreBox box, CreateEnemy event) {
-        super(box);
-        this.world = box.graph().world(event.world());
-        this.enemy = box.graph().enemy(event.id());
     }
 
     public EntityFilter(CoreBox box, CreateNpc event) {
@@ -36,13 +29,32 @@ public class EntityFilter extends Filter {
         super(box);
         this.world = box.graph().world(event.world());
         this.item = box.graph().item(event.id());
+        if(world != null) {
+            this.player = box.graph().player(world.players(), event.player());
+        }
     }
 
-    public EntityFilter(CoreBox box, DestroyEntity event) {
+    public EntityFilter(CoreBox box, DestroyPlayer event) {
         super(box);
         this.world = box.graph().world(event.world());
         if(world != null) {
-            this.entity = box.graph().entity(world.entities(), event.id());
+            this.player = box.graph().player(world.players(), event.id());
+        }
+    }
+
+    public EntityFilter(CoreBox box, DestroyNpc event) {
+        super(box);
+        this.world = box.graph().world(event.world());
+        if(world != null) {
+            this.npc = box.graph().npc(world.npcs(), event.id());
+        }
+    }
+
+    public EntityFilter(CoreBox box, DestroyItem event) {
+        super(box);
+        this.world = box.graph().world(event.world());
+        if(world != null) {
+            this.item = box.graph().item(world.items(), event.id());
         }
     }
 
@@ -101,6 +113,10 @@ public class EntityFilter extends Filter {
         return player;
     }
 
+    public Npc npc() {
+        return npc;
+    }
+
     public Item item() {
         return item;
     }
@@ -113,10 +129,6 @@ public class EntityFilter extends Filter {
         return player == null && world != null;
     }
 
-    public boolean createEnemyCanMount() {
-        return enemy == null && world != null;
-    }
-
     public boolean createNpcCanMount() {
         return npc == null && world != null;
     }
@@ -125,8 +137,16 @@ public class EntityFilter extends Filter {
         return item == null && world != null;
     }
 
-    public boolean destroyEntityCanMount() {
-        return entity != null && world != null;
+    public boolean destroyPlayerCanMount() {
+        return player != null && world != null;
+    }
+
+    public boolean destroyNpcCanMount() {
+        return npc != null && world != null;
+    }
+
+    public boolean destroyItemCanMount() {
+        return item != null && world != null;
     }
 
     public boolean actionCanMount() {

@@ -2,10 +2,10 @@ package io.intino.gamification.core.box.events.entity;
 
 import io.intino.gamification.core.box.events.GamificationEvent;
 
-public class DestroyEntity extends GamificationEvent {
+public abstract class DestroyEntity extends GamificationEvent {
 
-    public DestroyEntity() {
-        super(DestroyEntity.class);
+    public DestroyEntity(Class<? extends GamificationEvent> clazz) {
+        super(clazz);
     }
 
     public DestroyEntity(io.intino.alexandria.event.Event event) {

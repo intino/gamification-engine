@@ -4,6 +4,8 @@ import io.intino.alexandria.event.Event;
 import io.intino.alexandria.message.Message;
 import io.intino.gamification.core.box.events.GamificationEvent;
 
+import java.util.List;
+
 public abstract class CreateEntity extends GamificationEvent {
 
     public CreateEntity(Class<? extends GamificationEvent> clazz) {
@@ -42,6 +44,15 @@ public abstract class CreateEntity extends GamificationEvent {
 
     public CreateEntity enabled(boolean enabled) {
         set("enabled", enabled);
+        return this;
+    }
+
+    public List<String> groups() {
+        return getAsList("groups");
+    }
+
+    public CreateEntity groups(List<String> groups) {
+        set("groups", groups);
         return this;
     }
 }

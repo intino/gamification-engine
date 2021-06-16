@@ -44,9 +44,9 @@ public class MatchMounter extends Mounter {
         World world = filter.world();
         Match match = filter.match();
 
+        FailMission.get(box).failMissions(world, Mission::isActive);
         world.match(null);
         match.to(event.ts()).state(Finished);
-        FailMission.get(box).failMissions(world, Mission::isActive);
 
         world.save$();
         match.save$();

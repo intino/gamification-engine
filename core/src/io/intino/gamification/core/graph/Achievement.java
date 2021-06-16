@@ -24,7 +24,7 @@ public class Achievement extends AbstractAchievement {
 		return CheckerHandler.check(this, event, player);
 	}
 
-	public void progressIf(CheckerHandler.Checker<? extends GamificationEvent> checker) {
+	public <T extends GamificationEvent> void progressIf(CheckerHandler.Checker<T> checker) {
 		CheckerHandler.progressIf(this, checker);
 	}
 }

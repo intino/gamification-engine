@@ -12,7 +12,6 @@ public class World extends AbstractWorld {
 	public List<Entity> entities() {
 		List<Entity> entities = new ArrayList<>();
 		entities.addAll(players());
-		entities.addAll(enemies());
 		entities.addAll(npcs());
 		entities.addAll(items());
 		return entities;

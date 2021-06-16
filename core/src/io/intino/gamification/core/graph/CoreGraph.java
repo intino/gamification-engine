@@ -4,7 +4,6 @@ import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
-import io.intino.gamification.core.box.events.entity.CreateEnemy;
 import io.intino.gamification.core.box.events.entity.CreateItem;
 import io.intino.gamification.core.box.events.entity.CreateNpc;
 import io.intino.gamification.core.box.events.entity.CreatePlayer;
@@ -76,19 +75,9 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Player player(CreatePlayer event, String worldId) {
-		return create(Stash.Players.name()).player(event.id(), worldId);
-	}
-
-	/* ENEMY ------------------------------------------------------------------------------------------------------ */
-
-	public Enemy enemy(String id) {
-		//TODO
-		return entityList(e -> e.id().equals(id) && e instanceof Enemy)
-				.map(e -> (Enemy) e).findFirst().orElse(null);
-	}
-
-	public Enemy enemy(CreateEnemy event, String worldId) {
-		return create(Stash.Enemies.name()).enemy(event.id(), worldId);
+		List<String> groups = event.groups();
+		if(groups == null) groups = new ArrayList<>();
+		return create(Stash.Players.name()).player(event.id(), worldId, groups);
 	}
 
 	/* NPC ------------------------------------------------------------------------------------------------------ */
@@ -99,8 +88,14 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 				.map(e -> (Npc) e).findFirst().orElse(null);
 	}
 
+	public Npc npc(List<Npc> npcs, String id) {
+		return npcs.stream().filter(n -> n.id().equals(id)).findFirst().orElse(null);
+	}
+
 	public Npc npc(CreateNpc event, String worldId) {
-		return create(Stash.Npcs.name()).npc(event.id(), worldId);
+		List<String> groups = event.groups();
+		if(groups == null) groups = new ArrayList<>();
+		return create(Stash.Npcs.name()).npc(event.id(), worldId, groups);
 	}
 
 	/* ITEM ------------------------------------------------------------------------------------------------------ */
@@ -117,7 +112,9 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Item item(CreateItem event, String worldId) {
-		return create(Stash.Items.name()).item(event.id(), worldId);
+		List<String> groups = event.groups();
+		if(groups == null) groups = new ArrayList<>();
+		return create(Stash.Items.name()).item(event.id(), worldId, groups);
 	}
 
 	/* PLAYER STATE ------------------------------------------------------------------------------------------------------ */
@@ -200,7 +197,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		Map<Achievement, List<Player>> achievementMap = new HashMap<>();
 
 		for (World world : worldList()) {
-			List<Achievement> achievements = world.achievements();
+			List<Achievement> achievements = new ArrayList<>(world.achievements());
 			if(world.match() != null) achievements.addAll(world.match().achievements());
 
 			for (Achievement achievement : achievements) {

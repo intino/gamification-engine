@@ -1,6 +1,8 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.core.box.events.EventType;
+import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.mission.MissionDifficulty;
@@ -9,7 +11,7 @@ import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.helper.Time;
 import io.intino.gamification.core.box.logic.CheckResult;
-import io.intino.gamification.core.box.logic.CheckerHandler;
+import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Mission;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
@@ -17,7 +19,6 @@ import org.example.cinepolis.control.graph.Employee;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Adapter {
@@ -29,11 +30,23 @@ public class Adapter {
     }
 
     public void initialize() {
-        CreateWorld cw = (CreateWorld) new CreateWorld().id(GamificationConfig.WorldId).ts(Time.currentInstant());
-        BeginMatch bm = (BeginMatch) new BeginMatch().world(GamificationConfig.WorldId).id(UUID.randomUUID().toString()).ts(Time.currentInstant());
+        CreateWorld cw = (CreateWorld) new CreateWorld()
+                .id(GamificationConfig.WorldId)
+                .ts(Time.currentInstant());
+        CreateAchievement ga = (CreateAchievement) new CreateAchievement()
+                .world(GamificationConfig.WorldId)
+                .type(AchievementType.Global)
+                .description("Empieza 2 partidas")
+                .event(EventType.BeginMatch)
+                .maxCount(2)
+                .id("achievement1")
+                .ts(Time.currentInstant());
 
         box.engine().terminal().feed(cw);
-        box.engine().terminal().feed(bm);
+        box.engine().terminal().feed(ga);
+
+        Achievement globalAchievement = box.engine().datamart().achievement("achievement1");
+        globalAchievement.<BeginMatch>progressIf((event, player) -> CheckResult.Progress);
     }
 
     public void adapt(AssetAlert event) {
@@ -59,7 +72,7 @@ public class Adapter {
 
         Mission mission = box.engine().datamart().mission(event.id());
         if(mission != null) {
-            mission.progressIf((CheckerHandler.Checker<Action>) (a, p) -> {
+            mission.<Action>progressIf((a, p) -> {
                 if(a.type().equals("FixAsset") &&
                         a.entitySrc().equals(p.id()) &&
                         p.inventory().stream().anyMatch(i -> i.id().equals(a.entityDest()))) {

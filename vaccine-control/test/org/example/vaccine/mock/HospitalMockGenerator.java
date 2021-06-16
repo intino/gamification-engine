@@ -1,23 +1,17 @@
 package org.example.vaccine.mock;
 
 import org.example.vaccine.control.box.ControlBox;
-import org.example.vaccine.datahub.VaccineTerminal;
 import org.example.vaccine.datahub.events.vaccines.CreateHospital;
 
 import java.util.List;
-import java.util.Random;
 
-public class HospitalMockGenerator {
-
-    private final ControlBox box;
-    private final VaccineTerminal terminal;
-    private final Random random = new Random();
+public class HospitalMockGenerator extends MockGenerator {
 
     public HospitalMockGenerator(ControlBox box) {
-        this.box = box;
-        this.terminal = box.terminal();
+        super(box);
     }
 
+    @Override
     public void execute() {
         System.out.println("Creating hospitals...");
         for(String location : locations()) {

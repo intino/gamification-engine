@@ -1,0 +1,34 @@
+dsl Ness
+
+Namespace smartbrain
+
+	Event CreatePatient
+		Attribute dni as Text
+		Attribute surName as Text
+		Attribute lastName as Text
+		Attribute age as Integer
+
+	Event TestBegin
+		Attribute testName as Text
+		Attribute patientId as Text
+
+	Event TestEnd
+		Attribute testName as Text
+		Attribute patientId as Text
+
+	Event TestResponse
+		Attribute testName as Text
+		Attribute patientId as Text
+		Attribute question as Text
+		Attribute questionType as Word("Language" "Memory" "Math")
+		Attribute response as Text List
+		Attribute expected as Text List
+
+	Event TaskAssignment
+		Attribute taskName as Text
+		Attribute patientId as Text
+		Attribute description as Text
+
+	Event TaskComplete
+		Attribute taskName as Text
+		Attribute patientId as Text

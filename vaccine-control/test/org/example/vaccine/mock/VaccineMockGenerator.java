@@ -1,20 +1,12 @@
 package org.example.vaccine.mock;
 
 import org.example.vaccine.control.box.ControlBox;
-import org.example.vaccine.datahub.VaccineTerminal;
 import org.example.vaccine.datahub.events.vaccines.CreateVaccine;
 
-import java.util.Random;
-
-public class VaccineMockGenerator {
-
-    private final ControlBox box;
-    private final VaccineTerminal terminal;
-    private final Random random = new Random();
+public class VaccineMockGenerator extends MockGenerator {
 
     public VaccineMockGenerator(ControlBox box) {
-        this.box = box;
-        this.terminal = box.terminal();
+        super(box);
     }
 
     public void execute() {

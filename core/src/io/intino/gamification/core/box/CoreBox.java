@@ -34,7 +34,7 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public void beforeStart() {
-		this.engineConfig = new EngineConfiguration(this);
+		this.engineConfig = new EngineConfiguration();
 		if(graph != null) this.graph.engineConfig(engineConfig);
 		this.terminal = new EngineTerminal(this);
 		this.datamart = new EngineDatamart(this);

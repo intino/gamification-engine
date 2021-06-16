@@ -1,0 +1,29 @@
+dsl Legio
+
+Artifact(groupId = "org.example.smartbrain", version = "1.0.0-SNAPSHOT") data-hub as Solution
+	Model("Ness", "5.5.2", "4.1.1")
+	Imports
+		Test("junit", "junit", "4.13.2")
+		Test("org.assertj", "assertj-core", "3.19.0")
+
+	Package(LibrariesLinkedByManifest) as Runnable("org.example.smartbrain.datahub.Main")
+	IntinoPlugin(artifact = "io.intino.ness:data-hub-terminal-plugin:3.0.3", pluginClass = "io.intino.ness.datahubterminalplugin.DataHubTerminalsPluginLauncher", phase = Export)
+
+	Parameter("home")
+	Parameter("broker_port")
+	Parameter("broker_secondary_port")
+	Parameter("ui_port")
+
+RunConfiguration local
+	Argument("home", "temp")
+	Argument("broker_port", "63000")
+	Argument("broker_secondary_port", "1883")
+	Argument("ui_port", "9020")
+
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")
+	Snapshot("https://artifactory.intino.io/artifactory/snapshots")
+
+Repository("monentia-maven")
+	Snapshot("https://artifactory.monentia.es/artifactory/snapshots")
+	Release("https://artifactory.monentia.es/artifactory/releases")

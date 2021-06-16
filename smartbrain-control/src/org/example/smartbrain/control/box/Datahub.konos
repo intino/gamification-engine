@@ -1,0 +1,21 @@
+dsl Konos
+
+Datalake(path = "{datalake_path}") as Local
+
+Datamart(type = Graph) graph
+	Mounter PatientMounter as Event
+		Require("smartbrain.CreatePatient")
+	Mounter TestMounter as Event
+		Require("smartbrain.TestEnd")
+    	Require("smartbrain.TestResponse")
+		Require("smartbrain.TestBegin")
+	Mounter TaskMounter as Event
+    	Require("smartbrain.TaskAssignment")
+    	Require("smartbrain.TaskComplete")
+
+Subscriber(event = "smartbrain.CreatePatient", subscriberId = "CreatePatient") createPatientSubscriber
+Subscriber(event = "smartbrain.TestBegin", subscriberId = "TestBegin") testBeginSubscriber
+Subscriber(event = "smartbrain.TestEnd", subscriberId = "TestEnd") testEndSubscriber
+Subscriber(event = "smartbrain.TestResponse", subscriberId = "TestResponse") testResponseSubscriber
+Subscriber(event = "smartbrain.TaskAssignment", subscriberId = "TaskAssignment") taskAssignmentSubscriber
+Subscriber(event = "smartbrain.TaskComplete", subscriberId = "TaskComplete") taskCompleteSubscriber

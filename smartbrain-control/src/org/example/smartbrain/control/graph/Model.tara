@@ -1,0 +1,12 @@
+dsl Proteo
+
+Concept Patient
+	var string dni
+	var string surname
+	var string lastname
+	var integer age
+
+
+
+
+

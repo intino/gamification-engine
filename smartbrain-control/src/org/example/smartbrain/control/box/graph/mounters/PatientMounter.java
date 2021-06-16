@@ -6,6 +6,7 @@ import io.intino.alexandria.event.Event;
 import org.example.smartbrain.control.box.mounters.Mounter;
 
 public class PatientMounter implements Mounter {
+
 	private final ControlBox box;
 
 	public PatientMounter(ControlBox box) {
@@ -13,7 +14,7 @@ public class PatientMounter implements Mounter {
 	}
 
 	public void handle(org.example.smartbrain.datahub.events.smartbrain.CreatePatient event) {
-
+		box.graph().create("Patients").patient(event.dni(), event.surName(), event.lastName(), event.age());
 	}
 
 	public void handle(Event event) {

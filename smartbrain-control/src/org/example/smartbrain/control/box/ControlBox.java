@@ -61,4 +61,8 @@ public class ControlBox extends AbstractBox {
 	public MounterFactory mounters() {
 		return this.mounterFactory;
 	}
+
+	public ControlGraph graph() {
+		return this.graph;
+	}
 }

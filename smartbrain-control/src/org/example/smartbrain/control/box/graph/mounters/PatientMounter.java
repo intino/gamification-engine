@@ -14,7 +14,7 @@ public class PatientMounter implements Mounter {
 	}
 
 	public void handle(org.example.smartbrain.datahub.events.smartbrain.CreatePatient event) {
-
+		box.graph().create("Patients").patient(event.dni(), event.surName(), event.lastName(), event.age());
 	}
 
 	public void handle(Event event) {

@@ -8,6 +8,14 @@ Namespace smartbrain
 		Attribute lastName as Text
 		Attribute age as Integer
 
+	Event TestCreate
+		Attribute name as Text
+		Component(multiple=true) Question
+			Attribute question as Text
+			Component(multiple=true) Response
+        		Attribute name as Text
+        		Attribute correct as Bool
+
 	Event TestBegin
 		Attribute testName as Text
 		Attribute patientId as Text

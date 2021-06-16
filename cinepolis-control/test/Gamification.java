@@ -8,6 +8,8 @@ import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.helper.Time;
 import io.intino.gamification.core.box.logic.CheckResult;
 import io.intino.gamification.core.graph.Achievement;
+import io.intino.gamification.core.graph.Match;
+import io.intino.gamification.core.graph.World;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.GamificationConfig;
 import org.example.cinepolis.datahub.events.cinepolis.*;
@@ -56,7 +58,14 @@ public class Gamification {
     }
 
     private static void newWorkingDay(ControlBox box) {
-        box.engine().terminal().feed(endMatch(box.engine().datamart().world(GamificationConfig.WorldId).match().id()));
+        World world = box.engine().datamart().world(GamificationConfig.WorldId);
+        if(world != null) {
+            Match match = world.match();
+            if(match != null) {
+                box.engine().terminal().feed(endMatch(match.id()));
+            }
+        }
+
         box.engine().terminal().feed(beginMatch("match1"));
 
         CreateAchievement la = (CreateAchievement) new CreateAchievement()

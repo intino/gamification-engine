@@ -1,5 +1,6 @@
 package io.intino.gamification.core.graph;
 
+import io.intino.gamification.api.EngineConfiguration;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
@@ -22,6 +23,8 @@ import static io.intino.gamification.core.box.events.achievement.AchievementStat
 
 public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
+	private EngineConfiguration engineConfiguration;
+
 	public CoreGraph(Graph graph) {
 		super(graph);
 	}
@@ -29,6 +32,16 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	public CoreGraph(io.intino.magritte.framework.Graph graph, CoreGraph wrapper) {
 		super(graph, wrapper);
 	}
+
+	public EngineConfiguration engineConfig() {
+		return engineConfiguration;
+	}
+
+	public void engineConfig(EngineConfiguration engineConfiguration) {
+		this.engineConfiguration = engineConfiguration;
+	}
+
+	/* WORLD ------------------------------------------------------------------------------------------------------ */
 
 	public World world(String id) {
 		return worldList(w -> w.id().equals(id)).findFirst().orElse(null);

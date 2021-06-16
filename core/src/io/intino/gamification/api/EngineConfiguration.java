@@ -10,31 +10,28 @@ import io.intino.gamification.core.graph.Player;
 public class EngineConfiguration {
 
     private final CoreBox box;
-    private static PlayerLevelMapper playerLevelMapper;
-    private static MissionScoreMapper missionScoreMapper;
+    private PlayerLevelMapper playerLevelMapper;
+    private MissionScoreMapper missionScoreMapper;
 
     public EngineConfiguration(CoreBox box) {
         this.box = box;
-    }
-
-    static {
-        levelFunction((player, score) -> Math.toIntExact(Math.max(1, Math.round(5.7 * Math.log(Math.max(score, 1)) - 24.5))));
+        playerLevelFunction((player, score) -> Math.toIntExact(Math.max(1, Math.round(5.7 * Math.log(Math.max(score, 1)) - 24.5))));
         missionScoreFunction((player, mission, state) -> Math.round(100 * mission.difficulty().multiplier() * mission.type().multiplier() * state.multiplier()));
     }
 
-    public static void levelFunction(PlayerLevelMapper playerLevelMapper) {
-        EngineConfiguration.playerLevelMapper = playerLevelMapper;
+    public void playerLevelFunction(PlayerLevelMapper playerLevelMapper) {
+        this.playerLevelMapper = playerLevelMapper;
     }
 
-    public static void missionScoreFunction(MissionScoreMapper missionScoreMapper) {
-        EngineConfiguration.missionScoreMapper = missionScoreMapper;
+    public void missionScoreFunction(MissionScoreMapper missionScoreMapper) {
+        this.missionScoreMapper = missionScoreMapper;
     }
 
-    public static int levelOf(Player player, int score) {
+    public int levelOf(Player player, int score) {
         return playerLevelMapper.level(player, score);
     }
 
-    public static int scoreOf(Player player, Mission mission, MissionState missionState) {
+    public int scoreOf(Player player, Mission mission, MissionState missionState) {
         return missionScoreMapper.score(player, mission, missionState);
     }
 }

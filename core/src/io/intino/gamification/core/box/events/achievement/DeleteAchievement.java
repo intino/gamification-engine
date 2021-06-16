@@ -17,15 +17,15 @@ public class DeleteAchievement extends GamificationEvent {
     }
 
     public String world() {
-        return get("world");
+        return get("context");
     }
 
     public AchievementType type() {
         return getAsEnum("type", AchievementType.class);
     }
 
-    public DeleteAchievement world(String world) {
-        set("world", world);
+    public DeleteAchievement world(String context) {
+        set("context", context);
         return this;
     }
 

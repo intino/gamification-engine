@@ -33,6 +33,8 @@ public class ControlBox extends AbstractBox {
 	}
 
 	public void beforeStart() {
+		graph().clear();
+		engine().datamart().clear();
 		this.mounter = new MounterFactory(this);
 		this.adapter = new Adapter(this);
 	}

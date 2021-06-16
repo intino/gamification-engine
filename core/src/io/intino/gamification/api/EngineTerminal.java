@@ -55,10 +55,6 @@ public class EngineTerminal {
         box.mounter(EntityMounter.class).handle(event);
     }
 
-    public void feed(CreateEnemy event) {
-        box.mounter(EntityMounter.class).handle(event);
-    }
-
     public void feed(CreateNpc event) {
         box.mounter(EntityMounter.class).handle(event);
     }
@@ -76,6 +72,14 @@ public class EngineTerminal {
     }
 
     public void feed(DropItem event) {
+        box.mounter(EntityMounter.class).handle(event);
+    }
+
+    public void feed(EnableEntity event) {
+        box.mounter(EntityMounter.class).handle(event);
+    }
+
+    public void feed(DisableEntity event) {
         box.mounter(EntityMounter.class).handle(event);
     }
 

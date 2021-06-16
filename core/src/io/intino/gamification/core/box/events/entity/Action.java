@@ -83,6 +83,15 @@ public class Action extends GamificationEvent {
         return changeScore(world, entity, "ChangeScore", score);
     }
 
+    public static Action setHealth(String world, String entityDest, String type, double health) {
+        return new Action("SetHealth")
+                .world(world)
+                .entityDest(entityDest)
+                .type(type)
+                .attribute("health")
+                .value(String.valueOf(health));
+    }
+
     public static Action attack(String world, String entitySrc, String entityDest, String type, double damage) {
         return new Action("Attack")
                 .world(world)

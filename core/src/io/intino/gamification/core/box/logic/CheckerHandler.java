@@ -18,7 +18,7 @@ public class CheckerHandler {
         try {
             Checker<T> checker = (Checker<T>) AchievementCheckerMap.get(achievement.id());
             return checker.check(event, player);
-        } catch(ClassCastException e) {
+        } catch(ClassCastException | NullPointerException e) {
             return CheckResult.Skip;
         }
     }
@@ -28,7 +28,7 @@ public class CheckerHandler {
         try {
             Checker<T> checker = (Checker<T>) MissionCheckerMap.get(mission.id());
             return checker.check(event, player);
-        } catch(ClassCastException e) {
+        } catch(ClassCastException | NullPointerException e) {
             return CheckResult.Skip;
         }
     }

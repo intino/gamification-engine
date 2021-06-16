@@ -3,7 +3,6 @@ import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.graph.ControlGraph;
 
 import java.io.File;
 
@@ -25,7 +24,6 @@ public class Test {
 
         engine.launch(() -> {
             box.start();
-            box.graph().clear();
             Gamification.run(box);
             Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
         });

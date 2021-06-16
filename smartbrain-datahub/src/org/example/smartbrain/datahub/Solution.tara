@@ -1,0 +1,19 @@
+dsl Ness
+
+use SmartbrainEvents
+
+Broker(path = empty, port = empty, secondaryPort = empty)
+	User("example", "example")
+
+Datalake(scale = Month, path = empty) dl
+
+	Tank createPatient as Event(smartbrain.CreatePatient)
+	Tank testBegin as Event(smartbrain.TestBegin)
+	Tank testEnd as Event(smartbrain.TestEnd)
+	Tank testResponse as Event(smartbrain.TestResponse)
+	Tank taskAssignment as Event(smartbrain.TaskAssignment)
+	Tank taskComplete as Event(smartbrain.TaskComplete)
+
+Terminal smartbrainTerminal
+	Publish(dl.createPatient dl.testBegin dl.testEnd dl.testResponse dl.taskAssignment dl.taskComplete)
+	Subscribe(dl.createPatient dl.testBegin dl.testEnd dl.testResponse dl.taskAssignment dl.taskComplete)

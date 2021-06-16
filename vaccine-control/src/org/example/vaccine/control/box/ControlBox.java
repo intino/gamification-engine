@@ -78,7 +78,7 @@ public class ControlBox extends AbstractBox {
 
 	private void createHospitalsWorld() {
 		CreateWorld world = new CreateWorld();
-		world.id("Hospitals");
+		world.id(GameWorld.getID());
 		engine().terminal().feed(world);
 	}
 }

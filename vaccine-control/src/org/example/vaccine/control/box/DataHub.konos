@@ -4,12 +4,12 @@ Datalake(path = "{datalake_path}") as Local
 
 Datamart(type = Graph) graph
 	Mounter VaccineMounter as Event
-		Require("vaccines.CreateHospital")
-		Require("vaccines.CreateVaccine")
-		Require("vaccines.VaccineSupply")
-    	Require("vaccines.Vaccination")
+		Require("smartbrain.CreatePatient")
+		Require("smartbrain.CreatePatient")
+		Require("smartbrain.CreatePatient")
+    	Require("smartbrain.CreatePatient")
 
-Subscriber(event = "vaccines.CreateHospital", subscriberId = "CreateHospital") createHospitalSubscriber
-Subscriber(event = "vaccines.CreateVaccine", subscriberId = "CreateVaccine") createVaccineSubscriber
-Subscriber(event = "vaccines.VaccineSupply", subscriberId = "VaccineSupply") vaccineSupplySubscriber
-Subscriber(event = "vaccines.Vaccination", subscriberId = "Vaccination") vaccinationSubscriber
+Subscriber(event = "smartbrain.CreateHospital", subscriberId = "CreateHospital") createHospitalSubscriber
+Subscriber(event = "smartbrain.CreateVaccine", subscriberId = "CreateVaccine") createVaccineSubscriber
+Subscriber(event = "smartbrain.VaccineSupply", subscriberId = "VaccineSupply") vaccineSupplySubscriber
+Subscriber(event = "smartbrain.Vaccination", subscriberId = "Vaccination") vaccinationSubscriber

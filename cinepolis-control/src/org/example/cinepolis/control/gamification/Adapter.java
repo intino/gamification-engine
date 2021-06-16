@@ -45,7 +45,7 @@ public class Adapter {
         box.engine().terminal().feed(cw);
         box.engine().terminal().feed(ga);
 
-        Achievement globalAchievement = box.engine().datamart().achievement("achievement1");
+        Achievement globalAchievement = box.engine().datamart().globalAchievement(GamificationConfig.WorldId, "achievement1");
         globalAchievement.<BeginMatch>progressIf((event, player) -> CheckResult.Progress);
     }
 
@@ -70,7 +70,7 @@ public class Adapter {
 
         box.engine().terminal().feed(nm);
 
-        Mission mission = box.engine().datamart().mission(event.id());
+        Mission mission = box.engine().datamart().mission(GamificationConfig.WorldId, event.id());
         if(mission != null) {
             mission.<Action>progressIf((a, p) -> {
                 if(a.type().equals("FixAsset") &&
@@ -84,19 +84,20 @@ public class Adapter {
     }
 
     public void adapt(DeregisterAsset event) {
-        DestroyEntity de = (DestroyEntity) new DestroyEntity()
+        DestroyItem di = (DestroyItem) new DestroyItem()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
                 .ts(Time.currentInstant());
-        box.engine().terminal().feed(de);
+        box.engine().terminal().feed(di);
     }
 
     public void adapt(DismissEmployee event) {
-        DestroyEntity de = (DestroyEntity) new DestroyEntity()
+        DestroyPlayer dp = (DestroyPlayer) new DestroyPlayer()
+                .destroyStrategy(DestroyStrategy.Nothing)
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
                 .ts(Time.currentInstant());
-        box.engine().terminal().feed(de);
+        box.engine().terminal().feed(dp);
     }
 
     public void adapt(FixedAsset event) {

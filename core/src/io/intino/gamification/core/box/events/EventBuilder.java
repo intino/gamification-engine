@@ -3,10 +3,7 @@ package io.intino.gamification.core.box.events;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.AchievementState;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
-import io.intino.gamification.core.box.events.entity.Action;
-import io.intino.gamification.core.box.events.entity.DestroyEntity;
-import io.intino.gamification.core.box.events.entity.EnableEntity;
-import io.intino.gamification.core.box.events.entity.PickUpItem;
+import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.mission.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.helper.Time;
@@ -35,12 +32,28 @@ public class EventBuilder {
         return action;
     }
 
-    public static DestroyEntity destroyEntity(String worldId, String entityId) {
-        DestroyEntity destroyEntity = new DestroyEntity();
-        destroyEntity.ts(instant());
-        destroyEntity.id(entityId);
-        destroyEntity.world(worldId);
-        return destroyEntity;
+    public static DestroyPlayer destroyPlayer(String worldId, String playerId) {
+        DestroyPlayer destroyPlayer = new DestroyPlayer();
+        destroyPlayer.ts(instant());
+        destroyPlayer.id(playerId);
+        destroyPlayer.world(worldId);
+        return destroyPlayer;
+    }
+
+    public static DestroyNpc destroyNpc(String worldId, String npcId) {
+        DestroyNpc destroyNpc = new DestroyNpc();
+        destroyNpc.ts(instant());
+        destroyNpc.id(npcId);
+        destroyNpc.world(worldId);
+        return destroyNpc;
+    }
+
+    public static DestroyItem destroyItem(String worldId, String itemId) {
+        DestroyItem destroyItem = new DestroyItem();
+        destroyItem.ts(instant());
+        destroyItem.id(itemId);
+        destroyItem.world(worldId);
+        return destroyItem;
     }
 
     public static PickUpItem pickUpItem(String worldId, String itemId, String playerId) {

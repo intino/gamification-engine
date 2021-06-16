@@ -16,4 +16,10 @@ public class World extends AbstractWorld {
 		entities.addAll(items());
 		return entities;
 	}
+
+	public List<Achievement> allAchievements() {
+		List<Achievement> achievements = new ArrayList<>(achievements());
+		if(match != null) achievements.addAll(match.achievements());
+		return achievements;
+	}
 }

@@ -197,10 +197,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		Map<Achievement, List<Player>> achievementMap = new HashMap<>();
 
 		for (World world : worldList()) {
-			List<Achievement> achievements = new ArrayList<>(world.achievements());
-			if(world.match() != null) achievements.addAll(world.match().achievements());
-
-			for (Achievement achievement : achievements) {
+			for (Achievement achievement : world.allAchievements()) {
 				if(achievement.event().equals(EventType.get(clazz))) {
 					achievementMap.put(achievement, world.players());
 				}

@@ -4,7 +4,7 @@ import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.graph.*;
 
 import java.util.List;
-import io.intino.gamification.core.graph.World;
+import java.util.Optional;
 
 public class EngineDatamart {
 
@@ -12,6 +12,10 @@ public class EngineDatamart {
 
     public EngineDatamart(CoreBox box) {
         this.box = box;
+    }
+
+    public void clear() {
+        box.graph().clear();
     }
 
     public World world(String id) {
@@ -22,35 +26,51 @@ public class EngineDatamart {
         return box.graph().worldList();
     }
 
-    public Mission mission(String id) {
-        return box.graph().mission(id);
+    public Match match(String worldId) {
+        return Optional.ofNullable(world(worldId)).map(AbstractWorld::match).orElse(null);
     }
 
-    public void clear() {
-        box.graph().clear();
+    public Item item(String worldId, String id) {
+        return Optional.ofNullable(world(worldId)).map(w -> box.graph().item(w.items(), id)).orElse(null);
     }
 
-    public List<Mission> missions() {
-        return box.graph().missionList();
+    public Mission mission(String worldId, String id) {
+        return Optional.ofNullable(world(worldId))
+                .map(AbstractWorld::match)
+                .map(m -> box.graph().mission(m.missions(), id))
+                .orElse(null);
     }
 
-    public List<Achievement> achievements() {
-        return box.graph().achievementList();
+    public List<Mission> missions(String worldId) {
+        return Optional.ofNullable(world(worldId))
+                .map(AbstractWorld::match)
+                .map(AbstractMatch::missions)
+                .orElse(null);
     }
 
-    public List<Match> matches() {
-        return box.graph().matchList();
+    public Achievement globalAchievement(String worldId, String id) {
+        return Optional.ofNullable(world(worldId))
+                .map(w -> box.graph().achievement(w.achievements(), id))
+                .orElse(null);
     }
 
-    public Achievement achievement(String id) {
-        return box.graph().achievement(id);
+    public Achievement localAchievement(String worldId, String id) {
+        return Optional.ofNullable(world(worldId))
+                .map(AbstractWorld::match)
+                .map(m -> box.graph().achievement(m.achievements(), id))
+                .orElse(null);
     }
 
-    public Match match(String id) {
-        return box.graph().match(id);
+    public List<Achievement> globalAchievements(String worldId) {
+        return Optional.ofNullable(world(worldId))
+                .map(World::achievements)
+                .orElse(null);
     }
 
-    public Item item(String id) {
-        return box.graph().item(id);
+    public List<Achievement> localAchievements(String worldId) {
+        return Optional.ofNullable(world(worldId))
+                .map(AbstractWorld::match)
+                .map(AbstractMatch::achievements)
+                .orElse(null);
     }
 }

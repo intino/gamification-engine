@@ -7,6 +7,8 @@ import io.intino.magritte.io.Stash;
 import org.example.cinepolis.control.graph.ControlGraph;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -18,7 +20,10 @@ public class Main {
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
 		box.put(new ControlGraph(graph));
 
-		Engine engine = new Engine(box.configuration());
+		Map<String, String> engineConfig = new HashMap<>();
+		engineConfig.put("gamification_datamart_path", ".temp/datamarts/gamiex");
+
+		Engine engine = new Engine(engineConfig);
 		box.put(engine);
 
 		engine.launch(() -> {

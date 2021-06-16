@@ -1,41 +1,40 @@
 package io.intino.gamification.api;
 
+import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.box.events.mission.MissionState;
+import io.intino.gamification.core.box.logic.MissionScoreMapper;
+import io.intino.gamification.core.box.logic.PlayerLevelMapper;
 import io.intino.gamification.core.graph.Mission;
-import io.intino.gamification.core.graph.MissionState;
-import io.intino.gamification.core.graph.World;
-
-import java.util.function.Function;
+import io.intino.gamification.core.graph.Player;
 
 public class EngineConfiguration {
 
-    private static Function<Integer, Integer> levelFunction;
-    private static Function<MissionState, Integer> missionScoreFunction;
+    private final CoreBox box;
+    private static PlayerLevelMapper playerLevelMapper;
+    private static MissionScoreMapper missionScoreMapper;
+
+    public EngineConfiguration(CoreBox box) {
+        this.box = box;
+    }
 
     static {
-        levelFunction(score -> Math.toIntExact(Math.max(1, Math.round(5.7 * Math.log(Math.max(score, 1)) - 24.5))));
-        missionScoreFunction(missionState -> {
-            World world = missionState.graph().world(missionState.worldId());
-            if(world.match() != null) {
-                Mission mission = missionState.graph().mission(world.match().missions(), missionState.missionId());
-                return Math.round(100 * mission.difficulty().multiplier() * mission.type().multiplier() * missionState.state().multiplier());
-            }
-            return 0;
-        });
+        levelFunction((player, score) -> Math.toIntExact(Math.max(1, Math.round(5.7 * Math.log(Math.max(score, 1)) - 24.5))));
+        missionScoreFunction((player, mission, state) -> Math.round(100 * mission.difficulty().multiplier() * mission.type().multiplier() * state.multiplier()));
     }
 
-    public static void levelFunction(Function<Integer, Integer> levelFunction) {
-        EngineConfiguration.levelFunction = levelFunction;
+    public static void levelFunction(PlayerLevelMapper playerLevelMapper) {
+        EngineConfiguration.playerLevelMapper = playerLevelMapper;
     }
 
-    public static void missionScoreFunction(Function<MissionState, Integer> missionScoreFunction) {
-        EngineConfiguration.missionScoreFunction = missionScoreFunction;
+    public static void missionScoreFunction(MissionScoreMapper missionScoreMapper) {
+        EngineConfiguration.missionScoreMapper = missionScoreMapper;
     }
 
-    public static int levelOf(int score) {
-        return levelFunction.apply(score);
+    public static int levelOf(Player player, int score) {
+        return playerLevelMapper.level(player, score);
     }
 
-    public static int scoreOf(MissionState missionState) {
-        return missionScoreFunction.apply(missionState);
+    public static int scoreOf(Player player, Mission mission, MissionState missionState) {
+        return missionScoreMapper.score(player, mission, missionState);
     }
 }

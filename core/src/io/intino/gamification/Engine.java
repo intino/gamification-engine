@@ -2,15 +2,14 @@ package io.intino.gamification;
 
 import io.intino.alexandria.core.BoxConfiguration;
 import io.intino.alexandria.logger.Logger;
+import io.intino.gamification.api.EngineConfiguration;
 import io.intino.gamification.api.EngineDatamart;
 import io.intino.gamification.api.EngineTerminal;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.launcher.Launcher;
 
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class Engine {
@@ -20,7 +19,7 @@ public class Engine {
     private CoreBox box;
 
     public Engine(BoxConfiguration configuration) {
-        this.launcher = new Launcher(configuration);
+        this.launcher = new Launcher(configuration.args());
     }
 
     public Engine(Map<String, String> arguments) {
@@ -54,6 +53,10 @@ public class Engine {
         } catch (InterruptedException e) {
             Logger.error(e);
         }
+    }
+
+    public EngineConfiguration configuration() {
+        return box.engineConfiguration();
     }
 
     public EngineTerminal terminal() {

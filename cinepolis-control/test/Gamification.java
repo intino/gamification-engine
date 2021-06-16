@@ -70,7 +70,7 @@ public class Gamification {
 
         box.engine().terminal().feed(la);
 
-        Achievement localAchievement = box.engine().datamart().achievement("achievement2");
+        Achievement localAchievement = box.engine().datamart().localAchievement(GamificationConfig.WorldId, "achievement2");
         localAchievement.<NewStateMission>progressIf((e, p) -> {
             if (e.player().equals(p.id()) && e.state().equals(MissionState.Completed)) {
                 return CheckResult.Progress;

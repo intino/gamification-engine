@@ -1,29 +1,18 @@
 package io.intino.gamification.test;
 
 import io.intino.gamification.Engine;
-import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
-import io.intino.gamification.core.box.events.achievement.CreateAchievement;
-import io.intino.gamification.core.box.events.entity.PickUpItem;
-import io.intino.gamification.core.box.events.match.BeginMatch;
-import io.intino.gamification.core.box.events.mission.MissionDifficulty;
-import io.intino.gamification.core.box.events.mission.MissionType;
-import io.intino.gamification.core.box.events.mission.NewMission;
-import io.intino.gamification.core.box.logic.CheckerHandler;
-import io.intino.gamification.core.graph.*;
-
-import java.util.function.Function;
 
 public class Test {
 
     public static void main(String[] args) {
 
-        /*Engine engine = null;
+        Engine engine = null;
 
-        Entity.setAttributeListener("test", (entity, oldValue, newValue) -> oldValue, Integer::parseInt);
+        engine.configuration().healthListener.set((entity, oldValue, newValue) -> oldValue);
 
-        CreateAchievement createAchievement = new CreateAchievement()
+        //Entity.setAttributeListener("test", (entity, oldValue, newValue) -> oldValue, Integer::parseInt);
+
+        /*CreateAchievement createAchievement = new CreateAchievement()
                 .world("context")
                 .description("description")
                 .type(AchievementType.Global)

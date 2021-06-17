@@ -61,7 +61,7 @@ public class MissionMounter extends Mounter {
         }
 
         int score = box.engineConfiguration().missionScoreMapper.get().score(player, mission, missionState.state());
-        box.engineTerminal().feed(EventBuilder.changeScore(world.id(), player.id(), score));
+        box.engineTerminal().feed(EventBuilder.shiftScore(world.id(), player.id(), score));
 
         match.save$();
         playerState.save$();

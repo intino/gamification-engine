@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.logic;
+package io.intino.gamification.core.box.mappers;
 
 import io.intino.gamification.core.graph.Player;
 

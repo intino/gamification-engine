@@ -1,8 +1,8 @@
 package io.intino.gamification.core.box.actions;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.helper.Time;
-import io.intino.gamification.core.box.logic.FailMission;
+import io.intino.gamification.core.box.utils.TimeUtils;
+import io.intino.gamification.core.box.helper.MissionHelper;
 
 import java.time.Instant;
 
@@ -14,12 +14,13 @@ public class ExpireMissionsAction {
 
 	public void execute() {
 
-		from = Time.truncateTo(Time.currentInstant(), Time.Scale.D);
-		to = Time.nextInstant(from, Time.Scale.D);
+		from = TimeUtils.truncateTo(TimeUtils.currentInstant(), TimeUtils.Scale.D);
+		to = TimeUtils.nextInstant(from, TimeUtils.Scale.D);
+
+		MissionHelper helper = box.helper(MissionHelper.class);
 
 		box.graph().worldList().stream()
 				.filter(w -> w.match() != null)
-				.forEach(w -> FailMission.get(box)
-						.failMissions(w, m -> m.to() != null && Time.instantIsInRange(m.to(), from, to)));
+				.forEach(w -> helper.failMissions(w, m -> m.to() != null && TimeUtils.instantIsInRange(m.to(), from, to)));
 	}
 }

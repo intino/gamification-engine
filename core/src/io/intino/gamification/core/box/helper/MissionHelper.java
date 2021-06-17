@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.logic;
+package io.intino.gamification.core.box.helper;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.EventBuilder;
@@ -10,16 +10,10 @@ import java.util.stream.Collectors;
 
 import static io.intino.gamification.core.box.events.mission.MissionState.Failed;
 
-public class FailMission {
+public class MissionHelper extends Helper {
 
-    private CoreBox box;
-
-    public FailMission(CoreBox box) {
-        this.box = box;
-    }
-
-    public static FailMission get(CoreBox box) {
-        return new FailMission(box);
+    public MissionHelper(CoreBox box) {
+        super(box);
     }
 
     public void failMissions(World world, Predicate<Mission> missionFilter) {

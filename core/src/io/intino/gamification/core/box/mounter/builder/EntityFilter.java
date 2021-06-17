@@ -7,8 +7,6 @@ import io.intino.gamification.core.graph.*;
 public class EntityFilter extends Filter {
 
     private final World world;
-    private Match match;
-    private Entity entity;
     private Player player;
     private Npc npc;
     private Item item;
@@ -58,15 +56,6 @@ public class EntityFilter extends Filter {
         }
     }
 
-    public EntityFilter(CoreBox box, Action event) {
-        super(box);
-        this.world = box.graph().world(event.world());
-        if(world != null) {
-            this.entity = box.graph().entity(world.entities(), event.entityDest());
-            this.match = world.match();
-        }
-    }
-
     public EntityFilter(CoreBox box, PickUpItem event) {
         super(box);
         this.world = box.graph().world(event.world());
@@ -85,28 +74,8 @@ public class EntityFilter extends Filter {
         }
     }
 
-    public EntityFilter(CoreBox box, EnableEntity event) {
-        super(box);
-        this.world = box.graph().world(event.world());
-        if(world != null) {
-            this.entity = box.graph().entity(world.entities(), event.id());
-        }
-    }
-
-    public EntityFilter(CoreBox box, DisableEntity event) {
-        super(box);
-        this.world = box.graph().world(event.world());
-        if(world != null) {
-            this.entity = box.graph().entity(world.entities(), event.id());
-        }
-    }
-
     public World world() {
         return world;
-    }
-
-    public Entity entity() {
-        return entity;
     }
 
     public Player player() {
@@ -119,10 +88,6 @@ public class EntityFilter extends Filter {
 
     public Item item() {
         return item;
-    }
-
-    public Match match() {
-        return match;
     }
 
     public boolean createPlayerCanMount() {
@@ -149,23 +114,11 @@ public class EntityFilter extends Filter {
         return item != null && world != null;
     }
 
-    public boolean actionCanMount() {
-        return entity != null && match != null;
-    }
-
     public boolean pickUpItemCanMount() {
         return player != null && item != null;
     }
 
     public boolean dropItemCanMount() {
         return player != null && item != null;
-    }
-
-    public boolean enableEntityCanMount() {
-        return entity != null;
-    }
-
-    public boolean disableEntityCanMount() {
-        return entity != null;
     }
 }

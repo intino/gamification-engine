@@ -4,9 +4,9 @@ import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
-import io.intino.gamification.core.box.helper.Time;
-import io.intino.gamification.core.box.logic.CheckResult;
-import io.intino.gamification.core.box.logic.CheckerHandler;
+import io.intino.gamification.core.box.utils.TimeUtils;
+import io.intino.gamification.core.box.checkers.CheckResult;
+import io.intino.gamification.core.box.checkers.CheckerHandler;
 
 public class Mission extends AbstractMission {
 
@@ -50,6 +50,6 @@ public class Mission extends AbstractMission {
 	}
 
 	public boolean isActive() {
-		return to == null || to.isAfter(Time.currentInstant());
+		return to == null || to.isAfter(TimeUtils.currentInstant());
 	}
 }

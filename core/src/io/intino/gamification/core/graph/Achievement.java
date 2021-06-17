@@ -2,8 +2,8 @@ package io.intino.gamification.core.graph;
 
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.logic.CheckResult;
-import io.intino.gamification.core.box.logic.CheckerHandler;
+import io.intino.gamification.core.box.checkers.CheckResult;
+import io.intino.gamification.core.box.checkers.CheckerHandler;
 
 public class Achievement extends AbstractAchievement {
 

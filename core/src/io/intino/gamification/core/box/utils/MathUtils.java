@@ -1,6 +1,6 @@
-package io.intino.gamification.core.box.helper;
+package io.intino.gamification.core.box.utils;
 
-public class Math {
+public class MathUtils {
 
     public static double asDouble(Object value) {
         if(value == null) return 0.0;

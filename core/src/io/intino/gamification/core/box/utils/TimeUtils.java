@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.helper;
+package io.intino.gamification.core.box.utils;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
@@ -6,7 +6,7 @@ import java.time.temporal.WeekFields;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-public class Time {
+public class TimeUtils {
 
 	/*private static final Map<Integer, String> LongWeekDay = new HashMap<>() {{
 		put(1, "lunes");

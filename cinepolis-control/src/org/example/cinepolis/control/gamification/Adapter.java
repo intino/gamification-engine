@@ -3,14 +3,15 @@ package org.example.cinepolis.control.gamification;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
+import io.intino.gamification.core.box.events.action.Action;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
-import io.intino.gamification.core.box.helper.Time;
-import io.intino.gamification.core.box.logic.CheckResult;
+import io.intino.gamification.core.box.utils.TimeUtils;
+import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Mission;
 import org.example.cinepolis.control.box.ControlBox;
@@ -32,7 +33,7 @@ public class Adapter {
     public void initialize() {
         CreateWorld cw = (CreateWorld) new CreateWorld()
                 .id(GamificationConfig.WorldId)
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
         CreateAchievement ga = (CreateAchievement) new CreateAchievement()
                 .world(GamificationConfig.WorldId)
                 .type(AchievementType.Global)
@@ -40,7 +41,7 @@ public class Adapter {
                 .event(EventType.BeginMatch)
                 .maxCount(2)
                 .id("achievement1")
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
 
         box.engine().terminal().feed(cw);
         box.engine().terminal().feed(ga);
@@ -66,7 +67,7 @@ public class Adapter {
                 .event(EventType.Action)
                 .maxCount(1)
                 .id(event.id())
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
 
         box.engine().terminal().feed(nm);
 
@@ -87,7 +88,7 @@ public class Adapter {
         DestroyItem di = (DestroyItem) new DestroyItem()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
         box.engine().terminal().feed(di);
     }
 
@@ -96,7 +97,7 @@ public class Adapter {
                 .destroyStrategy(DestroyStrategy.Nothing)
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
         box.engine().terminal().feed(dp);
     }
 
@@ -109,7 +110,7 @@ public class Adapter {
         CreatePlayer cp = (CreatePlayer) new CreatePlayer()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
         box.engine().terminal().feed(cp);
 
         List<Asset> assets = box.graph().assetsByArea(event.area());
@@ -118,7 +119,7 @@ public class Adapter {
                     .world(GamificationConfig.WorldId)
                     .player(event.id())
                     .id(a.id())
-                    .ts(Time.currentInstant());
+                    .ts(TimeUtils.currentInstant());
             box.engine().terminal().feed(pui);
         });
     }
@@ -127,7 +128,7 @@ public class Adapter {
         CreateItem ci = (CreateItem) new CreateItem()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
         box.engine().terminal().feed(ci);
 
         Employee employee = box.graph().employeeByArea(event.area());
@@ -136,7 +137,7 @@ public class Adapter {
                 .world(GamificationConfig.WorldId)
                 .player(employee.id())
                 .id(event.id())
-                .ts(Time.currentInstant());
+                .ts(TimeUtils.currentInstant());
         box.engine().terminal().feed(pui);
     }
 

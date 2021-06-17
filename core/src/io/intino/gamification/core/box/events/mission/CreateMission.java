@@ -28,8 +28,8 @@ public class CreateMission extends GamificationEvent {
         return getAsList("players");
     }
 
-    public Instant to() {
-        return getAsInstant("to");
+    public Instant expiration() {
+        return getAsInstant("expiration");
     }
 
     public MissionDifficulty difficulty() {
@@ -62,8 +62,8 @@ public class CreateMission extends GamificationEvent {
         return this;
     }
 
-    public CreateMission to(Instant to) {
-        set("to", to);
+    public CreateMission expiration(Instant expiration) {
+        set("expiration", expiration);
         return this;
     }
 

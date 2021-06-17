@@ -21,7 +21,7 @@ public class ActionMounter extends Mounter {
         if(event instanceof Attack) handle((Attack) event);
         else if(event instanceof Heal) handle((Heal) event);
         else if(event instanceof SetHealth) handle((SetHealth) event);
-        else if(event instanceof ShiftScore) handle((ShiftScore) event);
+        else if(event instanceof ChangeScore) handle((ChangeScore) event);
         else if(event instanceof EnableEntity) handle((EnableEntity) event);
         else if(event instanceof DisableEntity) handle((DisableEntity) event);
     }
@@ -68,7 +68,7 @@ public class ActionMounter extends Mounter {
         entity.save$();
     }
 
-    private void handle(ShiftScore event) {
+    private void handle(ChangeScore event) {
         ActionFilter filter = new ActionFilter(box, event);
         if(!filter.shiftScoreCanMount()) return;
 
@@ -77,11 +77,11 @@ public class ActionMounter extends Mounter {
 
         Integer newScore = box.engineConfig()
                 .scoreListener.get()
-                .onValueChange(player, player.score(), player.score() + event.shift());
+                .onValueChange(player, player.score(), player.score() + event.change());
         player.score(newScore);
 
         if(match != null) {
-            changeMatchRelativeScore(match, player, event.shift());
+            changeMatchRelativeScore(match, player, event.change());
         }
 
         player.save$();

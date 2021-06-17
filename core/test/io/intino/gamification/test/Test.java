@@ -8,9 +8,7 @@ public class Test {
 
         Engine engine = null;
 
-        engine.configuration().healthListener.set((entity, oldValue, newValue) -> oldValue);
-
-        //Entity.setAttributeListener("test", (entity, oldValue, newValue) -> oldValue, Integer::parseInt);
+        //engine.configuration().healthListener.set((entity, oldValue, newValue) -> oldValue);
 
         /*CreateAchievement createAchievement = new CreateAchievement()
                 .world("context")

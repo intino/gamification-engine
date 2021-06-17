@@ -33,6 +33,11 @@ public class EngineTerminal {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
+    public void feed(Action event) {
+        box.mounter(ActionMounter.class).handle(event);
+    }
+
+
     public void feed(Attack event) {
         box.mounter(ActionMounter.class).handle(event);
     }
@@ -121,6 +126,7 @@ public class EngineTerminal {
         {
             put(CreateAchievement.class, (BiConsumer<EngineTerminal, CreateAchievement>)EngineTerminal::feed);
             put(DeleteAchievement.class, (BiConsumer<EngineTerminal, DeleteAchievement>)EngineTerminal::feed);
+            put(Action.class, (BiConsumer<EngineTerminal, Attack>)EngineTerminal::feed);
             put(Attack.class, (BiConsumer<EngineTerminal, Attack>)EngineTerminal::feed);
             put(DisableEntity.class, (BiConsumer<EngineTerminal, DisableEntity>)EngineTerminal::feed);
             put(EnableEntity.class, (BiConsumer<EngineTerminal, EnableEntity>)EngineTerminal::feed);

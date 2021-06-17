@@ -34,6 +34,10 @@ public class Terminal {
         box.mounter(AchievementMounter.class).handle(event);
     }
 
+    public void feed(Action event) {
+        box.mounter(ActionMounter.class).handle(event);
+    }
+
     public void feed(Attack event) {
         box.mounter(ActionMounter.class).handle(event);
     }
@@ -54,7 +58,7 @@ public class Terminal {
         box.mounter(ActionMounter.class).handle(event);
     }
 
-    public void feed(ShiftScore event) {
+    public void feed(ChangeScore event) {
         box.mounter(ActionMounter.class).handle(event);
     }
 

@@ -4,7 +4,7 @@ import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.AchievementState;
 import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
-import io.intino.gamification.core.box.events.action.ShiftScore;
+import io.intino.gamification.core.box.events.action.ChangeScore;
 import io.intino.gamification.core.box.events.entity.DestroyItem;
 import io.intino.gamification.core.box.events.entity.DestroyNpc;
 import io.intino.gamification.core.box.events.entity.DestroyPlayer;
@@ -18,13 +18,13 @@ import java.util.UUID;
 
 public class EventBuilder {
 
-    public static ShiftScore shiftScore(String worldId, String playerId, int score) {
-        ShiftScore shiftScore = new ShiftScore();
+    public static ChangeScore shiftScore(String worldId, String playerId, int score) {
+        ChangeScore shiftScore = new ChangeScore();
         shiftScore.ts(instant());
         shiftScore.id(UUID.randomUUID().toString());
         shiftScore.world(worldId);
         shiftScore.entityDest(playerId);
-        shiftScore.shift(score);
+        shiftScore.change(score);
         return shiftScore;
     }
 

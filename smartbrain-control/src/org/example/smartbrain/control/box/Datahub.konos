@@ -5,6 +5,8 @@ Datalake(path = "{datalake_path}") as Local
 Datamart(type = Graph) graph
 	Mounter PatientMounter as Event
 		Require("smartbrain.CreatePatient")
+	Mounter TherapistMounter as Event
+    	Require("smartbrain.CreateTherapist")
 	Mounter TestMounter as Event
 		Require("smartbrain.TestCreate")
 		Require("smartbrain.TestBegin")
@@ -15,6 +17,7 @@ Datamart(type = Graph) graph
     	Require("smartbrain.TaskComplete")
 
 Subscriber(event = "smartbrain.CreatePatient", subscriberId = "CreatePatient") createPatientSubscriber
+Subscriber(event = "smartbrain.CreateTherapist", subscriberId = "CreateTherapist") createTherapistSubscriber
 Subscriber(event = "smartbrain.TestCreate", subscriberId = "TestCreate") createTestSubscriber
 Subscriber(event = "smartbrain.TestBegin", subscriberId = "TestBegin") testBeginSubscriber
 Subscriber(event = "smartbrain.TestEnd", subscriberId = "TestEnd") testEndSubscriber

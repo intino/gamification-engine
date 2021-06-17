@@ -14,7 +14,7 @@ public class TaskMounter implements Mounter {
 	}
 
 	public void handle(org.example.smartbrain.datahub.events.smartbrain.TaskAssignment event) {
-
+		
 	}
 
 	public void handle(org.example.smartbrain.datahub.events.smartbrain.TaskComplete event) {

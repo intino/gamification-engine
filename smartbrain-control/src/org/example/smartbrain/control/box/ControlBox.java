@@ -1,7 +1,7 @@
 package org.example.smartbrain.control.box;
 
 import io.intino.gamification.Engine;
-import io.intino.gamification.core.Archetype;
+import org.example.smartbrain.control.Archetype;
 import org.example.smartbrain.control.box.mounters.MounterFactory;
 import org.example.smartbrain.control.graph.ControlGraph;
 
@@ -50,8 +50,8 @@ public class ControlBox extends AbstractBox {
 		return this.archetype;
 	}
 
-	public Archetype.Datamart.Example datamart() {
-		return archetype.datamart().example();
+	public Archetype.Datamart.Smartbrain datamart() {
+		return archetype.datamart().smartbrain();
 	}
 
 	public Engine engine() {

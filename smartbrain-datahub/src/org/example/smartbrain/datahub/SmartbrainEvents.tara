@@ -4,33 +4,41 @@ Namespace smartbrain
 
 	Event CreatePatient
 		Attribute dni as Text
-		Attribute surName as Text
-		Attribute lastName as Text
+		Attribute name as Text
+		Attribute lastname as Text
 		Attribute age as Integer
+
+	Event CreateTherapist
+		Attribute dni as Text
+        Attribute name as Text
+        Attribute lastname as Text
+        Attribute age as Integer
 
 	Event TestCreate
 		Attribute name as Text
 		Component(multiple=true) Question
-			Attribute question as Text
+			Attribute text as Text
+			Attribute type as Word("Language" "Memory" "Math")
 			Component(multiple=true) Response
-        		Attribute name as Text
+        		Attribute value as Text
         		Attribute correct as Bool
 
 	Event TestBegin
+		Attribute testId as Integer
 		Attribute testName as Text
 		Attribute patientId as Text
 
 	Event TestEnd
+		Attribute testId as Integer
 		Attribute testName as Text
 		Attribute patientId as Text
 
 	Event TestResponse
+		Attribute testId as Integer
 		Attribute testName as Text
 		Attribute patientId as Text
 		Attribute question as Text
-		Attribute questionType as Word("Language" "Memory" "Math")
-		Attribute response as Text List
-		Attribute expected as Text List
+		Attribute responses as Integer List
 
 	Event TaskAssignment
 		Attribute taskName as Text

@@ -1,11 +1,40 @@
 dsl Proteo
 
-Concept Patient
+Concept Patient is decorable
 	var string dni
-	var string surname
+	var string name
 	var string lastname
 	var integer age
 
+Concept Therapist is decorable
+	var string dni
+	var string name
+	var string lastname
+
+Concept Response
+	var string value
+	var boolean correct
+
+Concept Question is decorable
+	var string text
+	var word:QuestionType type
+	var Response[] responses = empty
+
+Concept Test is decorable
+	var string name
+	var Question[] questions = empty
+
+Concept QuestionResult is decorable
+	var Question question
+	var integer[] selectedResponses = empty
+
+Concept TestResult is decorable
+	var integer testId
+	var string name
+	var string patientId
+	var instant startTime = empty
+	var instant endTime = empty
+	var QuestionResult[] results = empty
 
 
 

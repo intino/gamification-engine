@@ -62,7 +62,8 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public File datamart() {
-		return new File(configuration.datamartPath());
+		return new File(""); // FIXME
+		//return new File(configuration.datamartPath());
 	}
 
 	public CoreGraph graph() {

@@ -39,10 +39,10 @@ public class AchievementChecker extends Checker {
         if(checkResult == CheckResult.Progress) {
             achievementState.count(achievementState.count() + 1).save$();
             if(achievementState.count() >= achievement.maxCount()) {
-                box.engineTerminal().feed(EventBuilder.newStateAchievement(achievement.id(), contextId, player.id(), Achieved, type));
+                box.terminal().feed(EventBuilder.newStateAchievement(achievement.id(), contextId, player.id(), Achieved, type));
             }
         } else if(checkResult == CheckResult.Cancel) {
-            box.engineTerminal().feed(EventBuilder.newStateAchievement(achievement.id(), contextId, player.id(), Failed, type));
+            box.terminal().feed(EventBuilder.newStateAchievement(achievement.id(), contextId, player.id(), Failed, type));
         }
     }
 }

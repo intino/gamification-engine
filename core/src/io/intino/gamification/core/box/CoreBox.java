@@ -5,6 +5,7 @@ import io.intino.gamification.api.EngineDatamart;
 import io.intino.gamification.api.EngineTerminal;
 import io.intino.gamification.core.box.checkers.Checker;
 import io.intino.gamification.core.box.checkers.Checkers;
+import io.intino.gamification.core.box.events.Terminal;
 import io.intino.gamification.core.box.helper.Helper;
 import io.intino.gamification.core.box.helper.Helpers;
 import io.intino.gamification.core.box.mounter.Mounter;
@@ -17,9 +18,10 @@ import java.io.File;
 public class CoreBox extends AbstractBox {
 
 	private CoreGraph graph;
+	private Terminal terminal;
 	private EngineConfiguration engineConfig;
-	private EngineTerminal terminal;
-	private EngineDatamart datamart;
+	private EngineTerminal engineTerminal;
+	private EngineDatamart engineDatamart;
 	private Mounters mounters;
 	private Checkers checkers;
 	private Helpers helpers;
@@ -42,8 +44,9 @@ public class CoreBox extends AbstractBox {
 	public void beforeStart() {
 		this.engineConfig = new EngineConfiguration();
 		if(graph != null) this.graph.engineConfig(engineConfig);
-		this.terminal = new EngineTerminal(this);
-		this.datamart = new EngineDatamart(this);
+		this.terminal = new Terminal(this);
+		this.engineTerminal = new EngineTerminal(this);
+		this.engineDatamart = new EngineDatamart(this);
 		this.mounters = new Mounters(this);
 		this.checkers = new Checkers(this);
 		this.helpers = new Helpers(this);
@@ -70,16 +73,20 @@ public class CoreBox extends AbstractBox {
 		return graph;
 	}
 
-	public EngineConfiguration engineConfiguration() {
+	public Terminal terminal() {
+		return terminal;
+	}
+
+	public EngineConfiguration engineConfig() {
 		return engineConfig;
 	}
 
 	public EngineTerminal engineTerminal() {
-		return terminal;
+		return engineTerminal;
 	}
 
 	public EngineDatamart engineDatamart() {
-		return datamart;
+		return engineDatamart;
 	}
 
 	public <L extends Mounter> L mounter(Class<L> clazz) {

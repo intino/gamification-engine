@@ -32,7 +32,7 @@ public class ActionMounter extends Mounter {
 
         Entity entity = filter.entity();
 
-        Double newHealth = box.engineConfiguration()
+        Double newHealth = box.engineConfig()
                 .healthListener.get()
                 .onValueChange(entity, entity.health(), entity.health() - event.damage());
         entity.health(MathUtils.clamp(newHealth, Entity.MIN_HEALTH, Entity.MAX_HEALTH));
@@ -46,7 +46,7 @@ public class ActionMounter extends Mounter {
 
         Entity entity = filter.entity();
 
-        Double newHealth = box.engineConfiguration()
+        Double newHealth = box.engineConfig()
                 .healthListener.get()
                 .onValueChange(entity, entity.health(), entity.health() + event.healedHealth());
         entity.health(newHealth);
@@ -60,7 +60,7 @@ public class ActionMounter extends Mounter {
 
         Entity entity = filter.entity();
 
-        Double newHealth = box.engineConfiguration()
+        Double newHealth = box.engineConfig()
                 .healthListener.get()
                 .onValueChange(entity, entity.health(), event.health());
         entity.health(newHealth);
@@ -75,7 +75,7 @@ public class ActionMounter extends Mounter {
         Match match = filter.match();
         Player player = (Player) filter.entity();
 
-        Integer newScore = box.engineConfiguration()
+        Integer newScore = box.engineConfig()
                 .scoreListener.get()
                 .onValueChange(player, player.score(), player.score() + event.shift());
         player.score(newScore);
@@ -93,7 +93,7 @@ public class ActionMounter extends Mounter {
 
         Entity entity = filter.entity();
 
-        Boolean newEnableState = box.engineConfiguration()
+        Boolean newEnableState = box.engineConfig()
                 .enableListener.get()
                 .onValueChange(entity, entity.enabled(), true);
         entity.enabled(newEnableState);
@@ -107,7 +107,7 @@ public class ActionMounter extends Mounter {
 
         Entity entity = filter.entity();
 
-        Boolean newEnableState = box.engineConfiguration()
+        Boolean newEnableState = box.engineConfig()
                 .enableListener.get()
                 .onValueChange(entity, entity.enabled(), false);
         entity.enabled(newEnableState);

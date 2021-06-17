@@ -1,6 +1,7 @@
 package io.intino.gamification.core.graph;
 
 import io.intino.gamification.api.EngineConfiguration;
+import io.intino.gamification.core.box.checkers.entries.MissionEntry;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
@@ -11,7 +12,7 @@ import io.intino.gamification.core.box.events.entity.CreateNpc;
 import io.intino.gamification.core.box.events.entity.CreatePlayer;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.MatchState;
-import io.intino.gamification.core.box.events.mission.NewMission;
+import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.checkers.entries.AchievementEntry;
@@ -152,24 +153,23 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return missions.stream().filter(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
 
-	public Map<String, Map<Mission, List<Player>>> mission(Class<? extends GamificationEvent> clazz) {
-		Map<String, Map<Mission, List<Player>>> missionMap = new HashMap<>();
+	public List<MissionEntry> mission(Class<? extends GamificationEvent> clazz) {
+		List<MissionEntry> missionEntries = new ArrayList<>();
 
 		for (World world : worldList(w -> w.match() != null).collect(Collectors.toList())) {
-			missionMap.put(world.id(), new HashMap<>());
 			for (Mission mission : world.match().activeMissions()) {
 				if(mission.event().equals(EventType.get(clazz))) {
-					missionMap.get(world.id()).put(mission, world.match().players().stream()
+					missionEntries.add(new MissionEntry(mission, world.id(), world.match().players().stream()
 							.filter(p -> mission.players().contains(p.id()))
-							.collect(Collectors.toList()));
+							.collect(Collectors.toList())));
 				}
 			}
 		}
 
-		return missionMap;
+		return missionEntries;
 	}
 
-	public Mission mission(NewMission event) {
+	public Mission mission(CreateMission event) {
 		List<String> players = event.players();
 		if(players == null) players = new ArrayList<>();
 		return create(Stash.Missions.name()).mission(event.id(), event.to(), players, event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());

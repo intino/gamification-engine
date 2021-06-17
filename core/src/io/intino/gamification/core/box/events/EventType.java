@@ -1,6 +1,7 @@
 package io.intino.gamification.core.box.events;
 
 import io.intino.gamification.core.box.events.achievement.*;
+import io.intino.gamification.core.box.events.action.*;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.*;
 import io.intino.gamification.core.box.events.mission.*;
@@ -13,18 +14,23 @@ public enum EventType {
     AchievementNewState(AchievementNewState.class),
     CreateAchievement(CreateAchievement.class),
     DeleteAchievement(DeleteAchievement.class),
-    Action(io.intino.gamification.core.box.events.action.Action.class),
-    CreatePlayer(CreatePlayer.class),
-    CreateNpc(CreateNpc.class),
+    Attack(Attack.class),
+    DisableEntity(DisableEntity.class),
+    EnableEntity(EnableEntity.class),
+    Heal(Heal.class),
+    SetHealth(SetHealth.class),
+    ShiftScore(ShiftScore.class),
     CreateItem(CreateItem.class),
-    DestroyEntity(DestroyEntity.class),
+    CreateNpc(CreateNpc.class),
+    CreatePlayer(CreatePlayer.class),
+    DestroyEntity(DestroyItem.class),
+    DestroyNpc(DestroyNpc.class),
+    DestroyPlayer(DestroyPlayer.class),
     DropItem(DropItem.class),
     PickUpItem(PickUpItem.class),
-    EnableEntity(io.intino.gamification.core.box.events.action.EnableEntity.class),
-    DisableEntity(io.intino.gamification.core.box.events.action.DisableEntity.class),
     BeginMatch(BeginMatch.class),
     EndMatch(EndMatch.class),
-    NewMission(NewMission.class),
+    CreateMission(CreateMission.class),
     NewStateMission(NewStateMission.class),
     CreateWorld(CreateWorld.class),
     DestroyWorld(DestroyWorld.class);

@@ -1,7 +1,7 @@
-package io.intino.gamification.api;
+package io.intino.gamification.core.box.events;
 
-import io.intino.alexandria.event.Event;
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
 import io.intino.gamification.core.box.events.action.*;
@@ -9,20 +9,21 @@ import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
 import io.intino.gamification.core.box.events.mission.CreateMission;
+import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
 import io.intino.gamification.core.box.mounter.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
-
-public class EngineTerminal {
+public class Terminal {
 
     private final CoreBox box;
 
-    public EngineTerminal(CoreBox box) {
+    public Terminal(CoreBox box) {
         this.box = box;
+    }
+
+    public void feed(AchievementNewState event) {
+        box.mounter(AchievementMounter.class).handle(event);
     }
 
     public void feed(CreateAchievement event) {
@@ -50,6 +51,10 @@ public class EngineTerminal {
     }
 
     public void feed(SetHealth event) {
+        box.mounter(ActionMounter.class).handle(event);
+    }
+
+    public void feed(ShiftScore event) {
         box.mounter(ActionMounter.class).handle(event);
     }
 
@@ -97,6 +102,10 @@ public class EngineTerminal {
         box.mounter(MissionMounter.class).handle(event);
     }
 
+    public void feed(NewStateMission event) {
+        box.mounter(MissionMounter.class).handle(event);
+    }
+
     public void feed(CreateWorld event) {
         box.mounter(WorldMounter.class).handle(event);
     }
@@ -104,40 +113,4 @@ public class EngineTerminal {
     public void feed(DestroyWorld event) {
         box.mounter(WorldMounter.class).handle(event);
     }
-
-    public <T extends Event> void feed(T event) {
-        this.<T>feedFunctionOf(event.getClass()).accept(this, event);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends Event> BiConsumer<EngineTerminal, T> feedFunctionOf(Class<? extends Event> eventClass) {
-        return (BiConsumer<EngineTerminal, T>) FeedFunctions.getOrDefault(eventClass, this::doNothing);
-    }
-
-    private void doNothing(EngineTerminal engineTerminal, Event event) {
-    }
-
-    private static final Map<Class<? extends Event>, BiConsumer<EngineTerminal, ? extends Event>> FeedFunctions = new HashMap<>(){
-        {
-            put(CreateAchievement.class, (BiConsumer<EngineTerminal, CreateAchievement>)EngineTerminal::feed);
-            put(DeleteAchievement.class, (BiConsumer<EngineTerminal, DeleteAchievement>)EngineTerminal::feed);
-            put(Attack.class, (BiConsumer<EngineTerminal, Attack>)EngineTerminal::feed);
-            put(DisableEntity.class, (BiConsumer<EngineTerminal, DisableEntity>)EngineTerminal::feed);
-            put(EnableEntity.class, (BiConsumer<EngineTerminal, EnableEntity>)EngineTerminal::feed);
-            put(Heal.class, (BiConsumer<EngineTerminal, Heal>)EngineTerminal::feed);
-            put(SetHealth.class, (BiConsumer<EngineTerminal, SetHealth>)EngineTerminal::feed);
-            put(CreatePlayer.class, (BiConsumer<EngineTerminal, CreatePlayer>)EngineTerminal::feed);
-            put(CreateNpc.class, (BiConsumer<EngineTerminal, CreateNpc>)EngineTerminal::feed);
-            put(CreateItem.class, (BiConsumer<EngineTerminal, CreateItem>)EngineTerminal::feed);
-            put(DestroyPlayer.class, (BiConsumer<EngineTerminal, DestroyPlayer>)EngineTerminal::feed);
-            put(DestroyNpc.class, (BiConsumer<EngineTerminal, DestroyNpc>)EngineTerminal::feed);
-            put(DestroyItem.class, (BiConsumer<EngineTerminal, DestroyItem>)EngineTerminal::feed);
-            put(PickUpItem.class, (BiConsumer<EngineTerminal, PickUpItem>)EngineTerminal::feed);
-            put(DropItem.class, (BiConsumer<EngineTerminal, DropItem>)EngineTerminal::feed);
-            put(BeginMatch.class, (BiConsumer<EngineTerminal, BeginMatch>)EngineTerminal::feed);
-            put(EndMatch.class, (BiConsumer<EngineTerminal, EndMatch>)EngineTerminal::feed);
-            put(CreateMission.class, (BiConsumer<EngineTerminal, CreateMission>)EngineTerminal::feed);
-            put(CreateWorld.class, (BiConsumer<EngineTerminal, CreateWorld>)EngineTerminal::feed);
-            put(DestroyWorld.class, (BiConsumer<EngineTerminal, DestroyWorld>)EngineTerminal::feed);
-        }};
 }

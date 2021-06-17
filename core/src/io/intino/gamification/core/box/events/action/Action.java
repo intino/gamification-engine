@@ -34,4 +34,9 @@ public abstract class Action extends GamificationEvent {
     public String type() {
         return get("type");
     }
+
+    public Action type(String type) {
+        set("type", type);
+        return this;
+    }
 }

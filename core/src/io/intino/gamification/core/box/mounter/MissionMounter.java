@@ -3,7 +3,7 @@ package io.intino.gamification.core.box.mounter;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.mission.NewMission;
+import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.mounter.builder.MissionFilter;
 import io.intino.gamification.core.graph.*;
@@ -18,11 +18,11 @@ public class MissionMounter extends Mounter {
 
     @Override
     public void mount(GamificationEvent event) {
-        if(event instanceof NewMission) handle((NewMission) event);
+        if(event instanceof CreateMission) handle((CreateMission) event);
         if(event instanceof NewStateMission) handle((NewStateMission) event);
     }
 
-    private void handle(NewMission event) {
+    private void handle(CreateMission event) {
         MissionFilter filter = new MissionFilter(box, event);
         if(!filter.newMissionCanMount()) return;
 
@@ -60,8 +60,8 @@ public class MissionMounter extends Mounter {
             }
         }
 
-        int score = box.engineConfiguration().missionScoreMapper.get().score(player, mission, missionState.state());
-        box.engineTerminal().feed(EventBuilder.shiftScore(world.id(), player.id(), score));
+        int score = box.engineConfig().missionScoreMapper.get().score(player, mission, missionState.state());
+        box.terminal().feed(EventBuilder.shiftScore(world.id(), player.id(), score));
 
         match.save$();
         playerState.save$();

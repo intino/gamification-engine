@@ -32,6 +32,6 @@ public class MissionHelper extends Helper {
     }
 
     private void failMissions(World world, Mission mission, Player player) {
-        box.engineTerminal().feed(EventBuilder.newStateMission(world.id(), mission.id(), player.id(), Failed));
+        box.terminal().feed(EventBuilder.newStateMission(world.id(), mission.id(), player.id(), Failed));
     }
 }

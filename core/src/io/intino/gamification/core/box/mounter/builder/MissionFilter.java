@@ -1,7 +1,7 @@
 package io.intino.gamification.core.box.mounter.builder;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.mission.NewMission;
+import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.graph.Match;
 import io.intino.gamification.core.graph.Mission;
@@ -15,7 +15,7 @@ public class MissionFilter extends Filter {
     private Mission mission;
     private Player player;
 
-    public MissionFilter(CoreBox box, NewMission event) {
+    public MissionFilter(CoreBox box, CreateMission event) {
         super(box);
         this.world = box.graph().world(event.world());
         if(world != null) {

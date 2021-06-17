@@ -1,17 +1,17 @@
 package org.example.cinepolis.control.gamification;
 
+import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
-import io.intino.gamification.core.box.events.action.Action;
+import io.intino.gamification.core.box.events.action.Heal;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
-import io.intino.gamification.core.box.events.mission.NewMission;
+import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.utils.TimeUtils;
-import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Mission;
 import org.example.cinepolis.control.box.ControlBox;
@@ -19,7 +19,9 @@ import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
+import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Adapter {
@@ -58,13 +60,13 @@ public class Adapter {
                 .map(Employee::id)
                 .collect(Collectors.toList());
 
-        NewMission nm = (NewMission) new NewMission()
+        CreateMission nm = (CreateMission) new CreateMission()
                 .world(GamificationConfig.WorldId)
                 .type(typeOf(event.importance()))
                 .difficulty(MissionDifficulty.Medium)
                 .description(event.description())
                 .players(employees)
-                .event(EventType.Action)
+                .event(EventType.Heal)
                 .maxCount(1)
                 .id(event.id())
                 .ts(TimeUtils.currentInstant());
@@ -73,7 +75,7 @@ public class Adapter {
 
         Mission mission = box.engine().datamart().mission(GamificationConfig.WorldId, event.id());
         if(mission != null) {
-            mission.<Action>progressIf((a, p) -> {
+            mission.<Heal>progressIf((a, p) -> {
                 if(a.type().equals("FixAsset") &&
                         a.entitySrc().equals(p.id()) &&
                         p.inventory().stream().anyMatch(i -> i.id().equals(a.entityDest()))) {
@@ -102,8 +104,15 @@ public class Adapter {
     }
 
     public void adapt(FixedAsset event) {
-        Action a = Action.heal(GamificationConfig.WorldId, event.employee(), event.asset(), "FixAsset", 100);
-        box.engine().terminal().feed(a);
+        Heal heal = (Heal) new Heal()
+                .healedHealth(100.0)
+                .entitySrc(event.employee())
+                .entityDest(event.asset())
+                .world(GamificationConfig.WorldId)
+                .type("FixAsset")
+                .id(UUID.randomUUID().toString())
+                .ts(Instant.now());
+        box.engine().terminal().feed(heal);
     }
 
     public void adapt(HireEmployee event) {

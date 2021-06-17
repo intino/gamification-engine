@@ -2,6 +2,8 @@ package io.intino.gamification.core.box.events.match;
 
 import io.intino.gamification.core.box.events.GamificationEvent;
 
+import java.time.Instant;
+
 public class BeginMatch extends GamificationEvent {
 
     public BeginMatch() {
@@ -22,6 +24,24 @@ public class BeginMatch extends GamificationEvent {
 
     public BeginMatch world(String world) {
         set("world", world);
+        return this;
+    }
+
+    public Instant expiration() {
+        return getAsInstant("expiration");
+    }
+
+    public BeginMatch expiration(Instant expiration) {
+        set("expiration", expiration);
+        return this;
+    }
+
+    public boolean reboot() {
+        return getAsBoolean("reboot");
+    }
+
+    public BeginMatch reboot(boolean reboot) {
+        set("reboot", reboot);
         return this;
     }
 }

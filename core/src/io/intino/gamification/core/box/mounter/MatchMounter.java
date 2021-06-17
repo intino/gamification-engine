@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
 import io.intino.gamification.core.box.helper.MissionHelper;
-import io.intino.gamification.core.box.mounter.builder.MatchFilter;
+import io.intino.gamification.core.box.mounter.filter.MatchFilter;
 import io.intino.gamification.core.graph.Match;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.World;
@@ -25,6 +25,7 @@ public class MatchMounter extends Mounter {
     }
 
     private void handle(BeginMatch event) {
+        //TODO AÑADIR EXPIRATION, REBOOT, Y HACER SENTINEL
         MatchFilter filter = new MatchFilter(box, event);
         if(!filter.beginMatchCanMount()) return;
 

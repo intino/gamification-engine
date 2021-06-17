@@ -123,7 +123,6 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Item item(List<Item> items, String id) {
-		//TODO
 		return items.stream().filter(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 

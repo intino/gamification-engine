@@ -19,6 +19,8 @@ import java.util.function.BiConsumer;
 
 public class EngineTerminal {
 
+    //TODO DEVOLVER OBJETOS
+
     private final CoreBox box;
 
     public EngineTerminal(CoreBox box) {

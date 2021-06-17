@@ -4,7 +4,7 @@ import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.entity.*;
-import io.intino.gamification.core.box.mounter.builder.EntityFilter;
+import io.intino.gamification.core.box.mounter.filter.EntityFilter;
 import io.intino.gamification.core.graph.Item;
 import io.intino.gamification.core.graph.Npc;
 import io.intino.gamification.core.graph.Player;

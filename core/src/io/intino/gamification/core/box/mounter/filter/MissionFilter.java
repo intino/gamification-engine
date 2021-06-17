@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.mounter.builder;
+package io.intino.gamification.core.box.mounter.filter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.mission.CreateMission;

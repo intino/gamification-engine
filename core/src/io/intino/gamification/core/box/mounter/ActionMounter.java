@@ -3,7 +3,7 @@ package io.intino.gamification.core.box.mounter;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.action.*;
-import io.intino.gamification.core.box.mounter.builder.ActionFilter;
+import io.intino.gamification.core.box.mounter.filter.ActionFilter;
 import io.intino.gamification.core.box.utils.MathUtils;
 import io.intino.gamification.core.graph.Entity;
 import io.intino.gamification.core.graph.Match;

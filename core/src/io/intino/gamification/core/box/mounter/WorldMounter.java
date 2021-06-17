@@ -33,10 +33,10 @@ public class WorldMounter extends Mounter {
 
         World world = filter.world();
 
-        world.achievements().forEach(a -> box.engineTerminal().feed(EventBuilder.deleteAchievement(a.id())));
-        world.players().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyPlayer(world.id(), e.id())));
-        world.npcs().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyNpc(world.id(), e.id())));
-        world.items().forEach(e -> box.engineTerminal().feed(EventBuilder.destroyItem(world.id(), e.id())));
+        world.achievements().forEach(a -> box.terminal().feed(EventBuilder.deleteAchievement(a.id())));
+        world.players().forEach(e -> box.terminal().feed(EventBuilder.destroyPlayer(world.id(), e.id())));
+        world.npcs().forEach(e -> box.terminal().feed(EventBuilder.destroyNpc(world.id(), e.id())));
+        world.items().forEach(e -> box.terminal().feed(EventBuilder.destroyItem(world.id(), e.id())));
 
         box.graph().matchesIn(world).forEach(ma -> {
             ma.missions().forEach(mi -> {
@@ -44,7 +44,7 @@ public class WorldMounter extends Mounter {
                 mi.delete$();
             });
 
-            ma.achievements().forEach(a -> box.engineTerminal().feed(EventBuilder.deleteAchievement(a.id())));
+            ma.achievements().forEach(a -> box.terminal().feed(EventBuilder.deleteAchievement(a.id())));
 
             ma.playersState().forEach(ps -> {
                 ps.missionState().forEach(Layer::delete$);

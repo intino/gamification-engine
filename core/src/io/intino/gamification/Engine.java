@@ -19,7 +19,7 @@ public class Engine {
     private CoreBox box;
 
     public Engine(BoxConfiguration configuration) {
-        this.launcher = new Launcher(configuration.args());
+        this(configuration.args());
     }
 
     public Engine(Map<String, String> arguments) {
@@ -56,7 +56,7 @@ public class Engine {
     }
 
     public EngineConfiguration configuration() {
-        return box.engineConfiguration();
+        return box.engineConfig();
     }
 
     public EngineTerminal terminal() {

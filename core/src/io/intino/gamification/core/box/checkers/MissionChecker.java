@@ -1,16 +1,18 @@
 package io.intino.gamification.core.box.checkers;
 
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.box.checkers.entries.MissionEntry;
 import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.box.helper.MissionStateHelper;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.MissionState;
 import io.intino.gamification.core.graph.Player;
 
 import java.util.List;
-import java.util.Map;
 
-import static io.intino.gamification.core.box.events.mission.MissionState.*;
+import static io.intino.gamification.core.box.events.mission.MissionState.Cancelled;
+import static io.intino.gamification.core.box.events.mission.MissionState.Completed;
 
 public class MissionChecker extends Checker {
 
@@ -20,30 +22,26 @@ public class MissionChecker extends Checker {
 
     public void checkMissions(GamificationEvent event) {
 
-        Map<String, Map<Mission, List<Player>>> missions = box.graph().mission(event.getClass());
+        List<MissionEntry> missionEntries = box.graph().mission(event.getClass());
 
-        missions.forEach((worldId, worldMissions) -> {
-            worldMissions.forEach((mission, players) -> {
-                players.forEach(player -> {
-                    CheckResult checkResult = mission.check(event, player);
-                    if(checkResult != CheckResult.Skip) {
-                        MissionState missionState = box.graph().missionStateOf(mission.id(), player.id());
-                        if(missionState == null) {
-                            box.engineTerminal().feed(EventBuilder.newStateMission(worldId, mission.id(), player.id(), Pending));
-                            missionState = box.graph().missionStateOf(mission.id(), player.id());
-                        }
-
-                        if(checkResult == CheckResult.Progress) {
-                            missionState.count(missionState.count() + 1).save$();
-                            if(missionState.count() >= mission.maxCount()) {
-                                box.engineTerminal().feed(EventBuilder.newStateMission(worldId, mission.id(), player.id(), Completed));
-                            }
-                        } else if(checkResult == CheckResult.Cancel) {
-                            box.engineTerminal().feed(EventBuilder.newStateMission(worldId, mission.id(), player.id(), Cancelled));
-                        }
-                    }
-                });
-            });
+        missionEntries.forEach(me -> {
+            me.players().forEach(p -> checkMission(event, me.mission(), me.world(), p));
         });
+    }
+
+    private void checkMission(GamificationEvent event, Mission mission, String worldId, Player player) {
+        CheckResult checkResult = mission.check(event, player);
+        if(checkResult == CheckResult.Skip) return;
+
+        MissionState missionState = box.helper(MissionStateHelper.class).getOrCreateMissionState(mission, worldId, player);
+
+        if(checkResult == CheckResult.Progress) {
+            missionState.count(missionState.count() + 1).save$();
+            if(missionState.count() >= mission.maxCount()) {
+                box.terminal().feed(EventBuilder.newStateMission(worldId, mission.id(), player.id(), Completed));
+            }
+        } else if(checkResult == CheckResult.Cancel) {
+            box.terminal().feed(EventBuilder.newStateMission(worldId, mission.id(), player.id(), Cancelled));
+        }
     }
 }

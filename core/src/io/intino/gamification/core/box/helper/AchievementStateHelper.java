@@ -16,7 +16,7 @@ public class AchievementStateHelper extends Helper {
     public AchievementState getOrCreateAchievementState(Achievement achievement, AchievementType type, String contextId, Player player) {
         AchievementState achievementState = box.graph().achievementStateOf(achievement.id(), player.id());
         if(achievementState == null) {
-            box.engineTerminal().feed(EventBuilder.newStateAchievement(achievement.id(), contextId, player.id(), io.intino.gamification.core.box.events.achievement.AchievementState.Pending, type));
+            box.terminal().feed(EventBuilder.newStateAchievement(achievement.id(), contextId, player.id(), io.intino.gamification.core.box.events.achievement.AchievementState.Pending, type));
             achievementState = box.graph().achievementStateOf(achievement.id(), player.id());
         }
         return achievementState;

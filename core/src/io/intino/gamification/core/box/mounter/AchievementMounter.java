@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
-import io.intino.gamification.core.box.mounter.builder.AchievementFilter;
+import io.intino.gamification.core.box.mounter.filter.AchievementFilter;
 import io.intino.gamification.core.graph.*;
 import io.intino.magritte.framework.Layer;
 

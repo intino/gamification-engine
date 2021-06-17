@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
-import io.intino.gamification.core.box.mounter.builder.MissionFilter;
+import io.intino.gamification.core.box.mounter.filter.MissionFilter;
 import io.intino.gamification.core.graph.*;
 
 import static io.intino.gamification.core.box.events.mission.MissionState.Pending;

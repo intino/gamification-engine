@@ -5,7 +5,7 @@ import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
-import io.intino.gamification.core.box.mounter.builder.WorldFilter;
+import io.intino.gamification.core.box.mounter.filter.WorldFilter;
 import io.intino.gamification.core.graph.World;
 import io.intino.magritte.framework.Layer;
 

@@ -1,6 +1,6 @@
 package io.intino.gamification.core.box.events.action;
 
-public class EnableEntity extends Action {
+public class EnableEntity extends AbstractAction {
 
     public EnableEntity() {
         super(EnableEntity.class);

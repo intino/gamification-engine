@@ -172,7 +172,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	public Mission mission(CreateMission event) {
 		List<String> players = event.players();
 		if(players == null) players = new ArrayList<>();
-		return create(Stash.Missions.name()).mission(event.id(), event.to(), players, event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
+		return create(Stash.Missions.name()).mission(event.id(), event.expiration(), players, event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
 	}
 
 	/* MISSION STATE ------------------------------------------------------------------------------------------------------ */

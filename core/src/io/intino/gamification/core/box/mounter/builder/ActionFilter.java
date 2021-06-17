@@ -36,7 +36,7 @@ public class ActionFilter extends Filter {
         }
     }
 
-    public ActionFilter(CoreBox box, ShiftScore event) {
+    public ActionFilter(CoreBox box, ChangeScore event) {
         super(box);
         this.world = box.graph().world(event.world());
         if(world != null) {

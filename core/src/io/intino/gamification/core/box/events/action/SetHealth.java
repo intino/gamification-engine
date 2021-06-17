@@ -1,6 +1,6 @@
 package io.intino.gamification.core.box.events.action;
 
-public class SetHealth extends Action {
+public class SetHealth extends AbstractAction {
 
     public SetHealth() {
         super(SetHealth.class);

@@ -1,6 +1,6 @@
 package io.intino.gamification.core.box.events.action;
 
-public class Attack extends Action {
+public class Attack extends AbstractAction {
 
     public Attack() {
         super(Attack.class);

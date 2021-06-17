@@ -3,6 +3,10 @@ package io.intino.gamification.core.box;
 import io.intino.gamification.api.EngineConfiguration;
 import io.intino.gamification.api.EngineDatamart;
 import io.intino.gamification.api.EngineTerminal;
+import io.intino.gamification.core.box.checkers.Checker;
+import io.intino.gamification.core.box.checkers.Checkers;
+import io.intino.gamification.core.box.helper.Helper;
+import io.intino.gamification.core.box.helper.Helpers;
 import io.intino.gamification.core.box.mounter.Mounter;
 import io.intino.gamification.core.box.mounter.Mounters;
 import io.intino.gamification.core.graph.CoreGraph;
@@ -17,6 +21,8 @@ public class CoreBox extends AbstractBox {
 	private EngineTerminal terminal;
 	private EngineDatamart datamart;
 	private Mounters mounters;
+	private Checkers checkers;
+	private Helpers helpers;
 
 	public CoreBox(String[] args) {
 		this(new CoreConfiguration(args));
@@ -39,6 +45,8 @@ public class CoreBox extends AbstractBox {
 		this.terminal = new EngineTerminal(this);
 		this.datamart = new EngineDatamart(this);
 		this.mounters = new Mounters(this);
+		this.checkers = new Checkers(this);
+		this.helpers = new Helpers(this);
 	}
 
 	public void afterStart() {
@@ -75,5 +83,13 @@ public class CoreBox extends AbstractBox {
 
 	public <L extends Mounter> L mounter(Class<L> clazz) {
 		return mounters.mounter(clazz);
+	}
+
+	public <L extends Checker> L checker(Class<L> clazz) {
+		return checkers.checker(clazz);
+	}
+
+	public <L extends Helper> L helper(Class<L> clazz) {
+		return helpers.helper(clazz);
 	}
 }

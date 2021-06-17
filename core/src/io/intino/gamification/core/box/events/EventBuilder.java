@@ -4,33 +4,28 @@ import io.intino.gamification.core.box.events.achievement.AchievementNewState;
 import io.intino.gamification.core.box.events.achievement.AchievementState;
 import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
-import io.intino.gamification.core.box.events.entity.*;
+import io.intino.gamification.core.box.events.action.ShiftScore;
+import io.intino.gamification.core.box.events.entity.DestroyItem;
+import io.intino.gamification.core.box.events.entity.DestroyNpc;
+import io.intino.gamification.core.box.events.entity.DestroyPlayer;
+import io.intino.gamification.core.box.events.entity.PickUpItem;
 import io.intino.gamification.core.box.events.mission.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
-import io.intino.gamification.core.box.helper.Time;
+import io.intino.gamification.core.box.utils.TimeUtils;
 
 import java.time.Instant;
+import java.util.UUID;
 
 public class EventBuilder {
 
-    public static EnableEntity enableEntity(String worldId, String entityId) {
-        EnableEntity enableEntity = new EnableEntity();
-        enableEntity.world(worldId);
-        enableEntity.id(entityId);
-        enableEntity.ts(instant());
-        return enableEntity;
-    }
-
-    public static Action changeScore(String worldId, String playerId, int score) {
-        Action action = Action.changeScore(worldId, playerId, score);
-        action.ts(instant());
-        return action;
-    }
-
-    public static Action setHealth(String worldId, String entityId, String type, double health) {
-        Action action = Action.setHealth(worldId, entityId, type, health);
-        action.ts(instant());
-        return action;
+    public static ShiftScore shiftScore(String worldId, String playerId, int score) {
+        ShiftScore shiftScore = new ShiftScore();
+        shiftScore.ts(instant());
+        shiftScore.id(UUID.randomUUID().toString());
+        shiftScore.world(worldId);
+        shiftScore.entityDest(playerId);
+        shiftScore.shift(score);
+        return shiftScore;
     }
 
     public static DestroyPlayer destroyPlayer(String worldId, String playerId) {
@@ -95,6 +90,6 @@ public class EventBuilder {
     }
 
     private static Instant instant() {
-        return Time.currentInstant();
+        return TimeUtils.currentInstant();
     }
 }

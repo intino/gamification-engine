@@ -5,7 +5,10 @@ import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.mounter.builder.EntityFilter;
-import io.intino.gamification.core.graph.*;
+import io.intino.gamification.core.graph.Item;
+import io.intino.gamification.core.graph.Npc;
+import io.intino.gamification.core.graph.Player;
+import io.intino.gamification.core.graph.World;
 
 public class EntityMounter extends Mounter {
 
@@ -21,11 +24,8 @@ public class EntityMounter extends Mounter {
         else if(event instanceof DestroyPlayer) handle((DestroyPlayer) event);
         else if(event instanceof DestroyNpc) handle((DestroyNpc) event);
         else if(event instanceof DestroyItem) handle((DestroyItem) event);
-        else if(event instanceof Action) handle((Action) event);
         else if(event instanceof PickUpItem) handle((PickUpItem) event);
         else if(event instanceof DropItem) handle((DropItem) event);
-        else if(event instanceof EnableEntity) handle((EnableEntity) event);
-        else if(event instanceof DisableEntity) handle((DisableEntity) event);
     }
 
     private void handle(CreatePlayer event) {
@@ -36,8 +36,8 @@ public class EntityMounter extends Mounter {
         Player player = box.graph().player(event, world.id());
 
         world.players().add(player);
-        if(event.enabled() != null) box.engineTerminal().feed(EventBuilder.enableEntity(world.id(), player.id()));
-        if(event.health() != null) box.engineTerminal().feed(EventBuilder.setHealth(world.id(), player.id(), "SetHealth", 100));
+        if(event.enabled() != null) player.enabled(event.enabled());
+        if(event.health() != null) player.health(event.health());
 
         world.save$();
         player.save$();
@@ -51,8 +51,8 @@ public class EntityMounter extends Mounter {
         Npc npc = box.graph().npc(event, world.id());
 
         world.npcs().add(npc);
-        if(event.enabled() != null) box.engineTerminal().feed(EventBuilder.enableEntity(world.id(), npc.id()));
-        if(event.health() != null) box.engineTerminal().feed(EventBuilder.setHealth(world.id(), event.id(), "SetHealth", 100));
+        if(event.enabled() != null) npc.enabled(event.enabled());
+        if(event.health() != null) npc.health(event.health());
 
         world.save$();
         npc.save$();
@@ -71,8 +71,8 @@ public class EntityMounter extends Mounter {
             box.engineTerminal().feed(EventBuilder.pickUpItem(world.id(), player.id(), item.id()));
         }
 
-        if(event.enabled() != null) box.engineTerminal().feed(EventBuilder.enableEntity(world.id(), item.id()));
-        if(event.health() != null) box.engineTerminal().feed(EventBuilder.setHealth(world.id(), item.id(), "SetHealth", 100));
+        if(event.enabled() != null) item.enabled(event.enabled());
+        if(event.health() != null) item.health(event.health());
 
         world.save$();
         item.save$();
@@ -130,30 +130,6 @@ public class EntityMounter extends Mounter {
         item.delete$();
     }
 
-
-
-
-
-
-
-
-
-    private void handle(Action event) {
-        EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.actionCanMount()) return;
-
-        Match match = filter.match();
-        Entity entity = filter.entity();
-
-        String oldValue = entity.get(event.attribute());
-        String newValue = applyAction(match, entity, event.toMessage().type(), event.value());
-        if(newValue == null) return;
-        newValue = Entity.getAttributeListener(event.attribute()).onAttributeChange(entity, oldValue, newValue);
-        entity.set(event.attribute(), newValue);
-
-        entity.save$();
-    }
-
     private void handle(PickUpItem event) {
         EntityFilter filter = new EntityFilter(box, event);
         if(!filter.pickUpItemCanMount()) return;
@@ -178,63 +154,5 @@ public class EntityMounter extends Mounter {
 
         player.save$();
         item.save$();
-    }
-
-    private void handle(EnableEntity event) {
-        EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.enableEntityCanMount()) return;
-
-        Entity entity = filter.entity();
-
-        entity.enabled(true);
-
-        entity.save$();
-    }
-
-    private void handle(DisableEntity event) {
-        EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.disableEntityCanMount()) return;
-
-        Entity entity = filter.entity();
-
-        entity.enabled(false);
-
-        entity.save$();
-    }
-
-    private String applyAction(Match match, Entity entity, String type, String value) {
-        switch (type) {
-            case "SetHealth":
-                return String.valueOf(Double.parseDouble(value));
-            case "Attack":
-                return String.valueOf(entity.health() - Double.parseDouble(value));
-            case "Heal":
-                return String.valueOf(entity.health() + Double.parseDouble(value));
-            case "ChangeScore":
-                //TODO
-                if(entity instanceof Player) {
-                    return applyChangeScore(match, (Player) entity, Integer.parseInt(value));
-                } else {
-                    return null;
-                }
-            default:
-                return value;
-        }
-    }
-
-    private String applyChangeScore(Match match, Player entity, int value) {
-        changeMatchRelativeScore(match, entity, value);
-        return String.valueOf(entity.score() + value);
-    }
-
-    private void changeMatchRelativeScore(Match match, Player player, int scoreDiff) {
-        PlayerState playerState = box.graph().playerState(match.playersState(), player.id());
-        if(playerState == null) {
-            playerState = box.graph().playerState(player.id());
-            match.playersState().add(playerState);
-            match.save$();
-        }
-
-        playerState.score(playerState.score() + scoreDiff).save$();
     }
 }

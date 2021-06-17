@@ -19,6 +19,7 @@ public class Mounters {
     private void buildMounters() {
         builder.put(AchievementMounter.class, new AchievementMounter(box));
         builder.put(EntityMounter.class, new EntityMounter(box));
+        builder.put(ActionMounter.class, new ActionMounter(box));
         builder.put(MatchMounter.class, new MatchMounter(box));
         builder.put(MissionMounter.class, new MissionMounter(box));
         builder.put(WorldMounter.class, new WorldMounter(box));

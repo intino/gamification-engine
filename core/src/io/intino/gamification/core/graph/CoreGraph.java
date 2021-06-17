@@ -14,7 +14,7 @@ import io.intino.gamification.core.box.events.match.MatchState;
 import io.intino.gamification.core.box.events.mission.NewMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
-import io.intino.gamification.core.box.helper.AchievementEntry;
+import io.intino.gamification.core.box.checkers.entries.AchievementEntry;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
 

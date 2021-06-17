@@ -4,7 +4,7 @@ import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
-import io.intino.gamification.core.box.logic.FailMission;
+import io.intino.gamification.core.box.helper.MissionHelper;
 import io.intino.gamification.core.box.mounter.builder.MatchFilter;
 import io.intino.gamification.core.graph.Match;
 import io.intino.gamification.core.graph.Mission;
@@ -44,7 +44,7 @@ public class MatchMounter extends Mounter {
         World world = filter.world();
         Match match = filter.match();
 
-        FailMission.get(box).failMissions(world, Mission::isActive);
+        box.helper(MissionHelper.class).failMissions(world, Mission::isActive);
         world.match(null);
         match.to(event.ts()).state(Finished);
 

@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.logic;
+package io.intino.gamification.core.box.checkers;
 
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.graph.Achievement;

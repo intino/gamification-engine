@@ -17,8 +17,8 @@ public class MissionTimerChecker extends Checker {
 
     public void check() {
 
-        from = TimeUtils.truncateTo(TimeUtils.currentInstant(), TimeUtils.Scale.H);
-        to = TimeUtils.nextInstant(from, TimeUtils.Scale.H);
+        from = TimeUtils.truncateTo(TimeUtils.currentInstant(), TimeUtils.Scale.Hour);
+        to = TimeUtils.nextInstant(from, TimeUtils.Scale.Hour);
 
         MissionHelper helper = box.helper(MissionHelper.class);
 

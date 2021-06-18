@@ -18,8 +18,8 @@ public class MatchTimerChecker extends Checker {
 
     public void check() {
 
-        from = TimeUtils.truncateTo(TimeUtils.currentInstant(), TimeUtils.Scale.D);
-        to = TimeUtils.nextInstant(from, TimeUtils.Scale.D);
+        from = TimeUtils.truncateTo(TimeUtils.currentInstant(), TimeUtils.Scale.Day);
+        to = TimeUtils.nextInstant(from, TimeUtils.Scale.Day);
 
         box.graph().activeMatches().stream()
                 .filter(m -> m.to() != null && TimeUtils.instantIsInRange(m.to(), from, to))

@@ -4,7 +4,6 @@ import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.entity.CreatePlayer;
 import org.example.smartbrain.control.box.ControlBox;
 import org.example.smartbrain.control.gamification.GameWorld;
-import org.example.smartbrain.datahub.events.smartbrain.CreatePatient;
 import org.example.smartbrain.datahub.events.smartbrain.CreateTherapist;
 
 import java.util.Collection;

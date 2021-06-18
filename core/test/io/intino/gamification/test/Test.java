@@ -2,7 +2,7 @@ package io.intino.gamification.test;
 
 import io.intino.gamification.Engine;
 
-import static io.intino.gamification.core.box.utils.TimeUtils.Scale.H;
+import static io.intino.gamification.core.box.utils.TimeUtils.Scale.Hour;
 
 public class Test {
 
@@ -12,7 +12,7 @@ public class Test {
 
         //engine.configuration().healthListener.set((entity, oldValue, newValue) -> oldValue);
 
-        engine.configuration().timerTaskListener.set(1, H);
+        engine.configuration().timerTaskListener.set(1, Hour);
     }
 }
 

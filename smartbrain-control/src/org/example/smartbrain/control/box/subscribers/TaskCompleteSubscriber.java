@@ -1,6 +1,7 @@
 package org.example.smartbrain.control.box.subscribers;
 
 import org.example.smartbrain.control.box.ControlBox;
+import org.example.smartbrain.control.box.adapter.TaskCompleteAdapter;
 
 public class TaskCompleteSubscriber implements java.util.function.Consumer<org.example.smartbrain.datahub.events.smartbrain.TaskComplete> {
 
@@ -12,5 +13,6 @@ public class TaskCompleteSubscriber implements java.util.function.Consumer<org.e
 
 	public void accept(org.example.smartbrain.datahub.events.smartbrain.TaskComplete event) {
 		box.mounters().handle(event);
+		new TaskCompleteAdapter(box).adapt(event);
 	}
 }

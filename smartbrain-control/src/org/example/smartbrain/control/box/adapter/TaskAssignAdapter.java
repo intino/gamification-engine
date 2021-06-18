@@ -6,24 +6,24 @@ import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.mission.MissionType;
 import org.example.smartbrain.control.box.ControlBox;
 import org.example.smartbrain.control.gamification.GameWorld;
-import org.example.smartbrain.datahub.events.smartbrain.TaskAssignment;
+import org.example.smartbrain.datahub.events.smartbrain.TaskAssign;
 
 import java.util.Collection;
 import java.util.List;
 
-public class CreateTaskMissionAdapter extends Adapter<TaskAssignment> {
+public class TaskAssignAdapter extends Adapter<TaskAssign> {
 
-    public CreateTaskMissionAdapter(ControlBox box) {
+    public TaskAssignAdapter(ControlBox box) {
         super(box);
     }
 
     @Override
-    protected Collection<GamificationEvent> doAdapt(TaskAssignment event) {
+    protected Collection<GamificationEvent> doAdapt(TaskAssign event) {
         return List.of(new CreateMission()
                 .world(GameWorld.getId())
-                .event(EventType.Action)
+                .eventInvolved(EventType.Action)
+                .expiration(event.ts().plusSeconds(event.durationMinutes() * 60))
                 .type(MissionType.Primary)
-                .description(event.description())
                 .maxCount(1)
                 .players(List.of(event.patientId()))
         );

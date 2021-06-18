@@ -20,6 +20,8 @@ public class Checkers {
     private void buildCheckers() {
         builder.put(AchievementChecker.class, new AchievementChecker(box));
         builder.put(MissionChecker.class, new MissionChecker(box));
+        builder.put(MatchTimerChecker.class, new MatchTimerChecker(box));
+        builder.put(MissionTimerChecker.class, new MissionTimerChecker(box));
     }
 
     public <T extends Checker> T checker(Class<T> clazz) {

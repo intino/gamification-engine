@@ -21,7 +21,7 @@ public class MatchMounter extends Mounter {
     @Override
     public void mount(GamificationEvent event) {
         if(event instanceof BeginMatch) handle((BeginMatch) event);
-        if(event instanceof EndMatch) handle((EndMatch) event);
+        else if(event instanceof EndMatch) handle((EndMatch) event);
     }
 
     private void handle(BeginMatch event) {

@@ -18,6 +18,7 @@ public class Helpers {
 
     private void buildHelpers() {
         builder.put(AchievementStateHelper.class, new AchievementStateHelper(box));
+        builder.put(MissionStateHelper.class, new MissionStateHelper(box));
         builder.put(MissionHelper.class, new MissionHelper(box));
     }
 

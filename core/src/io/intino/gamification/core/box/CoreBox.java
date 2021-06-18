@@ -25,6 +25,7 @@ public class CoreBox extends AbstractBox {
 	private Mounters mounters;
 	private Checkers checkers;
 	private Helpers helpers;
+	private final File datamartFile;
 
 	public CoreBox(String[] args) {
 		this(new CoreConfiguration(args));
@@ -32,6 +33,7 @@ public class CoreBox extends AbstractBox {
 
 	public CoreBox(CoreConfiguration configuration) {
 		super(configuration);
+		datamartFile = new File(configuration.datamartPath());
 	}
 
 	@Override
@@ -42,7 +44,7 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public void beforeStart() {
-		this.engineConfig = new EngineConfiguration();
+		this.engineConfig = new EngineConfiguration(this);
 		if(graph != null) this.graph.engineConfig(engineConfig);
 		this.terminal = new Terminal(this);
 		this.engineTerminal = new EngineTerminal(this);
@@ -65,8 +67,7 @@ public class CoreBox extends AbstractBox {
 	}
 
 	public File datamart() {
-		return new File(""); // FIXME
-		//return new File(configuration.datamartPath());
+		return datamartFile;
 	}
 
 	public CoreGraph graph() {

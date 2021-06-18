@@ -139,6 +139,21 @@ public class TimeUtils {
 
 	/*-------------------------------------------------------------------------------------------------------*/
 
+	public static long getMillisOf(Scale scale, int amount) {
+		int hours = 0;
+		switch (scale) {
+			case H:
+				hours = 1;
+				break;
+			case D:
+				hours = 24;
+				break;
+			case W:
+				hours = 24 * 7;
+		}
+		return (long) hours * amount * 60 * 60 * 1000;
+	}
+
 	public static long getInstantDiff(Instant instant1, Instant instant2, TimeUnit timeUnit) {
 		if(instant1 == null || instant2 == null) return -1;
 		long diffInSeconds = Math.abs(instant1.getEpochSecond() - instant2.getEpochSecond());

@@ -18,7 +18,7 @@ public class WorldMounter extends Mounter {
     @Override
     public void mount(GamificationEvent event) {
         if(event instanceof CreateWorld) handle((CreateWorld) event);
-        if(event instanceof DestroyWorld) handle((DestroyWorld) event);
+        else if(event instanceof DestroyWorld) handle((DestroyWorld) event);
     }
 
     private void handle(CreateWorld event) {

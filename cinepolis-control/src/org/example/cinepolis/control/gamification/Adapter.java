@@ -46,9 +46,7 @@ public class Adapter {
                 .ts(TimeUtils.currentInstant());
 
         box.engine().terminal().feed(cw);
-        box.engine().terminal().feed(ga);
-
-        Achievement globalAchievement = box.engine().datamart().globalAchievement(GamificationConfig.WorldId, "achievement1");
+        Achievement globalAchievement = box.engine().terminal().feed(ga);
         globalAchievement.<BeginMatch>progressIf((event, player) -> CheckResult.Progress);
     }
 
@@ -71,9 +69,7 @@ public class Adapter {
                 .id(event.id())
                 .ts(TimeUtils.currentInstant());
 
-        box.engine().terminal().feed(nm);
-
-        Mission mission = box.engine().datamart().mission(GamificationConfig.WorldId, event.id());
+        Mission mission = box.engine().terminal().feed(nm);
         if(mission != null) {
             mission.<Heal>progressIf((a, p) -> {
                 if(a.type().equals("FixAsset") &&

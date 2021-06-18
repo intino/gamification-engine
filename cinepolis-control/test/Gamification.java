@@ -66,7 +66,7 @@ public class Gamification {
             }
         }
 
-        box.engine().terminal().feed(beginMatch("match1"));
+        box.engine().terminal().feed(beginMatch());
 
         CreateAchievement la = (CreateAchievement) new CreateAchievement()
                 .world(GamificationConfig.WorldId)
@@ -77,9 +77,7 @@ public class Gamification {
                 .id("achievement2")
                 .ts(TimeUtils.currentInstant());
 
-        box.engine().terminal().feed(la);
-
-        Achievement localAchievement = box.engine().datamart().localAchievement(GamificationConfig.WorldId, "achievement2");
+        Achievement localAchievement = box.engine().terminal().feed(la);
         localAchievement.<NewStateMission>progressIf((e, p) -> {
             if (e.player().equals(p.id()) && e.state().equals(MissionState.Completed)) {
                 return CheckResult.Progress;
@@ -137,10 +135,10 @@ public class Gamification {
                 .employee(employee);
     }
 
-    private static BeginMatch beginMatch(String matchId) {
+    private static BeginMatch beginMatch() {
         return (BeginMatch) new BeginMatch()
                 .world(GamificationConfig.WorldId)
-                .id(matchId)
+                .reboot(false)
                 .ts(TimeUtils.currentInstant());
     }
 

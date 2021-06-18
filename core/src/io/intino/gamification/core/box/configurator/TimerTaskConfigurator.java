@@ -12,24 +12,28 @@ import static io.intino.gamification.core.box.utils.TimeUtils.*;
 public class TimerTaskConfigurator {
 
     private final CoreBox box;
+    private final Timer timer;
 
     public TimerTaskConfigurator(CoreBox box) {
         this.box = box;
+        this.timer = new Timer();
     }
 
-    public void set(int amount, Scale scale) {
+    public void schedule(int amount, Scale scale) {
         run(getMillisOf(scale, amount));
     }
 
-    private void run(long millis) {
+    private synchronized void run(long millis) {
         if(millis == 0) return;
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                box.checker(MatchTimerChecker.class).check();
-                box.checker(MissionTimerChecker.class).check();
-            }
-        }, 0, millis);
+        timer.cancel();
+        timer.scheduleAtFixedRate(new Task(), 0, millis);
+    }
+
+    private class Task extends TimerTask {
+        @Override
+        public void run() {
+            box.checker(MatchTimerChecker.class).check();
+            box.checker(MissionTimerChecker.class).check();
+        }
     }
 }

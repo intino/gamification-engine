@@ -22,8 +22,8 @@ public class Mission extends AbstractMission {
 		return MissionType.valueOf(typeName);
 	}
 
-	public EventType event() {
-		return EventType.valueOf(eventName);
+	public EventType eventInvolved() {
+		return EventType.valueOf(eventInvolvedName);
 	}
 
 	public AbstractMission difficulty(MissionDifficulty difficulty) {
@@ -36,8 +36,8 @@ public class Mission extends AbstractMission {
 		return this;
 	}
 
-	public AbstractMission event(EventType event) {
-		eventName(event.name());
+	public AbstractMission eventInvolved(EventType event) {
+		eventInvolvedName(event.name());
 		return this;
 	}
 
@@ -50,6 +50,6 @@ public class Mission extends AbstractMission {
 	}
 
 	public boolean isActive() {
-		return to == null || to.isAfter(TimeUtils.currentInstant());
+		return expiration == null || expiration.isAfter(TimeUtils.currentInstant());
 	}
 }

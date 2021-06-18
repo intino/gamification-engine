@@ -24,6 +24,6 @@ public class MissionTimerChecker extends Checker {
 
         box.graph().worldList().stream()
                 .filter(w -> w.match() != null)
-                .forEach(w -> helper.failMissions(w, m -> m.to() != null && TimeUtils.instantIsInRange(m.to(), from, to)));
+                .forEach(w -> helper.failMissions(w, m -> m.expiration() != null && TimeUtils.instantIsInRange(m.expiration(), from, to)));
     }
 }

@@ -161,7 +161,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 		for (World world : worldList(w -> w.match() != null).collect(Collectors.toList())) {
 			for (Mission mission : world.match().activeMissions()) {
-				if(mission.event().equals(EventType.get(clazz))) {
+				if(mission.eventInvolved() == EventType.get(clazz)) {
 					missionEntries.add(new MissionEntry(mission, world.id(), world.match().players().stream()
 							.filter(p -> mission.players().contains(p.id()))
 							.collect(Collectors.toList())));
@@ -175,7 +175,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	public Mission mission(CreateMission event) {
 		List<String> players = event.players();
 		if(players == null) players = new ArrayList<>();
-		return create(Stash.Missions.name()).mission(event.id(), event.expiration(), players, event.difficulty().name(), event.type().name(), event.description(), event.event().clazzName(), event.maxCount());
+		return create(Stash.Missions.name()).mission(event.id(), event.expiration(), players, event.difficulty().name(), event.type().name(), event.description(), event.eventInvolved().clazzName(), event.maxCount());
 	}
 
 	/* MISSION STATE ------------------------------------------------------------------------------------------------------ */
@@ -216,14 +216,14 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
 		for (World world : worldList()) {
 			for (Achievement achievement : world.achievements()) {
-				if(achievement.event().equals(EventType.get(clazz))) {
+				if(achievement.eventInvolved() == EventType.get(clazz)) {
 					achievementEntries.add(new AchievementEntry(achievement, world.id(), AchievementType.Global, world.players()));
 				}
 			}
 
 			if(world.match() != null) {
 				for (Achievement achievement : world.match().achievements()) {
-					if(achievement.event().equals(EventType.get(clazz))) {
+					if(achievement.eventInvolved() == EventType.get(clazz)) {
 						achievementEntries.add(new AchievementEntry(achievement, world.id(), AchievementType.Local, world.players()));
 					}
 				}
@@ -234,7 +234,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Achievement achievement(CreateAchievement event) {
-		return create(Stash.Achievements.name()).achievement(event.id(), event.description(), event.event().clazzName(), event.maxCount());
+		return create(Stash.Achievements.name()).achievement(event.id(), event.description(), event.eventInvolved().clazzName(), event.maxCount());
 	}
 
 	/* ACHIEVEMENT STATE ------------------------------------------------------------------------------------------------------ */

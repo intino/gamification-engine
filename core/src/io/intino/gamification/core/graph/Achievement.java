@@ -11,12 +11,12 @@ public class Achievement extends AbstractAchievement {
 		super(node);
 	}
 
-	public EventType event() {
-		return EventType.valueOf(eventName);
+	public EventType eventInvolved() {
+		return EventType.valueOf(eventInvolvedName);
 	}
 
-	public Achievement event(EventType event) {
-		eventName(event.name());
+	public Achievement eventInvolved(EventType event) {
+		eventInvolvedName(event.name());
 		return this;
 	}
 

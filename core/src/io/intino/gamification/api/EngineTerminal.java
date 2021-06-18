@@ -1,6 +1,7 @@
 package io.intino.gamification.api;
 
 import io.intino.alexandria.event.Event;
+import io.intino.gamification.api.model.*;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
@@ -12,7 +13,6 @@ import io.intino.gamification.core.box.events.match.EndMatch;
 import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
-import io.intino.gamification.core.graph.*;
 
 import java.util.HashMap;
 import java.util.Map;

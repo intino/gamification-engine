@@ -60,12 +60,16 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 		return matchList(m -> m.id().equals(id)).findFirst().orElse(null);
 	}
 
+	public List<Match> activeMatches() {
+		return worldList().stream().map(AbstractWorld::match).filter(Objects::nonNull).collect(Collectors.toList());
+	}
+
 	public List<Match> matchesIn(World world) {
 		return matchList(m -> m.worldId().equals(world.id())).collect(Collectors.toList());
 	}
 
 	public Match match(BeginMatch event, String worldId) {
-		return create(Stash.Matches.name()).match(event.id(), worldId, event.ts(), MatchState.Started.name());
+		return create(Stash.Matches.name()).match(UUID.randomUUID().toString(), worldId, event.ts(), MatchState.Started.name(), event.reboot());
 	}
 
 	/* ENTITY ------------------------------------------------------------------------------------------------------ */

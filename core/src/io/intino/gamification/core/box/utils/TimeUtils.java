@@ -139,11 +139,11 @@ public class TimeUtils {
 
 	/*-------------------------------------------------------------------------------------------------------*/
 
-	/*public static long getInstantDiff(Instant instant1, Instant instant2, TimeUnit timeUnit) {
+	public static long getInstantDiff(Instant instant1, Instant instant2, TimeUnit timeUnit) {
 		if(instant1 == null || instant2 == null) return -1;
 		long diffInSeconds = Math.abs(instant1.getEpochSecond() - instant2.getEpochSecond());
 		return timeUnit.convert(diffInSeconds, TimeUnit.SECONDS);
-	}*/
+	}
 
 	public static boolean instantIsInRange(Instant instant, Instant from, Instant to) {
 		return !instant.isBefore(from) && instant.isBefore(to);

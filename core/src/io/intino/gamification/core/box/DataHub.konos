@@ -3,4 +3,7 @@ dsl Konos
 Sentinel ExpireMissions as ClockListener(pattern = "0 0 0 1/1 * ? *", timeZone = "Atlantic/Canary")
 	mean = "Cada día"
 
+Sentinel ExpireMatches as ClockListener(pattern = "0 0 0 1/1 * ? *", timeZone = "Atlantic/Canary")
+	mean = "Cada día"
+
 Datalake(path = "{datalake_path}") as Local

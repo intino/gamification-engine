@@ -51,7 +51,7 @@ public class Player {
         return inventory;
     }
 
-    private class AchievementState {
+    private static class AchievementState {
 
         private final String achievementId;
         private final io.intino.gamification.core.box.events.achievement.AchievementState state;

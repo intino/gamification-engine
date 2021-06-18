@@ -2,7 +2,7 @@ package io.intino.gamification.core.box.checkers;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.helper.MissionHelper;
-import io.intino.gamification.core.box.utils.TimeUtils;
+import static io.intino.gamification.core.box.utils.TimeUtils.*;
 
 import java.time.Instant;
 
@@ -15,15 +15,15 @@ public class MissionTimerChecker extends Checker {
         super(box);
     }
 
-    public void check() {
+    public void check(int amount, Scale scale) {
 
-        from = TimeUtils.truncateTo(TimeUtils.currentInstant(), TimeUtils.Scale.Hour);
-        to = TimeUtils.nextInstant(from, TimeUtils.Scale.Hour);
+        to = currentInstant();
+        from = previousInstant(to, scale, amount);
 
         MissionHelper helper = box.helper(MissionHelper.class);
 
         box.graph().worldList().stream()
                 .filter(w -> w.match() != null)
-                .forEach(w -> helper.failMissions(w, m -> m.expiration() != null && TimeUtils.instantIsInRange(m.expiration(), from, to)));
+                .forEach(w -> helper.failMissions(w, m -> m.expiration() != null && instantIsInRange(m.expiration(), from, to)));
     }
 }

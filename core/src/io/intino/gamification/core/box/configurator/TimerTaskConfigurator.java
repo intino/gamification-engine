@@ -7,12 +7,15 @@ import io.intino.gamification.core.box.checkers.MissionTimerChecker;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static io.intino.gamification.core.box.utils.TimeUtils.*;
+import static io.intino.gamification.core.box.utils.TimeUtils.Scale;
+import static io.intino.gamification.core.box.utils.TimeUtils.getMillisOf;
 
 public class TimerTaskConfigurator {
 
     private final CoreBox box;
     private final Timer timer;
+    private int amount;
+    private Scale scale;
 
     public TimerTaskConfigurator(CoreBox box) {
         this.box = box;
@@ -20,11 +23,10 @@ public class TimerTaskConfigurator {
     }
 
     public void schedule(int amount, Scale scale) {
-        run(getMillisOf(scale, amount));
-    }
-
-    private synchronized void run(long millis) {
+        long millis = getMillisOf(scale, amount);
         if(millis == 0) return;
+        this.amount = amount;
+        this.scale = scale;
         timer.cancel();
         timer.scheduleAtFixedRate(new Task(), 0, millis);
     }
@@ -32,8 +34,8 @@ public class TimerTaskConfigurator {
     private class Task extends TimerTask {
         @Override
         public void run() {
-            box.checker(MatchTimerChecker.class).check();
-            box.checker(MissionTimerChecker.class).check();
+            box.checker(MatchTimerChecker.class).check(amount, scale);
+            box.checker(MissionTimerChecker.class).check(amount, scale);
         }
     }
 }

@@ -44,12 +44,12 @@ Concept PlayerState
 
 Concept Mission is decorable
 	var string id
-	var instant to
+	var instant expiration
 	var string[] players
 	var string difficultyName
 	var string typeName
 	var string description
-	var string eventName
+	var string eventInvolvedName
 	var integer maxCount
 
 Concept MissionState is decorable
@@ -62,7 +62,7 @@ Concept MissionState is decorable
 Concept Achievement is decorable
 	var string id
 	var string description
-	var string eventName
+	var string eventInvolvedName
 	var integer maxCount
 
 Concept AchievementState is decorable

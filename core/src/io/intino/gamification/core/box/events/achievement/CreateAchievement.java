@@ -29,8 +29,8 @@ public class CreateAchievement extends GamificationEvent {
         return getAsEnum("type", AchievementType.class);
     }
 
-    public EventType event() {
-        return getAsEnum("event", EventType.class);
+    public EventType eventInvolved() {
+        return getAsEnum("eventInvolved", EventType.class);
     }
 
     public Integer maxCount() {
@@ -52,8 +52,8 @@ public class CreateAchievement extends GamificationEvent {
         return this;
     }
 
-    public CreateAchievement event(EventType event) {
-        set("event", event);
+    public CreateAchievement eventInvolved(EventType eventInvolved) {
+        set("eventInvolved", eventInvolved);
         return this;
     }
 

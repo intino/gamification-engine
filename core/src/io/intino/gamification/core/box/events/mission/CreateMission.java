@@ -44,8 +44,8 @@ public class CreateMission extends GamificationEvent {
         return get("description");
     }
 
-    public EventType event() {
-        return getAsEnum("event", EventType.class);
+    public EventType eventInvolved() {
+        return getAsEnum("eventInvolved", EventType.class);
     }
 
     public Integer maxCount() {
@@ -82,8 +82,8 @@ public class CreateMission extends GamificationEvent {
         return this;
     }
 
-    public CreateMission event(EventType event) {
-        set("event", event);
+    public CreateMission eventInvolved(EventType eventInvolved) {
+        set("eventInvolved", eventInvolved);
         return this;
     }
 

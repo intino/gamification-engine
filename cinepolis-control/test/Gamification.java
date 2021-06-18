@@ -1,3 +1,4 @@
+import io.intino.gamification.api.model.*;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.achievement.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
@@ -7,9 +8,6 @@ import io.intino.gamification.core.box.events.mission.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.box.checkers.CheckResult;
-import io.intino.gamification.core.graph.Achievement;
-import io.intino.gamification.core.graph.Match;
-import io.intino.gamification.core.graph.World;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.GamificationConfig;
 import org.example.cinepolis.datahub.events.cinepolis.*;

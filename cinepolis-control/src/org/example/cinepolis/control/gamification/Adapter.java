@@ -1,5 +1,7 @@
 package org.example.cinepolis.control.gamification;
 
+import io.intino.gamification.api.model.Achievement;
+import io.intino.gamification.api.model.Mission;
 import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.achievement.AchievementType;
@@ -12,8 +14,6 @@ import io.intino.gamification.core.box.events.mission.MissionType;
 import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.utils.TimeUtils;
-import io.intino.gamification.core.graph.Achievement;
-import io.intino.gamification.core.graph.Mission;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;

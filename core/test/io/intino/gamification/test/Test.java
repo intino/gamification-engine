@@ -12,7 +12,7 @@ public class Test {
 
         //engine.configuration().healthListener.set((entity, oldValue, newValue) -> oldValue);
 
-        engine.configuration().timerTaskListener.set(1, Hour);
+        engine.configuration().timerTaskConfigurator.schedule(1, Hour);
     }
 }
 

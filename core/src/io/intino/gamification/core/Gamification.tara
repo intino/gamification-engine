@@ -15,6 +15,7 @@ Concept Match extends Context
 	var instant from
 	var instant to = empty
 	var string stateName
+	var boolean reboot
 	var Mission[] missions = empty
 	var PlayerState[] playersState = empty
 

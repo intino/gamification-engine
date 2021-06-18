@@ -9,12 +9,11 @@ import io.intino.gamification.core.graph.World;
 public class MatchFilter extends Filter {
 
     private final World world;
-    private final Match match;
+    private Match match;
 
     public MatchFilter(CoreBox box, BeginMatch event) {
         super(box);
         this.world = box.graph().world(event.world());
-        this.match = box.graph().match(event.id());
     }
 
     public MatchFilter(CoreBox box, EndMatch event) {
@@ -32,7 +31,7 @@ public class MatchFilter extends Filter {
     }
 
     public boolean beginMatchCanMount() {
-        return world != null && match == null && world.match() == null;
+        return world != null && world.match() == null;
     }
 
     public boolean endMatchCanMount() {

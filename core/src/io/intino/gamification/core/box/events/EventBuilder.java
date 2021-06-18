@@ -9,23 +9,44 @@ import io.intino.gamification.core.box.events.entity.DestroyItem;
 import io.intino.gamification.core.box.events.entity.DestroyNpc;
 import io.intino.gamification.core.box.events.entity.DestroyPlayer;
 import io.intino.gamification.core.box.events.entity.PickUpItem;
+import io.intino.gamification.core.box.events.match.BeginMatch;
+import io.intino.gamification.core.box.events.match.EndMatch;
 import io.intino.gamification.core.box.events.mission.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.utils.TimeUtils;
 
 import java.time.Instant;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class EventBuilder {
 
-    public static ChangeScore shiftScore(String worldId, String playerId, int score) {
-        ChangeScore shiftScore = new ChangeScore();
-        shiftScore.ts(instant());
-        shiftScore.id(UUID.randomUUID().toString());
-        shiftScore.world(worldId);
-        shiftScore.entityDest(playerId);
-        shiftScore.change(score);
-        return shiftScore;
+    public static BeginMatch beginMatch(String worldId, Instant from, Instant to) {
+        BeginMatch beginMatch = new BeginMatch();
+        beginMatch.ts(instant());
+        beginMatch.id(UUID.randomUUID().toString());
+        beginMatch.world(worldId);
+        beginMatch.expiration(expirationOf(from, to));
+        beginMatch.reboot(true);
+        return beginMatch;
+    }
+
+    public static EndMatch endMatch(String worldId, String matchId) {
+        EndMatch endMatch = new EndMatch();
+        endMatch.ts(instant());
+        endMatch.id(matchId);
+        endMatch.world(worldId);
+        return endMatch;
+    }
+
+    public static ChangeScore changeScore(String worldId, String playerId, int score) {
+        ChangeScore changeScore = new ChangeScore();
+        changeScore.ts(instant());
+        changeScore.id(UUID.randomUUID().toString());
+        changeScore.world(worldId);
+        changeScore.entityDest(playerId);
+        changeScore.change(score);
+        return changeScore;
     }
 
     public static DestroyPlayer destroyPlayer(String worldId, String playerId) {
@@ -91,5 +112,9 @@ public class EventBuilder {
 
     private static Instant instant() {
         return TimeUtils.currentInstant();
+    }
+
+    private static Instant expirationOf(Instant from, Instant to) {
+        return Instant.ofEpochMilli(to.toEpochMilli() + TimeUtils.getInstantDiff(from, to, TimeUnit.MILLISECONDS));
     }
 }

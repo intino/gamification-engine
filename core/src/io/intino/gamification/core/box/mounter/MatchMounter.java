@@ -25,7 +25,6 @@ public class MatchMounter extends Mounter {
     }
 
     private void handle(BeginMatch event) {
-        //TODO AÑADIR EXPIRATION, REBOOT, Y HACER SENTINEL
         MatchFilter filter = new MatchFilter(box, event);
         if(!filter.beginMatchCanMount()) return;
 
@@ -33,6 +32,7 @@ public class MatchMounter extends Mounter {
         Match match = box.graph().match(event, world.id());
 
         world.match(match);
+        if(event.expiration() != null) match.to(event.expiration());
 
         world.save$();
         match.save$();

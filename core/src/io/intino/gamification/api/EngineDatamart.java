@@ -30,6 +30,14 @@ public class EngineDatamart {
         return Optional.ofNullable(world(worldId)).map(AbstractWorld::match).orElse(null);
     }
 
+    public Player player(String worldId, String id) {
+        return Optional.ofNullable(world(worldId)).map(w -> box.graph().player(w.players(), id)).orElse(null);
+    }
+
+    public Npc npc(String worldId, String id) {
+        return Optional.ofNullable(world(worldId)).map(w -> box.graph().npc(w.npcs(), id)).orElse(null);
+    }
+
     public Item item(String worldId, String id) {
         return Optional.ofNullable(world(worldId)).map(w -> box.graph().item(w.items(), id)).orElse(null);
     }

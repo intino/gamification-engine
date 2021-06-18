@@ -2,8 +2,6 @@ package io.intino.gamification.core.box.utils;
 
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.WeekFields;
-import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
@@ -99,11 +97,11 @@ public class TimeUtils {
 
 	public static Instant truncateTo(Instant instant, Scale scale) {
 
-		if(scale.equals(Scale.H)) return instant.truncatedTo(ChronoUnit.HOURS);
-		if(scale.equals(Scale.D)) return instant.truncatedTo(ChronoUnit.DAYS);
-		if(scale.equals(Scale.W)) return truncateToWeek(instant);
-		if(scale.equals(Scale.M)) return truncateToMonth(instant);
-		if(scale.equals(Scale.Y)) return truncateToYear(instant);
+		if(scale.equals(Scale.Hour)) return instant.truncatedTo(ChronoUnit.HOURS);
+		if(scale.equals(Scale.Day)) return instant.truncatedTo(ChronoUnit.DAYS);
+		if(scale.equals(Scale.Week)) return truncateToWeek(instant);
+		if(scale.equals(Scale.Month)) return truncateToMonth(instant);
+		if(scale.equals(Scale.Year)) return truncateToYear(instant);
 		return instant;
 	}
 
@@ -115,11 +113,11 @@ public class TimeUtils {
 
 	public static Instant previousInstant(Instant instant, Scale scale, int n) {
 
-		if(scale.equals(Scale.H)) return instant.minus(n, ChronoUnit.HOURS);
-		if(scale.equals(Scale.D)) return instant.minus(n, ChronoUnit.DAYS);
-		if(scale.equals(Scale.W)) return instant.minus(7L * n, ChronoUnit.DAYS);
-		if(scale.equals(Scale.M)) return minusMonths(instant, n);
-		if(scale.equals(Scale.Y)) return minusYears(instant, n);
+		if(scale.equals(Scale.Hour)) return instant.minus(n, ChronoUnit.HOURS);
+		if(scale.equals(Scale.Day)) return instant.minus(n, ChronoUnit.DAYS);
+		if(scale.equals(Scale.Week)) return instant.minus(7L * n, ChronoUnit.DAYS);
+		if(scale.equals(Scale.Month)) return minusMonths(instant, n);
+		if(scale.equals(Scale.Year)) return minusYears(instant, n);
 		return instant;
 	}
 
@@ -129,11 +127,11 @@ public class TimeUtils {
 
 	public static Instant nextInstant(Instant instant, Scale scale, int n) {
 
-		if(scale.equals(Scale.H)) return instant.plus(n, ChronoUnit.HOURS);
-		if(scale.equals(Scale.D)) return instant.plus(n, ChronoUnit.DAYS);
-		if(scale.equals(Scale.W)) return instant.plus(7L * n, ChronoUnit.DAYS);
-		if(scale.equals(Scale.M)) return plusMonths(instant, n);
-		if(scale.equals(Scale.Y)) return plusYears(instant, n);
+		if(scale.equals(Scale.Hour)) return instant.plus(n, ChronoUnit.HOURS);
+		if(scale.equals(Scale.Day)) return instant.plus(n, ChronoUnit.DAYS);
+		if(scale.equals(Scale.Week)) return instant.plus(7L * n, ChronoUnit.DAYS);
+		if(scale.equals(Scale.Month)) return plusMonths(instant, n);
+		if(scale.equals(Scale.Year)) return plusYears(instant, n);
 		return instant;
 	}
 
@@ -142,13 +140,13 @@ public class TimeUtils {
 	public static long getMillisOf(Scale scale, int amount) {
 		int hours = 0;
 		switch (scale) {
-			case H:
+			case Hour:
 				hours = 1;
 				break;
-			case D:
+			case Day:
 				hours = 24;
 				break;
-			case W:
+			case Week:
 				hours = 24 * 7;
 		}
 		return (long) hours * amount * 60 * 60 * 1000;
@@ -296,9 +294,9 @@ public class TimeUtils {
 
 	private static Instant truncateToWeek(Instant instant) {
 
-		Instant dayInstant = truncateTo(instant, Scale.D);
+		Instant dayInstant = truncateTo(instant, Scale.Day);
 		int dayOfWeek = weekDayOf(dayInstant);
-		return previousInstant(dayInstant, Scale.D, dayOfWeek - 1);
+		return previousInstant(dayInstant, Scale.Day, dayOfWeek - 1);
 	}
 
 	private static Instant truncateToMonth(Instant instant) {
@@ -375,10 +373,10 @@ public class TimeUtils {
 	/*--------------------------------------------------------------------------------------------*/
 
 	public enum Scale {
-		H,
-		D,
-		W,
-		M,
-		Y
+		Hour,
+		Day,
+		Week,
+		Month,
+		Year
 	}
 }

@@ -66,7 +66,7 @@ public class Match {
         return achievements;
     }
 
-    private class PlayerState {
+    private static class PlayerState {
 
         private final String playerId;
         private final int score;
@@ -96,7 +96,7 @@ public class Match {
             return achievementsState;
         }
 
-        private class MissionState {
+        private static class MissionState {
 
             private final String missionId;
             private final io.intino.gamification.core.box.events.mission.MissionState state;
@@ -121,7 +121,7 @@ public class Match {
             }
         }
 
-        private class AchievementState {
+        private static class AchievementState {
 
             private final String achievementId;
             private final io.intino.gamification.core.box.events.achievement.AchievementState state;

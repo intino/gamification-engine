@@ -2,10 +2,11 @@ package io.intino.gamification.core.box.checkers;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.EventBuilder;
-import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.graph.Match;
 
 import java.time.Instant;
+
+import static io.intino.gamification.core.box.utils.TimeUtils.*;
 
 public class MatchTimerChecker extends Checker {
 
@@ -16,13 +17,13 @@ public class MatchTimerChecker extends Checker {
         super(box);
     }
 
-    public void check() {
+    public void check(int amount, Scale scale) {
 
-        from = TimeUtils.truncateTo(TimeUtils.currentInstant(), TimeUtils.Scale.Day);
-        to = TimeUtils.nextInstant(from, TimeUtils.Scale.Day);
+        to = currentInstant();
+        from = previousInstant(to, scale, amount);
 
         box.graph().activeMatches().stream()
-                .filter(m -> m.to() != null && TimeUtils.instantIsInRange(m.to(), from, to))
+                .filter(m -> m.to() != null && instantIsInRange(m.to(), from, to))
                 .forEach(this::endMatch);
     }
 

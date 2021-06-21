@@ -13,9 +13,9 @@ Datalake(scale = Month, path = empty) dl
 	Tank testBegin as Event(smartbrain.TestBegin)
 	Tank testEnd as Event(smartbrain.TestEnd)
 	Tank testResponse as Event(smartbrain.TestResponse)
-	Tank taskAssignment as Event(smartbrain.TaskAssignment)
+	Tank taskAssign as Event(smartbrain.TaskAssign)
 	Tank taskComplete as Event(smartbrain.TaskComplete)
 
 Terminal smartbrainTerminal
-	Publish(dl.testCreate dl.createPatient dl.createTherapist dl.testBegin dl.testEnd dl.testResponse dl.taskAssignment dl.taskComplete)
-	Subscribe(dl.testCreate dl.createPatient dl.createTherapist dl.testBegin dl.testEnd dl.testResponse dl.taskAssignment dl.taskComplete)
+	Publish(dl.testCreate dl.createPatient dl.createTherapist dl.testBegin dl.testEnd dl.testResponse dl.taskAssign dl.taskComplete)
+	Subscribe(dl.testCreate dl.createPatient dl.createTherapist dl.testBegin dl.testEnd dl.testResponse dl.taskAssign dl.taskComplete)

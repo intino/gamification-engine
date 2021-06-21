@@ -36,6 +36,11 @@ Concept TestResult is decorable
 	var instant endTime = empty
 	var QuestionResult[] results = empty
 
+Concept Task
+	var string taskId
+	var string taskName
+	var string description
+
 
 
 

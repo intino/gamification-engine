@@ -14,7 +14,7 @@ public class World {
 
     public World(io.intino.gamification.core.graph.World world) {
         this.id = world.id();
-        this.match = new Match(world.match());
+        this.match = world.match() != null ? new Match(world.match()) : null;
         this.players = world.players().stream().map(Player::new).collect(Collectors.toList());
         this.items = world.items().stream().map(Item::new).collect(Collectors.toList());
         this.npcs = world.npcs().stream().map(Npc::new).collect(Collectors.toList());

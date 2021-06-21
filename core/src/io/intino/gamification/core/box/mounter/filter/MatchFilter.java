@@ -3,7 +3,6 @@ package io.intino.gamification.core.box.mounter.filter;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
-import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.graph.Match;
 import io.intino.gamification.core.graph.World;
 
@@ -15,7 +14,6 @@ public class MatchFilter extends Filter {
     public MatchFilter(CoreBox box, BeginMatch event) {
         super(box);
 
-        if(event.id() == null) throwMissingEventAttributeException("id");
         if(event.world() == null) throwMissingEventAttributeException("world");
         if(event.reboot() == null) throwMissingEventAttributeException("reboot");
         if(event.ts() == null) throwMissingEventAttributeException("ts");

@@ -1,5 +1,6 @@
 package io.intino.gamification.core.box.launcher;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;
@@ -22,15 +23,19 @@ public class Launcher extends Async {
 
     @Override
     protected void run() {
-        this.box = new CoreBox(args);
-        Graph graph = new Graph(store(this.box.datamart())).loadStashes(false, StartUpStashes);
-        this.box.put(graph);
-        this.box.start();
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            this.box.stop();
-            stop();
-        }));
-        onStart.run();
+        try {
+            this.box = new CoreBox(args);
+            Graph graph = new Graph(store(this.box.datamart())).loadStashes(false, StartUpStashes);
+            this.box.put(graph);
+            this.box.start();
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                this.box.stop();
+                stop();
+            }));
+            onStart.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private static FileSystemStore store(File datamartFolder) {

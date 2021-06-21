@@ -13,65 +13,116 @@ public class EntityFilter extends Filter {
 
     public EntityFilter(CoreBox box, CreatePlayer event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+
         this.world = box.graph().world(event.world());
         this.player = box.graph().player(event.id());
+
+        canMount(player == null && world != null);
     }
 
     public EntityFilter(CoreBox box, CreateNpc event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+
         this.world = box.graph().world(event.world());
         this.npc = box.graph().npc(event.id());
+
+        canMount(npc == null && world != null);
     }
 
     public EntityFilter(CoreBox box, CreateItem event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+
         this.world = box.graph().world(event.world());
         this.item = box.graph().item(event.id());
         if(world != null) {
             this.player = box.graph().player(world.players(), event.player());
         }
+
+        canMount(item == null && world != null);
     }
 
     public EntityFilter(CoreBox box, DestroyPlayer event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+        if(event.destroyStrategy() == null) throwMissingEventAttributeException("destroyStrategy");
+
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.player = box.graph().player(world.players(), event.id());
         }
+
+        canMount(player != null && world != null);
     }
 
     public EntityFilter(CoreBox box, DestroyNpc event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.npc = box.graph().npc(world.npcs(), event.id());
         }
+
+        canMount(npc != null && world != null);
     }
 
     public EntityFilter(CoreBox box, DestroyItem event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.item = box.graph().item(world.items(), event.id());
         }
+
+        canMount(item != null && world != null);
     }
 
     public EntityFilter(CoreBox box, PickUpItem event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+        if(event.player() == null) throwMissingEventAttributeException("player");
+
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.item = box.graph().item(world.items(), event.id());
             this.player = box.graph().player(world.players(), event.player());
         }
+
+        canMount(player != null && item != null);
     }
 
     public EntityFilter(CoreBox box, DropItem event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+        if(event.world() == null) throwMissingEventAttributeException("world");
+        if(event.player() == null) throwMissingEventAttributeException("player");
+
         this.world = box.graph().world(event.world());
         if(world != null) {
             this.item = box.graph().item(world.items(), event.id());
             this.player = box.graph().player(world.players(), event.player());
         }
+
+        canMount(player != null && item != null);
     }
 
     public World world() {
@@ -88,37 +139,5 @@ public class EntityFilter extends Filter {
 
     public Item item() {
         return item;
-    }
-
-    public boolean createPlayerCanMount() {
-        return player == null && world != null;
-    }
-
-    public boolean createNpcCanMount() {
-        return npc == null && world != null;
-    }
-
-    public boolean createItemCanMount() {
-        return item == null && world != null;
-    }
-
-    public boolean destroyPlayerCanMount() {
-        return player != null && world != null;
-    }
-
-    public boolean destroyNpcCanMount() {
-        return npc != null && world != null;
-    }
-
-    public boolean destroyItemCanMount() {
-        return item != null && world != null;
-    }
-
-    public boolean pickUpItemCanMount() {
-        return player != null && item != null;
-    }
-
-    public boolean dropItemCanMount() {
-        return player != null && item != null;
     }
 }

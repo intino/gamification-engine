@@ -24,7 +24,7 @@ public class MissionMounter extends Mounter {
 
     private void handle(CreateMission event) {
         MissionFilter filter = new MissionFilter(box, event);
-        if(!filter.newMissionCanMount()) return;
+        if(!filter.canMount()) return;
 
         Match match = filter.match();
         Mission mission = box.graph().mission(event);
@@ -37,7 +37,7 @@ public class MissionMounter extends Mounter {
 
     private void handle(NewStateMission event) {
         MissionFilter filter = new MissionFilter(box, event);
-        if(!filter.newStateMissionCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Match match = filter.match();

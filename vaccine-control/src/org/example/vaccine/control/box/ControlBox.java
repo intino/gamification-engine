@@ -1,8 +1,8 @@
 package org.example.vaccine.control.box;
 
 import io.intino.gamification.Engine;
-import io.intino.gamification.core.Archetype;
 import io.intino.gamification.core.box.events.world.CreateWorld;
+import org.example.vaccine.control.Archetype;
 import org.example.vaccine.control.box.gamification.GameWorld;
 import org.example.vaccine.control.box.mounters.MounterFactory;
 import org.example.vaccine.control.graph.ControlGraph;
@@ -52,8 +52,8 @@ public class ControlBox extends AbstractBox {
 		return this.archetype;
 	}
 
-	public Archetype.Datamart.Example datamart() {
-		return archetype.datamart().example();
+	public Archetype.Datamart.Vaccine datamart() {
+		return archetype.datamart().vaccine();
 	}
 
 	public Engine engine() {

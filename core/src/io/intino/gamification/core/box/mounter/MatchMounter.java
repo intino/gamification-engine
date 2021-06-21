@@ -26,7 +26,7 @@ public class MatchMounter extends Mounter {
 
     private void handle(BeginMatch event) {
         MatchFilter filter = new MatchFilter(box, event);
-        if(!filter.beginMatchCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Match match = box.graph().match(event, world.id());
@@ -40,7 +40,7 @@ public class MatchMounter extends Mounter {
 
     private void handle(EndMatch event) {
         MatchFilter filter = new MatchFilter(box, event);
-        if(!filter.endMatchCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Match match = filter.match();

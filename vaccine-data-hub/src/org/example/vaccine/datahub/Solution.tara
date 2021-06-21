@@ -3,7 +3,7 @@ dsl Ness
 use VaccineEvents
 
 Broker(path = empty, port = empty, secondaryPort = empty)
-	User("example", "example")
+	User("vaccine", "vaccine")
 
 Datalake(scale = Month, path = empty) dl
 

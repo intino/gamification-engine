@@ -28,7 +28,7 @@ public class ActionMounter extends Mounter {
 
     private void handle(Attack event) {
         ActionFilter filter = new ActionFilter(box, event);
-        if(!filter.attackCanMount()) return;
+        if(!filter.canMount()) return;
 
         Entity entity = filter.entity();
 
@@ -42,7 +42,7 @@ public class ActionMounter extends Mounter {
 
     private void handle(Heal event) {
         ActionFilter filter = new ActionFilter(box, event);
-        if(!filter.healCanMount()) return;
+        if(!filter.canMount()) return;
 
         Entity entity = filter.entity();
 
@@ -56,7 +56,7 @@ public class ActionMounter extends Mounter {
 
     private void handle(SetHealth event) {
         ActionFilter filter = new ActionFilter(box, event);
-        if(!filter.setHealthCanMount()) return;
+        if(!filter.canMount()) return;
 
         Entity entity = filter.entity();
 
@@ -70,7 +70,7 @@ public class ActionMounter extends Mounter {
 
     private void handle(ChangeScore event) {
         ActionFilter filter = new ActionFilter(box, event);
-        if(!filter.shiftScoreCanMount()) return;
+        if(!filter.canMount()) return;
 
         Match match = filter.match();
         Player player = (Player) filter.entity();
@@ -89,7 +89,7 @@ public class ActionMounter extends Mounter {
 
     private void handle(EnableEntity event) {
         ActionFilter filter = new ActionFilter(box, event);
-        if(!filter.enableEntityCanMount()) return;
+        if(!filter.canMount()) return;
 
         Entity entity = filter.entity();
 
@@ -103,7 +103,7 @@ public class ActionMounter extends Mounter {
 
     private void handle(DisableEntity event) {
         ActionFilter filter = new ActionFilter(box, event);
-        if(!filter.disableEntityCanMount()) return;
+        if(!filter.canMount()) return;
 
         Entity entity = filter.entity();
 

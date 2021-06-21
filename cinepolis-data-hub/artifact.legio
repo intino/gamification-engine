@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact(groupId = "org.example.cinepolis", version = "1.0.0-SNAPSHOT") data-hub as Solution
+Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") data-hub as Solution
 	Model("Ness", "5.5.2", "4.1.1")
 	Imports
 		Test("junit", "junit", "4.13.2")

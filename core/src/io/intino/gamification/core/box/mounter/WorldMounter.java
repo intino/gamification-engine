@@ -23,13 +23,13 @@ public class WorldMounter extends Mounter {
 
     private void handle(CreateWorld event) {
         WorldFilter filter = new WorldFilter(box, event);
-        if(!filter.createWorldCanMount()) return;
+        if(!filter.canMount()) return;
         box.graph().world(event).save$();
     }
 
     private void handle(DestroyWorld event) {
         WorldFilter filter = new WorldFilter(box, event);
-        if(!filter.destroyWorldCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
 

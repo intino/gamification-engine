@@ -40,7 +40,7 @@ public class Adapter {
                 .world(GamificationConfig.WorldId)
                 .type(AchievementType.Global)
                 .description("Empieza 2 partidas")
-                .event(EventType.BeginMatch)
+                .eventInvolved(EventType.BeginMatch)
                 .maxCount(2)
                 .id("achievement1")
                 .ts(TimeUtils.currentInstant());
@@ -64,7 +64,7 @@ public class Adapter {
                 .difficulty(MissionDifficulty.Medium)
                 .description(event.description())
                 .players(employees)
-                .event(EventType.Heal)
+                .eventInvolved(EventType.Heal)
                 .maxCount(1)
                 .id(event.id())
                 .ts(TimeUtils.currentInstant());

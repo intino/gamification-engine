@@ -26,7 +26,7 @@ public class AchievementMounter extends Mounter {
 
     private void handle(CreateAchievement event) {
         AchievementFilter filter = new AchievementFilter(box, event);
-        if(!filter.createAchievementCanMount()) return;
+        if(!filter.canMount()) return;
 
         Context context = filter.context();
         Achievement achievement = box.graph().achievement(event);
@@ -39,7 +39,7 @@ public class AchievementMounter extends Mounter {
 
     private void handle(DeleteAchievement event) {
         AchievementFilter filter = new AchievementFilter(box, event);
-        if(!filter.deleteAchievementCanMount()) return;
+        if(!filter.canMount()) return;
 
         Context context = filter.context();
         Achievement achievement = filter.achievement();
@@ -53,7 +53,7 @@ public class AchievementMounter extends Mounter {
 
     private void handle(AchievementNewState event) {
         AchievementFilter filter = new AchievementFilter(box, event);
-        if(!filter.achievementNewStateCanMount()) return;
+        if(!filter.canMount()) return;
 
         Context context = filter.context();
         Achievement achievement = filter.achievement();

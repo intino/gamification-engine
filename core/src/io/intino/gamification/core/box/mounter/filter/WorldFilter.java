@@ -11,23 +11,25 @@ public class WorldFilter extends Filter {
 
     public WorldFilter(CoreBox box, CreateWorld event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+
         this.world = box.graph().world(event.id());
+
+        canMount(world == null);
     }
 
     public WorldFilter(CoreBox box, DestroyWorld event) {
         super(box);
+
+        if(event.id() == null) throwMissingEventAttributeException("id");
+
         this.world = box.graph().world(event.id());
+
+        canMount(world != null);
     }
 
     public World world() {
         return world;
-    }
-
-    public boolean createWorldCanMount() {
-        return world == null;
-    }
-
-    public boolean destroyWorldCanMount() {
-        return world != null;
     }
 }

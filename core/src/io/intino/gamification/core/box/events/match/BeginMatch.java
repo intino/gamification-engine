@@ -36,7 +36,7 @@ public class BeginMatch extends GamificationEvent {
         return this;
     }
 
-    public boolean reboot() {
+    public Boolean reboot() {
         return getAsBoolean("reboot");
     }
 

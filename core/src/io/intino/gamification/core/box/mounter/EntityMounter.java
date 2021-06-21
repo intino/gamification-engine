@@ -30,7 +30,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(CreatePlayer event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.createPlayerCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Player player = box.graph().player(event, world.id());
@@ -45,7 +45,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(CreateNpc event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.createNpcCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Npc npc = box.graph().npc(event, world.id());
@@ -60,7 +60,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(CreateItem event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.createItemCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Item item = box.graph().item(event, world.id());
@@ -80,7 +80,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(DestroyPlayer event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.destroyPlayerCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Player player = filter.player();
@@ -99,7 +99,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(DestroyNpc event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.destroyNpcCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Npc npc = filter.npc();
@@ -112,7 +112,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(DestroyItem event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.destroyItemCanMount()) return;
+        if(!filter.canMount()) return;
 
         World world = filter.world();
         Item item = filter.item();
@@ -121,7 +121,7 @@ public class EntityMounter extends Mounter {
 
         Player player = box.graph().player(world.players(), item.owner());
         if(player != null) {
-            Item itemToRemove = player.inventory().stream().filter(i -> i.id().equals(item.id())).findFirst().orElse(null);
+            Item itemToRemove = box.graph().item(player.inventory(), item.id());
             player.inventory().remove(itemToRemove);
             player.save$();
         }
@@ -132,7 +132,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(PickUpItem event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.pickUpItemCanMount()) return;
+        if(!filter.canMount()) return;
 
         Player player = filter.player();
         Item item = filter.item();
@@ -145,7 +145,7 @@ public class EntityMounter extends Mounter {
 
     private void handle(DropItem event) {
         EntityFilter filter = new EntityFilter(box, event);
-        if(!filter.dropItemCanMount()) return;
+        if(!filter.canMount()) return;
 
         Player player = filter.player();
         Item item = filter.item();

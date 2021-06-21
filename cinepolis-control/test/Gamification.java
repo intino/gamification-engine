@@ -70,7 +70,7 @@ public class Gamification {
                 .world(GamificationConfig.WorldId)
                 .type(AchievementType.Local)
                 .description("Arregla 3 proyectores")
-                .event(EventType.NewStateMission)
+                .eventInvolved(EventType.NewStateMission)
                 .maxCount(3)
                 .id("achievement2")
                 .ts(TimeUtils.currentInstant());

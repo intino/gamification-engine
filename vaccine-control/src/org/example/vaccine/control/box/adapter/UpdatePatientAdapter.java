@@ -1,6 +1,7 @@
 package org.example.vaccine.control.box.adapter;
 
 import io.intino.gamification.core.box.events.action.AbstractAction;
+import io.intino.gamification.core.box.events.action.Heal;
 import org.example.vaccine.control.box.ControlBox;
 import org.example.vaccine.datahub.events.vaccines.Vaccination;
 
@@ -14,12 +15,11 @@ public class UpdatePatientAdapter extends Adapter<Vaccination, AbstractAction> {
 
     @Override
     protected List<AbstractAction> doAdapt(Vaccination event) {
-        return List.of(AbstractAction.heal(
-                        location(event.hospitalName()),
-                        event.hospitalName(),
-                        event.patientName(),
-                        "",
-                        1.0 / getVaccineMaxDoseCount(event.vaccineName()) * 100)
+        return List.of(
+                new Heal().healedHealth(1.0 / getVaccineMaxDoseCount(event.vaccineName()) * 100)
+                        .entitySrc(event.hospitalName())
+                        .entityDest(event.patientName())
+                        .world(location(event.hospitalName()))
         );
     }
 

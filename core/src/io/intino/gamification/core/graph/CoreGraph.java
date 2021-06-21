@@ -95,9 +95,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Player player(CreatePlayer event, String worldId) {
-		List<String> groups = event.groups();
-		if(groups == null) groups = new ArrayList<>();
-		return create(Stash.Players.name()).player(event.id(), worldId, groups);
+		return create(Stash.Players.name()).player(event.id(), worldId, event.groups() == null ? new ArrayList<>() : event.groups());
 	}
 
 	/* NPC ------------------------------------------------------------------------------------------------------ */
@@ -113,9 +111,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Npc npc(CreateNpc event, String worldId) {
-		List<String> groups = event.groups();
-		if(groups == null) groups = new ArrayList<>();
-		return create(Stash.Npcs.name()).npc(event.id(), worldId, groups);
+		return create(Stash.Npcs.name()).npc(event.id(), worldId, event.groups() == null ? new ArrayList<>() : event.groups());
 	}
 
 	/* ITEM ------------------------------------------------------------------------------------------------------ */
@@ -131,9 +127,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Item item(CreateItem event, String worldId) {
-		List<String> groups = event.groups();
-		if(groups == null) groups = new ArrayList<>();
-		return create(Stash.Items.name()).item(event.id(), worldId, groups);
+		return create(Stash.Items.name()).item(event.id(), worldId, event.groups() == null ? new ArrayList<>() : event.groups());
 	}
 
 	/* PLAYER STATE ------------------------------------------------------------------------------------------------------ */
@@ -173,9 +167,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Mission mission(CreateMission event) {
-		List<String> players = event.players();
-		if(players == null) players = new ArrayList<>();
-		return create(Stash.Missions.name()).mission(event.id(), event.expiration(), players, event.difficulty().name(), event.type().name(), event.description(), event.eventInvolved().clazzName(), event.maxCount());
+		return create(Stash.Missions.name()).mission(event.id(), event.expiration(), event.players() == null ? new ArrayList<>() : event.players(), event.difficulty().name(), event.type().name(), event.description(), event.eventInvolved().clazzName(), event.maxCount());
 	}
 
 	/* MISSION STATE ------------------------------------------------------------------------------------------------------ */

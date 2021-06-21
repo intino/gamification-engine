@@ -25,8 +25,7 @@ public class MissionFilter extends Filter {
         if(event.type() == null) throwMissingEventAttributeException("type");
         if(event.description() == null) throwMissingEventAttributeException("description");
         if(event.eventInvolved() == null) throwMissingEventAttributeException("eventInvolved");
-        if(event.expiration() == null) throwMissingEventAttributeException("expiration");
-        if(event.expiration().isBefore(TimeUtils.currentInstant())) throwInvalidAttributeValueException("expiration", String.valueOf(event.expiration()), "The value must be after than now.");
+        if(event.expiration() != null && event.expiration().isBefore(TimeUtils.currentInstant())) throwInvalidAttributeValueException("expiration", String.valueOf(event.expiration()), "The value must be after than now.");
         if(event.maxCount() == null) throwMissingEventAttributeException("maxCount");
         if(event.maxCount() <= 0) throwInvalidAttributeValueException("maxCount", String.valueOf(event.maxCount()), "The value must be 1 or more.");
 

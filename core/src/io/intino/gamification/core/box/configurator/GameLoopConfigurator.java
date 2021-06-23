@@ -1,5 +1,6 @@
 package io.intino.gamification.core.box.configurator;
 
+import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.checkers.MatchTimerChecker;
 import io.intino.gamification.core.box.checkers.MissionTimerChecker;
@@ -10,28 +11,39 @@ import java.util.TimerTask;
 import static io.intino.gamification.core.box.utils.TimeUtils.Scale;
 import static io.intino.gamification.core.box.utils.TimeUtils.getMillisOf;
 
-public class TimerTaskConfigurator {
+public class GameLoopConfigurator {
 
     private final CoreBox box;
-    private final Timer timer;
+    private Timer timer;
     private int amount;
     private Scale scale;
 
-    public TimerTaskConfigurator(CoreBox box) {
+    public GameLoopConfigurator(CoreBox box) {
         this.box = box;
-        this.timer = new Timer();
     }
 
     public void schedule(int amount, Scale scale) {
-        long millis = getMillisOf(scale, amount);
-        if(millis == 0) return;
+        if(amount <= 0) {
+            Logger.error("Invalid timescale for the Game Loop: " + amount);
+            return;
+        }
         this.amount = amount;
         this.scale = scale;
-        timer.cancel();
-        timer.scheduleAtFixedRate(new Task(), 0, millis);
+        scheduleGameLoop(getMillisOf(scale, amount));
     }
 
-    private class Task extends TimerTask {
+    private void scheduleGameLoop(long millis) {
+        if(timer != null) stopPreviousLoop();
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new GameLoopUpdate(), 0, millis);
+    }
+
+    private void stopPreviousLoop() {
+        timer.cancel();
+        timer.purge();
+    }
+
+    private class GameLoopUpdate extends TimerTask {
         @Override
         public void run() {
             box.checker(MatchTimerChecker.class).check(amount, scale);

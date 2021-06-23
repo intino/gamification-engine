@@ -1,7 +1,7 @@
 package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.configurator.TimerTaskConfigurator;
+import io.intino.gamification.core.box.configurator.GameLoopConfigurator;
 import io.intino.gamification.core.box.events.mission.MissionState;
 import io.intino.gamification.core.box.listeners.EntityAttributeListener;
 import io.intino.gamification.core.box.mappers.*;
@@ -12,7 +12,7 @@ import io.intino.gamification.core.graph.Player;
 public class EngineConfiguration {
 
     private final CoreBox box;
-    public final TimerTaskConfigurator timerTaskConfigurator;
+    public final GameLoopConfigurator gameLoopConfigurator;
     public final Variable<PlayerLevelMapper> playerLevelMapper = new Variable<>(EngineConfiguration::playerLevelMapper);
     public final Variable<MissionScoreMapper> missionScoreMapper = new Variable<>(EngineConfiguration::missionScoreMapper);
     public final Variable<EntityAttributeListener<Double>> healthListener = new Variable<>(EngineConfiguration::healthListener);
@@ -21,7 +21,7 @@ public class EngineConfiguration {
 
     public EngineConfiguration(CoreBox box) {
         this.box = box;
-        this.timerTaskConfigurator = new TimerTaskConfigurator(box);
+        this.gameLoopConfigurator = new GameLoopConfigurator(box);
     }
 
     public static final class Variable<T> {

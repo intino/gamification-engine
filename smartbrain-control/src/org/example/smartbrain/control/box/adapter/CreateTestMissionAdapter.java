@@ -22,7 +22,7 @@ public class CreateTestMissionAdapter extends Adapter<TestBegin> {
     protected Collection<GamificationEvent> doAdapt(TestBegin event) {
         return List.of(new CreateMission()
                 .world(GameWorld.getId())
-                .event(EventType.Action) // ...
+                .eventInvolved(EventType.Action)
                 .maxCount(1)
                 .difficulty(MissionDifficulty.Medium)
                 .type(MissionType.Secondary)

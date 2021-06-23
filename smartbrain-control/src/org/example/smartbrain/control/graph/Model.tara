@@ -17,7 +17,7 @@ Concept Response
 
 Concept Question is decorable
 	var string text
-	var word:QuestionType type
+	var word:{Language Memory Math} type
 	var Response[] responses = empty
 
 Concept Test is decorable
@@ -39,7 +39,12 @@ Concept TestResult is decorable
 Concept Task
 	var string taskId
 	var string taskName
-	var string description
+	var string patientId
+	var string description = empty
+	var instant startTime = empty
+	var instant endTime = empty
+	var integer durationMinutes = 0
+	var word:{Pending Complete Failed} state = empty
 
 
 

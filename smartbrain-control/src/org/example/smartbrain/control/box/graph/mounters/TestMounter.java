@@ -5,10 +5,8 @@ import io.intino.alexandria.event.Event;
 
 import org.example.smartbrain.control.box.mounters.Mounter;
 import org.example.smartbrain.control.graph.*;
-import org.example.smartbrain.control.graph.rules.QuestionType;
 import org.example.smartbrain.datahub.events.smartbrain.TestCreate;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TestMounter implements Mounter {
@@ -27,7 +25,7 @@ public class TestMounter implements Mounter {
 
 	private void setQuestions(Test test, List<TestCreate.Question> questionsFromEvent) {
 		for(TestCreate.Question q : questionsFromEvent) {
-			Question question = test.graph().create().question(q.text(), QuestionType.valueOf(q.type().name()));
+			Question question = test.graph().create().question(q.text(), AbstractQuestion.Type.valueOf(q.type().name()));
 			for(TestCreate.Question.Response r : q.responseList())
 				question.graph().create().response(r.value(), r.correct());
 			question.save$();

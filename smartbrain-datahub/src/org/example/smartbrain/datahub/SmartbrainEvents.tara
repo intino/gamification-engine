@@ -41,10 +41,13 @@ Namespace smartbrain
 		Attribute responses as Integer List
 
 	Event TaskAssign
+		Attribute taskId as Text
 		Attribute taskName as Text
 		Attribute patientId as Text
+		Attribute description as Text
 		Attribute durationMinutes as LongInteger
 
 	Event TaskComplete
+		Attribute taskId as Text
 		Attribute taskName as Text
 		Attribute patientId as Text

@@ -1,6 +1,5 @@
 package io.intino.gamification.core.box.launcher;
 
-import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.graph.stash.Stash;
 import io.intino.magritte.framework.Graph;

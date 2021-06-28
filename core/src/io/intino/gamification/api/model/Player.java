@@ -12,6 +12,7 @@ public class Player {
     private final List<String> groups;
     private final int score;
     private final List<Item> inventory;
+    private final List<AchievementState> achievements;
 
     public Player(io.intino.gamification.core.graph.Player player) {
         this.id = player.id();
@@ -21,6 +22,7 @@ public class Player {
         this.groups = player.groups();
         this.score = player.score();
         this.inventory = player.inventory().stream().map(Item::new).collect(Collectors.toList());
+        this.achievements = player.achievements().stream().map(AchievementState::new).collect(Collectors.toList());
     }
 
     public String id() {
@@ -49,6 +51,10 @@ public class Player {
 
     public List<Item> inventory() {
         return inventory;
+    }
+
+    public List<AchievementState> achievements() {
+        return achievements;
     }
 
     private static class AchievementState {

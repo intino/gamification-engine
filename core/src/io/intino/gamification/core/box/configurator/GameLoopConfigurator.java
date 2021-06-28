@@ -1,9 +1,9 @@
 package io.intino.gamification.core.box.configurator;
 
-import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.checkers.MatchTimerChecker;
 import io.intino.gamification.core.box.checkers.MissionTimerChecker;
+import io.intino.gamification.core.exception.InvalidAttributeValueException;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,8 +24,10 @@ public class GameLoopConfigurator {
 
     public void schedule(int amount, Scale scale) {
         if(amount <= 0) {
-            Logger.error("Invalid timescale for the Game Loop: " + amount);
-            return;
+            throw new InvalidAttributeValueException("amount", String.valueOf(amount), "The value must be 1 or more.");
+        }
+        if(scale == null) {
+            throw new InvalidAttributeValueException("scale", "null", "The value can't be null.");
         }
         this.amount = amount;
         this.scale = scale;

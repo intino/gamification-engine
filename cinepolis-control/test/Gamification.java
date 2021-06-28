@@ -12,6 +12,8 @@ import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.GamificationConfig;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
+import java.util.UUID;
+
 public class Gamification {
 
     public static void run(ControlBox box) {
@@ -72,7 +74,7 @@ public class Gamification {
                 .description("Arregla 3 proyectores")
                 .eventInvolved(EventType.NewStateMission)
                 .maxCount(3)
-                .id("achievement2")
+                .id(UUID.randomUUID().toString())
                 .ts(TimeUtils.currentInstant());
 
         Achievement localAchievement = box.engine().terminal().feed(la);

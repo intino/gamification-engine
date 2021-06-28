@@ -138,6 +138,7 @@ public class EntityMounter extends Mounter {
         Item item = filter.item();
 
         player.inventory().add(item);
+        item.owner(player.id());
 
         player.save$();
         item.save$();
@@ -151,6 +152,7 @@ public class EntityMounter extends Mounter {
         Item item = filter.item();
 
         player.inventory().remove(item);
+        item.owner(null);
 
         player.save$();
         item.save$();

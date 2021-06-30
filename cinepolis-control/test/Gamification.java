@@ -1,10 +1,10 @@
-import io.intino.gamification.api.model.*;
+import io.intino.gamification.core.model.*;
 import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
-import io.intino.gamification.core.box.events.mission.MissionState;
+import io.intino.gamification.core.model.attributes.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.box.checkers.CheckResult;

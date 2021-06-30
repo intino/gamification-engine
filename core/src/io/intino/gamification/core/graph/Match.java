@@ -1,6 +1,6 @@
 package io.intino.gamification.core.graph;
 
-import io.intino.gamification.core.box.events.match.MatchState;
+import io.intino.gamification.core.model.attributes.MatchState;
 
 import java.util.List;
 import java.util.stream.Collectors;

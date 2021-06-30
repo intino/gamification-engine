@@ -6,7 +6,7 @@ import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.MissionState;
 import io.intino.gamification.core.graph.Player;
 
-import static io.intino.gamification.core.box.events.mission.MissionState.Pending;
+import static io.intino.gamification.core.model.attributes.MissionState.Pending;
 
 public class MissionStateHelper extends Helper {
 

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.core.box.events.mission.MissionState.Failed;
+import static io.intino.gamification.core.model.attributes.MissionState.Failed;
 
 public class MissionHelper extends Helper {
 

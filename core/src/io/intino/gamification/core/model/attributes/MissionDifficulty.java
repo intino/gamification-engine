@@ -1,9 +1,10 @@
-package io.intino.gamification.core.box.events.mission;
+package io.intino.gamification.core.model.attributes;
 
 public enum MissionDifficulty {
+
     Easy(1), Medium(2), Hard(3);
 
-    private final float multiplier;
+    private float multiplier;
 
     MissionDifficulty(float multiplier) {
         this.multiplier = multiplier;
@@ -11,5 +12,9 @@ public enum MissionDifficulty {
 
     public float multiplier() {
         return multiplier;
+    }
+
+    public void multiplier(float multiplier) {
+        this.multiplier = multiplier;
     }
 }

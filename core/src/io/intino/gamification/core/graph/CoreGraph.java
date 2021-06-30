@@ -5,13 +5,13 @@ import io.intino.gamification.core.box.checkers.entries.MissionEntry;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.entity.CreateItem;
 import io.intino.gamification.core.box.events.entity.CreateNpc;
 import io.intino.gamification.core.box.events.entity.CreatePlayer;
 import io.intino.gamification.core.box.events.match.BeginMatch;
-import io.intino.gamification.core.box.events.match.MatchState;
+import io.intino.gamification.core.model.attributes.MatchState;
 import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
@@ -22,7 +22,7 @@ import io.intino.magritte.framework.Graph;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.core.box.events.achievement.AchievementState.Pending;
+import static io.intino.gamification.core.model.attributes.AchievementState.Pending;
 
 public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 
@@ -190,7 +190,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public MissionState missionState(String worldId, String missionId, String playerId) {
-		return create(Stash.MissionsState.name()).missionState(worldId, missionId, playerId, io.intino.gamification.core.box.events.mission.MissionState.Pending.name());
+		return create(Stash.MissionsState.name()).missionState(worldId, missionId, playerId, io.intino.gamification.core.model.attributes.MissionState.Pending.name());
 	}
 
 	/* ACHIEVEMENT ------------------------------------------------------------------------------------------------------ */

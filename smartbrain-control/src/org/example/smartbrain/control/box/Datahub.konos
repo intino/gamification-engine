@@ -13,7 +13,7 @@ Datamart(type = Graph) graph
     	Require("smartbrain.TestResponse")
 		Require("smartbrain.TestEnd")
 	Mounter TaskMounter as Event
-    	Require("smartbrain.TaskAssignment")
+    	Require("smartbrain.TaskAssign")
     	Require("smartbrain.TaskComplete")
 
 Subscriber(event = "smartbrain.CreatePatient", subscriberId = "CreatePatient") createPatientSubscriber
@@ -22,5 +22,5 @@ Subscriber(event = "smartbrain.TestCreate", subscriberId = "TestCreate") createT
 Subscriber(event = "smartbrain.TestBegin", subscriberId = "TestBegin") testBeginSubscriber
 Subscriber(event = "smartbrain.TestEnd", subscriberId = "TestEnd") testEndSubscriber
 Subscriber(event = "smartbrain.TestResponse", subscriberId = "TestResponse") testResponseSubscriber
-Subscriber(event = "smartbrain.TaskAssignment", subscriberId = "TaskAssignment") taskAssignmentSubscriber
+Subscriber(event = "smartbrain.TaskAssign", subscriberId = "TaskAssign") taskAssignSubscriber
 Subscriber(event = "smartbrain.TaskComplete", subscriberId = "TaskComplete") taskCompleteSubscriber

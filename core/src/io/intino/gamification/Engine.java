@@ -6,7 +6,7 @@ import io.intino.gamification.api.EngineConfiguration;
 import io.intino.gamification.api.EngineDatamart;
 import io.intino.gamification.api.EngineTerminal;
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.launcher.Launcher;
+import io.intino.gamification.core.launcher.Launcher;
 
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;

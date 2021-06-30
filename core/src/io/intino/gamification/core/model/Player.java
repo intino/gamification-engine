@@ -1,4 +1,4 @@
-package io.intino.gamification.api.model;
+package io.intino.gamification.core.model;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,7 +60,7 @@ public class Player {
     private static class AchievementState {
 
         private final String achievementId;
-        private final io.intino.gamification.core.box.events.achievement.AchievementState state;
+        private final io.intino.gamification.core.model.attributes.AchievementState state;
         private final int count;
 
         public AchievementState(io.intino.gamification.core.graph.AchievementState achievementState) {
@@ -73,7 +73,7 @@ public class Player {
             return achievementId;
         }
 
-        public io.intino.gamification.core.box.events.achievement.AchievementState state() {
+        public io.intino.gamification.core.model.attributes.AchievementState state() {
             return state;
         }
 

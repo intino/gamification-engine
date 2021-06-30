@@ -10,7 +10,7 @@ import io.intino.gamification.core.graph.Match;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.World;
 
-import static io.intino.gamification.core.box.events.match.MatchState.Finished;
+import static io.intino.gamification.core.model.attributes.MatchState.Finished;
 
 public class MatchMounter extends Mounter {
 

@@ -1,6 +1,6 @@
 package io.intino.gamification.core.box.mappers;
 
-import io.intino.gamification.core.box.events.mission.MissionState;
+import io.intino.gamification.core.model.attributes.MissionState;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.Player;
 

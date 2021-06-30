@@ -1,6 +1,6 @@
-package io.intino.gamification.api.model;
+package io.intino.gamification.core.model;
 
-import io.intino.gamification.core.box.events.match.MatchState;
+import io.intino.gamification.core.model.attributes.MatchState;
 
 import java.time.Instant;
 import java.util.List;
@@ -99,7 +99,7 @@ public class Match {
         private static class MissionState {
 
             private final String missionId;
-            private final io.intino.gamification.core.box.events.mission.MissionState state;
+            private final io.intino.gamification.core.model.attributes.MissionState state;
             private final int count;
 
             public MissionState(io.intino.gamification.core.graph.MissionState missionState) {
@@ -112,7 +112,7 @@ public class Match {
                 return missionId;
             }
 
-            public io.intino.gamification.core.box.events.mission.MissionState state() {
+            public io.intino.gamification.core.model.attributes.MissionState state() {
                 return state;
             }
 
@@ -124,7 +124,7 @@ public class Match {
         private static class AchievementState {
 
             private final String achievementId;
-            private final io.intino.gamification.core.box.events.achievement.AchievementState state;
+            private final io.intino.gamification.core.model.attributes.AchievementState state;
             private final int count;
 
             public AchievementState(io.intino.gamification.core.graph.AchievementState achievementState) {
@@ -137,7 +137,7 @@ public class Match {
                 return achievementId;
             }
 
-            public io.intino.gamification.core.box.events.achievement.AchievementState state() {
+            public io.intino.gamification.core.model.attributes.AchievementState state() {
                 return state;
             }
 

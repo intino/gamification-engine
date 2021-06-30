@@ -1,6 +1,6 @@
 package io.intino.gamification.core.box.checkers.entries;
 
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.Player;
 

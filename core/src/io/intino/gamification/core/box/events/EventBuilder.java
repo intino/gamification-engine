@@ -1,8 +1,8 @@
 package io.intino.gamification.core.box.events;
 
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
-import io.intino.gamification.core.box.events.achievement.AchievementState;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementState;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
 import io.intino.gamification.core.box.events.action.ChangeScore;
 import io.intino.gamification.core.box.events.entity.DestroyItem;
@@ -11,7 +11,7 @@ import io.intino.gamification.core.box.events.entity.DestroyPlayer;
 import io.intino.gamification.core.box.events.entity.PickUpItem;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
-import io.intino.gamification.core.box.events.mission.MissionState;
+import io.intino.gamification.core.model.attributes.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.utils.TimeUtils;
 

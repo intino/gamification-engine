@@ -1,9 +1,10 @@
-package io.intino.gamification.core.box.events.mission;
+package io.intino.gamification.core.model.attributes;
 
 public enum MissionType {
+
     Primary(2), Secondary(1), Special(3);
 
-    private final float multiplier;
+    private float multiplier;
 
     MissionType(float multiplier) {
         this.multiplier = multiplier;
@@ -11,5 +12,9 @@ public enum MissionType {
 
     public float multiplier() {
         return multiplier;
+    }
+
+    public void multiplier(float multiplier) {
+        this.multiplier = multiplier;
     }
 }

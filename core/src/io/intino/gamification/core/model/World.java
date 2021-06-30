@@ -1,4 +1,4 @@
-package io.intino.gamification.api.model;
+package io.intino.gamification.core.model;
 
 import java.util.List;
 import java.util.stream.Collectors;

@@ -1,9 +1,9 @@
 package io.intino.gamification.api;
 
 import io.intino.alexandria.event.Event;
-import io.intino.gamification.api.model.*;
+import io.intino.gamification.core.model.*;
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
 import io.intino.gamification.core.box.events.action.*;

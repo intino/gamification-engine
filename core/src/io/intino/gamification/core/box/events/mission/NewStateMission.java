@@ -1,6 +1,7 @@
 package io.intino.gamification.core.box.events.mission;
 
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.model.attributes.MissionState;
 
 public class NewStateMission extends GamificationEvent {
 

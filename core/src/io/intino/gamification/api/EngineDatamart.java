@@ -1,6 +1,6 @@
 package io.intino.gamification.api;
 
-import io.intino.gamification.api.model.*;
+import io.intino.gamification.core.model.*;
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.graph.AbstractWorld;
 

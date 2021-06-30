@@ -6,11 +6,11 @@ public class MissionState extends AbstractMissionState {
 		super(node);
 	}
 
-	public io.intino.gamification.core.box.events.mission.MissionState state() {
-		return io.intino.gamification.core.box.events.mission.MissionState.valueOf(stateName);
+	public io.intino.gamification.core.model.attributes.MissionState state() {
+		return io.intino.gamification.core.model.attributes.MissionState.valueOf(stateName);
 	}
 
-	public MissionState state(io.intino.gamification.core.box.events.mission.MissionState state) {
+	public MissionState state(io.intino.gamification.core.model.attributes.MissionState state) {
 		stateName(state.name());
 		return this;
 	}

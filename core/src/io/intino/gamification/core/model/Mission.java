@@ -1,10 +1,10 @@
-package io.intino.gamification.api.model;
+package io.intino.gamification.core.model;
 
 import io.intino.gamification.core.box.checkers.CheckerHandler;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.mission.MissionDifficulty;
-import io.intino.gamification.core.box.events.mission.MissionType;
+import io.intino.gamification.core.model.attributes.MissionDifficulty;
+import io.intino.gamification.core.model.attributes.MissionType;
 
 import java.time.Instant;
 import java.util.List;

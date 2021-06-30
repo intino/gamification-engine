@@ -1,21 +1,23 @@
-package io.intino.gamification.api.model;
+package io.intino.gamification.core.model;
 
 import java.util.List;
 
-public class Npc {
+public class Item {
 
     private final String id;
     private final String worldId;
     private final boolean enabled;
     private final double health;
     private final List<String> groups;
+    private final String owner;
 
-    public Npc(io.intino.gamification.core.graph.Npc npc) {
-        this.id = npc.id();
-        this.worldId = npc.worldId();
-        this.enabled = npc.enabled();
-        this.health = npc.health();
-        this.groups = npc.groups();
+    public Item(io.intino.gamification.core.graph.Item item) {
+        this.id = item.id();
+        this.worldId = item.worldId();
+        this.enabled = item.enabled();
+        this.health = item.health();
+        this.groups = item.groups();
+        this.owner = item.owner();
     }
 
     public String id() {
@@ -36,5 +38,9 @@ public class Npc {
 
     public List<String> groups() {
         return groups;
+    }
+
+    public String owner() {
+        return owner;
     }
 }

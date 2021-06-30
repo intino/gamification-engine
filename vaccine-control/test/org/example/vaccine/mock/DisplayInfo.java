@@ -1,9 +1,9 @@
 package org.example.vaccine.mock;
 
-import io.intino.gamification.api.model.Item;
-import io.intino.gamification.api.model.Npc;
-import io.intino.gamification.api.model.Player;
-import io.intino.gamification.api.model.World;
+import io.intino.gamification.core.model.Item;
+import io.intino.gamification.core.model.Npc;
+import io.intino.gamification.core.model.Player;
+import io.intino.gamification.core.model.World;
 import org.example.vaccine.control.box.ControlBox;
 
 import java.util.List;

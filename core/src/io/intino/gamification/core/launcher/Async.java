@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.launcher;
+package io.intino.gamification.core.launcher;
 
 import io.intino.alexandria.logger.Logger;
 

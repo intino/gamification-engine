@@ -1,4 +1,4 @@
-package io.intino.gamification.core.box.launcher;
+package io.intino.gamification.core.launcher;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.graph.stash.Stash;

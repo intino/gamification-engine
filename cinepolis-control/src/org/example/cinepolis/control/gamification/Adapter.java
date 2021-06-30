@@ -1,18 +1,19 @@
 package org.example.cinepolis.control.gamification;
 
-import io.intino.gamification.api.model.Achievement;
-import io.intino.gamification.api.model.Mission;
+import io.intino.gamification.core.model.Achievement;
+import io.intino.gamification.core.model.Mission;
 import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.action.Heal;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.mission.CreateMission;
-import io.intino.gamification.core.box.events.mission.MissionDifficulty;
-import io.intino.gamification.core.box.events.mission.MissionType;
+import io.intino.gamification.core.model.attributes.MissionDifficulty;
+import io.intino.gamification.core.model.attributes.MissionType;
 import io.intino.gamification.core.box.events.world.CreateWorld;
+import io.intino.gamification.core.model.attributes.DestroyStrategy;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;

@@ -11,8 +11,8 @@ import io.intino.gamification.core.graph.Player;
 
 import java.util.List;
 
-import static io.intino.gamification.core.box.events.mission.MissionState.Cancelled;
-import static io.intino.gamification.core.box.events.mission.MissionState.Completed;
+import static io.intino.gamification.core.model.attributes.MissionState.Cancelled;
+import static io.intino.gamification.core.model.attributes.MissionState.Completed;
 
 public class MissionChecker extends Checker {
 

@@ -2,9 +2,10 @@ package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.configurator.GameLoopConfigurator;
-import io.intino.gamification.core.box.events.mission.MissionState;
+import io.intino.gamification.core.model.attributes.MissionState;
 import io.intino.gamification.core.box.listeners.EntityAttributeListener;
 import io.intino.gamification.core.box.mappers.*;
+import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.graph.Entity;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.Player;
@@ -22,6 +23,7 @@ public class EngineConfiguration {
     public EngineConfiguration(CoreBox box) {
         this.box = box;
         this.gameLoopConfigurator = new GameLoopConfigurator(box);
+        this.gameLoopConfigurator.schedule(1, TimeUtils.Scale.Hour);
     }
 
     public static final class Variable<T> {

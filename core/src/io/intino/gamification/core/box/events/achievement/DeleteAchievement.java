@@ -1,6 +1,7 @@
 package io.intino.gamification.core.box.events.achievement;
 
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.model.attributes.AchievementType;
 
 public class DeleteAchievement extends GamificationEvent {
 

@@ -4,7 +4,7 @@ import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.checkers.entries.AchievementEntry;
 import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.helper.AchievementStateHelper;
 import io.intino.gamification.core.graph.Achievement;
 import io.intino.gamification.core.graph.AchievementState;
@@ -12,8 +12,8 @@ import io.intino.gamification.core.graph.Player;
 
 import java.util.List;
 
-import static io.intino.gamification.core.box.events.achievement.AchievementState.Achieved;
-import static io.intino.gamification.core.box.events.achievement.AchievementState.Failed;
+import static io.intino.gamification.core.model.attributes.AchievementState.Achieved;
+import static io.intino.gamification.core.model.attributes.AchievementState.Failed;
 
 public class AchievementChecker extends Checker {
 

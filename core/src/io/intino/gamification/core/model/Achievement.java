@@ -1,4 +1,4 @@
-package io.intino.gamification.api.model;
+package io.intino.gamification.core.model;
 
 import io.intino.gamification.core.box.checkers.CheckerHandler;
 import io.intino.gamification.core.box.events.EventType;

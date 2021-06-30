@@ -9,7 +9,7 @@ import io.intino.gamification.core.box.mounter.filter.AchievementFilter;
 import io.intino.gamification.core.graph.*;
 import io.intino.magritte.framework.Layer;
 
-import static io.intino.gamification.core.box.events.achievement.AchievementState.Pending;
+import static io.intino.gamification.core.model.attributes.AchievementState.Pending;
 
 public class AchievementMounter extends Mounter {
 

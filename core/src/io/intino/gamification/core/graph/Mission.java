@@ -2,8 +2,8 @@ package io.intino.gamification.core.graph;
 
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.mission.MissionDifficulty;
-import io.intino.gamification.core.box.events.mission.MissionType;
+import io.intino.gamification.core.model.attributes.MissionDifficulty;
+import io.intino.gamification.core.model.attributes.MissionType;
 import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.box.checkers.CheckerHandler;

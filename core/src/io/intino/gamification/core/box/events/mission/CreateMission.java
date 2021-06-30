@@ -2,6 +2,8 @@ package io.intino.gamification.core.box.events.mission;
 
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.model.attributes.MissionDifficulty;
+import io.intino.gamification.core.model.attributes.MissionType;
 
 import java.time.Instant;
 import java.util.List;

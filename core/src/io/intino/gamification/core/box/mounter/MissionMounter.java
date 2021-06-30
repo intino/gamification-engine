@@ -8,7 +8,7 @@ import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.mounter.filter.MissionFilter;
 import io.intino.gamification.core.graph.*;
 
-import static io.intino.gamification.core.box.events.mission.MissionState.Pending;
+import static io.intino.gamification.core.model.attributes.MissionState.Pending;
 
 public class MissionMounter extends Mounter {
 

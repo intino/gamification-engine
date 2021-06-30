@@ -1,5 +1,7 @@
 package io.intino.gamification.core.box.events.entity;
 
+import io.intino.gamification.core.model.attributes.DestroyStrategy;
+
 public class DestroyPlayer extends DestroyEntity {
 
     public DestroyPlayer() {

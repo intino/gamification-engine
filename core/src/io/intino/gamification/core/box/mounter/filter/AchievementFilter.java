@@ -2,7 +2,7 @@ package io.intino.gamification.core.box.mounter.filter;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
-import io.intino.gamification.core.box.events.achievement.AchievementType;
+import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
 import io.intino.gamification.core.graph.Achievement;

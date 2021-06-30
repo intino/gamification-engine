@@ -32,6 +32,10 @@ public class EngineDatamart {
         return Optional.ofNullable(box.graph().world(worldId)).map(w -> new Match(w.match())).orElse(null);
     }
 
+    public List<Match> matches() {
+        return box.graph().matchList().stream().map(Match::new).collect(Collectors.toList());
+    }
+
     public Player player(String worldId, String id) {
         return Optional.ofNullable(box.graph().world(worldId)).map(w -> new Player(box.graph().player(w.players(), id))).orElse(null);
     }

@@ -30,11 +30,9 @@ public class MissionFilter extends Filter {
         if(event.maxCount() <= 0) throwInvalidAttributeValueException("maxCount", String.valueOf(event.maxCount()), "The value must be 1 or more.");
 
         this.world = box.graph().world(event.world());
+        this.mission = box.graph().mission(event.id());
         if(world != null) {
             this.match = world.match();
-            if(match != null) {
-                this.mission = box.graph().mission(match.missions(), event.id());
-            }
         }
 
         canMount(world != null && match != null && mission == null);

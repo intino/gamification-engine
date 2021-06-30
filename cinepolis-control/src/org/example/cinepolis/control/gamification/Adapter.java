@@ -9,11 +9,10 @@ import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.action.Heal;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
+import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.mission.MissionDifficulty;
 import io.intino.gamification.core.box.events.mission.MissionType;
-import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
-import io.intino.gamification.core.box.utils.TimeUtils;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
@@ -23,6 +22,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static io.intino.gamification.core.box.utils.TimeUtils.*;
 
 public class Adapter {
 
@@ -35,7 +36,7 @@ public class Adapter {
     public void initialize() {
         CreateWorld cw = (CreateWorld) new CreateWorld()
                 .id(GamificationConfig.WorldId)
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
         CreateAchievement ga = (CreateAchievement) new CreateAchievement()
                 .world(GamificationConfig.WorldId)
                 .type(AchievementType.Global)
@@ -43,7 +44,7 @@ public class Adapter {
                 .eventInvolved(EventType.BeginMatch)
                 .maxCount(2)
                 .id("achievement1")
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
 
         box.engine().terminal().feed(cw);
         Achievement globalAchievement = box.engine().terminal().feed(ga);
@@ -66,8 +67,9 @@ public class Adapter {
                 .players(employees)
                 .eventInvolved(EventType.Heal)
                 .maxCount(1)
-                .id(event.id())
-                .ts(TimeUtils.currentInstant());
+                .expiration(nextInstant(event.ts(), Scale.Hour, event.limitHours()))
+                .id(UUID.randomUUID().toString())
+                .ts(currentInstant());
 
         Mission mission = box.engine().terminal().feed(nm);
         if(mission != null) {
@@ -86,7 +88,7 @@ public class Adapter {
         DestroyItem di = (DestroyItem) new DestroyItem()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
         box.engine().terminal().feed(di);
     }
 
@@ -95,7 +97,7 @@ public class Adapter {
                 .destroyStrategy(DestroyStrategy.Nothing)
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
         box.engine().terminal().feed(dp);
     }
 
@@ -115,7 +117,7 @@ public class Adapter {
         CreatePlayer cp = (CreatePlayer) new CreatePlayer()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
         box.engine().terminal().feed(cp);
 
         List<Asset> assets = box.graph().assetsByArea(event.area());
@@ -124,7 +126,7 @@ public class Adapter {
                     .world(GamificationConfig.WorldId)
                     .player(event.id())
                     .id(a.id())
-                    .ts(TimeUtils.currentInstant());
+                    .ts(currentInstant());
             box.engine().terminal().feed(pui);
         });
     }
@@ -133,7 +135,7 @@ public class Adapter {
         CreateItem ci = (CreateItem) new CreateItem()
                 .world(GamificationConfig.WorldId)
                 .id(event.id())
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
         box.engine().terminal().feed(ci);
 
         Employee employee = box.graph().employeeByArea(event.area());
@@ -142,7 +144,7 @@ public class Adapter {
                 .world(GamificationConfig.WorldId)
                 .player(employee.id())
                 .id(event.id())
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
         box.engine().terminal().feed(pui);
     }
 

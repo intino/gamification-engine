@@ -44,10 +44,10 @@ public class Gamification {
         box.terminal().publish(deleteEmployee("empleado1"));
         box.terminal().publish(deleteAsset("asset4"));
 
-        box.terminal().publish(generateAlert("alert1", "asset5", AssetAlert.Importance.Important, 1, "descripcion 1"));
-        box.terminal().publish(generateAlert("alert2", "asset7", AssetAlert.Importance.Low, 2, "descripcion 2"));
-        box.terminal().publish(generateAlert("alert3", "asset10", AssetAlert.Importance.Medium, 3, "descripcion 3"));
-        box.terminal().publish(generateAlert("alert4", "asset15", AssetAlert.Importance.Medium, 3, "descripcion 5"));
+        box.terminal().publish(generateAlert("alert1", "asset5", AssetAlert.Importance.Important, 1, "Arregla el asset 5"));
+        box.terminal().publish(generateAlert("alert2", "asset7", AssetAlert.Importance.Low, 2, "Arregla el asset 7"));
+        box.terminal().publish(generateAlert("alert3", "asset10", AssetAlert.Importance.Medium, 3, "Arregla el asset 10"));
+        box.terminal().publish(generateAlert("alert4", "asset15", AssetAlert.Importance.Medium, 3, "Arregla el asset 15"));
 
         box.terminal().publish(completeAlert("alert1", "asset5", "empleado2"));
         box.terminal().publish(completeAlert("alert2", "asset10", "empleado3"));

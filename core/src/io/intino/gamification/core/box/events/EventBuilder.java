@@ -21,10 +21,10 @@ import java.util.concurrent.TimeUnit;
 
 public class EventBuilder {
 
-    public static BeginMatch beginMatch(String worldId, Instant from, Instant to) {
+    public static BeginMatch beginMatch(String worldId, String matchId, Instant from, Instant to) {
         BeginMatch beginMatch = new BeginMatch();
         beginMatch.ts(instant());
-        beginMatch.id(UUID.randomUUID().toString());
+        beginMatch.id(matchId);
         beginMatch.world(worldId);
         beginMatch.expiration(expirationOf(from, to));
         beginMatch.reboot(true);

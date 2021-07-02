@@ -69,7 +69,8 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	}
 
 	public Match match(BeginMatch event, String worldId) {
-		return create(Stash.Matches.name()).match(UUID.randomUUID().toString(), worldId, event.ts(), MatchState.Started.name(), event.reboot());
+		String id = event.reboot() ? event.id() + "_" + UUID.randomUUID().toString() : event.id();
+		return create(Stash.Matches.name()).match(id, worldId, event.ts(), MatchState.Started.name(), event.reboot());
 	}
 
 	/* ENTITY ------------------------------------------------------------------------------------------------------ */
@@ -85,9 +86,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	/* PLAYER ------------------------------------------------------------------------------------------------------ */
 
 	public Player player(String id) {
-		//TODO
-		return entityList(e -> e.id().equals(id) && e instanceof Player)
-				.map(e -> (Player) e).findFirst().orElse(null);
+		return playerList(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 
 	public Player player(List<Player> players, String id) {
@@ -101,9 +100,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	/* NPC ------------------------------------------------------------------------------------------------------ */
 
 	public Npc npc(String id) {
-		//TODO
-		return entityList(e -> e.id().equals(id) && e instanceof Npc)
-				.map(e -> (Npc) e).findFirst().orElse(null);
+		return npcList(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 
 	public Npc npc(List<Npc> npcs, String id) {
@@ -117,9 +114,7 @@ public class CoreGraph extends io.intino.gamification.core.graph.AbstractGraph {
 	/* ITEM ------------------------------------------------------------------------------------------------------ */
 
 	public Item item(String id) {
-		//TODO
-		return entityList(e -> e.id().equals(id) && e instanceof Item)
-				.map(e -> (Item) e).findFirst().orElse(null);
+		return itemList(e -> e.id().equals(id)).findFirst().orElse(null);
 	}
 
 	public Item item(List<Item> items, String id) {

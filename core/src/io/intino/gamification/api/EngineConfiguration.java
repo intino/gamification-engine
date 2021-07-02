@@ -23,7 +23,6 @@ public class EngineConfiguration {
     public EngineConfiguration(CoreBox box) {
         this.box = box;
         this.gameLoopConfigurator = new GameLoopConfigurator(box);
-        this.gameLoopConfigurator.schedule(1, TimeUtils.Scale.Hour);
     }
 
     public static final class Variable<T> {

@@ -1,9 +1,9 @@
 package io.intino.gamification.api;
 
-import io.intino.gamification.core.model.*;
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.graph.AbstractWorld;
+import io.intino.gamification.core.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ public class EngineDatamart {
     }
 
     public World world(String id) {
-        return new World(box.graph().world(id));
+        return Optional.ofNullable(box.graph().world(id)).map(World::new).orElse(null);
     }
 
     public List<World> worlds() {
@@ -32,59 +32,77 @@ public class EngineDatamart {
         return Optional.ofNullable(box.graph().world(worldId)).map(w -> new Match(w.match())).orElse(null);
     }
 
-    public List<Match> matches() {
-        return box.graph().matchList().stream().map(Match::new).collect(Collectors.toList());
+    public Player player(String worldId, String id) {
+        return players(worldId).stream()
+                .filter(p -> p.id().equals(id))
+                .findFirst().orElse(null);
     }
 
-    public Player player(String worldId, String id) {
-        return Optional.ofNullable(box.graph().world(worldId)).map(w -> new Player(box.graph().player(w.players(), id))).orElse(null);
+    public List<Player> players(String worldId) {
+        return Optional.ofNullable(world(worldId))
+                .map(World::players)
+                .orElse(new ArrayList<>());
     }
 
     public Npc npc(String worldId, String id) {
-        return Optional.ofNullable(box.graph().world(worldId)).map(w -> new Npc(box.graph().npc(w.npcs(), id))).orElse(null);
+        return npcs(worldId).stream()
+                .filter(n -> n.id().equals(id))
+                .findFirst().orElse(null);
+    }
+
+    public List<Npc> npcs(String worldId) {
+        return Optional.ofNullable(world(worldId))
+                .map(World::npcs)
+                .orElse(new ArrayList<>());
     }
 
     public Item item(String worldId, String id) {
-        return Optional.ofNullable(box.graph().world(worldId)).map(w -> new Item(box.graph().item(w.items(), id))).orElse(null);
+        return items(worldId).stream()
+                .filter(i -> i.id().equals(id))
+                .findFirst().orElse(null);
+    }
+
+    public List<Item> items(String worldId) {
+        return Optional.ofNullable(world(worldId))
+                .map(World::items)
+                .orElse(new ArrayList<>());
     }
 
     public Mission mission(String worldId, String id) {
-        return Optional.ofNullable(box.graph().world(worldId))
-                .map(AbstractWorld::match)
-                .map(m -> new Mission(box.graph().mission(m.missions(), id)))
-                .orElse(null);
+        return missions(worldId).stream()
+                .filter(m -> m.id().equals(id))
+                .findFirst().orElse(null);
     }
 
     public List<Mission> missions(String worldId) {
-        return Optional.ofNullable(box.graph().world(worldId))
-                .map(AbstractWorld::match)
-                .map(ma -> ma.missions().stream().map(Mission::new).collect(Collectors.toList()))
-                .orElse(null);
+        return Optional.ofNullable(world(worldId))
+                .map(World::match)
+                .map(Match::missions)
+                .orElse(new ArrayList<>());
     }
 
     public Achievement globalAchievement(String worldId, String id) {
-        return Optional.ofNullable(box.graph().world(worldId))
-                .map(w -> new Achievement(box.graph().achievement(w.achievements(), id)))
-                .orElse(null);
+        return globalAchievements(worldId).stream()
+                .filter(a -> a.id().equals(id))
+                .findFirst().orElse(null);
     }
 
     public Achievement localAchievement(String worldId, String id) {
-        return Optional.ofNullable(box.graph().world(worldId))
-                .map(AbstractWorld::match)
-                .map(m -> new Achievement(box.graph().achievement(m.achievements(), id)))
-                .orElse(null);
+        return localAchievements(worldId).stream()
+                .filter(a -> a.id().equals(id))
+                .findFirst().orElse(null);
     }
 
     public List<Achievement> globalAchievements(String worldId) {
-        return Optional.ofNullable(box.graph().world(worldId))
-                .map(w -> w.achievements().stream().map(Achievement::new).collect(Collectors.toList()))
-                .orElse(null);
+        return Optional.ofNullable(world(worldId))
+                .map(World::achievements)
+                .orElse(new ArrayList<>());
     }
 
     public List<Achievement> localAchievements(String worldId) {
-        return Optional.ofNullable(box.graph().world(worldId))
-                .map(AbstractWorld::match)
-                .map(m -> m.achievements().stream().map(Achievement::new).collect(Collectors.toList()))
-                .orElse(null);
+        return Optional.ofNullable(world(worldId))
+                .map(World::match)
+                .map(Match::achievements)
+                .orElse(new ArrayList<>());
     }
 }

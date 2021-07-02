@@ -138,7 +138,8 @@ public class Gamification {
     private static BeginMatch beginMatch() {
         return (BeginMatch) new BeginMatch()
                 .world(GamificationConfig.WorldId)
-                .reboot(false)
+                .reboot(true)
+                .id(UUID.randomUUID().toString())
                 .ts(TimeUtils.currentInstant());
     }
 

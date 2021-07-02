@@ -62,7 +62,6 @@ public class AchievementMounter extends Mounter {
         AchievementState achievementState = box.graph().achievementStateOf(achievement.id(), player.id());
         if(achievementState == null) {
             achievementState = box.graph().achievementState(event, achievement.id(), player.id());
-            //TODO
             if(context instanceof World) {
                 player.achievements().add(achievementState);
                 player.save$();

@@ -12,17 +12,17 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-public class Engine {
+public class GamificationEngine {
 
     private final Launcher launcher;
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private CoreBox box;
 
-    public Engine(BoxConfiguration configuration) {
+    public GamificationEngine(BoxConfiguration configuration) {
         this(configuration.args());
     }
 
-    public Engine(Map<String, String> arguments) {
+    public GamificationEngine(Map<String, String> arguments) {
         this.launcher = new Launcher(arguments);
     }
 

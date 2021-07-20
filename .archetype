@@ -13,4 +13,5 @@
         - questions in "Question"
         - getQuestion(testName, questionName) in "Question/{testName}.{questionName}"
         - getTestResults(patient, testName, month as timetag:month) in "TestResult.{patient}/{testName}.{month}"
+        - getTask(patient, taskName, month as timetag:month) in "TestResult.{patient}/{testName}.{month}"
 

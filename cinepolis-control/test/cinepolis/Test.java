@@ -1,4 +1,6 @@
-import io.intino.gamification.Engine;
+package cinepolis;
+
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
@@ -13,8 +15,12 @@ public class Test {
     private static final String[] StartUpStashes = {Stashes, "Employees", "Assets", "Alerts"};
 
     public static void main(String[] args) {
+        run();
+    }
 
-        args = new String[] {"home=temp", "datahub_url=failover:(tcp://localhost:63000)", "datahub_user=cinepolis", "datahub_password=cinepolis", "datahub_clientId=cinepolis", "datahub_outbox_directory=temp/terminals/example/cinepolis", "datalake_path=temp/datalake"};
+    public static ControlBox run() {
+
+        String[] args = new String[] {"home=temp", "datahub_url=failover:(tcp://localhost:63000)", "datahub_user=cinepolis", "datahub_password=cinepolis", "datahub_clientId=cinepolis", "datahub_outbox_directory=temp/terminals/example/cinepolis", "datalake_path=temp/datalake"};
 
         ControlBox box = new ControlBox(args);
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
@@ -23,7 +29,7 @@ public class Test {
         Map<String, String> engineConfig = box.configuration().args();
         engineConfig.put("gamification_datamart_path", "./temp/datamarts/gamiex");
 
-        Engine engine = new Engine(engineConfig);
+        GamificationEngine engine = new GamificationEngine(engineConfig);
         box.put(engine);
 
         engine.launch(() -> {
@@ -31,6 +37,8 @@ public class Test {
             Gamification.run(box);
             Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
         });
+
+        return box;
     }
 
     private static FileSystemStore store(File datamartFolder) {

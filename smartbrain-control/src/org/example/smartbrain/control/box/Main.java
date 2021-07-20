@@ -1,6 +1,6 @@
 package org.example.smartbrain.control.box;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
@@ -19,13 +19,13 @@ public class Main {
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
 		box.put(new ControlGraph(graph));
 
-		Engine engine = new Engine(box.configuration());
+		GamificationEngine engine = new GamificationEngine(box.configuration());
 		box.put(engine);
 
 		engine.launch(() -> onInit(box, engine));
 	}
 
-	private static void onInit(ControlBox box, Engine engine) {
+	private static void onInit(ControlBox box, GamificationEngine engine) {
 		box.start();
 		Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 		engine.configuration().gameLoopConfigurator.schedule(1, TimeUtils.Scale.Day);

@@ -1,6 +1,6 @@
 package org.example.vaccine.control.box;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import org.example.vaccine.control.Archetype;
 import org.example.vaccine.control.box.gamification.GameWorld;
@@ -10,7 +10,7 @@ import org.example.vaccine.control.graph.ControlGraph;
 public class ControlBox extends AbstractBox {
 
 	private final Archetype archetype;
-	private Engine engine;
+	private GamificationEngine engine;
 	private ControlGraph graph;
 	private MounterFactory mounter;
 
@@ -26,7 +26,7 @@ public class ControlBox extends AbstractBox {
 	@Override
 	public io.intino.alexandria.core.Box put(Object o) {
 		super.put(o);
-		if(o instanceof Engine) engine = (Engine) o;
+		if(o instanceof GamificationEngine) engine = (GamificationEngine) o;
 		if(o instanceof ControlGraph) graph = (ControlGraph) o;
 		return this;
 	}
@@ -56,7 +56,7 @@ public class ControlBox extends AbstractBox {
 		return archetype.datamart().vaccine();
 	}
 
-	public Engine engine() {
+	public GamificationEngine engine() {
 		return this.engine;
 	}
 

@@ -1,6 +1,6 @@
 package org.example.vaccine.mock;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
@@ -28,7 +28,7 @@ public class ControlBoxMock {
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
         box.put(new ControlGraph(graph));
 
-        Engine engine = new Engine(box.configuration());
+        GamificationEngine engine = new GamificationEngine(box.configuration());
         box.put(engine);
 
         engine.launch(() -> {

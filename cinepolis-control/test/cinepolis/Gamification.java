@@ -1,3 +1,5 @@
+package cinepolis;
+
 import io.intino.gamification.core.model.*;
 import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.model.attributes.AchievementType;

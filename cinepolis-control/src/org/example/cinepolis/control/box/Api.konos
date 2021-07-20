@@ -1,0 +1,68 @@
+dsl Konos
+
+Service(title = "Cinepolis REST Service") api as REST(host = "{host}", basePath = "/api/v1", port = "{port}")
+
+    Resource(path="/gamification/world/:id") getWorld
+    	Get("")
+    		Parameter(in=path) id as Text
+    		Response as Text
+
+	Resource(path="/gamification/match/:world") getCurrentMatch
+         Get("")
+         	Parameter(in=path) world as Text
+         	Response as Text
+
+//	Resource(path="/gamification/match/:world/:id") getMatch
+//         Get("")
+//         	Parameter(in=path) world as Text
+//         	Parameter(in=path) id as Text
+//         	Response as Text
+
+	Resource(path="/gamification/player/:world/:id") getPlayer
+		Get("")
+			Parameter(in=path) world as Text
+			Parameter(in=path) id as Text
+			Response as Text
+
+
+	Resource(path="/gamification/npc/:world/:id") getNpc
+		Get("")
+			Parameter(in=path) world as Text
+			Parameter(in=path) id as Text
+			Response as Text
+
+
+	Resource(path="/gamification/item/:world/:id") getItem
+		Get("")
+			Parameter(in=path) world as Text
+			Parameter(in=path) id as Text
+			Response as Text
+
+	Resource(path="/gamification/mission/:world/:id") getMission
+		Get("")
+			Parameter(in=path) world as Text
+			Parameter(in=path) id as Text
+			Response as Text
+
+	Resource(path="/gamification/player/:world/:id") getAchievement
+		Get("")
+			Parameter(in=path) world as Text
+			Parameter(in=path) id as Text
+			Response as Text
+
+	Resource(path="/gamification/player/:world/:player/:id") getPlayerAchievement
+		Get("")
+			Parameter(in=path) world as Text
+			Parameter(in=path) player as Text
+			Parameter(in=path) id as Text
+			Response as Text
+
+
+
+
+
+
+
+
+
+

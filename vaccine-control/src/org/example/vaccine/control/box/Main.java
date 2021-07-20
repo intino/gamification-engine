@@ -1,7 +1,6 @@
 package org.example.vaccine.control.box;
 
-import io.intino.gamification.Engine;
-import io.intino.gamification.core.box.events.world.CreateWorld;
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
@@ -19,7 +18,7 @@ public class Main {
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
 		box.put(new ControlGraph(graph));
 
-		Engine engine = new Engine(box.configuration());
+		GamificationEngine engine = new GamificationEngine(box.configuration());
 		box.put(engine);
 
 		engine.launch(() -> onInit(box));

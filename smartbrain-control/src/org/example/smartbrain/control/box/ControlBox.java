@@ -1,6 +1,6 @@
 package org.example.smartbrain.control.box;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 import org.example.smartbrain.control.Archetype;
 import org.example.smartbrain.control.box.mounters.MounterFactory;
 import org.example.smartbrain.control.graph.ControlGraph;
@@ -10,7 +10,7 @@ public class ControlBox extends AbstractBox {
 	private final MounterFactory mounterFactory;
 	private final Archetype archetype;
 	private ControlGraph graph;
-	private Engine engine;
+	private GamificationEngine engine;
 
 	public ControlBox(String[] args) {
 		this(new ControlConfiguration(args));
@@ -26,7 +26,7 @@ public class ControlBox extends AbstractBox {
 	public io.intino.alexandria.core.Box put(Object o) {
 		super.put(o);
 		if(o instanceof ControlGraph) graph = (ControlGraph) o;
-		if(o instanceof Engine) engine = (Engine) o;
+		if(o instanceof GamificationEngine) engine = (GamificationEngine) o;
 		return this;
 	}
 
@@ -54,7 +54,7 @@ public class ControlBox extends AbstractBox {
 		return archetype.datamart().smartbrain();
 	}
 
-	public Engine engine() {
+	public GamificationEngine engine() {
 		return engine;
 	}
 

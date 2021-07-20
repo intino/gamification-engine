@@ -34,4 +34,9 @@ public class ControlGraph extends org.example.smartbrain.control.graph.AbstractG
 		Node node = core$().load(box.datamart().getTestResults(patientId, testName, Timetag.of(month, Scale.Month)) + "#" + testId);
 		return node == null ? null : node.as(TestResult.class);
 	}
+
+	public TestResult task(String taskId, String taskName, String patientId) {
+		Node node = core$().load(box.datamart().getTestResults(patientId, testName, Timetag.of(month, Scale.Month)) + "#" + testId);
+		return node == null ? null : node.as(TestResult.class);
+	}
 }

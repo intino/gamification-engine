@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.box;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
@@ -23,7 +23,7 @@ public class Main {
 		Map<String, String> engineConfig = new HashMap<>();
 		engineConfig.put("gamification_datamart_path", ".temp/datamarts/gamiex");
 
-		Engine engine = new Engine(engineConfig);
+		GamificationEngine engine = new GamificationEngine(engineConfig);
 		box.put(engine);
 
 		engine.launch(() -> {

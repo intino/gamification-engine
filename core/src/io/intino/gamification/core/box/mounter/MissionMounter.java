@@ -51,17 +51,18 @@ public class MissionMounter extends Mounter {
         }
 
         MissionState missionState = box.graph().missionState(playerState.missionState(), mission.id());
-        if(missionState == null) {
-            missionState = box.graph().missionState(event, world.id(), mission.id(), player.id());
-            playerState.missionState().add(missionState);
-        } else {
-            if(missionState.state().equals(Pending)) {
+        if(missionState == null || missionState.state().equals(Pending)) {
+
+            if(missionState == null) {
+                missionState = box.graph().missionState(event, world.id(), mission.id(), player.id());
+                playerState.missionState().add(missionState);
+            } else {
                 missionState.state(event.state());
             }
-        }
 
-        int score = box.engineConfig().missionScoreMapper.get().score(player, mission, missionState.state());
-        box.terminal().feed(EventBuilder.changeScore(world.id(), player.id(), score));
+            int score = box.engineConfig().missionScoreMapper.get().score(player, mission, missionState.state());
+            box.terminal().feed(EventBuilder.changeScore(world.id(), player.id(), score));
+        }
 
         match.save$();
         playerState.save$();

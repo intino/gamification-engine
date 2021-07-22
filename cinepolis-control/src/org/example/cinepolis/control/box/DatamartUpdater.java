@@ -1,22 +1,30 @@
-import io.intino.gamification.core.model.*;
+package org.example.cinepolis.control.box;
+
+import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.match.EndMatch;
-import io.intino.gamification.core.model.attributes.MissionState;
 import io.intino.gamification.core.box.events.mission.NewStateMission;
-import io.intino.gamification.core.box.utils.TimeUtils;
-import io.intino.gamification.core.box.checkers.CheckResult;
-import org.example.cinepolis.control.box.ControlBox;
+import io.intino.gamification.core.model.Achievement;
+import io.intino.gamification.core.model.Match;
+import io.intino.gamification.core.model.attributes.AchievementType;
+import io.intino.gamification.core.model.attributes.MissionState;
 import org.example.cinepolis.control.gamification.GamificationConfig;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
 import java.util.UUID;
 
-public class Gamification {
+import static io.intino.gamification.core.box.utils.TimeUtils.*;
 
-    public static void run(ControlBox box) {
+public class DatamartUpdater {
+
+    public static void initialize(ControlBox box) {
+        box.graph().clear();
+        box.engine().datamart().clear();
+
+        box.adapter().initialize();
+
         box.terminal().publish(newEmployee("empleado1", "Pepe", 29, "622785202", "area1"));
         box.terminal().publish(newEmployee("empleado2", "Jose", 30, "622785203", "area2"));
         box.terminal().publish(newEmployee("empleado3", "Rafa", 42, "622785204", "area3"));
@@ -39,63 +47,60 @@ public class Gamification {
         box.terminal().publish(newAsset("asset14", "Proyector 14", "area5"));
         box.terminal().publish(newAsset("asset15", "Proyector 15", "area5"));
 
-        newWorkingDay(box);
+        Match match = box.engine().terminal().feed(match());
+        if(match != null) {
+
+            CreateAchievement la = (CreateAchievement) new CreateAchievement()
+                    .world(GamificationConfig.WorldId)
+                    .type(AchievementType.Local)
+                    .description("Arregla 3 proyectores")
+                    .eventInvolved(EventType.NewStateMission)
+                    .maxCount(3)
+                    .id(UUID.randomUUID().toString())
+                    .ts(currentInstant());
+
+            Achievement localAchievement = box.engine().terminal().feed(la);
+            localAchievement.<NewStateMission>progressIf((e, p) -> {
+                if (e.player().equals(p.id()) && e.state().equals(MissionState.Completed)) {
+                    return CheckResult.Progress;
+                } else {
+                    return CheckResult.Skip;
+                }
+            });
+        }
 
         box.terminal().publish(deleteEmployee("empleado1"));
         box.terminal().publish(deleteAsset("asset4"));
 
-        box.terminal().publish(generateAlert("alert1", "asset5", AssetAlert.Importance.Important, 2, "Arregla el asset 5"));
-        box.terminal().publish(generateAlert("alert2", "asset7", AssetAlert.Importance.Low, 2, "Arregla el asset 7"));
-        box.terminal().publish(generateAlert("alert3", "asset10", AssetAlert.Importance.Medium, 1, "Arregla el asset 10"));
-        box.terminal().publish(generateAlert("alert4", "asset15", AssetAlert.Importance.Medium, 3, "Arregla el asset 15"));
+        box.terminal().publish(generateAlert("alert1", "asset5", AssetAlert.Importance.Important, 4, "Arregla el asset 5"));
+        box.terminal().publish(generateAlert("alert2", "asset7", AssetAlert.Importance.Low, 4, "Arregla el asset 7"));
+        box.terminal().publish(generateAlert("alert3", "asset10", AssetAlert.Importance.Medium, 2, "Arregla el asset 10"));
+        box.terminal().publish(generateAlert("alert4", "asset15", AssetAlert.Importance.Medium, 6, "Arregla el asset 15"));
 
         box.terminal().publish(completeAlert("alert1", "asset5", "empleado2"));
         box.terminal().publish(completeAlert("alert2", "asset10", "empleado3"));
         box.terminal().publish(completeAlert("alert3", "asset10", "empleado3"));
         box.terminal().publish(completeAlert("alert4", "asset15", "empleado5"));
-
-        System.out.println();
     }
 
-    private static void newWorkingDay(ControlBox box) {
-        World world = box.engine().datamart().world(GamificationConfig.WorldId);
-        if(world != null) {
-            Match match = world.match();
-            if(match != null) {
-                box.engine().terminal().feed(endMatch(match.id()));
-            }
-        }
-
-        box.engine().terminal().feed(beginMatch());
-
-        CreateAchievement la = (CreateAchievement) new CreateAchievement()
+    private static BeginMatch match() {
+        return (BeginMatch) new BeginMatch()
                 .world(GamificationConfig.WorldId)
-                .type(AchievementType.Local)
-                .description("Arregla 3 proyectores")
-                .eventInvolved(EventType.NewStateMission)
-                .maxCount(3)
+                .reboot(true)
+                .expiration(truncateTo(nextInstant(currentInstant(), Scale.Hour), Scale.Hour))
                 .id(UUID.randomUUID().toString())
-                .ts(TimeUtils.currentInstant());
-
-        Achievement localAchievement = box.engine().terminal().feed(la);
-        localAchievement.<NewStateMission>progressIf((e, p) -> {
-            if (e.player().equals(p.id()) && e.state().equals(MissionState.Completed)) {
-                return CheckResult.Progress;
-            } else {
-                return CheckResult.Skip;
-            }
-        });
+                .ts(currentInstant());
     }
 
     private static DeregisterAsset deleteAsset(String id) {
         return new DeregisterAsset()
-                .ts(TimeUtils.currentInstant())
+                .ts(currentInstant())
                 .id(id);
     }
 
     private static RegisterAsset newAsset(String id, String name, String area) {
         return new RegisterAsset()
-                .ts(TimeUtils.currentInstant())
+                .ts(currentInstant())
                 .id(id)
                 .name(name)
                 .area(area);
@@ -103,7 +108,7 @@ public class Gamification {
 
     private static HireEmployee newEmployee(String id, String name, int age, String phone, String area) {
         return new HireEmployee()
-                .ts(TimeUtils.currentInstant())
+                .ts(currentInstant())
                 .id(id)
                 .name(name)
                 .age(age)
@@ -113,13 +118,13 @@ public class Gamification {
 
     private static DismissEmployee deleteEmployee(String id) {
         return new DismissEmployee()
-                .ts(TimeUtils.currentInstant())
+                .ts(currentInstant())
                 .id(id);
     }
 
     private static AssetAlert generateAlert(String id, String asset, AssetAlert.Importance importance, int limitHours, String description) {
         return new AssetAlert()
-                .ts(TimeUtils.currentInstant())
+                .ts(currentInstant())
                 .id(id)
                 .asset(asset)
                 .importance(importance)
@@ -129,7 +134,7 @@ public class Gamification {
 
     private static FixedAsset completeAlert(String alert, String asset, String employee) {
         return new FixedAsset()
-                .ts(TimeUtils.currentInstant())
+                .ts(currentInstant())
                 .alert(alert)
                 .asset(asset)
                 .employee(employee);
@@ -140,13 +145,13 @@ public class Gamification {
                 .world(GamificationConfig.WorldId)
                 .reboot(true)
                 .id(UUID.randomUUID().toString())
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
     }
 
     private static EndMatch endMatch(String matchId) {
         return (EndMatch) new EndMatch()
                 .world(GamificationConfig.WorldId)
                 .id(matchId)
-                .ts(TimeUtils.currentInstant());
+                .ts(currentInstant());
     }
 }

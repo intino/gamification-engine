@@ -1,8 +1,10 @@
 package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
+import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.model.*;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -79,6 +81,11 @@ public class EngineDatamart {
                 .map(World::match)
                 .map(Match::missions)
                 .orElse(new ArrayList<>());
+    }
+
+    public List<Mission> activeMissions(String worldId) {
+        Instant now = TimeUtils.currentInstant();
+        return missions(worldId).stream().filter(m -> now.isBefore(m.expiration())).collect(Collectors.toList());
     }
 
     public Achievement globalAchievement(String worldId, String id) {

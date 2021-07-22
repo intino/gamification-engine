@@ -15,6 +15,7 @@ import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -101,7 +102,8 @@ public class EngineTerminal {
 
     public Match feed(BeginMatch event) {
         box.terminal().feed(event);
-        return box.engineDatamart().match(event.id());
+        Match match = box.engineDatamart().match(event.world());
+        return match.from().equals(event.ts()) ? match : null;
     }
 
     public void feed(EndMatch event) {

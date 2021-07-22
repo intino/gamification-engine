@@ -16,14 +16,13 @@ public class Main {
 	private static final String[] StartUpStashes = {Stashes, "Employees", "Assets", "Alerts"};
 
 	public static void main(String[] args) {
+
 		ControlBox box = new ControlBox(args);
+
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
-		box.put(new ControlGraph(graph));
+		box.put(graph);
 
-		Map<String, String> engineConfig = new HashMap<>();
-		engineConfig.put("gamification_datamart_path", ".temp/datamarts/gamiex");
-
-		Engine engine = new Engine(engineConfig);
+		Engine engine = new Engine(box.configuration());
 		box.put(engine);
 
 		engine.launch(() -> {

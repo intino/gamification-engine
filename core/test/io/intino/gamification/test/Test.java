@@ -1,6 +1,6 @@
 package io.intino.gamification.test;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 
 import static io.intino.gamification.core.box.utils.TimeUtils.Scale.Hour;
 
@@ -8,7 +8,7 @@ public class Test {
 
     public static void main(String[] args) {
 
-        Engine engine = null;
+        GamificationEngine engine = null;
 
         //engine.configuration().healthListener.set((entity, oldValue, newValue) -> oldValue);
 

@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.box;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import org.example.cinepolis.control.Archetype;
 import org.example.cinepolis.control.box.mounters.MounterFactory;
@@ -10,7 +10,7 @@ import org.example.cinepolis.control.graph.ControlGraph;
 public class ControlBox extends AbstractBox {
 
 	private final Archetype archetype;
-	private Engine engine;
+	private GamificationEngine engine;
 	private ControlGraph graph;
 	private MounterFactory mounter;
 	private Adapter adapter;
@@ -27,7 +27,7 @@ public class ControlBox extends AbstractBox {
 	@Override
 	public io.intino.alexandria.core.Box put(Object o) {
 		super.put(o);
-		if(o instanceof Engine) engine = (Engine) o;
+		if(o instanceof GamificationEngine) engine = (GamificationEngine) o;
 		if(o instanceof Graph) graph = ((Graph) o).as(ControlGraph.class);
 		return this;
 	}
@@ -57,7 +57,7 @@ public class ControlBox extends AbstractBox {
 		return archetype.datamart().cinepolis();
 	}
 
-	public Engine engine() {
+	public GamificationEngine engine() {
 		return this.engine;
 	}
 

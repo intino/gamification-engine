@@ -1,6 +1,5 @@
 package org.example.vaccine.control.box.subscribers;
 
-import io.intino.gamification.Engine;
 import org.example.vaccine.control.box.ControlBox;
 import org.example.vaccine.control.box.adapter.CreatePatientAdapter;
 import org.example.vaccine.control.box.adapter.UpdatePatientAdapter;

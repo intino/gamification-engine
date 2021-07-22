@@ -1,19 +1,21 @@
 package org.example.cinepolis.control.gamification;
 
-import io.intino.gamification.core.model.Achievement;
-import io.intino.gamification.core.model.Mission;
 import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.action.Heal;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.mission.CreateMission;
+import io.intino.gamification.core.box.events.world.CreateWorld;
+import io.intino.gamification.core.box.mappers.PlayerLevelMapper;
+import io.intino.gamification.core.graph.Player;
+import io.intino.gamification.core.model.Achievement;
+import io.intino.gamification.core.model.Mission;
+import io.intino.gamification.core.model.attributes.AchievementType;
+import io.intino.gamification.core.model.attributes.DestroyStrategy;
 import io.intino.gamification.core.model.attributes.MissionDifficulty;
 import io.intino.gamification.core.model.attributes.MissionType;
-import io.intino.gamification.core.box.events.world.CreateWorld;
-import io.intino.gamification.core.model.attributes.DestroyStrategy;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
@@ -35,6 +37,15 @@ public class Adapter {
     }
 
     public void initialize() {
+        box.engine().configuration().gameLoopConfigurator.schedule(1, Scale.Minute);
+        box.engine().configuration().missionScoreMapper.set((player, mission, state) -> Math.round(state.multiplier() * mission.difficulty().multiplier() * mission.type().multiplier()));
+        box.engine().configuration().playerLevelMapper.set(new PlayerLevelMapper() {
+            @Override
+            public int level(Player player, int score) {
+                return (int) (score /10.0);
+            }
+        });
+
         CreateWorld cw = (CreateWorld) new CreateWorld()
                 .id(GamificationConfig.WorldId)
                 .ts(currentInstant());
@@ -68,8 +79,8 @@ public class Adapter {
                 .players(employees)
                 .eventInvolved(EventType.Heal)
                 .maxCount(1)
-                .expiration(nextInstant(event.ts(), Scale.Hour, event.limitHours()))
-                .id(event.id())
+                .expiration(nextInstant(event.ts(), Scale.Minute, event.limitHours()))
+                .id(UUID.randomUUID().toString())
                 .ts(currentInstant());
 
         Mission mission = box.engine().terminal().feed(nm);

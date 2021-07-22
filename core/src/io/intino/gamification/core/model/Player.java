@@ -13,6 +13,7 @@ public class Player {
     private final int score;
     private final List<Item> inventory;
     private final List<AchievementState> achievements;
+    private final Integer level;
 
     public Player(io.intino.gamification.core.graph.Player player) {
         this.id = player.id();
@@ -23,6 +24,7 @@ public class Player {
         this.score = player.score();
         this.inventory = player.inventory().stream().map(Item::new).collect(Collectors.toList());
         this.achievements = player.achievements().stream().map(AchievementState::new).collect(Collectors.toList());
+        this.level = player.level();
     }
 
     public String id() {
@@ -55,6 +57,10 @@ public class Player {
 
     public List<AchievementState> achievements() {
         return achievements;
+    }
+
+    public Integer level() {
+        return level;
     }
 
     private static class AchievementState {

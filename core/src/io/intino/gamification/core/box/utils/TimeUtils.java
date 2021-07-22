@@ -6,31 +6,6 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
 
-	/*private static final Map<Integer, String> LongWeekDay = new HashMap<>() {{
-		put(1, "lunes");
-		put(2, "martes");
-		put(3, "miércoles");
-		put(4, "jueves");
-		put(5, "viernes");
-		put(6, "sábado");
-		put(7, "domingo");
-	}};
-
-	private static final Map<Integer, String> LongMonthMap = new HashMap<>() {{
-		put(1, "enero");
-		put(2, "febrero");
-		put(3, "marzo");
-		put(4, "abril");
-		put(5, "mayo");
-		put(6, "junio");
-		put(7, "julio");
-		put(8, "agosto");
-		put(9, "septiembre");
-		put(10, "octubre");
-		put(11, "noviembre");
-		put(12, "diciembre");
-	}};*/
-
 	/* INSTANT OF ----------------------------------------------------------------------------------------------------*/
 
 	public static Instant currentInstant() {
@@ -52,11 +27,6 @@ public class TimeUtils {
 	public static Instant getInstantOf(int year, int month) {
 		return getInstantOf(year, month, 1);
 	}
-
-	/*public static Instant getInstantOfWeeks(int year, int week) {
-		if(week <= 0) return null;
-		return nextInstant(truncateTo(getInstantOf(year), Scale.W), Scale.W, week - 1);
-	}*/
 
 	public static Instant getInstantOf(int year) {
 		if(year < 0) return null;
@@ -81,10 +51,6 @@ public class TimeUtils {
 		return getLocalDateTimeOf(instant).getDayOfMonth();
 	}
 
-	/*public static int yearWeekOf(Instant instant) {
-		return getLocalDateTimeOf(instant).get(WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear());
-	}*/
-
 	public static int monthOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getMonth().getValue();
 	}
@@ -97,6 +63,7 @@ public class TimeUtils {
 
 	public static Instant truncateTo(Instant instant, Scale scale) {
 
+		if(scale.equals(Scale.Minute)) return instant.truncatedTo(ChronoUnit.MINUTES);
 		if(scale.equals(Scale.Hour)) return instant.truncatedTo(ChronoUnit.HOURS);
 		if(scale.equals(Scale.Day)) return instant.truncatedTo(ChronoUnit.DAYS);
 		if(scale.equals(Scale.Week)) return truncateToWeek(instant);
@@ -113,6 +80,7 @@ public class TimeUtils {
 
 	public static Instant previousInstant(Instant instant, Scale scale, int n) {
 
+		if(scale.equals(Scale.Minute)) return instant.minus(n, ChronoUnit.MINUTES);
 		if(scale.equals(Scale.Hour)) return instant.minus(n, ChronoUnit.HOURS);
 		if(scale.equals(Scale.Day)) return instant.minus(n, ChronoUnit.DAYS);
 		if(scale.equals(Scale.Week)) return instant.minus(7L * n, ChronoUnit.DAYS);
@@ -127,6 +95,7 @@ public class TimeUtils {
 
 	public static Instant nextInstant(Instant instant, Scale scale, int n) {
 
+		if(scale.equals(Scale.Minute)) return instant.plus(n, ChronoUnit.MINUTES);
 		if(scale.equals(Scale.Hour)) return instant.plus(n, ChronoUnit.HOURS);
 		if(scale.equals(Scale.Day)) return instant.plus(n, ChronoUnit.DAYS);
 		if(scale.equals(Scale.Week)) return instant.plus(7L * n, ChronoUnit.DAYS);
@@ -138,18 +107,22 @@ public class TimeUtils {
 	/*-------------------------------------------------------------------------------------------------------*/
 
 	public static long getMillisOf(Scale scale, int amount) {
-		int hours = 0;
+
+		int minutes = 0;
 		switch (scale) {
+			case Minute:
+				minutes = 1;
+				break;
 			case Hour:
-				hours = 1;
+				minutes = 60;
 				break;
 			case Day:
-				hours = 24;
+				minutes = 24 * 60;
 				break;
 			case Week:
-				hours = 24 * 7;
+				minutes = 7 * 24 * 60;
 		}
-		return (long) hours * amount * 60 * 60 * 1000;
+		return (long) minutes * amount * 60 * 1000;
 	}
 
 	public static long getInstantDiff(Instant instant1, Instant instant2, TimeUnit timeUnit) {
@@ -161,64 +134,6 @@ public class TimeUtils {
 	public static boolean instantIsInRange(Instant instant, Instant from, Instant to) {
 		return !instant.isBefore(from) && instant.isBefore(to);
 	}
-
-	/*public static List<Instant> getInstantsBetween(Instant from, Instant to, Scale scale) {
-
-		List<Instant> instants = new ArrayList<>();
-
-		Instant currentInstant = Instant.ofEpochSecond(truncateTo(from, scale).getEpochSecond());
-		while(currentInstant.isBefore(to)) {
-			instants.add(currentInstant);
-			currentInstant = nextInstant(currentInstant, scale);
-		}
-
-		return instants;
-	}*/
-
-	/*-------------------------------------------------------------------------------------------------------*/
-
-	/*public static String yearStyled(int year) {
-		if(year < 0 || year > 9999) return null;
-		return timeComponentStyled(year, 4);
-	}
-
-	public static String monthStyled(int month) {
-		if(month <= 0 || month > 12) return null;
-		return timeComponentStyled(month, 2);
-	}
-
-	public static String monthLongStyled(int month) {
-		return LongMonthMap.get(month);
-	}
-
-	public static String dayStyled(int day) {
-		if(day <= 0 || day > 31) return null;
-		return timeComponentStyled(day, 2);
-	}
-
-	public static String weekDayMonthStyled(int weekDay) {
-		return LongWeekDay.get(weekDay);
-	}
-
-	public static String hourStyled(int hour) {
-		if(hour < 0 || hour > 23) return null;
-		return timeComponentStyled(hour, 2);
-	}
-
-	public static String minuteStyled(int minute) {
-		if(minute < 0 || minute > 59) return null;
-		return timeComponentStyled(minute, 2);
-	}
-
-	public static String shortDateStyled(Instant instant) {
-		return dayStyled(monthDayOf(instant)) + "/" + monthStyled(monthOf(instant)) + "/" + yearStyled(yearOf(instant)) +
-				" a las " + hourStyled(hourOf(instant)) + ":" + minuteStyled(minuteOf(instant));
-	}
-
-	public static String longDateStyled(Instant instant) {
-		return dayStyled(monthDayOf(instant)) + " de " + monthLongStyled(monthOf(instant)) + " de " + yearStyled(yearOf(instant)) +
-				" a las " + hourStyled(hourOf(instant)) + ":" + minuteStyled(minuteOf(instant));
-	}*/
 
 	/*-------------------------------------------------------------------------------------------------------*/
 
@@ -279,18 +194,6 @@ public class TimeUtils {
 
 		return Integer.parseInt(ret);
 	}
-
-	/*private static String timeComponentStyled(int component, int nDigits) {
-
-		StringBuilder sb = new StringBuilder();
-		for (int i = 0; i < nDigits - 1; i++) {
-			sb.append('0');
-		}
-		sb.append(component);
-
-		String timeComponentStyled = sb.toString();
-		return timeComponentStyled.substring(timeComponentStyled.length() - nDigits);
-	}*/
 
 	private static Instant truncateToWeek(Instant instant) {
 
@@ -373,6 +276,7 @@ public class TimeUtils {
 	/*--------------------------------------------------------------------------------------------*/
 
 	public enum Scale {
+		Minute,
 		Hour,
 		Day,
 		Week,

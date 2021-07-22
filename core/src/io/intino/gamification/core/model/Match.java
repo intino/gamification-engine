@@ -66,7 +66,7 @@ public class Match {
         return achievements;
     }
 
-    private static class PlayerState {
+    public static class PlayerState {
 
         private final String playerId;
         private final int score;
@@ -96,7 +96,7 @@ public class Match {
             return achievementsState;
         }
 
-        private static class MissionState {
+        public static class MissionState {
 
             private final String missionId;
             private final io.intino.gamification.core.model.attributes.MissionState state;
@@ -121,7 +121,7 @@ public class Match {
             }
         }
 
-        private static class AchievementState {
+        public static class AchievementState {
 
             private final String achievementId;
             private final io.intino.gamification.core.model.attributes.AchievementState state;

@@ -7,10 +7,9 @@ Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
     	Compile("io.intino.alexandria", "datalake", "4.0.2")
+    	Compile("io.intino.alexandria", "scheduler-framework", "2.1.0")
     	Compile("io.intino.gamification", "core", "1.0.0-SNAPSHOT")
-    	Compile("io.intino.alexandria", "rest", "3.1.9")
 		Test("junit", "junit", "LATEST")
-
 	Package(mode = ModulesAndLibrariesExtracted) as Runnable("org.example.cinepolis.control.box.Main")
 
 	Parameter("home")
@@ -20,7 +19,7 @@ Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Parameter("datahub_clientId")
 	Parameter("datahub_outbox_directory")
 	Parameter("datalake_path")
-	Parameter(name = "port")
+	Parameter("gamification_datamart_path")
 
 RunConfiguration local
 	Argument("home", "temp")
@@ -30,6 +29,7 @@ RunConfiguration local
 	Argument("datahub_clientId", "cinepolis")
 	Argument("datahub_outbox_directory", "temp/terminals/example/cinepolis")
 	Argument("datalake_path", "temp/datalake")
+	Argument("gamification_datamart_path", "temp/datamarts/cinepolis-gamification")
 
 Repository(identifier = "intino-maven")
 	Release(url = "https://artifactory.intino.io/artifactory/releases")

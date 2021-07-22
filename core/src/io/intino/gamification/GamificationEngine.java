@@ -10,6 +10,7 @@ import io.intino.gamification.core.launcher.Launcher;
 
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 public class GamificationEngine {
@@ -26,17 +27,17 @@ public class GamificationEngine {
         this.launcher = new Launcher(arguments);
     }
 
-    public void launch() {
-        launch(() -> {});
+    public Future<?> launch() {
+        return launch(() -> {});
     }
 
-    public void launch(Runnable onStartCallback) {
+    public Future<?> launch(Runnable onStartCallback) {
         launcher.onStart(() -> {
             box = launcher.box();
             onStartCallback.run();
             countDownLatch.countDown();
         });
-        launcher.start();
+        return launcher.start();
     }
 
     public void waitFor() {

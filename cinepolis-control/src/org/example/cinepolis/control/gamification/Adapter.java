@@ -69,7 +69,7 @@ public class Adapter {
                 .eventInvolved(EventType.Heal)
                 .maxCount(1)
                 .expiration(nextInstant(event.ts(), Scale.Hour, event.limitHours()))
-                .id(UUID.randomUUID().toString())
+                .id(event.id())
                 .ts(currentInstant());
 
         Mission mission = box.engine().terminal().feed(nm);

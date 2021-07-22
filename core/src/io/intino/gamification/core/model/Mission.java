@@ -20,7 +20,7 @@ public class Mission {
     private final EventType eventInvolved;
     private final int maxCount;
     private final List<String> playersId;
-    private final Consumer<CheckerHandler.Checker<? extends GamificationEvent>> progressCosumer;
+    private transient final Consumer<CheckerHandler.Checker<? extends GamificationEvent>> progressCosumer;
 
     public Mission(io.intino.gamification.core.graph.Mission mission) {
         this.id = mission.id();

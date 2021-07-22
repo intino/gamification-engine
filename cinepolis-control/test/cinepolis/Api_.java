@@ -1,27 +1,46 @@
 package cinepolis;
 
 import org.example.cinepolis.control.box.ControlBox;
+import org.example.cinepolis.control.box.actions.GetGetItemAction;
+import org.example.cinepolis.control.box.actions.GetGetMissionAction;
 import org.example.cinepolis.control.box.actions.GetGetPlayerAction;
+import org.example.cinepolis.datahub.CinepolisTerminal;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static cinepolis.TestUtils.*;
+import static org.example.cinepolis.datahub.events.cinepolis.AssetAlert.Importance.*;
 
 public class Api_ {
 
-    private static final ControlBox Box = createBox();
+    private static final ControlBox Box = TestUtils.createBox();
     public static final String WORLD_ID = "Cinesa";
 
-    private static ControlBox createBox() {
-        final ControlBox box = cinepolis.Test.run();
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        return box;
+    @BeforeClass
+    public static void initialize() {
+        createPlayers();
+        createItems();
+        createMissions();
+    }
+
+    private static void createPlayers() {
+        terminal().publish(newEmployee("empleado1", "Pepe", 29, "622785202", "area1"));
+    }
+
+    private static void createItems() {
+        terminal().publish(newAsset("asset1", "Proyector 1", "area1"));
+    }
+
+    private static void createMissions() {
+        terminal().publish(generateAlert("alert1", "asset1", Important, 1, "Arregla el asset 1"));
+    }
+
+    private static CinepolisTerminal terminal() {
+        return Box.terminal();
     }
 
     @Test
     public void getPlayer() {
-
         GetGetPlayerAction action = new GetGetPlayerAction();
         action.box = Box;
         action.world = WORLD_ID;
@@ -29,4 +48,25 @@ public class Api_ {
 
         System.out.println(action.execute());
     }
+
+    @Test
+    public void getItem() {
+        GetGetItemAction action = new GetGetItemAction();
+        action.box = Box;
+        action.world = WORLD_ID;
+        action.id = "asset1";
+
+        System.out.println(action.execute());
+    }
+
+    @Test
+    public void getMission() {
+        GetGetMissionAction action = new GetGetMissionAction();
+        action.box = Box;
+        action.world = WORLD_ID;
+        action.id = "alert1";
+
+        System.out.println(action.execute());
+    }
+
 }

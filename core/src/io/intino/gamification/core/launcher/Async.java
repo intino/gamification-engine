@@ -4,6 +4,7 @@ import io.intino.alexandria.logger.Logger;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -27,13 +28,12 @@ public abstract class Async {
         this.onStart = onStartCallback != null ? onStartCallback : () -> {};
     }
 
-    public boolean start() {
+    public Future<?> start() {
         if(!running.compareAndSet(false, true)) {
             Logger.warn("Model " + hashCode() + " is already running");
-            return false;
+            return null;
         }
-        thread.submit(this::run);
-        return true;
+        return thread.submit(this::run);
     }
 
     public boolean running() {

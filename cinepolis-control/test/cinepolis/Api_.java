@@ -1,9 +1,9 @@
 package cinepolis;
 
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.box.actions.GetGetItemAction;
-import org.example.cinepolis.control.box.actions.GetGetMissionAction;
-import org.example.cinepolis.control.box.actions.GetGetPlayerAction;
+import org.example.cinepolis.control.box.actions.test.GetGetItemAction;
+import org.example.cinepolis.control.box.actions.test.GetGetMissionAction;
+import org.example.cinepolis.control.box.actions.test.GetGetPlayerAction;
 import org.example.cinepolis.datahub.CinepolisTerminal;
 import org.junit.BeforeClass;
 import org.junit.Test;

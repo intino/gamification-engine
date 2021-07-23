@@ -20,6 +20,9 @@ Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Parameter("datahub_outbox_directory")
 	Parameter("datalake_path")
 	Parameter("gamification_datamart_path")
+	Parameter(name = "port")
+	Parameter(name = "port")
+	Parameter(name = "port")
 
 RunConfiguration local
 	Argument("home", "temp")

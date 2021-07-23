@@ -3,7 +3,7 @@ package org.example.cinepolis.control.box.actions;
 import io.intino.gamification.core.model.Achievement;
 
 
-public class GetGetAchievementAction extends AbstractGetAction<Achievement> {
+public class GetAchievementAction extends AbstractGetAction<Achievement> {
 
 	public String world;
 	public String id;

@@ -6,10 +6,12 @@ import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
 
+	public static String TIME_ZONE = "Atlantic/Canary";
+
 	/* INSTANT OF ----------------------------------------------------------------------------------------------------*/
 
 	public static Instant currentInstant() {
-		return getInstantOf(getCanaryZonedDateTimeOf());
+		return getInstantOf(getZonedDateTimeOf());
 	}
 
 	public static Instant getInstantOf(int year, int month, int day, int hour, int minute) {
@@ -63,6 +65,8 @@ public class TimeUtils {
 
 	public static Instant truncateTo(Instant instant, Scale scale) {
 
+		if(scale.equals(Scale.Millis)) return instant.truncatedTo(ChronoUnit.MILLIS);
+		if(scale.equals(Scale.Second)) return instant.truncatedTo(ChronoUnit.SECONDS);
 		if(scale.equals(Scale.Minute)) return instant.truncatedTo(ChronoUnit.MINUTES);
 		if(scale.equals(Scale.Hour)) return instant.truncatedTo(ChronoUnit.HOURS);
 		if(scale.equals(Scale.Day)) return instant.truncatedTo(ChronoUnit.DAYS);
@@ -80,6 +84,8 @@ public class TimeUtils {
 
 	public static Instant previousInstant(Instant instant, Scale scale, int n) {
 
+		if(scale.equals(Scale.Millis)) return instant.minus(n, ChronoUnit.MILLIS);
+		if(scale.equals(Scale.Second)) return instant.minus(n, ChronoUnit.SECONDS);
 		if(scale.equals(Scale.Minute)) return instant.minus(n, ChronoUnit.MINUTES);
 		if(scale.equals(Scale.Hour)) return instant.minus(n, ChronoUnit.HOURS);
 		if(scale.equals(Scale.Day)) return instant.minus(n, ChronoUnit.DAYS);
@@ -95,6 +101,8 @@ public class TimeUtils {
 
 	public static Instant nextInstant(Instant instant, Scale scale, int n) {
 
+		if(scale.equals(Scale.Millis)) return instant.plus(n, ChronoUnit.MILLIS);
+		if(scale.equals(Scale.Second)) return instant.plus(n, ChronoUnit.SECONDS);
 		if(scale.equals(Scale.Minute)) return instant.plus(n, ChronoUnit.MINUTES);
 		if(scale.equals(Scale.Hour)) return instant.plus(n, ChronoUnit.HOURS);
 		if(scale.equals(Scale.Day)) return instant.plus(n, ChronoUnit.DAYS);
@@ -108,21 +116,27 @@ public class TimeUtils {
 
 	public static long getMillisOf(Scale scale, int amount) {
 
-		int minutes = 0;
+		long millis = 0;
 		switch (scale) {
+			case Millis:
+				millis = 1;
+				break;
+			case Second:
+				millis = 1000;
+				break;
 			case Minute:
-				minutes = 1;
+				millis = 60 * 1000;
 				break;
 			case Hour:
-				minutes = 60;
+				millis = 60 * 60 * 1000;
 				break;
 			case Day:
-				minutes = 24 * 60;
+				millis = 24 * 60 * 60 * 1000;
 				break;
 			case Week:
-				minutes = 7 * 24 * 60;
+				millis = 7 * 24 * 60 * 60 * 1000;
 		}
-		return (long) minutes * amount * 60 * 1000;
+		return millis * amount;
 	}
 
 	public static long getInstantDiff(Instant instant1, Instant instant2, TimeUnit timeUnit) {
@@ -146,8 +160,8 @@ public class TimeUtils {
 		return localDateTime.toInstant(ZoneOffset.UTC);
 	}
 
-	private static ZonedDateTime getCanaryZonedDateTimeOf() {
-		return ZonedDateTime.now(ZoneId.of("Atlantic/Canary"));
+	private static ZonedDateTime getZonedDateTimeOf() {
+		return ZonedDateTime.now(ZoneId.of(TIME_ZONE));
 	}
 
 	private static LocalDateTime getLocalDateTimeOf(Instant instant) {
@@ -276,6 +290,8 @@ public class TimeUtils {
 	/*--------------------------------------------------------------------------------------------*/
 
 	public enum Scale {
+		Millis,
+		Second,
 		Minute,
 		Hour,
 		Day,

@@ -10,6 +10,7 @@ import io.intino.gamification.core.box.helper.Helper;
 import io.intino.gamification.core.box.helper.Helpers;
 import io.intino.gamification.core.box.mounter.Mounter;
 import io.intino.gamification.core.box.mounter.Mounters;
+import io.intino.gamification.core.box.utils.TimeUtils;
 import io.intino.gamification.core.graph.CoreGraph;
 import io.intino.magritte.framework.Graph;
 
@@ -33,6 +34,7 @@ public class CoreBox extends AbstractBox {
 
 	public CoreBox(CoreConfiguration configuration) {
 		super(configuration);
+		TimeUtils.TIME_ZONE = configuration.timeZone();
 		datamartFile = new File(configuration.datamartPath());
 	}
 

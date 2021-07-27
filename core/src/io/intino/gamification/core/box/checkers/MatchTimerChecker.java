@@ -5,7 +5,6 @@ import io.intino.gamification.core.box.events.EventBuilder;
 import io.intino.gamification.core.graph.Match;
 
 import java.time.Instant;
-import java.util.UUID;
 
 import static io.intino.gamification.core.box.utils.TimeUtils.*;
 
@@ -25,12 +24,15 @@ public class MatchTimerChecker extends Checker {
 
         box.graph().activeMatches().stream()
                 .filter(m -> m.to() != null && instantIsInRange(m.to(), from, to))
-                .forEach(this::endMatch);
+                .forEach(this::restartMatch);
     }
 
-    private void endMatch(Match match) {
+    private void restartMatch(Match match) {
         box.terminal().feed(EventBuilder.endMatch(match.worldId(), match.id()));
-        if(match.reboot()) box.terminal().feed(EventBuilder.beginMatch(match.worldId(), idOf(match), match.from(), match.to()));
+        if(match.reboot()) {
+            box.terminal().feed(EventBuilder.beginMatch(match.worldId(), idOf(match), match.from(), match.to()));
+            match.achievements().forEach(a -> EventBuilder.createAchievement(a, match.worldId()));
+        }
     }
 
     private String idOf(Match match) {

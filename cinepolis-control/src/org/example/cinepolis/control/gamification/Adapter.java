@@ -5,7 +5,6 @@ import io.intino.gamification.core.box.events.EventType;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.action.Heal;
 import io.intino.gamification.core.box.events.entity.*;
-import io.intino.gamification.core.box.events.match.BeginMatch;
 import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.mappers.PlayerLevelMapper;
@@ -59,8 +58,8 @@ public class Adapter {
                 .ts(currentInstant());
 
         box.engine().terminal().feed(cw);
-        Achievement globalAchievement = box.engine().terminal().feed(ga);
-        globalAchievement.<BeginMatch>progressIf((event, player) -> CheckResult.Progress);
+        Achievement achievement = box.engine().terminal().feed(ga);
+        achievement.<PickUpItem>progressIf((event, player) -> CheckResult.Progress);
     }
 
     public void adapt(AssetAlert event) {

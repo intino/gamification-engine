@@ -50,13 +50,3 @@ Service(title = "Cinepolis REST Service") api as REST(host = "{host}", basePath 
 			Parameter(in=path) player as Text
 			Parameter(in=path) id as Text
 			Response as Text
-
-
-
-
-
-
-
-
-
-

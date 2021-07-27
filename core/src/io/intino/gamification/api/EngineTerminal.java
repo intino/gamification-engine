@@ -1,9 +1,7 @@
 package io.intino.gamification.api;
 
-import io.intino.alexandria.event.Event;
-import io.intino.gamification.core.model.*;
 import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.model.attributes.AchievementType;
+import io.intino.gamification.core.box.events.GamificationEvent;
 import io.intino.gamification.core.box.events.achievement.CreateAchievement;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
 import io.intino.gamification.core.box.events.action.*;
@@ -13,9 +11,10 @@ import io.intino.gamification.core.box.events.match.EndMatch;
 import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
+import io.intino.gamification.core.model.*;
+import io.intino.gamification.core.model.attributes.AchievementType;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
@@ -28,7 +27,7 @@ public class EngineTerminal {
     }
 
     public Achievement feed(CreateAchievement event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
         if(event.type() == AchievementType.Global) {
             return box.engineDatamart().globalAchievement(event.world(), event.id());
         } else if(event.type() == AchievementType.Local) {
@@ -38,105 +37,105 @@ public class EngineTerminal {
     }
 
     public void feed(DeleteAchievement event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(Action event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(Attack event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(DisableEntity event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(EnableEntity event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(Heal event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(SetHealth event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public Player feed(CreatePlayer event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
         return box.engineDatamart().player(event.world(), event.id());
     }
 
     public Npc feed(CreateNpc event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
         return box.engineDatamart().npc(event.world(), event.id());
     }
 
     public Item feed(CreateItem event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
         return box.engineDatamart().item(event.world(), event.id());
     }
 
     public void feed(DestroyPlayer event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(DestroyNpc event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(DestroyItem event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(PickUpItem event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public void feed(DropItem event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public Match feed(BeginMatch event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
         Match match = box.engineDatamart().match(event.world());
         return match.from().equals(event.ts()) ? match : null;
     }
 
     public void feed(EndMatch event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
     public Mission feed(CreateMission event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
         return box.engineDatamart().mission(event.world(), event.id());
     }
 
     public World feed(CreateWorld event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
         return box.engineDatamart().world(event.id());
     }
 
     public void feed(DestroyWorld event) {
-        box.terminal().feed(event);
+        box.engineConfig().gameLoopConfigurator.enqueue(event);
     }
 
-    public <T extends Event> void feed(T event) {
+    public <T extends GamificationEvent> void feed(T event) {
         this.<T>feedFunctionOf(event.getClass()).accept(this, event);
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends Event> BiConsumer<EngineTerminal, T> feedFunctionOf(Class<? extends Event> eventClass) {
+    private <T extends GamificationEvent> BiConsumer<EngineTerminal, T> feedFunctionOf(Class<? extends GamificationEvent> eventClass) {
         return (BiConsumer<EngineTerminal, T>) FeedFunctions.getOrDefault(eventClass, this::doNothing);
     }
 
-    private void doNothing(EngineTerminal engineTerminal, Event event) {
+    private void doNothing(EngineTerminal engineTerminal, GamificationEvent event) {
     }
 
-    private static final Map<Class<? extends Event>, BiConsumer<EngineTerminal, ? extends Event>> FeedFunctions = new HashMap<>(){
+    private static final Map<Class<? extends GamificationEvent>, BiConsumer<EngineTerminal, ? extends GamificationEvent>> FeedFunctions = new HashMap<>(){
         {
             put(CreateAchievement.class, (BiConsumer<EngineTerminal, CreateAchievement>)EngineTerminal::feed);
             put(DeleteAchievement.class, (BiConsumer<EngineTerminal, DeleteAchievement>)EngineTerminal::feed);

@@ -14,6 +14,10 @@ import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
 import io.intino.gamification.core.box.mounter.*;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.BiConsumer;
+
 public class Terminal {
 
     private final CoreBox box;
@@ -117,4 +121,41 @@ public class Terminal {
     public void feed(DestroyWorld event) {
         box.mounter(WorldMounter.class).handle(event);
     }
+
+    public <T extends GamificationEvent> void feed(T event) {
+        this.<T>feedFunctionOf(event.getClass()).accept(this, event);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends GamificationEvent> BiConsumer<Terminal, T> feedFunctionOf(Class<? extends GamificationEvent> eventClass) {
+        return (BiConsumer<Terminal, T>) FeedFunctions.getOrDefault(eventClass, this::doNothing);
+    }
+
+    private void doNothing(Terminal Terminal, GamificationEvent event) {
+    }
+
+    private static final Map<Class<? extends GamificationEvent>, BiConsumer<Terminal, ? extends GamificationEvent>> FeedFunctions = new HashMap<>(){
+        {
+            put(CreateAchievement.class, (BiConsumer<Terminal, CreateAchievement>)Terminal::feed);
+            put(DeleteAchievement.class, (BiConsumer<Terminal, DeleteAchievement>)Terminal::feed);
+            put(Action.class, (BiConsumer<Terminal, Attack>)Terminal::feed);
+            put(Attack.class, (BiConsumer<Terminal, Attack>)Terminal::feed);
+            put(DisableEntity.class, (BiConsumer<Terminal, DisableEntity>)Terminal::feed);
+            put(EnableEntity.class, (BiConsumer<Terminal, EnableEntity>)Terminal::feed);
+            put(Heal.class, (BiConsumer<Terminal, Heal>)Terminal::feed);
+            put(SetHealth.class, (BiConsumer<Terminal, SetHealth>)Terminal::feed);
+            put(CreatePlayer.class, (BiConsumer<Terminal, CreatePlayer>)Terminal::feed);
+            put(CreateNpc.class, (BiConsumer<Terminal, CreateNpc>)Terminal::feed);
+            put(CreateItem.class, (BiConsumer<Terminal, CreateItem>)Terminal::feed);
+            put(DestroyPlayer.class, (BiConsumer<Terminal, DestroyPlayer>)Terminal::feed);
+            put(DestroyNpc.class, (BiConsumer<Terminal, DestroyNpc>)Terminal::feed);
+            put(DestroyItem.class, (BiConsumer<Terminal, DestroyItem>)Terminal::feed);
+            put(PickUpItem.class, (BiConsumer<Terminal, PickUpItem>)Terminal::feed);
+            put(DropItem.class, (BiConsumer<Terminal, DropItem>)Terminal::feed);
+            put(BeginMatch.class, (BiConsumer<Terminal, BeginMatch>)Terminal::feed);
+            put(EndMatch.class, (BiConsumer<Terminal, EndMatch>)Terminal::feed);
+            put(CreateMission.class, (BiConsumer<Terminal, CreateMission>)Terminal::feed);
+            put(CreateWorld.class, (BiConsumer<Terminal, CreateWorld>)Terminal::feed);
+            put(DestroyWorld.class, (BiConsumer<Terminal, DestroyWorld>)Terminal::feed);
+        }};
 }

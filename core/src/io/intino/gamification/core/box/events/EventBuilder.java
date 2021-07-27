@@ -1,6 +1,11 @@
 package io.intino.gamification.core.box.events;
 
 import io.intino.gamification.core.box.events.achievement.AchievementNewState;
+import io.intino.gamification.core.box.events.achievement.CreateAchievement;
+import io.intino.gamification.core.box.events.mission.CreateMission;
+import io.intino.gamification.core.graph.Achievement;
+import io.intino.gamification.core.graph.Mission;
+import io.intino.gamification.core.model.Match;
 import io.intino.gamification.core.model.attributes.AchievementState;
 import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.box.events.achievement.DeleteAchievement;
@@ -23,7 +28,7 @@ public class EventBuilder {
 
     public static BeginMatch beginMatch(String worldId, String matchId, Instant from, Instant to) {
         BeginMatch beginMatch = new BeginMatch();
-        beginMatch.ts(instant());
+        beginMatch.ts(to);
         beginMatch.id(matchId);
         beginMatch.world(worldId);
         beginMatch.expiration(expirationOf(from, to));
@@ -116,5 +121,17 @@ public class EventBuilder {
 
     private static Instant expirationOf(Instant from, Instant to) {
         return Instant.ofEpochMilli(to.toEpochMilli() + TimeUtils.getInstantDiff(from, to, TimeUnit.MILLISECONDS));
+    }
+
+    public static CreateAchievement createAchievement(Achievement achievement, String worldId) {
+        CreateAchievement createAchievement = new CreateAchievement();
+        createAchievement.id(achievement.id() + "_" + UUID.randomUUID().toString());
+        createAchievement.ts(instant());
+        createAchievement.world(worldId);
+        createAchievement.eventInvolved(achievement.eventInvolved());
+        createAchievement.maxCount(achievement.maxCount());
+        createAchievement.type(AchievementType.Local);
+        createAchievement.description(achievement.description());
+        return createAchievement;
     }
 }

@@ -129,6 +129,7 @@ public class TestUtils {
     public static BeginMatch beginMatch() {
         return (BeginMatch) new BeginMatch()
                 .world(GamificationConfig.WorldId)
+                .expiration(TimeUtils.nextInstant(TimeUtils.currentInstant(), TimeUtils.Scale.Minute))
                 .reboot(true)
                 .id(UUID.randomUUID().toString())
                 .ts(TimeUtils.currentInstant());

@@ -12,14 +12,14 @@ public class Achievement {
     private final String description;
     private final EventType eventInvolved;
     private final int maxCount;
-    private final Consumer<CheckerHandler.Checker<? extends GamificationEvent>> progressCosumer;
+    private final Consumer<CheckerHandler.Checker<? extends GamificationEvent>> progressConsumer;
 
     public Achievement(io.intino.gamification.core.graph.Achievement achievement) {
         this.id = achievement.id();
         this.description = achievement.description();
         this.eventInvolved = achievement.eventInvolved();
         this.maxCount = achievement.maxCount();
-        this.progressCosumer = checker -> CheckerHandler.progressIf(achievement, checker);
+        this.progressConsumer = checker -> CheckerHandler.progressIf(achievement, checker);
     }
 
     public String id() {
@@ -39,6 +39,6 @@ public class Achievement {
     }
 
     public <T extends GamificationEvent> void progressIf(CheckerHandler.Checker<T> checker) {
-        progressCosumer.accept(checker);
+        progressConsumer.accept(checker);
     }
 }

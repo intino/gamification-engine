@@ -1,9 +1,9 @@
 package cinepolis;
 
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.box.actions.test.GetGetItemAction;
-import org.example.cinepolis.control.box.actions.test.GetGetMissionAction;
-import org.example.cinepolis.control.box.actions.test.GetGetPlayerAction;
+import org.example.cinepolis.control.box.actions.GetItemAction;
+import org.example.cinepolis.control.box.actions.GetMissionAction;
+import org.example.cinepolis.control.box.actions.GetPlayerAction;
 import org.example.cinepolis.datahub.CinepolisTerminal;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -41,7 +41,7 @@ public class Api_ {
 
     @Test
     public void getPlayer() {
-        GetGetPlayerAction action = new GetGetPlayerAction();
+        GetPlayerAction action = new GetPlayerAction();
         action.box = Box;
         action.world = WORLD_ID;
         action.id = "empleado1";
@@ -51,7 +51,7 @@ public class Api_ {
 
     @Test
     public void getItem() {
-        GetGetItemAction action = new GetGetItemAction();
+        GetItemAction action = new GetItemAction();
         action.box = Box;
         action.world = WORLD_ID;
         action.id = "asset1";
@@ -61,7 +61,7 @@ public class Api_ {
 
     @Test
     public void getMission() {
-        GetGetMissionAction action = new GetGetMissionAction();
+        GetMissionAction action = new GetMissionAction();
         action.box = Box;
         action.world = WORLD_ID;
         action.id = "alert1";

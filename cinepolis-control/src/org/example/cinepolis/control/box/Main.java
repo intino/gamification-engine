@@ -1,14 +1,11 @@
 package org.example.cinepolis.control.box;
 
-import io.intino.gamification.Engine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
-import org.example.cinepolis.control.graph.ControlGraph;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class Main {
 
@@ -22,7 +19,7 @@ public class Main {
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
 		box.put(graph);
 
-		Engine engine = new Engine(box.configuration());
+		GamificationEngine engine = new GamificationEngine(box.configuration());
 		box.put(engine);
 
 		engine.launch(() -> {

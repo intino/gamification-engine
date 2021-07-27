@@ -1,15 +1,25 @@
 package org.example.cinepolis.control.box.actions;
 
+import io.intino.alexandria.Json;
+import io.intino.alexandria.http.spark.SparkContext;
 import io.intino.gamification.core.model.Match;
+import org.example.cinepolis.control.box.ControlBox;
 
 
-public class GetCurrentMatchAction extends AbstractGetAction<Match> {
+public class GetCurrentMatchAction {
 
+	protected static final String EMPTY_JSON = "{}";
+
+	public ControlBox box;
+	public SparkContext context;
 	public String world;
 
-	@Override
 	protected Match get() {
-		return datamart().match(world);
+		return box.engine().datamart().match(world);
 	}
 
+	public String execute() {
+		final Match response = get();
+		return response == null ? EMPTY_JSON : Json.toString(response);
+	}
 }

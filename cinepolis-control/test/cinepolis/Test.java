@@ -1,28 +1,14 @@
 package cinepolis;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.core.box.checkers.CheckResult;
-import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.box.events.achievement.CreateAchievement;
-import io.intino.gamification.core.box.events.match.BeginMatch;
-import io.intino.gamification.core.box.events.match.EndMatch;
-import io.intino.gamification.core.box.events.mission.NewStateMission;
-import io.intino.gamification.core.box.utils.TimeUtils;
-import io.intino.gamification.core.model.Achievement;
-import io.intino.gamification.core.model.Match;
-import io.intino.gamification.core.model.World;
-import io.intino.gamification.core.model.attributes.AchievementType;
-import io.intino.gamification.core.model.attributes.MissionState;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.gamification.GamificationConfig;
-import org.example.cinepolis.datahub.events.cinepolis.*;
+import org.example.cinepolis.datahub.events.cinepolis.AssetAlert;
 
 import java.io.File;
 import java.util.Map;
-import java.util.UUID;
 
 import static cinepolis.TestUtils.*;
 
@@ -37,7 +23,7 @@ public class Test {
 
     public static ControlBox run() {
 
-        String[] args = new String[] {"home=temp", "datahub_url=failover:(tcp://localhost:63000)", "datahub_user=cinepolis", "datahub_password=cinepolis", "datahub_clientId=cinepolis", "datahub_outbox_directory=temp/terminals/example/cinepolis", "datalake_path=temp/datalake"};
+        String[] args = new String[] {"home=temp", "datahub_url=failover:(tcp://localhost:63000)", "datahub_user=cinepolis", "datahub_password=cinepolis", "datahub_clientId=cinepolis", "datahub_outbox_directory=temp/terminals/example/cinepolis", "datalake_path=temp/datalake", "time_zone=Atlantic/Canary"};
 
         ControlBox box = new ControlBox(args);
         Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);

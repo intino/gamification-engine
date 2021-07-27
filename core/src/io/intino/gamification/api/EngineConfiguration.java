@@ -2,13 +2,13 @@ package io.intino.gamification.api;
 
 import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.configurator.GameLoopConfigurator;
-import io.intino.gamification.core.model.attributes.MissionState;
 import io.intino.gamification.core.box.listeners.EntityAttributeListener;
-import io.intino.gamification.core.box.mappers.*;
-import io.intino.gamification.core.box.utils.TimeUtils;
+import io.intino.gamification.core.box.mappers.MissionScoreMapper;
+import io.intino.gamification.core.box.mappers.PlayerLevelMapper;
 import io.intino.gamification.core.graph.Entity;
 import io.intino.gamification.core.graph.Mission;
 import io.intino.gamification.core.graph.Player;
+import io.intino.gamification.core.model.attributes.MissionState;
 
 public class EngineConfiguration {
 

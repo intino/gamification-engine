@@ -69,7 +69,7 @@ public class EntityMounter extends Mounter {
         world.items().add(item);
         Player player = filter.player();
         if(player != null) {
-            box.engineTerminal().feed(EventBuilder.pickUpItem(world.id(), player.id(), item.id()));
+            box.terminal().feed(EventBuilder.pickUpItem(world.id(), player.id(), item.id()));
         }
 
         if(event.enabled() != null) item.enabled(event.enabled());
@@ -89,7 +89,7 @@ public class EntityMounter extends Mounter {
         world.players().remove(player);
 
         if(event.destroyStrategy() == DestroyStrategy.Cascade) {
-            player.inventory().forEach(i -> box.engineTerminal().feed(EventBuilder.destroyItem(world.id(), i.id())));
+            player.inventory().forEach(i -> box.terminal().feed(EventBuilder.destroyItem(world.id(), i.id())));
         } else {
             player.inventory().forEach(i -> i.owner(null).save$());
         }

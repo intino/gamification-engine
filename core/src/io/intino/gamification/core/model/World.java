@@ -3,9 +3,8 @@ package io.intino.gamification.core.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class World {
+public class World extends Component {
 
-    private final String id;
     private final Match match;
     private final List<Player> players;
     private final List<Item> items;
@@ -13,16 +12,12 @@ public class World {
     private final List<Achievement> achievements;
 
     public World(io.intino.gamification.core.graph.World world) {
-        this.id = world.id();
+        super(world.id());
         this.match = world.match() != null ? new Match(world.match()) : null;
         this.players = world.players().stream().map(Player::new).collect(Collectors.toList());
         this.items = world.items().stream().map(Item::new).collect(Collectors.toList());
         this.npcs = world.npcs().stream().map(Npc::new).collect(Collectors.toList());
         this.achievements = world.achievements().stream().map(Achievement::new).collect(Collectors.toList());
-    }
-
-    public String id() {
-        return id;
     }
 
     public Match match() {

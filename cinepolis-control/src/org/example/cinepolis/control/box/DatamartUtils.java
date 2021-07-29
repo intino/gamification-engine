@@ -1,4 +1,4 @@
-package cinepolis;
+package org.example.cinepolis.control.box;
 
 import io.intino.gamification.core.box.checkers.CheckResult;
 import io.intino.gamification.core.box.events.EventType;
@@ -13,42 +13,12 @@ import io.intino.gamification.core.model.Match;
 import io.intino.gamification.core.model.World;
 import io.intino.gamification.core.model.attributes.AchievementType;
 import io.intino.gamification.core.model.attributes.MissionState;
-import io.intino.magritte.framework.Graph;
-import io.intino.magritte.framework.stores.FileSystemStore;
-import io.intino.magritte.io.Stash;
-import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.GamificationConfig;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
-import java.io.File;
 import java.util.UUID;
 
-public class TestUtils {
-
-    public static final String Stashes = "Control";
-    public static final String[] StartUpStashes = {Stashes, "Employees", "Assets", "Alerts"};
-    public static final String[] Arguments = new String[] {
-            "home=temp",
-            "datahub_url=failover:(tcp://localhost:63000)",
-            "datahub_user=cinepolis",
-            "datahub_password=cinepolis",
-            "datahub_clientId=cinepolis",
-            "datahub_outbox_directory=temp/terminals/example/cinepolis",
-            "datalake_path=temp/datalake",
-            "gamification_datamart_path=temp/datamarts/cinepolis-gamification",
-            "time_zone=Atlantic/Canary",
-            "port=9000"
-    };
-
-    public static ControlBox createBox() {
-
-        ControlBox box = new ControlBox(Arguments);
-
-        Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
-        box.put(graph);
-
-        return box;
-    }
+public class DatamartUtils {
 
     public static void newWorkingDay(ControlBox box) {
         World world = box.engine().datamart().world(GamificationConfig.WorldId);
@@ -133,7 +103,7 @@ public class TestUtils {
     public static BeginMatch beginMatch() {
         return (BeginMatch) new BeginMatch()
                 .world(GamificationConfig.WorldId)
-                .expiration(TimeUtils.nextInstant(TimeUtils.currentInstant(), TimeUtils.Scale.Hour))
+                .expiration(TimeUtils.nextInstant(TimeUtils.currentInstant(), TimeUtils.Scale.Minute, 2))
                 .reboot(true)
                 .id(UUID.randomUUID().toString())
                 .ts(TimeUtils.currentInstant());
@@ -144,23 +114,5 @@ public class TestUtils {
                 .world(GamificationConfig.WorldId)
                 .id(matchId)
                 .ts(TimeUtils.currentInstant());
-    }
-
-    private static FileSystemStore store(File datamartFolder) {
-        return new FileSystemStore(datamartFolder) {
-
-            @Override
-            public Stash stashFrom(String path) {
-                Stash stash = super.stashFrom(path);
-                if (stash != null && stash.language == null) stash.language = Stashes;
-                return stash;
-            }
-
-            @Override
-            public void writeStash(Stash stash, String path) {
-                stash.language = stash.language == null || stash.language.isEmpty() ? Stashes : stash.language;
-                super.writeStash(stash, path);
-            }
-        };
     }
 }

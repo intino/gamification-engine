@@ -10,9 +10,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Mission {
+public class Mission extends Component {
 
-    private final String id;
     private final String description;
     private final MissionType type;
     private final MissionDifficulty difficulty;
@@ -23,7 +22,7 @@ public class Mission {
     private transient final Consumer<CheckerHandler.Checker<? extends GamificationEvent>> progressCosumer;
 
     public Mission(io.intino.gamification.core.graph.Mission mission) {
-        this.id = mission.id();
+        super(mission.id());
         this.description = mission.description();
         this.type = mission.type();
         this.difficulty = mission.difficulty();
@@ -32,10 +31,6 @@ public class Mission {
         this.maxCount = mission.maxCount();
         this.playersId = mission.players();
         this.progressCosumer = checker -> CheckerHandler.progressIf(mission, checker);
-    }
-
-    public String id() {
-        return id;
     }
 
     public String description() {

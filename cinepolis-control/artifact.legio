@@ -2,14 +2,14 @@ dsl Legio
 
 Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Model("Proteo", "3.0.2", "4.1.1")
-	Box("Konos", "8.11.0")
+	Box("Konos", "8.13.0")
 	DataHub("org.example.cinepolis.datahub", "cinepolis-terminal", "1.0.0-SNAPSHOT")
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.0")
     	Compile("io.intino.alexandria", "datalake", "4.0.2")
-    	Compile("io.intino.alexandria", "scheduler-framework", "2.1.0")
+    	Compile("io.intino.alexandria", "scheduler-framework", "1.1.1")
     	Compile("io.intino.gamification", "core", "1.0.0-SNAPSHOT")
-    	Compile("io.intino.alexandria", "rest", "3.1.9")
+    	Compile("io.intino.alexandria", "rest", "3.3.0")
 		Test("junit", "junit", "LATEST")
 
 	Package(mode = ModulesAndLibrariesExtracted) as Runnable("org.example.cinepolis.control.box.Main")
@@ -22,6 +22,7 @@ Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Parameter("datahub_outbox_directory")
 	Parameter("datalake_path")
 	Parameter("gamification_datamart_path")
+	Parameter("time_zone")
 	Parameter("port")
 
 RunConfiguration local
@@ -33,6 +34,7 @@ RunConfiguration local
 	Argument("datahub_outbox_directory", "temp/terminals/example/cinepolis")
 	Argument("datalake_path", "temp/datalake")
 	Argument("gamification_datamart_path", "temp/datamarts/cinepolis-gamification")
+	Argument("time_zone", "Atlantic/Canary")
 	Argument("port", "9000")
 
 Repository(identifier = "intino-maven")

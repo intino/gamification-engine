@@ -4,7 +4,9 @@ import io.intino.gamification.core.box.CoreBox;
 import io.intino.gamification.core.box.checkers.MatchTimerChecker;
 import io.intino.gamification.core.box.checkers.MissionTimerChecker;
 import io.intino.gamification.core.box.events.GamificationEvent;
+import io.intino.gamification.core.box.listeners.EventProcessListener;
 import io.intino.gamification.core.exception.InvalidAttributeValueException;
+import io.intino.gamification.core.model.Component;
 
 import java.util.*;
 
@@ -15,7 +17,7 @@ public class GameLoopConfigurator {
 
     private final CoreBox box;
 
-    private final Queue<GamificationEvent> eventQueue;
+    private final Queue<GamificationEventWrapper<? extends GamificationEvent, ? extends Component>> eventQueue;
 
     private Timer timer;
     private int amount;
@@ -23,13 +25,22 @@ public class GameLoopConfigurator {
 
     public GameLoopConfigurator(CoreBox box) {
         this.box = box;
-        this.eventQueue = new PriorityQueue<>(Comparator.comparing(GamificationEvent::ts));
+        this.eventQueue = new PriorityQueue<>(Comparator.comparing(w -> w.event().ts()));
     }
 
-    public void enqueue(GamificationEvent event) {
+    public <T extends GamificationEvent, S extends Component> void enqueue(T event) {
 
         synchronized (eventQueue) {
-            eventQueue.add(event);
+            GamificationEventWrapper<T, S> wrapper = new GamificationEventWrapper<>(event);
+            eventQueue.add(wrapper);
+        }
+    }
+
+    public <T extends GamificationEvent, S extends Component> void enqueue(T event, EventProcessListener<S> listener) {
+
+        synchronized (eventQueue) {
+            GamificationEventWrapper<T, S> wrapper = new GamificationEventWrapper<>(event, listener);
+            eventQueue.add(wrapper);
         }
     }
 
@@ -65,8 +76,13 @@ public class GameLoopConfigurator {
 
         synchronized (eventQueue) {
             while (!eventQueue.isEmpty()) {
-                GamificationEvent event = eventQueue.poll();
-                if(event != null) box.terminal().feed(event);
+                GamificationEventWrapper<? extends GamificationEvent, ? extends Component> wrapper = eventQueue.poll();
+                if(wrapper != null) {
+                    Component component = box.terminal().feed(wrapper.event());
+                    if(wrapper.listener() != null && component != null) {
+                        wrapper.listener().process(component);
+                    }
+                }
             }
         }
     }
@@ -76,6 +92,30 @@ public class GameLoopConfigurator {
         public void run() {
             runCheckers();
             feedEvents();
+        }
+    }
+
+    public static class GamificationEventWrapper<T extends GamificationEvent, S extends Component> {
+
+        private final T event;
+        private final EventProcessListener<S> listener;
+
+        public GamificationEventWrapper(T event) {
+            this.event = event;
+            this.listener = null;
+        }
+
+        public GamificationEventWrapper(T event, EventProcessListener<S> listener) {
+            this.event = event;
+            this.listener = listener;
+        }
+
+        public T event() {
+            return event;
+        }
+
+        public EventProcessListener<S> listener() {
+            return listener;
         }
     }
 }

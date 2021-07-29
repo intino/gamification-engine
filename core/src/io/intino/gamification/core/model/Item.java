@@ -2,9 +2,8 @@ package io.intino.gamification.core.model;
 
 import java.util.List;
 
-public class Item {
+public class Item extends Component {
 
-    private final String id;
     private final String worldId;
     private final boolean enabled;
     private final double health;
@@ -12,16 +11,12 @@ public class Item {
     private final String owner;
 
     public Item(io.intino.gamification.core.graph.Item item) {
-        this.id = item.id();
+        super(item.id());
         this.worldId = item.worldId();
         this.enabled = item.enabled();
         this.health = item.health();
         this.groups = item.groups();
         this.owner = item.owner();
-    }
-
-    public String id() {
-        return id;
     }
 
     public String worldId() {

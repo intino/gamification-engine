@@ -13,10 +13,9 @@ import io.intino.gamification.core.box.events.mission.NewStateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
 import io.intino.gamification.core.box.events.world.DestroyWorld;
 import io.intino.gamification.core.box.mounter.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import io.intino.gamification.core.model.Component;
+import io.intino.gamification.core.model.Match;
+import io.intino.gamification.core.model.attributes.AchievementType;
 
 public class Terminal {
 
@@ -26,136 +25,159 @@ public class Terminal {
         this.box = box;
     }
 
-    public void feed(AchievementNewState event) {
+    public Component feed(GamificationEvent event) {
+        if(event instanceof AchievementNewState) return feed((AchievementNewState) event);
+        else if(event instanceof CreateAchievement) return feed((CreateAchievement) event);
+        else if(event instanceof DeleteAchievement) return feed((DeleteAchievement) event);
+        else if(event instanceof Action) return feed((Action) event);
+        else if(event instanceof Attack) return feed((Attack) event);
+        else if(event instanceof DisableEntity) return feed((DisableEntity) event);
+        else if(event instanceof EnableEntity) return feed((EnableEntity) event);
+        else if(event instanceof Heal) return feed((Heal) event);
+        else if(event instanceof SetHealth) return feed((SetHealth) event);
+        else if(event instanceof ChangeScore) return feed((ChangeScore) event);
+        else if(event instanceof CreatePlayer) return feed((CreatePlayer) event);
+        else if(event instanceof CreateNpc) return feed((CreateNpc) event);
+        else if(event instanceof CreateItem) return feed((CreateItem) event);
+        else if(event instanceof DestroyPlayer) return feed((DestroyPlayer) event);
+        else if(event instanceof DestroyNpc) return feed((DestroyNpc) event);
+        else if(event instanceof DestroyItem) return feed((DestroyItem) event);
+        else if(event instanceof PickUpItem) return feed((PickUpItem) event);
+        else if(event instanceof DropItem) return feed((DropItem) event);
+        else if(event instanceof BeginMatch) return feed((BeginMatch) event);
+        else if(event instanceof EndMatch) return feed((EndMatch) event);
+        else if(event instanceof CreateMission) return feed((CreateMission) event);
+        else if(event instanceof NewStateMission) return feed((NewStateMission) event);
+        else if(event instanceof CreateWorld) return feed((CreateWorld) event);
+        else if(event instanceof DestroyWorld) return feed((DestroyWorld) event);
+        return null;
+    }
+
+    private Component feed(AchievementNewState event) {
         box.mounter(AchievementMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(CreateAchievement event) {
+    private Component feed(CreateAchievement event) {
+
         box.mounter(AchievementMounter.class).handle(event);
+
+        if(event.type() == AchievementType.Global) {
+            return box.engineDatamart().globalAchievement(event.world(), event.id());
+        } else if(event.type() == AchievementType.Local) {
+            return box.engineDatamart().localAchievement(event.world(), event.id());
+        }
+        return null;
     }
 
-    public void feed(DeleteAchievement event) {
+    private Component feed(DeleteAchievement event) {
         box.mounter(AchievementMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(Action event) {
+    private Component feed(Action event) {
         box.mounter(ActionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(Attack event) {
+    private Component feed(Attack event) {
         box.mounter(ActionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(DisableEntity event) {
+    private Component feed(DisableEntity event) {
         box.mounter(ActionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(EnableEntity event) {
+    private Component feed(EnableEntity event) {
         box.mounter(ActionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(Heal event) {
+    private Component feed(Heal event) {
         box.mounter(ActionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(SetHealth event) {
+    private Component feed(SetHealth event) {
         box.mounter(ActionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(ChangeScore event) {
+    private Component feed(ChangeScore event) {
         box.mounter(ActionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(CreatePlayer event) {
+    private Component feed(CreatePlayer event) {
         box.mounter(EntityMounter.class).handle(event);
+        return box.engineDatamart().player(event.world(), event.id());
     }
 
-    public void feed(CreateNpc event) {
+    private Component feed(CreateNpc event) {
         box.mounter(EntityMounter.class).handle(event);
+        return box.engineDatamart().npc(event.world(), event.id());
     }
 
-    public void feed(CreateItem event) {
+    private Component feed(CreateItem event) {
         box.mounter(EntityMounter.class).handle(event);
+        return box.engineDatamart().item(event.world(), event.id());
     }
 
-    public void feed(DestroyPlayer event) {
+    private Component feed(DestroyPlayer event) {
         box.mounter(EntityMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(DestroyNpc event) {
+    private Component feed(DestroyNpc event) {
         box.mounter(EntityMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(DestroyItem event) {
+    private Component feed(DestroyItem event) {
         box.mounter(EntityMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(PickUpItem event) {
+    private Component feed(PickUpItem event) {
         box.mounter(EntityMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(DropItem event) {
+    private Component feed(DropItem event) {
         box.mounter(EntityMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(BeginMatch event) {
+    private Component feed(BeginMatch event) {
         box.mounter(MatchMounter.class).handle(event);
+        Match match = box.engineDatamart().match(event.world());
+        return match.from().equals(event.ts()) ? match : null;
     }
 
-    public void feed(EndMatch event) {
+    private Component feed(EndMatch event) {
         box.mounter(MatchMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(CreateMission event) {
+    private Component feed(CreateMission event) {
         box.mounter(MissionMounter.class).handle(event);
+        return box.engineDatamart().mission(event.world(), event.id());
     }
 
-    public void feed(NewStateMission event) {
+    private Component feed(NewStateMission event) {
         box.mounter(MissionMounter.class).handle(event);
+        return null;
     }
 
-    public void feed(CreateWorld event) {
+    private Component feed(CreateWorld event) {
         box.mounter(WorldMounter.class).handle(event);
+        return box.engineDatamart().world(event.id());
     }
 
-    public void feed(DestroyWorld event) {
+    private Component feed(DestroyWorld event) {
         box.mounter(WorldMounter.class).handle(event);
+        return null;
     }
-
-    public <T extends GamificationEvent> void feed(T event) {
-        this.<T>feedFunctionOf(event.getClass()).accept(this, event);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends GamificationEvent> BiConsumer<Terminal, T> feedFunctionOf(Class<? extends GamificationEvent> eventClass) {
-        return (BiConsumer<Terminal, T>) FeedFunctions.getOrDefault(eventClass, this::doNothing);
-    }
-
-    private void doNothing(Terminal Terminal, GamificationEvent event) {
-    }
-
-    private static final Map<Class<? extends GamificationEvent>, BiConsumer<Terminal, ? extends GamificationEvent>> FeedFunctions = new HashMap<>(){
-        {
-            put(CreateAchievement.class, (BiConsumer<Terminal, CreateAchievement>)Terminal::feed);
-            put(DeleteAchievement.class, (BiConsumer<Terminal, DeleteAchievement>)Terminal::feed);
-            put(Action.class, (BiConsumer<Terminal, Attack>)Terminal::feed);
-            put(Attack.class, (BiConsumer<Terminal, Attack>)Terminal::feed);
-            put(DisableEntity.class, (BiConsumer<Terminal, DisableEntity>)Terminal::feed);
-            put(EnableEntity.class, (BiConsumer<Terminal, EnableEntity>)Terminal::feed);
-            put(Heal.class, (BiConsumer<Terminal, Heal>)Terminal::feed);
-            put(SetHealth.class, (BiConsumer<Terminal, SetHealth>)Terminal::feed);
-            put(CreatePlayer.class, (BiConsumer<Terminal, CreatePlayer>)Terminal::feed);
-            put(CreateNpc.class, (BiConsumer<Terminal, CreateNpc>)Terminal::feed);
-            put(CreateItem.class, (BiConsumer<Terminal, CreateItem>)Terminal::feed);
-            put(DestroyPlayer.class, (BiConsumer<Terminal, DestroyPlayer>)Terminal::feed);
-            put(DestroyNpc.class, (BiConsumer<Terminal, DestroyNpc>)Terminal::feed);
-            put(DestroyItem.class, (BiConsumer<Terminal, DestroyItem>)Terminal::feed);
-            put(PickUpItem.class, (BiConsumer<Terminal, PickUpItem>)Terminal::feed);
-            put(DropItem.class, (BiConsumer<Terminal, DropItem>)Terminal::feed);
-            put(BeginMatch.class, (BiConsumer<Terminal, BeginMatch>)Terminal::feed);
-            put(EndMatch.class, (BiConsumer<Terminal, EndMatch>)Terminal::feed);
-            put(CreateMission.class, (BiConsumer<Terminal, CreateMission>)Terminal::feed);
-            put(CreateWorld.class, (BiConsumer<Terminal, CreateWorld>)Terminal::feed);
-            put(DestroyWorld.class, (BiConsumer<Terminal, DestroyWorld>)Terminal::feed);
-        }};
 }

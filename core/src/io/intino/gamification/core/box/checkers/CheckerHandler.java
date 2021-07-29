@@ -41,6 +41,10 @@ public class CheckerHandler {
         MissionCheckerMap.put(mission.id(), checker);
     }
 
+    public static Checker<? extends GamificationEvent> checkerOf(Achievement achievement) {
+        return AchievementCheckerMap.get(achievement.id());
+    }
+
     public interface Checker<T> {
         CheckResult check(T event, Player player);
     }

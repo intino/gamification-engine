@@ -3,9 +3,8 @@ package io.intino.gamification.core.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Player {
+public class Player extends Component {
 
-    private final String id;
     private final String worldId;
     private final boolean enabled;
     private final double health;
@@ -16,7 +15,7 @@ public class Player {
     private final Integer level;
 
     public Player(io.intino.gamification.core.graph.Player player) {
-        this.id = player.id();
+        super(player.id());
         this.worldId = player.worldId();
         this.enabled = player.enabled();
         this.health = player.health();
@@ -25,10 +24,6 @@ public class Player {
         this.inventory = player.inventory().stream().map(Item::new).collect(Collectors.toList());
         this.achievements = player.achievements().stream().map(AchievementState::new).collect(Collectors.toList());
         this.level = player.level();
-    }
-
-    public String id() {
-        return id;
     }
 
     public String worldId() {

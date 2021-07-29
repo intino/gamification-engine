@@ -7,6 +7,7 @@ import io.intino.gamification.core.box.events.action.Heal;
 import io.intino.gamification.core.box.events.entity.*;
 import io.intino.gamification.core.box.events.mission.CreateMission;
 import io.intino.gamification.core.box.events.world.CreateWorld;
+import io.intino.gamification.core.box.listeners.EventProcessListener;
 import io.intino.gamification.core.box.mappers.PlayerLevelMapper;
 import io.intino.gamification.core.graph.Player;
 import io.intino.gamification.core.model.Achievement;
@@ -20,7 +21,6 @@ import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,7 +36,7 @@ public class Adapter {
     }
 
     public void initialize() {
-        box.engine().configuration().gameLoopConfigurator.schedule(1, Scale.Minute);
+        box.engine().configuration().gameLoopConfigurator.schedule( 10, Scale.Second);
         box.engine().configuration().missionScoreMapper.set((player, mission, state) -> Math.round(state.multiplier() * mission.difficulty().multiplier() * mission.type().multiplier()));
         box.engine().configuration().playerLevelMapper.set(new PlayerLevelMapper() {
             @Override
@@ -58,8 +58,9 @@ public class Adapter {
                 .ts(currentInstant());
 
         box.engine().terminal().feed(cw);
-        Achievement achievement = box.engine().terminal().feed(ga);
-        achievement.<PickUpItem>progressIf((event, player) -> CheckResult.Progress);
+
+        EventProcessListener<Achievement> eventProcessListener = achievement -> achievement.<PickUpItem>progressIf((event, player) -> CheckResult.Progress);
+        box.engine().terminal().feed(ga, eventProcessListener);
     }
 
     public void adapt(AssetAlert event) {
@@ -78,12 +79,11 @@ public class Adapter {
                 .players(employees)
                 .eventInvolved(EventType.Heal)
                 .maxCount(1)
-                .expiration(nextInstant(event.ts(), Scale.Minute, event.limitHours()))
+                .expiration(nextInstant(event.ts(), Scale.Hour, event.limitHours()))
                 .id(UUID.randomUUID().toString())
                 .ts(currentInstant());
 
-        Mission mission = box.engine().terminal().feed(nm);
-        if(mission != null) {
+        EventProcessListener<Mission> eventProcessListener = mission -> {
             mission.<Heal>progressIf((a, p) -> {
                 if(a.type().equals("FixAsset") &&
                         a.entitySrc().equals(p.id()) &&
@@ -92,7 +92,8 @@ public class Adapter {
                 }
                 return CheckResult.Skip;
             });
-        }
+        };
+        box.engine().terminal().feed(nm, eventProcessListener);
     }
 
     public void adapt(DeregisterAsset event) {
@@ -120,7 +121,7 @@ public class Adapter {
                 .world(GamificationConfig.WorldId)
                 .type("FixAsset")
                 .id(UUID.randomUUID().toString())
-                .ts(Instant.now());
+                .ts(currentInstant());
         box.engine().terminal().feed(heal);
     }
 

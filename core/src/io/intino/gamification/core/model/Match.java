@@ -6,9 +6,8 @@ import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Match {
+public class Match extends Component {
 
-    private final String id;
     private final String worldId;
     private final Instant from;
     private final Instant to;
@@ -19,7 +18,7 @@ public class Match {
     private final List<Achievement> achievements;
 
     public Match(io.intino.gamification.core.graph.Match match) {
-        this.id = match.id();
+        super(match.id());
         this.worldId = match.worldId();
         this.from = match.from();
         this.to = match.to();
@@ -28,10 +27,6 @@ public class Match {
         this.playersState = match.playersState().stream().map(PlayerState::new).collect(Collectors.toList());
         this.missions = match.missions().stream().map(Mission::new).collect(Collectors.toList());
         this.achievements = match.achievements().stream().map(Achievement::new).collect(Collectors.toList());
-    }
-
-    public String id() {
-        return id;
     }
 
     public String worldId() {

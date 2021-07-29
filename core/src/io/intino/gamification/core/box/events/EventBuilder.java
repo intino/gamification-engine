@@ -125,7 +125,7 @@ public class EventBuilder {
 
     public static CreateAchievement createAchievement(Achievement achievement, String worldId) {
         CreateAchievement createAchievement = new CreateAchievement();
-        createAchievement.id(achievement.id() + "_" + UUID.randomUUID().toString());
+        createAchievement.id(achievementId(achievement.id()));
         createAchievement.ts(instant());
         createAchievement.world(worldId);
         createAchievement.eventInvolved(achievement.eventInvolved());
@@ -133,5 +133,10 @@ public class EventBuilder {
         createAchievement.type(AchievementType.Local);
         createAchievement.description(achievement.description());
         return createAchievement;
+    }
+
+    private static String achievementId(String id) {
+        String originalId = id.contains("_") ? id.substring(0, id.indexOf('_')) : id;
+        return originalId + "_" + UUID.randomUUID().toString();
     }
 }

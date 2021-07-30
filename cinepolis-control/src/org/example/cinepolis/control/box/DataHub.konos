@@ -1,8 +1,5 @@
 dsl Konos
 
-Sentinel DatamartViewer as ClockListener(pattern = "0 0/1 * 1/1 * ? *", timeZone = "Atlantic/Canary")
-	mean = "Cada Hora"
-
 Datalake(path = "{datalake_path}") as Local
 
 Datamart(type = Graph) graph

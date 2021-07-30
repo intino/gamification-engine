@@ -59,8 +59,8 @@ public class Launcher extends Async {
         return new String[] {
                 "home=" + args.get("home"),
                 "datalake_path=" + args.get("datalake_path"),
-                "datamart_path=" + args.get("gamification_datamart_path"),
-                "time_zone=" + args.get("time_zone")
+                "datamart_path=" + args.get("gamification_path"),
+                "time_zone=" + args.get("gamification_timezone")
         };
     }
 

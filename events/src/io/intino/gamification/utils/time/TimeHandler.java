@@ -1,8 +1,9 @@
 package io.intino.gamification.utils.time;
 
+import io.intino.gamification.utils.time.Scale;
+
 import java.time.*;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
 
 public class TimeHandler {
 
@@ -229,37 +230,36 @@ public class TimeHandler {
 		if(unit.equals(ChronoUnit.DAYS)) ret = instant.toString().split("[TZ]")[0].split("-")[2];
 		if(unit.equals(ChronoUnit.HOURS)) ret = instant.toString().split("[TZ]")[1].split(":")[0];
 		if(unit.equals(ChronoUnit.MINUTES)) ret = instant.toString().split("[TZ]")[1].split(":")[1];
-
-		if(unit.equals(ChronoUnit.SECONDS)) ret = Float.parseFloat(instant.toString().split("[TZ]")[1].split(":")[2]);
-		if(unit.equals(ChronoUnit.MILLIS)) ret = Float.parseFloat(instant.toString().split("[TZ]")[1].split(":")[2]);
+		if(unit.equals(ChronoUnit.SECONDS)) ret = String.valueOf((int) Float.parseFloat(instant.toString().split("[TZ]")[1].split(":")[2]));
+		if(unit.equals(ChronoUnit.MILLIS)) ret = String.valueOf((int) (1000 * (Double.parseDouble(instant.toString().split("[TZ]")[1].split(":")[2]) % 1)));
 
 		return Integer.parseInt(ret);
 	}
 
-	private static Instant truncateToWeek(Instant instant) {
+	private Instant truncateToWeek(Instant instant) {
 
 		Instant dayInstant = truncateTo(instant, Scale.Day);
 		int dayOfWeek = weekDayOf(dayInstant);
 		return previousInstant(dayInstant, Scale.Day, dayOfWeek - 1);
 	}
 
-	private static Instant truncateToMonth(Instant instant) {
+	private Instant truncateToMonth(Instant instant) {
 		return getInstantOf(yearOf(instant), monthOf(instant));
 	}
 
-	private static Instant truncateToYear(Instant instant) {
+	private Instant truncateToYear(Instant instant) {
 		return getInstantOf(yearOf(instant));
 	}
 
-	private static Instant minusMonths(Instant instant, int nMonth) {
+	private Instant minusMonths(Instant instant, int nMonth) {
 		return offsetMonth(instant, -nMonth);
 	}
 
-	private static Instant plusMonths(Instant instant, int nMonth) {
+	private Instant plusMonths(Instant instant, int nMonth) {
 		return offsetMonth(instant, nMonth);
 	}
 
-	private static Instant offsetMonth(Instant instant, int nMonth) {
+	private Instant offsetMonth(Instant instant, int nMonth) {
 		int day = monthDayOf(instant);
 		int month = monthOf(instant) + nMonth;
 		int year = yearOf(instant);
@@ -279,15 +279,15 @@ public class TimeHandler {
 		return getInstantOf(year, month, day, hourOf(instant), minuteOf(instant));
 	}
 
-	private static Instant minusYears(Instant instant, int nYears) {
+	private Instant minusYears(Instant instant, int nYears) {
 		return offsetYear(instant, -nYears);
 	}
 
-	private static Instant plusYears(Instant instant, int nYears) {
+	private Instant plusYears(Instant instant, int nYears) {
 		return offsetYear(instant, nYears);
 	}
 
-	private static Instant offsetYear(Instant instant, int nYears) {
+	private Instant offsetYear(Instant instant, int nYears) {
 		int day = monthDayOf(instant);
 		int year = yearOf(instant) + nYears;
 
@@ -296,7 +296,7 @@ public class TimeHandler {
 		return getInstantOf(year, monthOf(instant), day, hourOf(instant), minuteOf(instant));
 	}
 
-	private static int adjustedDay(int day, int month, int year) {
+	private int adjustedDay(int day, int month, int year) {
 		switch (month) {
 			case 2:
 				return Math.min(day, getFebruaryDaysOf(year));
@@ -310,7 +310,7 @@ public class TimeHandler {
 		}
 	}
 
-	private static int getFebruaryDaysOf(int year) {
+	private int getFebruaryDaysOf(int year) {
 		return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 29 : 28;
 	}
 }

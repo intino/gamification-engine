@@ -1,0 +1,12 @@
+dsl Legio
+
+Artifact("io.intino.gamification", "1.0.0-SNAPSHOT") events
+
+	Package(ModulesAndLibrariesExtracted)
+
+	Distribution > Artifactory ("intino-maven")
+			Release("https://artifactory.intino.io/artifactory/release-libraries")
+			Snapshot("https://artifactory.intino.io/artifactory/snapshot-libraries")
+
+Repository("intino-maven")
+	Release("https://artifactory.intino.io/artifactory/releases")

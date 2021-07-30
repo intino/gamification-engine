@@ -69,7 +69,7 @@ public class EntityMounter extends Mounter {
         world.items().add(item);
         Player player = filter.player();
         if(player != null) {
-            box.terminal().feed(EventBuilder.pickUpItem(world.id(), player.id(), item.id()));
+            box.terminal().feed(EventBuilder.pickUpItem(world.id(), item.id(), player.id()));
         }
 
         if(event.enabled() != null) item.enabled(event.enabled());

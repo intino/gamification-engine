@@ -36,7 +36,7 @@ public class Adapter {
     }
 
     public void initialize() {
-        box.engine().configuration().gameLoopConfigurator.schedule( 10, Scale.Second);
+        box.engine().configuration().gameLoopConfigurator.schedule( 16, Scale.Millis);
         box.engine().configuration().missionScoreMapper.set((player, mission, state) -> Math.round(state.multiplier() * mission.difficulty().multiplier() * mission.type().multiplier()));
         box.engine().configuration().playerLevelMapper.set(new PlayerLevelMapper() {
             @Override
@@ -48,19 +48,19 @@ public class Adapter {
         CreateWorld cw = (CreateWorld) new CreateWorld()
                 .id(GamificationConfig.WorldId)
                 .ts(currentInstant());
-        CreateAchievement ga = (CreateAchievement) new CreateAchievement()
+        /*CreateAchievement ga = (CreateAchievement) new CreateAchievement()
                 .world(GamificationConfig.WorldId)
                 .type(AchievementType.Global)
                 .description("Empieza 2 partidas")
                 .eventInvolved(EventType.BeginMatch)
                 .maxCount(2)
                 .id("achievement1")
-                .ts(currentInstant());
+                .ts(currentInstant());*/
 
         box.engine().terminal().feed(cw);
 
-        EventProcessListener<Achievement> eventProcessListener = achievement -> achievement.<PickUpItem>progressIf((event, player) -> CheckResult.Progress);
-        box.engine().terminal().feed(ga, eventProcessListener);
+        /*EventProcessListener<Achievement> eventProcessListener = achievement -> achievement.<PickUpItem>progressIf((event, player) -> CheckResult.Progress);
+        box.engine().terminal().feed(ga, eventProcessListener);*/
     }
 
     public void adapt(AssetAlert event) {

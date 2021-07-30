@@ -3,12 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/events/events.iml" filepath="$PROJECT_DIR$/events/events.iml" />
       <module fileurl="file://$PROJECT_DIR$/cinepolis-control/example.cinepolis.cinepolis-control.iml" filepath="$PROJECT_DIR$/cinepolis-control/example.cinepolis.cinepolis-control.iml" />
       <module fileurl="file://$PROJECT_DIR$/cinepolis-data-hub/example.cinepolis.cinepolis-data-hub.iml" filepath="$PROJECT_DIR$/cinepolis-data-hub/example.cinepolis.cinepolis-data-hub.iml" />
       <module fileurl="file://$PROJECT_DIR$/smartbrain-control/example.smartbrain.smartbrain-control.iml" filepath="$PROJECT_DIR$/smartbrain-control/example.smartbrain.smartbrain-control.iml" />
       <module fileurl="file://$PROJECT_DIR$/smartbrain-datahub/example.smartbrain.smartbrain-datahub.iml" filepath="$PROJECT_DIR$/smartbrain-datahub/example.smartbrain.smartbrain-datahub.iml" />
       <module fileurl="file://$PROJECT_DIR$/vaccine-control/example.vaccine.vaccine-control.iml" filepath="$PROJECT_DIR$/vaccine-control/example.vaccine.vaccine-control.iml" />
       <module fileurl="file://$PROJECT_DIR$/vaccine-data-hub/example.vaccine.vaccine-data-hub.iml" filepath="$PROJECT_DIR$/vaccine-data-hub/example.vaccine.vaccine-data-hub.iml" />
+      <module fileurl="file://$PROJECT_DIR$/model/model.iml" filepath="$PROJECT_DIR$/model/model.iml" />
     </modules>
   </component>
 </project>

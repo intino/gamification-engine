@@ -33,8 +33,8 @@ RunConfiguration local
 	Argument("datahub_clientId", "cinepolis")
 	Argument("datahub_outbox_directory", "temp/terminals/example/cinepolis")
 	Argument("datalake_path", "temp/datalake")
-	Argument("gamification_datamart_path", "temp/datamarts/cinepolis-gamification")
-	Argument("time_zone", "Atlantic/Canary")
+	Argument("gamification_path", "temp/datamarts/cinepolis-gamification")
+	Argument("gamification_timezone", "Atlantic/Canary")
 	Argument("port", "9000")
 
 Repository(identifier = "intino-maven")

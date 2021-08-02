@@ -4,7 +4,6 @@ import io.intino.gamification.api.Configuration;
 import io.intino.gamification.core.checker.Checker;
 import io.intino.gamification.core.checker.Checkers;
 import io.intino.gamification.core.launcher.ParameterProcessor;
-import io.intino.gamification.core.mounter.Mounter;
 import io.intino.gamification.core.mounter.Mounters;
 import io.intino.gamification.events.EventRegister;
 import io.intino.gamification.events.Terminal;
@@ -12,8 +11,6 @@ import io.intino.gamification.model.Datamart;
 import io.intino.gamification.model.Graph;
 import io.intino.gamification.utils.Util;
 import io.intino.gamification.utils.Utils;
-
-import java.util.Map;
 
 public class Core {
 
@@ -64,8 +61,8 @@ public class Core {
         return this.datamart;
     }
 
-    public Mounter mounter(Class<? extends Mounter> clazz) {
-        return this.mounters.mounter(clazz);
+    public Mounters mounters() {
+        return this.mounters;
     }
 
     public EventRegister eventRegister() {

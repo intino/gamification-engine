@@ -2,8 +2,8 @@ package io.intino.gamification.core;
 
 import io.intino.gamification.core.exception.InvalidAttributeValueException;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameLoop {
 

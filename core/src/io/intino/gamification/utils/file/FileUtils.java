@@ -2,10 +2,9 @@ package io.intino.gamification.utils.file;
 
 import io.intino.gamification.utils.Util;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileUtils extends Util {
 
@@ -38,5 +37,19 @@ public class FileUtils extends Util {
             //TODO REGISTRAR ERROR
             e.printStackTrace();
         }
+    }
+
+    public List<String> read(File file) {
+        List<String> lines = new ArrayList<>();
+        String line;
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            while ((line = br.readLine()) != null) lines.add(line);
+            br.close();
+        } catch (IOException e) {
+            //TODO REGISTRAR ERROR
+            e.printStackTrace();
+        }
+        return lines;
     }
 }

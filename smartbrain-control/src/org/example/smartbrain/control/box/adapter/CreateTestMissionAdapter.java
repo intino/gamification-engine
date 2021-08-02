@@ -1,10 +1,10 @@
 package org.example.smartbrain.control.box.adapter;
 
-import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.box.events.GamificationEvent;
-import io.intino.gamification.core.box.events.mission.CreateMission;
-import io.intino.gamification.core.model.attributes.MissionDifficulty;
-import io.intino.gamification.core.model.attributes.MissionType;
+import old.core.box.events.EventType;
+import old.core.box.events.GamificationEvent;
+import old.core.box.events.mission.CreateMission;
+import old.core.model.attributes.MissionDifficulty;
+import old.core.model.attributes.MissionType;
 import org.example.smartbrain.control.box.ControlBox;
 import org.example.smartbrain.control.gamification.GameWorld;
 import org.example.smartbrain.datahub.events.smartbrain.TestBegin;

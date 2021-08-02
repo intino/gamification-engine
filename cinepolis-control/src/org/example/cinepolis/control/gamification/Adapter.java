@@ -1,21 +1,18 @@
 package org.example.cinepolis.control.gamification;
 
-import io.intino.gamification.core.box.checkers.CheckResult;
-import io.intino.gamification.core.box.events.EventType;
-import io.intino.gamification.core.box.events.achievement.CreateAchievement;
-import io.intino.gamification.core.box.events.action.Heal;
-import io.intino.gamification.core.box.events.entity.*;
-import io.intino.gamification.core.box.events.mission.CreateMission;
-import io.intino.gamification.core.box.events.world.CreateWorld;
-import io.intino.gamification.core.box.listeners.EventProcessListener;
-import io.intino.gamification.core.box.mappers.PlayerLevelMapper;
-import io.intino.gamification.core.graph.Player;
-import io.intino.gamification.core.model.Achievement;
-import io.intino.gamification.core.model.Mission;
-import io.intino.gamification.core.model.attributes.AchievementType;
-import io.intino.gamification.core.model.attributes.DestroyStrategy;
-import io.intino.gamification.core.model.attributes.MissionDifficulty;
-import io.intino.gamification.core.model.attributes.MissionType;
+import old.core.box.checkers.CheckResult;
+import old.core.box.events.EventType;
+import old.core.box.events.action.Heal;
+import old.core.box.events.entity.*;
+import old.core.box.events.mission.CreateMission;
+import old.core.box.events.world.CreateWorld;
+import old.core.box.listeners.EventProcessListener;
+import old.core.box.mappers.PlayerLevelMapper;
+import old.core.graph.Player;
+import old.core.model.Mission;
+import old.core.model.attributes.DestroyStrategy;
+import old.core.model.attributes.MissionDifficulty;
+import old.core.model.attributes.MissionType;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
@@ -25,7 +22,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.core.box.utils.TimeUtils.*;
+import static old.core.box.utils.TimeUtils.*;
 
 public class Adapter {
 

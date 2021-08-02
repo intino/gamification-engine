@@ -1,7 +1,7 @@
 package org.example.vaccine.control.box.adapter;
 
-import io.intino.gamification.core.box.events.action.AbstractAction;
-import io.intino.gamification.core.box.events.action.Heal;
+import old.core.box.events.action.AbstractAction;
+import old.core.box.events.action.Heal;
 import org.example.vaccine.control.box.ControlBox;
 import org.example.vaccine.datahub.events.vaccines.Vaccination;
 

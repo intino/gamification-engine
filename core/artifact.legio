@@ -1,22 +1,17 @@
 dsl Legio
 
-Artifact("io.intino.gamification", "1.0.0-SNAPSHOT") core as Product
-	Model("Proteo", "3.0.2", "4.1.1")
-	Box("Konos", "8.13.0")
+Artifact("io.intino.gamification", "1.0.0-SNAPSHOT") core
+
 	Imports
-		Compile("io.intino.alexandria", "core-framework", "2.1.0")
-		Compile("io.intino.alexandria", "datalake", "4.0.2")
 		Compile("com.google.code.gson", "gson", "2.8.7")
 		Test("junit", "junit", "LATEST")
+
 	Package(ModulesAndLibrariesExtracted)
 
 	Distribution > Artifactory ("intino-maven")
 			Release("https://artifactory.intino.io/artifactory/release-libraries")
 			Snapshot("https://artifactory.intino.io/artifactory/snapshot-libraries")
-
-	Parameter("datalake_path")
-	Parameter("datamart_path")
-	Parameter("time_zone")
+	Parameter(name = "datalake_path")
 
 Repository("intino-maven")
 	Release("https://artifactory.intino.io/artifactory/releases")

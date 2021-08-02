@@ -1,6 +1,6 @@
 package org.example.vaccine.control.box.adapter;
 
-import io.intino.gamification.core.box.events.entity.CreateNpc;
+import old.core.box.events.entity.CreateNpc;
 import org.example.vaccine.control.box.ControlBox;
 import org.example.vaccine.datahub.events.vaccines.Vaccination;
 

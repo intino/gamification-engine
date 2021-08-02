@@ -1,6 +1,6 @@
 package org.example.vaccine.mock;
 
-import io.intino.gamification.GamificationEngine;
+import old.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;

@@ -1,7 +1,7 @@
 package org.example.smartbrain.control.box;
 
-import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.core.box.utils.TimeUtils;
+import old.GamificationEngine;
+import old.core.box.utils.TimeUtils;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;

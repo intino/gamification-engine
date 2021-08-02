@@ -11,13 +11,9 @@ public class GameLoop {
 
     private Timer timer;
 
-    //TODO COLA Y ACTUAR SOBRE LOS EVENTOS
-    //private final Queue<GamificationEventWrapper<? extends GamificationEvent, ? extends Entity>> eventQueue;
-
     public GameLoop(Core core) {
         this.core = core;
-        //this.eventQueue = new PriorityQueue<>(Comparator.comparing(w -> w.event().ts()));
-        this.schedule(this.core.configuration().frameRate.get());
+        this.schedule(60);
     }
 
     private void schedule(int frameRate) {
@@ -26,7 +22,7 @@ public class GameLoop {
             throw new InvalidAttributeValueException("frameRate", String.valueOf(frameRate), "The value must be 1 or more.");
         }
 
-        scheduleGameLoop((int) (1000 / ((float) frameRate)));
+        scheduleGameLoop((long) Math.max(1, 1000 / ((float) frameRate)));
     }
 
     private void scheduleGameLoop(long millis) {
@@ -40,35 +36,10 @@ public class GameLoop {
         timer.purge();
     }
 
-    private class GameLoopUpdate extends TimerTask {
+    private static class GameLoopUpdate extends TimerTask {
         @Override
         public void run() {
             //runCheckers();
-            //feedEvents();
         }
     }
-
-    /*public static class GamificationEventWrapper<T extends GamificationEvent, S extends Entity> {
-
-        private final T event;
-        private final EventProcessListener<S> listener;
-
-        public GamificationEventWrapper(T event) {
-            this.event = event;
-            this.listener = null;
-        }
-
-        public GamificationEventWrapper(T event, EventProcessListener<S> listener) {
-            this.event = event;
-            this.listener = listener;
-        }
-
-        public T event() {
-            return event;
-        }
-
-        public EventProcessListener<S> listener() {
-            return listener;
-        }
-    }*/
 }

@@ -2,11 +2,11 @@ package io.intino.gamification.events;
 
 import io.intino.gamification.core.Core;
 
-public class Terminal {
+public class EventManager {
 
     private final Core core;
 
-    public Terminal(Core core) {
+    public EventManager(Core core) {
         this.core = core;
     }
 

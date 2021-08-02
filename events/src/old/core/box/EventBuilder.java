@@ -1,4 +1,4 @@
-package old.core.box.events;
+package old.core.box;
 
 import old.core.box.events.achievement.AchievementNewState;
 import old.core.box.events.achievement.CreateAchievement;

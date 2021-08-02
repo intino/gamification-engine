@@ -2,7 +2,7 @@ package old.core.box.checkers;
 
 import old.core.box.CoreBox;
 import old.core.box.checkers.entries.MissionEntry;
-import old.core.box.events.EventBuilder;
+import old.core.box.EventBuilder;
 import old.core.box.events.GamificationEvent;
 import old.core.box.helper.MissionStateHelper;
 import old.core.graph.Mission;

@@ -1,7 +1,7 @@
 package old.core.box.helper;
 
 import old.core.box.CoreBox;
-import old.core.box.events.EventBuilder;
+import old.core.box.EventBuilder;
 import old.core.graph.Mission;
 import old.core.graph.MissionState;
 import old.core.graph.Player;

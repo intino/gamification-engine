@@ -1,7 +1,7 @@
 package old.core.box.mounter;
 
 import old.core.box.CoreBox;
-import old.core.box.events.EventBuilder;
+import old.core.box.EventBuilder;
 import old.core.box.events.GamificationEvent;
 import old.core.box.events.entity.*;
 import old.core.model.attributes.DestroyStrategy;

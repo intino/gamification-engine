@@ -2,7 +2,7 @@ package org.example.cinepolis.control.box.actions;
 
 import io.intino.alexandria.Json;
 import io.intino.alexandria.http.spark.SparkContext;
-import io.intino.gamification.core.graph.Achievement;
+import old.core.graph.Achievement;
 import org.example.cinepolis.control.box.ControlBox;
 
 

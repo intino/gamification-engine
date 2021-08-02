@@ -1,7 +1,7 @@
 package org.example.smartbrain.control.box.adapter;
 
 import io.intino.alexandria.event.Event;
-import io.intino.gamification.core.box.events.GamificationEvent;
+import old.core.box.events.GamificationEvent;
 import org.example.smartbrain.control.box.ControlBox;
 
 import java.util.Collection;

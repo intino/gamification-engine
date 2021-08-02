@@ -1,6 +1,6 @@
 package org.example.smartbrain.control.box;
 
-import io.intino.gamification.GamificationEngine;
+import old.GamificationEngine;
 import org.example.smartbrain.control.Archetype;
 import org.example.smartbrain.control.box.mounters.MounterFactory;
 import org.example.smartbrain.control.graph.ControlGraph;

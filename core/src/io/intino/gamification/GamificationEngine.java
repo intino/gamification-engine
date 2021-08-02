@@ -1,70 +1,37 @@
 package io.intino.gamification;
 
-import io.intino.alexandria.core.BoxConfiguration;
-import io.intino.alexandria.logger.Logger;
-import io.intino.gamification.api.EngineConfiguration;
-import io.intino.gamification.api.EngineDatamart;
-import io.intino.gamification.api.EngineTerminal;
-import io.intino.gamification.core.box.CoreBox;
-import io.intino.gamification.core.launcher.Launcher;
+import io.intino.gamification.api.Configuration;
+import io.intino.gamification.core.launcher.ParameterProcessor;
+import io.intino.gamification.model.Datamart;
+import io.intino.gamification.core.Core;
 
 import java.util.Map;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.TimeUnit;
 
 public class GamificationEngine {
 
-    private final Launcher launcher;
-    private final CountDownLatch countDownLatch = new CountDownLatch(1);
-    private CoreBox box;
+    private final ParameterProcessor parameterProcessor;
 
-    public GamificationEngine(BoxConfiguration configuration) {
-        this(configuration.args());
-    }
+    private Core core;
+    private Configuration configuration;
+    private Datamart datamart;
 
-    public GamificationEngine(Map<String, String> arguments) {
-        this.launcher = new Launcher(arguments);
+    public GamificationEngine(Map<String, String> params) {
+        this.parameterProcessor = new ParameterProcessor(params);
     }
 
     public void launch() {
-        launch(() -> {});
-        waitFor();
+        this.core = new Core(parameterProcessor);
+        this.core.start();
+
+        this.configuration = core.configuration();
+        this.datamart = core.datamart();
     }
 
-    public void launch(Runnable onStartCallback) {
-        launcher.onStart(() -> {
-            box = launcher.box();
-            onStartCallback.run();
-            countDownLatch.countDown();
-        });
-        launcher.start();
+    public Configuration configuration() {
+        return this.configuration;
     }
 
-    public void waitFor() {
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            Logger.error(e);
-        }
-    }
-
-    public void waitFor(long timeout, TimeUnit timeUnit) {
-        try {
-            countDownLatch.await(timeout, timeUnit);
-        } catch (InterruptedException e) {
-            Logger.error(e);
-        }
-    }
-
-    public EngineConfiguration configuration() {
-        return box.engineConfig();
-    }
-
-    public EngineTerminal terminal() {
-        return box.engineTerminal();
-    }
-
-    public EngineDatamart datamart() {
-        return box.engineDatamart();
+    public Datamart datamart() {
+        return this.datamart;
     }
 }

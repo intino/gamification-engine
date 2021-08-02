@@ -1,7 +1,7 @@
 package org.example.vaccine.control.box;
 
-import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.core.box.events.world.CreateWorld;
+import old.GamificationEngine;
+import old.core.box.events.world.CreateWorld;
 import org.example.vaccine.control.Archetype;
 import org.example.vaccine.control.box.gamification.GameWorld;
 import org.example.vaccine.control.box.mounters.MounterFactory;

@@ -1,3 +1,0 @@
-dsl Konos
-
-Datalake(path = "{datalake_path}") as Local

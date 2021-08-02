@@ -2,8 +2,8 @@ package org.example.cinepolis.control.box;
 
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
-import io.intino.gamification.core.box.events.entity.CreateItem;
-import io.intino.gamification.core.box.events.entity.CreatePlayer;
+import old.core.box.events.entity.CreateItem;
+import old.core.box.events.entity.CreatePlayer;
 import org.example.cinepolis.control.gamification.GamificationConfig;
 
 import java.io.File;

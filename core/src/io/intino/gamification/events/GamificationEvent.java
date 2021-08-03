@@ -1,6 +1,7 @@
 package io.intino.gamification.events;
 
 import io.intino.gamification.utils.Json;
+import io.intino.gamification.utils.time.TimeUtils;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -8,7 +9,7 @@ import java.util.Objects;
 public class GamificationEvent {
 
     private String id;
-    private Instant ts = Instant.now();
+    private Instant ts = TimeUtils.currentInstant();
 
     public GamificationEvent() {
     }

@@ -1,16 +1,14 @@
 package io.intino.gamification.test;
 
-import io.intino.gamification.model.Actor;
-import io.intino.gamification.model.Datamart;
-import io.intino.gamification.model.Player;
-import io.intino.gamification.model.World;
+import io.intino.gamification.graph.model.Actor;
+import io.intino.gamification.graph.model.Player;
+import io.intino.gamification.graph.model.World;
 import io.intino.gamification.utils.Json;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class TestJson {

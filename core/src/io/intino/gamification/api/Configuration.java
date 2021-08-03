@@ -1,16 +1,15 @@
 package io.intino.gamification.api;
 
-import io.intino.gamification.core.launcher.ParameterProcessor;
-import io.intino.gamification.utils.time.Scale;
+import io.intino.gamification.core.GamificationParameters;
 
 public class Configuration {
 
     public final Variable<String> timeZone;
     public final Variable<String> gamificationPath;
 
-    public Configuration(ParameterProcessor parameterProcessor) {
-        this.timeZone = new Variable<>(parameterProcessor.timeZone());
-        this.gamificationPath = new Variable<>(parameterProcessor.gamificationPath());
+    public Configuration(GamificationParameters gamificationParameters) {
+        this.timeZone = new Variable<>(gamificationParameters.timeZone());
+        this.gamificationPath = new Variable<>(gamificationParameters.gamificationPath());
     }
 
     public static final class Variable<T> {

@@ -19,7 +19,7 @@ public class Checkers {
     }
 
     private void buildCheckers() {
-        //builder.put(TimeUtils.class, new TimeUtils(core.configuration().timeZone.get()));
+        builder.put(TimeChecker.class, new TimeChecker(core));
     }
 
     public <T extends Checker> T checker(Class<T> clazz) {

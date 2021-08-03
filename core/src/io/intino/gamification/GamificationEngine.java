@@ -2,6 +2,7 @@ package io.intino.gamification;
 
 import io.intino.gamification.api.Configuration;
 import io.intino.gamification.core.launcher.ParameterProcessor;
+import io.intino.gamification.events.EventManager;
 import io.intino.gamification.model.Datamart;
 import io.intino.gamification.core.Core;
 
@@ -12,8 +13,10 @@ public class GamificationEngine {
     private final ParameterProcessor parameterProcessor;
 
     private Core core;
+
     private Configuration configuration;
     private Datamart datamart;
+    private EventManager eventManager;
 
     public GamificationEngine(Map<String, String> params) {
         this.parameterProcessor = new ParameterProcessor(params);
@@ -25,6 +28,7 @@ public class GamificationEngine {
 
         this.configuration = core.configuration();
         this.datamart = core.datamart();
+        this.eventManager = core.eventManager();
     }
 
     public Configuration configuration() {
@@ -33,5 +37,9 @@ public class GamificationEngine {
 
     public Datamart datamart() {
         return this.datamart;
+    }
+
+    public EventManager eventManager() {
+        return this.eventManager;
     }
 }

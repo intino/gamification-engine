@@ -1,86 +1,84 @@
 package io.intino.gamification.utils.time;
 
-import io.intino.gamification.utils.Util;
-
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 
-public class TimeUtils extends Util {
+public class TimeUtils {
 
-	private final String timeZone;
+	private static String timeZone = "Atlantic/Canary";
 
-	public TimeUtils(String timeZone) {
-		this.timeZone = timeZone;
+	public static void timeZone(String timeZone) {
+		TimeUtils.timeZone = timeZone;
 	}
 
 	/* INSTANT OF ----------------------------------------------------------------------------------------------------*/
 
-	public Instant currentInstant() {
+	public static Instant currentInstant() {
 		return getInstantOf(getZonedDateTimeOf());
 	}
 
-	public Instant getInstantOf(int year, int month, int day, int hour, int minute, int second, int millis) {
+	public static Instant getInstantOf(int year, int month, int day, int hour, int minute, int second, int millis) {
 		return getInstantOf(getLocalDateTimeOf(year, month, day, hour, minute, second, millis));
 	}
 
-	public Instant getInstantOf(int year, int month, int day, int hour, int minute, int second) {
+	public static Instant getInstantOf(int year, int month, int day, int hour, int minute, int second) {
 		return getInstantOf(year, month, day, hour, minute, second, 0);
 	}
 
-	public Instant getInstantOf(int year, int month, int day, int hour, int minute) {
+	public static Instant getInstantOf(int year, int month, int day, int hour, int minute) {
 		return getInstantOf(year, month, day, hour, minute, 0);
 	}
 
-	public Instant getInstantOf(int year, int month, int day, int hour) {
+	public static Instant getInstantOf(int year, int month, int day, int hour) {
 		return getInstantOf(year, month, day, hour, 0);
 	}
 
-	public Instant getInstantOf(int year, int month, int day) {
+	public static Instant getInstantOf(int year, int month, int day) {
 		return getInstantOf(year, month, day, 0);
 	}
 
-	public Instant getInstantOf(int year, int month) {
+	public static Instant getInstantOf(int year, int month) {
 		return getInstantOf(year, month, 1);
 	}
 
-	public Instant getInstantOf(int year) {
+	public static Instant getInstantOf(int year) {
 		if(year < 0) return null;
 		return getInstantOf(year, 1);
 	}
 
 	/* COMPONENT OF --------------------------------------------------------------------------------------------------*/
 
-	public int secondOf(Instant instant) {
+	public static int secondOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getSecond();
 	}
 
-	public int minuteOf(Instant instant) {
+	public static int minuteOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getMinute();
 	}
 
-	public int hourOf(Instant instant) {
+	public static int hourOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getHour();
 	}
 
-	public int weekDayOf(Instant instant) {
+	public static int weekDayOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getDayOfWeek().getValue();
 	}
 
-	public int monthDayOf(Instant instant) {
+	public static int monthDayOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getDayOfMonth();
 	}
 
-	public int monthOf(Instant instant) {
+	public static int monthOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getMonth().getValue();
 	}
 
-	public int yearOf(Instant instant) {
+	public static int yearOf(Instant instant) {
 		return getLocalDateTimeOf(instant).getYear();
 	}
 
 	/* TRUNCATE ------------------------------------------------------------------------------------------------------*/
 
-	public Instant truncateTo(Instant instant, Scale scale) {
+	public static Instant truncateTo(Instant instant, Scale scale) {
 
 		if(scale.equals(Scale.Millis)) return instant.truncatedTo(ChronoUnit.MILLIS);
 		if(scale.equals(Scale.Second)) return instant.truncatedTo(ChronoUnit.SECONDS);
@@ -95,11 +93,11 @@ public class TimeUtils extends Util {
 
 	/* OFFSET INSTANT ------------------------------------------------------------------------------------------------*/
 
-	public Instant previousInstant(Instant instant, Scale scale) {
+	public static Instant previousInstant(Instant instant, Scale scale) {
 		return previousInstant(instant, scale, 1);
 	}
 
-	public Instant previousInstant(Instant instant, Scale scale, int n) {
+	public static Instant previousInstant(Instant instant, Scale scale, int n) {
 
 		if(scale.equals(Scale.Millis)) return instant.minus(n, ChronoUnit.MILLIS);
 		if(scale.equals(Scale.Second)) return instant.minus(n, ChronoUnit.SECONDS);
@@ -112,11 +110,11 @@ public class TimeUtils extends Util {
 		return instant;
 	}
 
-	public Instant nextInstant(Instant instant, Scale scale) {
+	public static Instant nextInstant(Instant instant, Scale scale) {
 		return nextInstant(instant, scale, 1);
 	}
 
-	public Instant nextInstant(Instant instant, Scale scale, int n) {
+	public static Instant nextInstant(Instant instant, Scale scale, int n) {
 
 		if(scale.equals(Scale.Millis)) return instant.plus(n, ChronoUnit.MILLIS);
 		if(scale.equals(Scale.Second)) return instant.plus(n, ChronoUnit.SECONDS);
@@ -131,7 +129,7 @@ public class TimeUtils extends Util {
 
 	/*-------------------------------------------------------------------------------------------------------*/
 
-	public long getMillisOf(Scale scale, int amount) {
+	public static long getMillisOf(Scale scale, int amount) {
 
 		long millis = 0;
 		switch (scale) {
@@ -156,36 +154,30 @@ public class TimeUtils extends Util {
 		return millis * amount;
 	}
 
-	/*public long getInstantDiff(Instant instant1, Instant instant2, TimeUnit timeUnit) {
-		if(instant1 == null || instant2 == null) return -1;
-		long diffInSeconds = Math.abs(instant1.getEpochSecond() - instant2.getEpochSecond());
-		return timeUnit.convert(diffInSeconds, TimeUnit.SECONDS);
-	}*/
-
-	public boolean instantIsInRange(Instant instant, Instant from, Instant to) {
+	public static boolean instantIsInRange(Instant instant, Instant from, Instant to) {
 		return !instant.isBefore(from) && instant.isBefore(to);
 	}
 
 	/*-------------------------------------------------------------------------------------------------------*/
 
-	private Instant getInstantOf(ZonedDateTime zdt) {
+	private static Instant getInstantOf(ZonedDateTime zdt) {
 		return Instant.parse(zdt.toString().split("Z|[+-]\\d*:")[0] + "Z");
 	}
 
-	private Instant getInstantOf(LocalDateTime localDateTime) {
+	private static Instant getInstantOf(LocalDateTime localDateTime) {
 		if(localDateTime == null) return null;
 		return localDateTime.toInstant(ZoneOffset.UTC);
 	}
 
-	private ZonedDateTime getZonedDateTimeOf() {
+	private static ZonedDateTime getZonedDateTimeOf() {
 		return ZonedDateTime.now(ZoneId.of(timeZone));
 	}
 
-	private LocalDateTime getLocalDateTimeOf(Instant instant) {
+	private static LocalDateTime getLocalDateTimeOf(Instant instant) {
 		return LocalDateTime.of(getYearOf(instant), getMonthOf(instant), getDayOf(instant), getHourOf(instant), getMinuteOf(instant), getSecondOf(instant), getMillisOf(instant));
 	}
 
-	private LocalDateTime getLocalDateTimeOf(int year, int month, int day, int hour, int minute, int second, int millis) {
+	private static LocalDateTime getLocalDateTimeOf(int year, int month, int day, int hour, int minute, int second, int millis) {
 		try {
 			return LocalDateTime.of(year, month, day, hour, minute);
 		} catch (Exception e) {
@@ -193,35 +185,35 @@ public class TimeUtils extends Util {
 		}
 	}
 
-	private int getYearOf(Instant instant) {
+	private static int getYearOf(Instant instant) {
 		return getComponentOf(instant, ChronoUnit.YEARS);
 	}
 
-	private int getMonthOf(Instant instant) {
+	private static int getMonthOf(Instant instant) {
 		return getComponentOf(instant, ChronoUnit.MONTHS);
 	}
 
-	private int getDayOf(Instant instant) {
+	private static int getDayOf(Instant instant) {
 		return getComponentOf(instant, ChronoUnit.DAYS);
 	}
 
-	private int getHourOf(Instant instant) {
+	private static int getHourOf(Instant instant) {
 		return getComponentOf(instant, ChronoUnit.HOURS);
 	}
 
-	private int getMinuteOf(Instant instant) {
+	private static int getMinuteOf(Instant instant) {
 		return getComponentOf(instant, ChronoUnit.MINUTES);
 	}
 
-	private int getSecondOf(Instant instant) {
+	private static int getSecondOf(Instant instant) {
 		return getComponentOf(instant, ChronoUnit.SECONDS);
 	}
 
-	private int getMillisOf(Instant instant) {
+	private static int getMillisOf(Instant instant) {
 		return getComponentOf(instant, ChronoUnit.MILLIS);
 	}
 
-	private int getComponentOf(Instant instant, ChronoUnit unit) {
+	private static int getComponentOf(Instant instant, ChronoUnit unit) {
 
 		String ret = "-1";
 
@@ -236,30 +228,30 @@ public class TimeUtils extends Util {
 		return Integer.parseInt(ret);
 	}
 
-	private Instant truncateToWeek(Instant instant) {
+	private static Instant truncateToWeek(Instant instant) {
 
 		Instant dayInstant = truncateTo(instant, Scale.Day);
 		int dayOfWeek = weekDayOf(dayInstant);
 		return previousInstant(dayInstant, Scale.Day, dayOfWeek - 1);
 	}
 
-	private Instant truncateToMonth(Instant instant) {
+	private static Instant truncateToMonth(Instant instant) {
 		return getInstantOf(yearOf(instant), monthOf(instant));
 	}
 
-	private Instant truncateToYear(Instant instant) {
+	private static Instant truncateToYear(Instant instant) {
 		return getInstantOf(yearOf(instant));
 	}
 
-	private Instant minusMonths(Instant instant, int nMonth) {
+	private static Instant minusMonths(Instant instant, int nMonth) {
 		return offsetMonth(instant, -nMonth);
 	}
 
-	private Instant plusMonths(Instant instant, int nMonth) {
+	private static Instant plusMonths(Instant instant, int nMonth) {
 		return offsetMonth(instant, nMonth);
 	}
 
-	private Instant offsetMonth(Instant instant, int nMonth) {
+	private static Instant offsetMonth(Instant instant, int nMonth) {
 		int day = monthDayOf(instant);
 		int month = monthOf(instant) + nMonth;
 		int year = yearOf(instant);
@@ -279,15 +271,15 @@ public class TimeUtils extends Util {
 		return getInstantOf(year, month, day, hourOf(instant), minuteOf(instant));
 	}
 
-	private Instant minusYears(Instant instant, int nYears) {
+	private static Instant minusYears(Instant instant, int nYears) {
 		return offsetYear(instant, -nYears);
 	}
 
-	private Instant plusYears(Instant instant, int nYears) {
+	private static Instant plusYears(Instant instant, int nYears) {
 		return offsetYear(instant, nYears);
 	}
 
-	private Instant offsetYear(Instant instant, int nYears) {
+	private static Instant offsetYear(Instant instant, int nYears) {
 		int day = monthDayOf(instant);
 		int year = yearOf(instant) + nYears;
 
@@ -296,7 +288,7 @@ public class TimeUtils extends Util {
 		return getInstantOf(year, monthOf(instant), day, hourOf(instant), minuteOf(instant));
 	}
 
-	private int adjustedDay(int day, int month, int year) {
+	private static int adjustedDay(int day, int month, int year) {
 		switch (month) {
 			case 2:
 				return Math.min(day, getFebruaryDaysOf(year));
@@ -310,7 +302,7 @@ public class TimeUtils extends Util {
 		}
 	}
 
-	private int getFebruaryDaysOf(int year) {
+	private static int getFebruaryDaysOf(int year) {
 		return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 29 : 28;
 	}
 }

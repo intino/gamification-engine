@@ -1,9 +1,7 @@
 package io.intino.gamification.core;
 
-import io.intino.gamification.core.checker.TimeChecker;
 import io.intino.gamification.events.EventManager;
-import io.intino.gamification.model.GamificationGraph;
-import io.intino.gamification.utils.time.Scale;
+import io.intino.gamification.graph.GamificationGraph;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,13 +44,8 @@ public class GameLoop {
             {
                 eventManager.pollEvents();
                 graph.update();
-                executeCheckers();
             }
             endFrame();
-        }
-
-        private void executeCheckers() {
-            core.checker(TimeChecker.class).check((int) timeBetweenFrames(), Scale.Millis);
         }
 
         private void beginFrame() {

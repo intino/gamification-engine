@@ -1,6 +1,6 @@
 package io.intino.gamification.test;
 
-import io.intino.gamification.model.Mission;
+import io.intino.gamification.graph.model.Mission;
 
 public class Missions {
 

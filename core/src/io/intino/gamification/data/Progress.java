@@ -28,11 +28,21 @@ public final class Progress {
         return this;
     }
 
-    public boolean complete() {
+    public State state() {
+        if(complete()) return State.Complete;
+        if(!failed()) return State.InProgress;
+        return State.Failed;
+    }
+
+    private boolean complete() {
         return !failed && progress >= 1.0f;
     }
 
-    public boolean failed() {
+    private boolean failed() {
         return this.failed;
+    }
+
+    public enum State {
+        Complete, InProgress, Failed
     }
 }

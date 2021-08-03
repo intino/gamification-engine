@@ -1,15 +1,17 @@
 package io.intino.gamification.utils.file;
 
-import io.intino.gamification.utils.Util;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+public class FileUtils {
 
-public class FileUtils extends Util {
-
-    public File setFile(String filePath) {
+    public static File createFile(String filePath) {
         File file = new File(filePath);
+
+        createFolder(file.getParentFile().getAbsolutePath());
 
         if(!file.exists()) {
             try {
@@ -23,13 +25,13 @@ public class FileUtils extends Util {
         return file;
     }
 
-    public File setFolder(String folderPath) {
+    public static File createFolder(String folderPath) {
         File folder = new File(folderPath);
         if(!folder.exists()) folder.mkdirs();
         return folder;
     }
 
-    public void appendIn(File file, String text) {
+    public static void appendIn(File file, String text) {
         try {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
             bw.append(text).close();
@@ -39,17 +41,23 @@ public class FileUtils extends Util {
         }
     }
 
-    public List<String> read(File file) {
-        List<String> lines = new ArrayList<>();
-        String line;
+    public static String read(File file) {
+        String content = "";
         try {
-            BufferedReader br = new BufferedReader(new FileReader(file));
-            while ((line = br.readLine()) != null) lines.add(line);
-            br.close();
+            content = Files.readString(file.toPath());
         } catch (IOException e) {
             //TODO REGISTRAR ERROR
             e.printStackTrace();
         }
-        return lines;
+        return content;
+    }
+
+    public static void write(File file, String text) {
+        try {
+            Files.writeString(file.toPath(), text);
+        } catch (IOException e) {
+            //TODO REGISTRAR ERROR
+            e.printStackTrace();
+        }
     }
 }

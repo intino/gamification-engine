@@ -1,19 +1,17 @@
 package io.intino.gamification.core.checker;
 
-import io.intino.gamification.core.Core;
-import io.intino.gamification.utils.file.FileUtils;
-import io.intino.gamification.utils.time.TimeUtils;
+import io.intino.gamification.core.GamificationCore;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Checkers {
 
-    private final Core core;
+    private final GamificationCore core;
 
     private static Map<Class<? extends Checker>, Checker> builder = new HashMap<>();
 
-    public Checkers(Core core) {
+    public Checkers(GamificationCore core) {
         this.core = core;
         buildCheckers();
     }

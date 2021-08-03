@@ -1,31 +1,65 @@
 package io.intino.gamification.events;
 
-import io.intino.gamification.core.Core;
-import io.intino.gamification.core.listener.SubscribedMissions;
-import io.intino.gamification.model.Graph;
+import io.intino.gamification.core.GamificationCore;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("all")
 public class EventManager {
 
-    private final Core core;
+    private static EventManager instance;
 
-    private final Map<Class<? extends GamificationEvent>, List<SubscribedMissions>> eventSubscribers;
+    public static EventManager get() {
+        return instance;
+    }
 
-    public EventManager(Core core) {
+    private final GamificationCore core;
+    private volatile Queue<GamificationEvent> frontEventQueue;
+    private volatile Queue<GamificationEvent> backEventQueue;
+    private final Map<Class<? extends GamificationEvent>, List<EventCallback<? extends GamificationEvent>>> eventCallbacks;
+
+    public EventManager(GamificationCore core) {
+        if(core == null) throw new NullPointerException("GamificationCore cannot be null");
+        EventManager.instance = this;
         this.core = core;
-        this.eventSubscribers = new HashMap<>();
+        this.frontEventQueue = new PriorityQueue<>();
+        this.backEventQueue = new PriorityQueue<>();
+        this.eventCallbacks = new ConcurrentHashMap<>();
     }
 
-    public <T extends GamificationEvent> void feed(T event) {
-        eventSubscribers.get(event.getClass()).forEach(s -> s.notify(event));
+    public void publish(GamificationEvent event) {
+        if(event == null) return;
+        frontEventQueue.add(event);
     }
 
-    public <T extends GamificationEvent> void subscribe(Class<T> clazz, SubscribedMissions action) {
-        eventSubscribers.computeIfAbsent(clazz, k -> new ArrayList<>());
-        eventSubscribers.get(clazz).add(action);
+    public <T extends GamificationEvent> void addEventCallback(Class<T> eventClass, EventCallback<T> callback) {
+        if(callback == null) return;
+        eventCallbacks.computeIfAbsent(eventClass, c -> new ArrayList<>()).add(callback);
+    }
+
+    public void pollEvents() {
+        final Queue<GamificationEvent> eventQueue = swapEventQueues();
+        while(!eventQueue.isEmpty()) {
+            final GamificationEvent event = eventQueue.poll();
+            invokeEventCallbacks(event, eventCallbacks.get(event.getClass()));
+        }
+    }
+
+    private void invokeEventCallbacks(GamificationEvent event, List<EventCallback<? extends GamificationEvent>> callbacks) {
+        if(callbacks == null) return;
+        for(EventCallback callback : callbacks) {
+            callback.notify(event);
+        }
+    }
+
+    private Queue<GamificationEvent> swapEventQueues() {
+        synchronized (EventManager.class) {
+            Queue<GamificationEvent> eventQueue = frontEventQueue;
+            Queue<GamificationEvent> tmp = backEventQueue;
+            backEventQueue = frontEventQueue;
+            frontEventQueue = tmp;
+            return eventQueue;
+        }
     }
 }

@@ -1,13 +1,13 @@
 package io.intino.gamification.core.checker;
 
-import io.intino.gamification.core.Core;
+import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.utils.time.Scale;
 
 public abstract class Checker {
 
-    protected final Core core;
+    protected final GamificationCore core;
 
-    public Checker(Core core) {
+    public Checker(GamificationCore core) {
         this.core = core;
     }
 

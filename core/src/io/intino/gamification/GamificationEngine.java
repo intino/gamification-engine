@@ -4,7 +4,7 @@ import io.intino.gamification.api.Configuration;
 import io.intino.gamification.core.launcher.ParameterProcessor;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.model.Datamart;
-import io.intino.gamification.core.Core;
+import io.intino.gamification.core.GamificationCore;
 
 import java.util.Map;
 
@@ -12,7 +12,7 @@ public class GamificationEngine {
 
     private final ParameterProcessor parameterProcessor;
 
-    private Core core;
+    private GamificationCore core;
 
     private Configuration configuration;
     private Datamart datamart;
@@ -23,7 +23,7 @@ public class GamificationEngine {
     }
 
     public void launch() {
-        this.core = new Core(parameterProcessor);
+        this.core = new GamificationCore(parameterProcessor);
         this.core.start();
 
         this.configuration = core.configuration();

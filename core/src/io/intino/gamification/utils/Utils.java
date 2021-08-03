@@ -1,6 +1,6 @@
 package io.intino.gamification.utils;
 
-import io.intino.gamification.core.Core;
+import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.utils.file.FileUtils;
 import io.intino.gamification.utils.time.TimeUtils;
 
@@ -9,11 +9,11 @@ import java.util.Map;
 
 public class Utils {
 
-    private final Core core;
+    private final GamificationCore core;
 
     private static Map<Class<? extends Util>, Util> builder = new HashMap<>();
 
-    public Utils(Core core) {
+    public Utils(GamificationCore core) {
         this.core = core;
         buildUtils();
     }

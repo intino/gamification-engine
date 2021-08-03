@@ -6,36 +6,35 @@ import io.intino.gamification.core.checker.Checkers;
 import io.intino.gamification.core.launcher.ParameterProcessor;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.model.Datamart;
-import io.intino.gamification.model.Graph;
+import io.intino.gamification.model.GamificationGraph;
 import io.intino.gamification.utils.Util;
 import io.intino.gamification.utils.Utils;
 
-public class Core {
+public class GamificationCore {
 
     private final Configuration configuration;
-    private Utils utils;
-
-    private Graph graph;
+    private GamificationGraph graph;
     private Datamart datamart;
-
     private EventManager eventManager;
     private Checkers checkers;
-
     private GameLoop gameLoop;
+    private Utils utils;
 
-    public Core(ParameterProcessor parameterProcessor) {
+    public GamificationCore(ParameterProcessor parameterProcessor) {
         this.configuration = new Configuration(parameterProcessor);
     }
 
     public void start() {
+        initSubSystems();
+        datamart.load();
+    }
+
+    private void initSubSystems() {
         this.utils = new Utils(this);
-
-        this.graph = new Graph(this);
+        this.graph = new GamificationGraph(this);
         this.datamart = new Datamart(this);
-
         this.eventManager = new EventManager(this);
         this.checkers = new Checkers(this);
-
         this.gameLoop = new GameLoop(this);
     }
 
@@ -47,7 +46,7 @@ public class Core {
         return this.utils.util(clazz);
     }
 
-    public Graph graph() {
+    public GamificationGraph graph() {
         return graph;
     }
 

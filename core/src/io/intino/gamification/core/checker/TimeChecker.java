@@ -1,6 +1,6 @@
 package io.intino.gamification.core.checker;
 
-import io.intino.gamification.core.Core;
+import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.utils.time.Scale;
 import io.intino.gamification.utils.time.TimeUtils;
 
@@ -10,7 +10,7 @@ public class TimeChecker extends Checker {
 
     private TimeUtils timeUtils;
 
-    public TimeChecker(Core core) {
+    public TimeChecker(GamificationCore core) {
         super(core);
     }
 

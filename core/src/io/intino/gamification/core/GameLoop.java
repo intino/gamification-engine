@@ -1,7 +1,8 @@
 package io.intino.gamification.core;
 
 import io.intino.gamification.core.checker.TimeChecker;
-import io.intino.gamification.core.exception.InvalidAttributeValueException;
+import io.intino.gamification.events.EventManager;
+import io.intino.gamification.model.GamificationGraph;
 import io.intino.gamification.utils.time.Scale;
 
 import java.util.Timer;
@@ -9,45 +10,59 @@ import java.util.TimerTask;
 
 public class GameLoop {
 
-    private final int FRAME_RATE = 60;
+    private static final int FRAME_RATE = 60;
 
-    private final Core core;
+    private final GamificationCore core;
+    private final EventManager eventManager;
+    private final GamificationGraph graph;
+    private final Timer timer;
 
-    private Timer timer;
-
-    public GameLoop(Core core) {
+    public GameLoop(GamificationCore core) {
         this.core = core;
-        this.schedule();
+        this.eventManager = core.eventManager();
+        this.graph = core.graph();
+        this.timer = new Timer();
     }
 
-    private void schedule() {
-        if(FRAME_RATE <= 0) {
-            //TODO REGISTRAR ERROR
-            throw new InvalidAttributeValueException("frameRate", String.valueOf(FRAME_RATE), "The value must be 1 or more.");
-        }
-
-        scheduleGameLoop(millisToRefresh(FRAME_RATE));
+    public void start() {
+        timer.schedule(new GameLoopUpdate(), 0, timeBetweenFrames());
     }
 
-    private void scheduleGameLoop(long millis) {
-        if(timer != null) stopPreviousLoop();
-        timer = new Timer();
-        timer.scheduleAtFixedRate(new GameLoopUpdate(), 0, millis);
-    }
-
-    private void stopPreviousLoop() {
+    public void stop() {
         timer.cancel();
-        timer.purge();
     }
 
-    private long millisToRefresh(int frameRate) {
-        return (long) Math.max(1, 1000 / ((float) FRAME_RATE));
+    private long timeBetweenFrames() {
+        return (long) Math.max(1, 1000.0f / ((float) FRAME_RATE));
     }
 
     private class GameLoopUpdate extends TimerTask {
+
+        private long lastFrameTime;
+
         @Override
         public void run() {
-            core.checker(TimeChecker.class).check((int) millisToRefresh(FRAME_RATE), Scale.Millis);
+            beginFrame();
+            {
+                eventManager.pollEvents();
+                graph.update();
+                executeCheckers();
+            }
+            endFrame();
+        }
+
+        private void executeCheckers() {
+            core.checker(TimeChecker.class).check((int) timeBetweenFrames(), Scale.Millis);
+        }
+
+        private void beginFrame() {
+            final long now = System.currentTimeMillis();
+            GameTime.deltaTime = now - lastFrameTime;
+            lastFrameTime = now;
+        }
+
+        private void endFrame() {
+            ++GameTime.frame;
         }
     }
 }

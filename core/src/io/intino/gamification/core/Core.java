@@ -43,7 +43,7 @@ public class Core {
         return this.configuration;
     }
 
-    public Util util(Class<? extends Util> clazz) {
+    public <T extends Util> T util(Class<T> clazz) {
         return this.utils.util(clazz);
     }
 
@@ -55,11 +55,11 @@ public class Core {
         return this.datamart;
     }
 
-    public EventManager terminal() {
+    public EventManager eventManager() {
         return eventManager;
     }
 
-    public Checker checker(Class<? extends Checker> clazz) {
+    public <T extends Checker> T checker(Class<T> clazz) {
         return this.checkers.checker(clazz);
     }
 

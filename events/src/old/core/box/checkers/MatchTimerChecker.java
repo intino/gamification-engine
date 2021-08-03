@@ -2,6 +2,7 @@ package old.core.box.checkers;
 
 import old.core.box.CoreBox;
 import old.core.box.EventBuilder;
+import old.core.box.helper.MissionHelper;
 import old.core.graph.Match;
 import old.core.model.Achievement;
 
@@ -22,6 +23,12 @@ public class MatchTimerChecker extends Checker {
 
         to = currentInstant();
         from = previousInstant(to, scale, amount);
+
+        MissionHelper helper = box.helper(MissionHelper.class);
+
+        box.graph().worldList().stream()
+                .filter(w -> w.match() != null)
+                .forEach(w -> helper.failMissions(w, m -> m.expiration() != null && instantIsInRange(m.expiration(), from, to)));
 
         box.graph().activeMatches().stream()
                 .filter(m -> m.to() != null && instantIsInRange(m.to(), from, to))

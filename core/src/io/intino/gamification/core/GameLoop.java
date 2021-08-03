@@ -1,11 +1,15 @@
 package io.intino.gamification.core;
 
+import io.intino.gamification.core.checker.TimeChecker;
 import io.intino.gamification.core.exception.InvalidAttributeValueException;
+import io.intino.gamification.utils.time.Scale;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class GameLoop {
+
+    private final int FRAME_RATE = 60;
 
     private final Core core;
 
@@ -13,16 +17,16 @@ public class GameLoop {
 
     public GameLoop(Core core) {
         this.core = core;
-        this.schedule(60);
+        this.schedule();
     }
 
-    private void schedule(int frameRate) {
-        if(frameRate <= 0) {
+    private void schedule() {
+        if(FRAME_RATE <= 0) {
             //TODO REGISTRAR ERROR
-            throw new InvalidAttributeValueException("frameRate", String.valueOf(frameRate), "The value must be 1 or more.");
+            throw new InvalidAttributeValueException("frameRate", String.valueOf(FRAME_RATE), "The value must be 1 or more.");
         }
 
-        scheduleGameLoop((long) Math.max(1, 1000 / ((float) frameRate)));
+        scheduleGameLoop(millisToRefresh(FRAME_RATE));
     }
 
     private void scheduleGameLoop(long millis) {
@@ -36,10 +40,14 @@ public class GameLoop {
         timer.purge();
     }
 
-    private static class GameLoopUpdate extends TimerTask {
+    private long millisToRefresh(int frameRate) {
+        return (long) Math.max(1, 1000 / ((float) FRAME_RATE));
+    }
+
+    private class GameLoopUpdate extends TimerTask {
         @Override
         public void run() {
-            //runCheckers();
+            core.checker(TimeChecker.class).check((int) millisToRefresh(FRAME_RATE), Scale.Millis);
         }
     }
 }

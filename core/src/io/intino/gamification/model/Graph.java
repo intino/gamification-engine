@@ -9,4 +9,8 @@ public class Graph {
     public Graph(Core core) {
         this.core = core;
     }
+
+    public Core core() {
+        return core;
+    }
 }

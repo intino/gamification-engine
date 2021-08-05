@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.box;
 
-import old.GamificationEngine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import io.intino.magritte.framework.stores.FileSystemStore;
 import io.intino.magritte.io.Stash;
@@ -19,13 +19,12 @@ public class Main {
 		Graph graph = new Graph(store(box.datamart().root())).loadStashes(false, StartUpStashes);
 		box.put(graph);
 
-		GamificationEngine engine = new GamificationEngine(box.configuration());
+		GamificationEngine engine = new GamificationEngine(box.configuration().args());
+		engine.launch();
 		box.put(engine);
 
-		engine.launch(() -> {
-			box.start();
-			Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
-		});
+		box.start();
+		Runtime.getRuntime().addShutdownHook(new Thread(box::stop));
 	}
 
 	private static FileSystemStore store(File datamartFolder) {

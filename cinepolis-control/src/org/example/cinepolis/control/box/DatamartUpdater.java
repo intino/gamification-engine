@@ -2,40 +2,42 @@ package org.example.cinepolis.control.box;
 
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
-import old.core.box.events.entity.CreateItem;
-import old.core.box.events.entity.CreatePlayer;
-import org.example.cinepolis.control.gamification.GamificationConfig;
+import io.intino.gamification.util.time.TimeUtils;
+import org.example.cinepolis.datahub.events.cinepolis.AssetAlert;
+import org.example.cinepolis.datahub.events.cinepolis.HireEmployee;
+import org.example.cinepolis.datahub.events.cinepolis.RegisterAsset;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static org.example.cinepolis.control.box.DatamartUtils.*;
 
 public class DatamartUpdater {
 
     public static void initialize(ControlBox box) {
         box.graph().clear();
-        box.engine().datamart().clear();
-
         box.adapter().initialize();
 
         try {
             List<Theater> theaters = new ArrayList<>();
-
-            File employeeFile = new File(box.configuration().home() + "/data/employees/employees.tsv");
-            List<String> employeeLines = Files.readAllLines(employeeFile.toPath());
-            for(String line : employeeLines) {
-                if(line.endsWith("id")) continue;
-                box.engine().terminal().feed(createPlayerOf(new Employee(line.split("\t"))));
-            }
 
             File theaterFile = new File(box.configuration().home() + "/data/theaters/theaters.tsv");
             List<String> theaterLines = Files.readAllLines(theaterFile.toPath());
             for(String line : theaterLines) {
                 if(line.endsWith("comercialSegment")) continue;
                 theaters.add(new Theater(line.split("\t")));
+            }
+
+            File employeeFile = new File(box.configuration().home() + "/data/employees/employees.tsv");
+            List<String> employeeLines = Files.readAllLines(employeeFile.toPath());
+            for(String line : employeeLines) {
+                if(line.endsWith("id")) continue;
+                Employee employee = new Employee(line.split("\t"));
+                Theater theater = theaters.stream().filter(t -> t.technician.equals(employee.id)).findFirst().orElse(null);
+                if(theater != null) box.terminal().publish(hireEmployee(employee, theater));
             }
 
             Map<String, Asset> assetMap = new HashMap<>();
@@ -62,11 +64,9 @@ public class DatamartUpdater {
                 }
             }
 
-            assetMap.forEach((key, value) -> {
-                List<String> employees = getEmployeesWithIp(theaters, key);
-                for (String employee : employees) {
-                    box.engine().terminal().feed(createItemOf(employee, value));
-                }
+            assetMap.forEach((ip, asset) -> {
+                Theater theater = theaters.stream().filter(t -> ip.startsWith(t.operationSegment)).findFirst().orElse(null);
+                if(theater != null) box.terminal().publish(registerAsset(asset, theater));
             });
 
             System.out.println();
@@ -75,9 +75,7 @@ public class DatamartUpdater {
             e.printStackTrace();
         }
 
-        /*newWorkingDay(box);
-
-        box.terminal().publish(deleteEmployee("empleado1"));
+        /*box.terminal().publish(deleteEmployee("empleado1"));
         box.terminal().publish(deleteAsset("asset4"));
 
         box.terminal().publish(generateAlert("alert1", "asset5", AssetAlert.Importance.Important, 1, "Arregla el asset 5"));
@@ -88,23 +86,35 @@ public class DatamartUpdater {
         box.terminal().publish(completeAlert("alert1", "asset5", "empleado2"));
         box.terminal().publish(completeAlert("alert2", "asset10", "empleado3"));
         box.terminal().publish(completeAlert("alert3", "asset10", "empleado3"));
-        box.terminal().publish(completeAlert("alert4", "asset15", "empleado5"));
+        box.terminal().publish(completeAlert("alert4", "asset15", "empleado5"));*/
 
-        System.out.println();*/
+        box.engine().graphSerializer().save();
+
+        System.out.println();
+    }
+
+    private static RegisterAsset registerAsset(Asset value, Theater theater) {
+        RegisterAsset event = new RegisterAsset();
+        event.ts(TimeUtils.currentInstant());
+        event.id(value.ip);
+        event.area(theater.code);
+        event.name(value.name);
+        return event;
+    }
+
+    private static HireEmployee hireEmployee(Employee employee, Theater theater) {
+        HireEmployee event = new HireEmployee();
+        event.ts(TimeUtils.currentInstant());
+        event.id(employee.id);
+        event.area(theater.code);
+        event.age(30);
+        event.phone(employee.phone);
+        event.name(employee.name);
+        return event;
     }
 
     private static Instant tsOf(Message.Value ts) {
         return Instant.parse(ts.asString().replaceAll(" ", ""));
-    }
-
-    private static List<String> getEmployeesWithIp(List<Theater> theaters, String ip) {
-        return theaters.stream().filter(t -> ip.startsWith(t.operationSegment)).map(t -> t.technician).collect(Collectors.toList());
-    }
-
-    private static boolean enabledOf(String mode) {
-        if(mode == null) return false;
-        if(mode.equals("On")) return true;
-        return false;
     }
 
     private static MessageReader getMessageReaderOf(File file) throws IOException {
@@ -117,22 +127,6 @@ public class DatamartUpdater {
         List<Message> messages = new ArrayList<>();
         while (reader.hasNext()) messages.add(reader.next());
         return messages;
-    }
-
-    private static CreatePlayer createPlayerOf(Employee employee) {
-        CreatePlayer event = new CreatePlayer();
-        event.health((int) (100 * Math.random())).enabled(true).world(GamificationConfig.WorldId).id(employee.id);
-        return event;
-    }
-
-    private static CreateItem createItemOf(String employee, Asset asset) {
-        CreateItem event = new CreateItem();
-        event.player(employee)
-                .health((int) (100 * Math.random()))
-                .enabled(enabledOf(asset.mode))
-                .world(GamificationConfig.WorldId)
-                .id(asset.ip);
-        return event;
     }
 
     private static Asset combine(Asset oldAsset, Asset newAsset) {

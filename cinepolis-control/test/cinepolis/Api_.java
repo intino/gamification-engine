@@ -1,19 +1,15 @@
 package cinepolis;
 
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.box.actions.GetItemAction;
-import org.example.cinepolis.control.box.actions.GetMissionAction;
-import org.example.cinepolis.control.box.actions.GetPlayerAction;
 import org.example.cinepolis.datahub.CinepolisTerminal;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import static cinepolis.TestUtils.*;
 import static org.example.cinepolis.datahub.events.cinepolis.AssetAlert.Importance.*;
 
 public class Api_ {
 
-    private static final ControlBox Box = TestUtils.createBox();
+    /*private static final ControlBox Box = TestUtils.createBox();
     public static final String WORLD_ID = "Cinesa";
 
     @BeforeClass
@@ -67,6 +63,6 @@ public class Api_ {
         action.id = "alert1";
 
         System.out.println(action.execute());
-    }
+    }*/
 
 }

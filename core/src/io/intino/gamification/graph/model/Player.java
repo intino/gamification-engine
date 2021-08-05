@@ -1,11 +1,11 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.data.Progress;
+import io.intino.gamification.util.data.Progress;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.data.Progress.State.*;
+import static io.intino.gamification.util.data.Progress.State.*;
 
 public class Player extends Actor {
 
@@ -16,8 +16,8 @@ public class Player extends Actor {
         this.achievementProgress = new LinkedHashMap<>();
     }
 
-    public Progress getAchievementProgress(String achievementId) {
-        return achievementProgress.computeIfAbsent(achievementId, id -> new Progress());
+    public Progress getAchievementProgress(String achievementId, int total) {
+        return achievementProgress.computeIfAbsent(achievementId, id -> new Progress(total));
     }
 
     public Collection<Map.Entry<String, Progress>> achievementProgress() {

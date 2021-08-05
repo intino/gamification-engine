@@ -3,7 +3,7 @@ package io.intino.gamification.core;
 import io.intino.gamification.api.Configuration;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GraphSerializer;
-import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.model.GamificationGraph;
 import io.intino.gamification.graph.GraphViewer;
 
 public class GamificationCore {
@@ -30,6 +30,7 @@ public class GamificationCore {
         this.graphViewer = new GraphViewer(this);
         this.eventManager = new EventManager(this);
         this.gameLoop = new GameLoop(this);
+        this.gameLoop.start();
     }
 
     public Configuration configuration() {

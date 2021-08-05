@@ -1,6 +1,6 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.data.Property;
+import io.intino.gamification.util.data.Property;
 
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -8,25 +8,12 @@ import java.util.Set;
 
 public class Actor extends Entity {
 
-    private final Property<Float> health = new Property<>(100.0f);
     private final Property<Long> score = new Property<>(0L);
     private final Inventory inventory = new Inventory();
     private final Property<InventoryPolicy> inventoryPolicy = new Property<>(InventoryPolicy.Drop);
 
     public Actor(String world, String id) {
         super(world, id);
-    }
-
-    public float health() {
-        return health.get();
-    }
-
-    public void health(float health) {
-        this.health.set(health);
-    }
-
-    public Property<Float> healthProperty() {
-        return health;
     }
 
     public long score() {
@@ -100,11 +87,11 @@ public class Actor extends Entity {
         }
 
         private void destroyItems() {
-            items.stream().map(world().items()::find).filter(Objects::nonNull).forEach(item -> item.owner(null));
+            items.stream().<Item>map(world().items()::find).filter(Objects::nonNull).forEach(item -> item.owner(null));
         }
 
         private void dropItems() {
-            items.stream().map(world().items()::find).filter(Objects::nonNull).forEach(item -> item.owner(null));
+            items.stream().<Item>map(world().items()::find).filter(Objects::nonNull).forEach(item -> item.owner(null));
         }
     }
 }

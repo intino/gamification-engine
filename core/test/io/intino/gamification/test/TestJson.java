@@ -3,7 +3,7 @@ package io.intino.gamification.test;
 import io.intino.gamification.graph.model.Actor;
 import io.intino.gamification.graph.model.Player;
 import io.intino.gamification.graph.model.World;
-import io.intino.gamification.utils.Json;
+import io.intino.gamification.util.data.Json;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class TestJson {
 
-    public static void main(String[] args) throws IOException {
+    /*public static void main(String[] args) throws IOException {
         writeWorld();
         readWorld();
     }
@@ -58,5 +58,5 @@ public class TestJson {
         return new HashMap<>() {{
             put("", ""); // ...
         }};
-    }
+    }*/
 }

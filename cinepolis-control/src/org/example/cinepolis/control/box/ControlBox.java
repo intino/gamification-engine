@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.box;
 
-import old.GamificationEngine;
+import io.intino.gamification.GamificationEngine;
 import io.intino.magritte.framework.Graph;
 import org.example.cinepolis.control.Archetype;
 import org.example.cinepolis.control.box.mounters.MounterFactory;

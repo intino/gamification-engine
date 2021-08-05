@@ -1,57 +1,33 @@
 package io.intino.gamification.events;
 
-import io.intino.gamification.utils.Json;
-import io.intino.gamification.utils.time.TimeUtils;
+import io.intino.gamification.util.data.Json;
+import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
-import java.util.Objects;
 
-public class GamificationEvent {
+public class GamificationEvent implements Comparable<GamificationEvent> {
 
-    private String id;
-    private Instant ts = TimeUtils.currentInstant();
+    protected final Instant ts;
 
     public GamificationEvent() {
+        this(TimeUtils.currentInstant());
     }
 
-    public GamificationEvent(String id, Instant ts) {
-        this.id = id;
+    public GamificationEvent(Instant ts) {
         this.ts = ts;
-    }
-
-    public String id() {
-        return this.id;
-    }
-
-    public GamificationEvent id(String id) {
-        this.id = id;
-        return this;
     }
 
     public Instant ts() {
         return this.ts;
     }
 
-    public GamificationEvent ts(Instant ts) {
-        this.ts = ts;
-        return this;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GamificationEvent that = (GamificationEvent) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
     @Override
     public String toString() {
         return Json.toJson(this);
+    }
+
+    @Override
+    public int compareTo(GamificationEvent event) {
+        return ts.compareTo(event.ts());
     }
 }

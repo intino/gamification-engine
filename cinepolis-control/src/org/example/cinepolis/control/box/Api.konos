@@ -1,52 +1,52 @@
 dsl Konos
 
-Service(title = "Cinepolis REST Service") api as REST(host = "{host}", basePath = "/api/v1", port = "{port}")
+//Service(title = "Cinepolis REST Service") api as REST(host = "{host}", basePath = "/api/v1", port = "{port}")
 
-    Resource(path="/gamification/world/:id") world
-    	Get(description = "Get world by id")
-    		Parameter(in=path) id as Text
-    		Response as Text
-
-	Resource(path="/gamification/match/:world") currentMatch
-         Get(description = "Get current match of world")
-         	Parameter(in=path) world as Text
-         	Response as Text
-
-	Resource(path="/gamification/player/:world/:id") player
-		Get(description = "Get player of world")
-			Parameter(in=path) world as Text
-			Parameter(in=path) id as Text
-			Response as Text
-
-
-	Resource(path="/gamification/npc/:world/:id") npc
-		Get(description = "Get npc of world")
-			Parameter(in=path) world as Text
-			Parameter(in=path) id as Text
-			Response as Text
-
-
-	Resource(path="/gamification/item/:world/:id") item
-		Get(description = "Get item of world")
-			Parameter(in=path) world as Text
-			Parameter(in=path) id as Text
-			Response as Text
-
-	Resource(path="/gamification/mission/:world/:id") mission
-		Get(description = "Get mission of world")
-			Parameter(in=path) world as Text
-			Parameter(in=path) id as Text
-			Response as Text
-
-	Resource(path="/gamification/player/:world/:id") achievement
-		Get(description = "Get achievement of world")
-			Parameter(in=path) world as Text
-			Parameter(in=path) id as Text
-			Response as Text
-
-	Resource(path="/gamification/player/:world/:player/:id") playerAchievement
-		Get(description = "Get player achievement")
-			Parameter(in=path) world as Text
-			Parameter(in=path) player as Text
-			Parameter(in=path) id as Text
-			Response as Text
+//    Resource(path="/gamification/world/:id") world
+//    	Get(description = "Get world by id")
+//    		Parameter(in=path) id as Text
+//    		Response as Text
+//
+//	Resource(path="/gamification/match/:world") currentMatch
+//         Get(description = "Get current match of world")
+//         	Parameter(in=path) world as Text
+//         	Response as Text
+//
+//	Resource(path="/gamification/player/:world/:id") player
+//		Get(description = "Get player of world")
+//			Parameter(in=path) world as Text
+//			Parameter(in=path) id as Text
+//			Response as Text
+//
+//
+//	Resource(path="/gamification/npc/:world/:id") npc
+//		Get(description = "Get npc of world")
+//			Parameter(in=path) world as Text
+//			Parameter(in=path) id as Text
+//			Response as Text
+//
+//
+//	Resource(path="/gamification/item/:world/:id") item
+//		Get(description = "Get item of world")
+//			Parameter(in=path) world as Text
+//			Parameter(in=path) id as Text
+//			Response as Text
+//
+//	Resource(path="/gamification/mission/:world/:id") mission
+//		Get(description = "Get mission of world")
+//			Parameter(in=path) world as Text
+//			Parameter(in=path) id as Text
+//			Response as Text
+//
+//	Resource(path="/gamification/player/:world/:id") achievement
+//		Get(description = "Get achievement of world")
+//			Parameter(in=path) world as Text
+//			Parameter(in=path) id as Text
+//			Response as Text
+//
+//	Resource(path="/gamification/player/:world/:player/:id") playerAchievement
+//		Get(description = "Get player achievement")
+//			Parameter(in=path) world as Text
+//			Parameter(in=path) player as Text
+//			Parameter(in=path) id as Text
+//			Response as Text

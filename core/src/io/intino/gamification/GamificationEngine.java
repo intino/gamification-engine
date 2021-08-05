@@ -35,7 +35,7 @@ public class GamificationEngine {
         return this.configuration;
     }
 
-    public GraphSerializer datamart() {
+    public GraphSerializer graphSerializer() {
         return this.graphSerializer;
     }
 

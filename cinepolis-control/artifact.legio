@@ -21,9 +21,9 @@ Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Parameter("datahub_clientId")
 	Parameter("datahub_outbox_directory")
 	Parameter("datalake_path")
-	Parameter("gamification_datamart_path")
-	Parameter("time_zone")
 	Parameter("port")
+	Parameter("gamification_path")
+	Parameter("gamification_time_zone")
 
 RunConfiguration local
 	Argument("home", "temp")
@@ -34,7 +34,7 @@ RunConfiguration local
 	Argument("datahub_outbox_directory", "temp/terminals/example/cinepolis")
 	Argument("datalake_path", "temp/datalake")
 	Argument("gamification_path", "temp/datamarts/cinepolis-gamification")
-	Argument("gamification_timezone", "Atlantic/Canary")
+	Argument("gamification_time_zone", "Atlantic/Canary")
 	Argument("port", "9000")
 
 Repository(identifier = "intino-maven")

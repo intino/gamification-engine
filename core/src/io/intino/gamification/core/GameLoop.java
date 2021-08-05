@@ -1,7 +1,7 @@
 package io.intino.gamification.core;
 
 import io.intino.gamification.events.EventManager;
-import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.model.GamificationGraph;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -46,6 +46,8 @@ public class GameLoop {
                 graph.update();
             }
             endFrame();
+            //TODO
+            core.graphSerializer().save();
         }
 
         private void beginFrame() {

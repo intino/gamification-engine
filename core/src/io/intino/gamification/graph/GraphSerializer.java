@@ -1,9 +1,10 @@
 package io.intino.gamification.graph;
 
 import io.intino.gamification.core.GamificationCore;
+import io.intino.gamification.graph.model.GamificationGraph;
 import io.intino.gamification.graph.model.World;
-import io.intino.gamification.utils.Json;
-import io.intino.gamification.utils.file.FileUtils;
+import io.intino.gamification.util.data.Json;
+import io.intino.gamification.util.file.FileUtils;
 
 import java.io.File;
 

@@ -1,8 +1,8 @@
 package io.intino.gamification.graph.model;
 
 import com.google.gson.Gson;
-import io.intino.gamification.data.Property;
-import io.intino.gamification.data.ReadOnlyProperty;
+import io.intino.gamification.util.data.Property;
+import io.intino.gamification.util.data.ReadOnlyProperty;
 
 import java.io.Serializable;
 import java.util.Objects;
@@ -25,12 +25,12 @@ public abstract class Node implements Serializable {
         return destroyed.get();
     }
 
-    void markDestroyed() {
-        destroyed.set(true);
-    }
-
     public ReadOnlyProperty<Boolean> destroyedProperty() {
         return this.destroyed;
+    }
+
+    void markDestroyed() {
+        destroyed.set(true);
     }
 
     @Override

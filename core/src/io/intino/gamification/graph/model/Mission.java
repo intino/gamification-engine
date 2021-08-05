@@ -1,15 +1,15 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.events.EventCallback;
 import io.intino.gamification.events.EventManager;
-import io.intino.gamification.events.GamificationEvent;
-import io.intino.gamification.utils.time.TimeUtils;
+import io.intino.gamification.events.MissionEventListener;
+import io.intino.gamification.events.MissionProgressEvent;
+import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
 
-public final class Mission extends Node implements Comparable<Mission> {
+public class Mission extends Node implements Comparable<Mission> {
 
-    public static final long NO_EXPIRATION_TIME = Long.MAX_VALUE;
+    private static final long NO_EXPIRATION_TIME = Long.MAX_VALUE;
 
     private final String description;
     private final int priority;
@@ -36,6 +36,54 @@ public final class Mission extends Node implements Comparable<Mission> {
         this.expirationTimeSeconds = NO_EXPIRATION_TIME;
     }
 
+    public <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
+        EventManager.get().addEventCallback(eventType, event -> {
+            World world = GamificationGraph.get().worlds().get(event.worldId());
+            Match match = world.currentMatch();
+            if(match != null) {
+                match.addMissionProgressTask(new Match.MissionProgressTask(event.playerId()) {
+                    @Override
+                    void execute() {
+                        invokeTask(listener, event, world);
+                    }
+                });
+            }
+        });
+    }
+
+    private <T extends MissionProgressEvent> void invokeTask(MissionEventListener<T> listener, T event, World world) {
+        Mission mission = Mission.this;
+        Player player = playerWithId(world, event.playerId());
+        if(player != null) {
+            MissionAssignment missionAssignment = missionAssigmentOfPlayer(mission.id(), player);
+            if(missionAssignment != null) {
+                listener.invoke(event, mission, player, missionAssignment);
+            }
+        }
+    }
+
+    private MissionAssignment missionAssigmentOfPlayer(String missionId, Player player) {
+        return player.world()
+                .currentMatch()
+                .player(player.id())
+                .missionAssignment(missionId);
+    }
+
+    private Player playerWithId(World world, String id) {
+        return world != null ? world.players().find(id) : null;
+    }
+
+    boolean hasExpired(Instant referenceTs) {
+        if(!hasExpirationTime()) return false;
+        final Instant now = TimeUtils.currentInstant();
+        final Instant expirationTs = referenceTs.plusSeconds(expirationTimeSeconds);
+        return !now.isBefore(expirationTs);
+    }
+
+    private boolean hasExpirationTime() {
+        return expirationTimeSeconds != NO_EXPIRATION_TIME;
+    }
+
     public String description() {
         return this.description;
     }
@@ -48,23 +96,8 @@ public final class Mission extends Node implements Comparable<Mission> {
         return this.expirationTimeSeconds;
     }
 
-    public boolean hasExpirationTime() {
-        return expirationTimeSeconds != NO_EXPIRATION_TIME;
-    }
-
-    public boolean hasExpired(Instant referenceTs) {
-        if(!hasExpirationTime()) return false;
-        final Instant now = TimeUtils.currentInstant();
-        final Instant expirationTs = referenceTs.plusSeconds(expirationTimeSeconds);
-        return !now.isBefore(expirationTs);
-    }
-
     @Override
     public int compareTo(Mission o) {
         return Integer.compare(priority, o.priority);
-    }
-
-    public <T extends GamificationEvent> void subscribe(Class<T> eventType, EventCallback<T> eventCallback) {
-        EventManager.get().addEventCallback(eventType, eventCallback);
     }
 }

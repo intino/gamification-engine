@@ -1,7 +1,7 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.data.Property;
-import io.intino.gamification.data.ReadOnlyProperty;
+import io.intino.gamification.util.data.Property;
+import io.intino.gamification.util.data.ReadOnlyProperty;
 
 public class Item extends Entity {
 

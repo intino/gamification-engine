@@ -1,17 +1,14 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
-
 import java.util.Objects;
 
-class WorldNode extends Node {
+abstract class WorldNode extends Node {
 
     private final String worldId;
 
     public WorldNode(String worldId, String id) {
         super(id);
         if(worldId == null) throw new NullPointerException("World cannot be null");
-        //if(!GamificationGraph.get().worlds().exists(worldId)) throw new NoSuchElementException("World " + worldId + " does not exists");
         this.worldId = worldId;
     }
 

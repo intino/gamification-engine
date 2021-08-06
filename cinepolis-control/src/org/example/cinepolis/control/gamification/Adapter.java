@@ -35,9 +35,9 @@ public class Adapter {
     }
 
     public void initialize() {
-        this.world = World.create(GamificationConfig.WorldId);
-        this.world.currentMatchProperty().set(new Match(GamificationConfig.WorldId, "match", missionDefinitions()));
-        this.world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
+        world = World.create(GamificationConfig.WorldId);
+        world.currentMatch(new Match(GamificationConfig.WorldId, "match"));
+        world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
     }
 
     private List<Mission> missionDefinitions() {

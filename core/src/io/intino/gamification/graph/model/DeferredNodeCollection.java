@@ -3,17 +3,29 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.util.data.NodeCollection;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
 public class DeferredNodeCollection<T extends Node> implements NodeCollection<T> {
 
-    private static final int INITIAL_CAPACITY = 1024;
+    public static final int DEFAULT_INITIAL_CAPACITY = 1024;
 
-    private final List<T> nodes = new ArrayList<>(INITIAL_CAPACITY);
-    //TODO HACER TRANSIENT PARA AHORRAR MEMORIA
-    private final Map<String, T> lookupTable = new HashMap<>(INITIAL_CAPACITY);
-    private final Queue<T> nodesToAdd = new ArrayDeque<>();
-    private final Queue<T> nodesToDestroy = new ArrayDeque<>();
+    private final List<T> nodes;
+    private final Map<String, T> lookupTable; // TODO: could be transient
+    private final Queue<T> nodesToAdd;
+    private final Queue<T> nodesToDestroy;
+
+    public DeferredNodeCollection() {
+        this(DEFAULT_INITIAL_CAPACITY);
+    }
+
+    public DeferredNodeCollection(int initialCapacity) {
+        this.nodes = Collections.synchronizedList(new ArrayList<>(initialCapacity));
+        this.lookupTable = new ConcurrentHashMap<>(initialCapacity);
+        this.nodesToAdd = new ConcurrentLinkedQueue<>();
+        this.nodesToDestroy = new ConcurrentLinkedQueue<>();
+    }
 
     @Override
     public void add(T node) {
@@ -49,13 +61,15 @@ public class DeferredNodeCollection<T extends Node> implements NodeCollection<T>
         return Collections.unmodifiableList(nodes);
     }
 
-    void update() {
+    boolean sealContents() {
+        final boolean hasChanged = !nodesToAdd.isEmpty() || !nodesToDestroy.isEmpty();
         while(!nodesToAdd.isEmpty()) {
             addNode(nodesToAdd.poll());
         }
         while(!nodesToDestroy.isEmpty()) {
             destroyNode(nodesToDestroy.poll());
         }
+        return hasChanged;
     }
 
     private boolean addNode(T node) {

@@ -50,9 +50,7 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:json:1.0.2" level="project" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.6" level="project" />
     <orderEntry type="library" name="Intino: org.example.cinepolis.datahub:cinepolis-terminal:1.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:terminal-jms:4.1.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:jms:1.2.5" level="project" />
-    <orderEntry type="library" name="Intino: io.intino.alexandria:ingestion:4.0.5" level="project" />
     <orderEntry type="library" name="Intino: org.example.cinepolis.datahub:ontology:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:scheduler-framework:1.1.1" level="project" />
     <orderEntry type="library" name="Intino: org.quartz-scheduler:quartz:2.3.2" level="project" />
@@ -79,6 +77,8 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-common:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-client:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.42.v20210604" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:terminal-jms:4.0.6" level="project" />
+    <orderEntry type="library" name="Intino: io.intino.alexandria:ingestion:4.0.3" level="project" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.7" level="project" />
   </component>
 </module>

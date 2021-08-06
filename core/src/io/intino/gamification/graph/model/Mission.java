@@ -12,22 +12,22 @@ public class Mission extends Node implements Comparable<Mission> {
     private static final long NO_EXPIRATION_TIME = Long.MAX_VALUE;
 
     private final String description;
-    private final int total;
+    private final int stepsToComplete;
     private final int priority;
     private final long expirationTimeSeconds;
 
-    public Mission(String id, String description, int total) {
-        this(id, description, total, 0);
+    public Mission(String id, String description, int stepsToComplete) {
+        this(id, description, stepsToComplete, 0);
     }
 
-    public Mission(String id, String description, int total, int priority) {
-        this(id, description, total, priority, NO_EXPIRATION_TIME);
+    public Mission(String id, String description, int stepsToComplete, int priority) {
+        this(id, description, stepsToComplete, priority, NO_EXPIRATION_TIME);
     }
 
-    public Mission(String id, String description, int total, int priority, long expirationTimeSeconds) {
+    public Mission(String id, String description, int stepsToComplete, int priority, long expirationTimeSeconds) {
         super(id);
         this.description = description;
-        this.total = total;
+        this.stepsToComplete = stepsToComplete;
         this.priority = priority;
         this.expirationTimeSeconds = expirationTimeSeconds;
     }
@@ -36,13 +36,15 @@ public class Mission extends Node implements Comparable<Mission> {
         EventManager.get().addEventCallback(eventType, event -> {
             World world = GamificationGraph.get().worlds().find(event.worldId());
             Match match = world.currentMatch();
-            if(match != null) {
-                match.addMissionProgressTask(new Match.MissionProgressTask(event.playerId()) {
-                    @Override
-                    void execute() {
-                        invokeTask(listener, event, world);
-                    }
-                });
+            if(match != null) addMissionProgressTask(listener, event, world, match);
+        });
+    }
+
+    private <T extends MissionProgressEvent> void addMissionProgressTask(MissionEventListener<T> listener, T event, World world, Match match) {
+        match.addMissionProgressTask(new Match.MissionProgressTask(event.playerId()) {
+            @Override
+            void execute() {
+                invokeTask(listener, event, world);
             }
         });
     }
@@ -85,7 +87,7 @@ public class Mission extends Node implements Comparable<Mission> {
     }
 
     public int total() {
-        return total;
+        return stepsToComplete;
     }
 
     public int priority() {

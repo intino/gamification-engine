@@ -7,10 +7,15 @@ import io.intino.gamification.util.data.Json;
 import io.intino.gamification.util.file.FileUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class GraphSerializer {
 
-    public static final String GRAPH_SUBDIR = "/graph";
+    private static final String GRAPH_SUBDIR = "/graph";
+
     private final GamificationCore core;
     private final GamificationGraph graph;
     private final File rootDirectory;
@@ -22,12 +27,11 @@ public class GraphSerializer {
     }
 
     public void save() {
-        for(World world : graph.worlds()) {
-            save(world);
-        }
+        graph.worlds().stream().parallel().forEach(this::saveWorld);
+        graph.shouldSave(false);
     }
 
-    private void save(World world) {
+    private void saveWorld(World world) {
         File file = FileUtils.createFile(rootDirectory + "/world#" + world.id() + ".json");
         FileUtils.write(file, Json.toJsonPretty(world));
     }
@@ -35,14 +39,13 @@ public class GraphSerializer {
     public void load() {
         File[] worldFiles = rootDirectory.listFiles(this::isWorldFile);
         if(worldFiles == null) return;
-        for(File worldFile : worldFiles) {
-            load(worldFile);
-        }
+        List<World> worlds = Collections.synchronizedList(new ArrayList<>(worldFiles.length));
+        Arrays.stream(worldFiles).parallel().forEach(worldFile -> load(worldFile, worlds));
+        worlds.forEach(graph.worlds()::add);
     }
 
-    private void load(File worldFile) {
-        World world = Json.fromJson(FileUtils.read(worldFile), World.class);
-        graph.worlds().add(world);
+    private void load(File worldFile, List<World> worlds) {
+        worlds.add(Json.fromJson(FileUtils.read(worldFile), World.class));
     }
 
     private boolean isWorldFile(File file) {

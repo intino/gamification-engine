@@ -3,12 +3,12 @@ package io.intino.gamification.graph.model;
 public class Achievement extends Node {
 
     private final String description;
-    private final int total;
+    private final int stepsToComplete;
 
-    public Achievement(String id, String description, int total) {
+    public Achievement(String id, String description, int stepsToComplete) {
         super(id);
         this.description = description;
-        this.total = total;
+        this.stepsToComplete = stepsToComplete;
     }
 
     public String description() {
@@ -16,6 +16,6 @@ public class Achievement extends Node {
     }
 
     public int total() {
-        return total;
+        return stepsToComplete;
     }
 }

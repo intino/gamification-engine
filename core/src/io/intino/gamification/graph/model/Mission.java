@@ -12,33 +12,29 @@ public class Mission extends Node implements Comparable<Mission> {
     private static final long NO_EXPIRATION_TIME = Long.MAX_VALUE;
 
     private final String description;
+    private final int total;
     private final int priority;
     private final long expirationTimeSeconds;
 
-    public Mission(String id, String description, int priority, long expirationTimeSeconds) {
+    public Mission(String id, String description, int total) {
+        this(id, description, total, 0);
+    }
+
+    public Mission(String id, String description, int total, int priority) {
+        this(id, description, total, priority, NO_EXPIRATION_TIME);
+    }
+
+    public Mission(String id, String description, int total, int priority, long expirationTimeSeconds) {
         super(id);
         this.description = description;
+        this.total = total;
         this.priority = priority;
         this.expirationTimeSeconds = expirationTimeSeconds;
     }
 
-    public Mission(String id, String description, int priority) {
-        super(id);
-        this.description = description;
-        this.priority = priority;
-        this.expirationTimeSeconds = NO_EXPIRATION_TIME;
-    }
-
-    public Mission(String id, String description) {
-        super(id);
-        this.description = description;
-        this.priority = 0;
-        this.expirationTimeSeconds = NO_EXPIRATION_TIME;
-    }
-
     public <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
         EventManager.get().addEventCallback(eventType, event -> {
-            World world = GamificationGraph.get().worlds().get(event.worldId());
+            World world = GamificationGraph.get().worlds().find(event.worldId());
             Match match = world.currentMatch();
             if(match != null) {
                 match.addMissionProgressTask(new Match.MissionProgressTask(event.playerId()) {
@@ -86,6 +82,10 @@ public class Mission extends Node implements Comparable<Mission> {
 
     public String description() {
         return this.description;
+    }
+
+    public int total() {
+        return total;
     }
 
     public int priority() {

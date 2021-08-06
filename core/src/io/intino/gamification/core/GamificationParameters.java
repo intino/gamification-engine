@@ -9,7 +9,7 @@ public class GamificationParameters {
 
     public GamificationParameters(Map<String, String> params) {
         this.timeZone = getOrElse(params, "gamification_time_zone", "Atlantic/Canary");
-        this.gamificationPath = getOrElse(params, "gamification_path", ".temp/gamification");
+        this.gamificationPath = getOrElse(params, "gamification_path", "./temp/gamification");
     }
 
     public String timeZone() {
@@ -21,6 +21,6 @@ public class GamificationParameters {
     }
 
     private String getOrElse(Map<String, String> params, String param, String defaultValue) {
-        return params.containsValue(param) ? params.get(param) : defaultValue;
+        return params.containsKey(param) ? params.get(param) : defaultValue;
     }
 }

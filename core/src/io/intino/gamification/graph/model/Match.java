@@ -26,7 +26,7 @@ public class Match extends WorldNode {
     private final Queue<MissionProgressTask> missionProgressTasks;
 
     public Match(String world, String id, List<Mission> missions) {
-        this(world, id, missions, null);
+        this(world, id, missions, new Crontab());
     }
 
     public Match(String world, String id, List<Mission> missions, Crontab crontab) {
@@ -34,7 +34,7 @@ public class Match extends WorldNode {
     }
 
     private Match(int instance, String world, String id, List<Mission> missions) {
-        this(instance, world, id, missions, null);
+        this(instance, world, id, missions, new Crontab());
     }
 
     private Match(int instance, String world, String id, List<Mission> missions, Crontab crontab) {
@@ -45,6 +45,9 @@ public class Match extends WorldNode {
         this.npcs = new HashMap<>();
         this.crontab = crontab;
         this.missionProgressTasks = new ArrayDeque<>();
+
+        //RLP
+        begin();
     }
 
     void begin() {
@@ -105,7 +108,7 @@ public class Match extends WorldNode {
 
     boolean hasExpired() {
         if(!hasExpirationTime()) return false;
-        return crontab.matches(TimeUtils.currentInstant());
+        return crontab.matches(startTime.get(), TimeUtils.currentInstant());
     }
 
     private boolean hasExpirationTime() {
@@ -191,7 +194,7 @@ public class Match extends WorldNode {
         }
     }
 
-    public static class PlayerState extends ActorState {
+    public class PlayerState extends ActorState {
 
         private final List<MissionAssignment> missionAssignments;
 
@@ -200,8 +203,10 @@ public class Match extends WorldNode {
             this.missionAssignments = new ArrayList<>();
         }
 
-        public MissionAssignment assignMission(String missionId, int total) {
-            MissionAssignment missionAssignment = new MissionAssignment(actorId(), missionId, total);
+        public MissionAssignment assignMission(String missionId) {
+            Mission mission = world().missions().find(missionId);
+            if(mission == null) throw new NoSuchElementException("Mission " + missionId + " not exists");
+            MissionAssignment missionAssignment = new MissionAssignment(missionId, actorId(), mission.total());
             missionAssignments.add(missionAssignment);
             return missionAssignment;
         }

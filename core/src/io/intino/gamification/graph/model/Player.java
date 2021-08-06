@@ -16,8 +16,10 @@ public class Player extends Actor {
         this.achievementProgress = new LinkedHashMap<>();
     }
 
-    public Progress getAchievementProgress(String achievementId, int total) {
-        return achievementProgress.computeIfAbsent(achievementId, id -> new Progress(total));
+    public Progress getAchievementProgress(String achievementId) {
+        Achievement achievement = world().achievements().find(achievementId);
+        if(achievement == null) throw new NoSuchElementException("Achievement " + achievementId + " not exists");
+        return achievementProgress.computeIfAbsent(achievementId, id -> new Progress(achievement.total()));
     }
 
     public Collection<Map.Entry<String, Progress>> achievementProgress() {

@@ -37,11 +37,11 @@ public class Adapter {
     public void initialize() {
         world = World.create(GamificationConfig.WorldId);
         world.currentMatch(new Match(GamificationConfig.WorldId, "match"));
+        world.missions().add(missionDefinition());
         world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
     }
 
-    private List<Mission> missionDefinitions() {
-        List<Mission> missions = new ArrayList<>();
+    private Mission missionDefinition() {
         Mission mission = new Mission("mission1", "Arregla 1 proyector", 1);
         mission.subscribe(FixAsset.class, new MissionEventListener<FixAsset>() {
             @Override
@@ -49,8 +49,7 @@ public class Adapter {
                 missionAssignment.progress().increment();
             }
         });
-        missions.add(mission);
-        return missions;
+        return mission;
     }
 
     public void adapt(AssetAlert event) {
@@ -84,18 +83,18 @@ public class Adapter {
     public void adapt(HireEmployee event) {
         Player player = new Player(GamificationConfig.WorldId, event.id());
         world.players().add(player);
-        box.graph().assetsByArea(event.area()).forEach(a -> player.inventory().add(a.id()));
+        //box.graph().assetsByArea(event.area()).forEach(a -> player.inventory().add(a.id()));
     }
 
     public void adapt(RegisterAsset event) {
         Item item = new Item(world.id(), event.id());
         world.items().add(item);
 
-        Employee employee = box.graph().employeeByArea(event.area());
+        /*Employee employee = box.graph().employeeByArea(event.area());
         if(employee == null) return;
         Player player = world.players().find(employee.id());
         player.inventoryPolicy(Actor.InventoryPolicy.Drop);
         //player.inventory().policy(Actor.InventoryPolicy.Drop);
-        player.inventory().add(item);
+        player.inventory().add(item);*/
     }
 }

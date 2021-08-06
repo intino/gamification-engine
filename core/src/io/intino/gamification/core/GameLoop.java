@@ -56,14 +56,18 @@ public class GameLoop {
 
         private void endFrame() {
             ++GameTime.frame;
-            if(graph.shouldSave()) saveGraph();
+            /*if(graph.shouldSave())*/ saveGraph();
         }
 
         private void saveGraph() {
             System.out.println("Saving graph...");
             final long start = System.currentTimeMillis();
 
-            core.graphSerializer().save();
+            try {
+                core.graphSerializer().save();
+            } catch(Exception e) {
+                e.printStackTrace();
+            }
 
             final float time = (System.currentTimeMillis() - start);
             System.out.println("Graph serialized after: " + time + " ms");

@@ -12,8 +12,8 @@ public class DeferredNodeCollection<T extends Node> implements NodeCollection<T>
     private final List<T> nodes = new ArrayList<>(INITIAL_CAPACITY);
     //TODO HACER TRANSIENT PARA AHORRAR MEMORIA
     private final Map<String, T> lookupTable = new HashMap<>(INITIAL_CAPACITY);
-    private final Queue<T> nodesToAdd = new ArrayDeque<>();
-    private final Queue<T> nodesToDestroy = new ArrayDeque<>();
+    private transient final Queue<T> nodesToAdd = new ArrayDeque<>();
+    private transient final Queue<T> nodesToDestroy = new ArrayDeque<>();
 
     @Override
     public void add(T node) {

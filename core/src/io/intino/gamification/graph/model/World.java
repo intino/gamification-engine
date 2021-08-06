@@ -1,13 +1,21 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.util.data.Property;
+import io.intino.gamification.util.data.ReadOnlyProperty;
 
 import java.util.*;
 import java.util.function.BiFunction;
 
 import static io.intino.gamification.util.time.Crontab.Type.Cyclic;
 
+@SuppressWarnings("all")
 public class World extends Node {
+
+    public static World create(String id) {
+        World world = new World(id);
+        GamificationGraph.get().worlds().add(world);
+        return world;
+    }
 
     private final Property<Match> currentMatch = new Property<>();
     private final SortedSet<Match> finishedMatches = new TreeSet<>(Comparator.comparing(Match::endTime));
@@ -21,13 +29,6 @@ public class World extends Node {
         super(id);
     }
 
-    //RLP
-    public static World create(String id) {
-        World world = new World(id);
-        GamificationGraph.get().worlds().add(world);
-        return world;
-    }
-
     protected void update() {
         runPendingTasks();
         final Match match = currentMatch();
@@ -38,9 +39,13 @@ public class World extends Node {
     }
 
     private void runPendingTasks() {
-        players.update();
-        npcs.update();
-        items.update();
+        boolean shouldSaveGraph = false;
+        {
+            shouldSaveGraph |= players.sealContents();
+            shouldSaveGraph |= npcs.sealContents();
+            shouldSaveGraph |= items.sealContents();
+        }
+        if(shouldSaveGraph) graph().save();
     }
 
     private void checkMatchExpiration() {
@@ -50,27 +55,29 @@ public class World extends Node {
         }
     }
 
-    private void handleMatchExpiration(Match match) {
-        match.end();
-        finishedMatches.add(match);
-        currentMatch.set(startNextMatch(match));
+    private void handleMatchExpiration(Match oldMatch) {
+        currentMatch(nextMatch(oldMatch));
     }
 
-    private Match startNextMatch(Match match) {
-        if(match.crontab().type() == Cyclic) {
-            Match newMatch = match.copy();
-            newMatch.begin();
-            return newMatch;
-        }
-        return null;
+    private Match nextMatch(Match match) {
+        return match.crontab().type() == Cyclic ? match.copy() : null;
     }
 
     public Match currentMatch() {
         return currentMatch.get();
     }
 
-    //RLP
-    public Property<Match> currentMatchProperty() {
+    public void currentMatch(Match match) {
+        final Match oldMatch = currentMatch.get();
+        if(oldMatch != null) {
+            oldMatch.end();
+            finishedMatches.add(match);
+        }
+        currentMatch.set(match);
+        if(match != null) match.begin();
+    }
+
+    public ReadOnlyProperty<Match> currentMatchProperty() {
         return currentMatch;
     }
 
@@ -86,10 +93,6 @@ public class World extends Node {
         return items;
     }
 
-    public Collection<Match> finishedMatches() {
-        return Collections.unmodifiableSet(finishedMatches);
-    }
-
     public SimpleNodeCollection<Mission> missions() {
         return missions;
     }
@@ -98,10 +101,16 @@ public class World extends Node {
         return achievements;
     }
 
+    public Collection<Match> finishedMatches() {
+        return Collections.unmodifiableSet(finishedMatches);
+    }
+
     public final class EntityCollection<T extends Entity> extends DeferredNodeCollection<T> {
 
-        public void create(String entityId, BiFunction<String, String, ? extends T> constructor) {
-            add(constructor.apply(World.this.id(), entityId));
+        public <E extends T> E create(String entityId, BiFunction<String, String, E> constructor) {
+            final E entity = constructor.apply(World.this.id(), entityId);
+            add(entity);
+            return entity;
         }
 
         @Override

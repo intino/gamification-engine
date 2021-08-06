@@ -22,7 +22,7 @@ public class GraphSerializer {
     }
 
     public void save() {
-        for(World world : graph.worlds().getAll()) {
+        for(World world : graph.worlds()) {
             save(world);
         }
     }

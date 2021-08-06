@@ -49,8 +49,9 @@ public class Crontab {
         return type;
     }
 
-    public boolean matches(Instant instant) {
-        return cronExpression.isSatisfiedBy(TimeUtils.dateOf(instant));
+    public boolean matches(Instant start, Instant now) {
+        Instant finishDate = cronExpression.getTimeAfter(TimeUtils.dateOf(start)).toInstant();
+        return !now.isBefore(finishDate);
     }
 
     public enum Type {

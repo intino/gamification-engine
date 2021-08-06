@@ -14,12 +14,17 @@ import java.util.stream.Collectors;
 
 public class Adapter {
 
-    public class Tecnico extends Player {
+    /*public class Tecnico extends Player {
 
         public Tecnico(String world, String id) {
             super(world, id);
         }
-    }
+
+        public void onMatchBegin(Match match) {
+            this.world().achievements().find("achievement1");
+            this.getAchievementProgress("achievement1").increment();
+        }
+    }*/
 
     private final ControlBox box;
 
@@ -31,23 +36,17 @@ public class Adapter {
 
     public void initialize() {
         this.world = World.create(GamificationConfig.WorldId);
-
-        //world.players().create("id", Tecnico::new);
-
-        this.world = new World(GamificationConfig.WorldId);
-        Match match = new Match(GamificationConfig.WorldId, "match", missionDefinitions(), new Match.ExpirationConfig(true, 3600));
-        Achievement achievement = new Achievement("achievement1", "Empieza 2 partidas");
-        //Cómo me suscribo a la creación de un match?
+        this.world.currentMatchProperty().set(new Match(GamificationConfig.WorldId, "match", missionDefinitions()));
+        this.world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
     }
 
     private List<Mission> missionDefinitions() {
         List<Mission> missions = new ArrayList<>();
-        Mission mission = new Mission("mission1", "Arregla 1 proyector");
+        Mission mission = new Mission("mission1", "Arregla 1 proyector", 1);
         mission.subscribe(FixAsset.class, new MissionEventListener<FixAsset>() {
             @Override
             public void invoke(FixAsset event, Mission mission, Player player, MissionAssignment missionAssignment) {
-                //Como se progresa?
-                missionAssignment.progress().set(1);
+                missionAssignment.progress().increment();
             }
         });
         missions.add(mission);
@@ -62,7 +61,7 @@ public class Adapter {
                 .map(Employee::id)
                 .collect(Collectors.toList());
 
-        employees.forEach(e -> new MissionAssignment("mission1", e));
+        employees.forEach(e -> world.currentMatch().player(e).assignMission("mission1"));
     }
 
     public void adapt(DeregisterAsset event) {
@@ -78,7 +77,7 @@ public class Adapter {
     }
 
     public void adapt(FixedAsset event) {
-        FixAsset fixAssetEvent = new FixAsset(event.employee());
+        FixAsset fixAssetEvent = new FixAsset(GamificationConfig.WorldId, event.employee());
         box.engine().eventManager().publish(fixAssetEvent);
     }
 

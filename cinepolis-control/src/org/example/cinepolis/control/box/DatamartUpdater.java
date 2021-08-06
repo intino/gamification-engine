@@ -88,8 +88,6 @@ public class DatamartUpdater {
         box.terminal().publish(completeAlert("alert3", "asset10", "empleado3"));
         box.terminal().publish(completeAlert("alert4", "asset15", "empleado5"));*/
 
-        box.engine().graphSerializer().save();
-
         System.out.println();
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
 public class Main {
 
     public static void main(String[] args) {
-        CustomMatch match = new CustomMatch("", "", new ArrayList<>());
+        World world = null;
     }
 
     public static class CustomMatch extends Match {

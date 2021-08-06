@@ -47,7 +47,11 @@ public class GameLoop {
             }
             endFrame();
             //TODO
-            core.graphSerializer().save();
+            try {
+                core.graphSerializer().save();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         private void beginFrame() {

@@ -17,7 +17,7 @@ abstract class WorldNode extends Node {
     }
 
     public final World world() {
-        return GamificationGraph.get().worlds().get(worldId);
+        return GamificationGraph.get().worlds().find(worldId);
     }
 
     @Override

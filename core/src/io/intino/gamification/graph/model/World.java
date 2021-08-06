@@ -4,7 +4,6 @@ import io.intino.gamification.util.data.Property;
 
 import java.util.*;
 import java.util.function.BiFunction;
-import java.util.stream.Stream;
 
 import static io.intino.gamification.util.time.Crontab.Type.Cyclic;
 
@@ -15,9 +14,18 @@ public class World extends Node {
     private final EntityCollection<Player> players = new EntityCollection<>();
     private final EntityCollection<Actor> npcs = new EntityCollection<>();
     private final EntityCollection<Item> items = new EntityCollection<>();
+    private final SimpleNodeCollection<Mission> missions = new SimpleNodeCollection<>();
+    private final SimpleNodeCollection<Achievement> achievements = new SimpleNodeCollection<>();
 
     public World(String id) {
         super(id);
+    }
+
+    //RLP
+    public static World create(String id) {
+        World world = new World(id);
+        GamificationGraph.get().worlds().add(world);
+        return world;
     }
 
     protected void update() {
@@ -30,9 +38,9 @@ public class World extends Node {
     }
 
     private void runPendingTasks() {
-        players.runPendingTasks();
-        npcs.runPendingTasks();
-        items.runPendingTasks();
+        players.update();
+        npcs.update();
+        items.update();
     }
 
     private void checkMatchExpiration() {
@@ -61,6 +69,11 @@ public class World extends Node {
         return currentMatch.get();
     }
 
+    //RLP
+    public Property<Match> currentMatchProperty() {
+        return currentMatch;
+    }
+
     public EntityCollection<Player> players() {
         return players;
     }
@@ -77,84 +90,30 @@ public class World extends Node {
         return Collections.unmodifiableSet(finishedMatches);
     }
 
-    public class EntityCollection<T extends Entity> implements Iterable<T> {
+    public SimpleNodeCollection<Mission> missions() {
+        return missions;
+    }
 
-        private static final int INITIAL_CAPACITY = 1024;
+    public SimpleNodeCollection<Achievement> achievements() {
+        return achievements;
+    }
 
-        private final List<T> entities = new ArrayList<>(INITIAL_CAPACITY);
-        //TODO HACER TRANSIENT PARA AHORRAR MEMORIA
-        private final Map<String, T> lookupTable = new HashMap<>(INITIAL_CAPACITY);
-        private final Queue<T> entitiesToAdd = new ArrayDeque<>();
-        private final Queue<T> entitiesToDestroy = new ArrayDeque<>();
-
-        public EntityCollection() {
-        }
-
-        public void add(T entity) {
-            if(entity == null) return;
-            entitiesToAdd.add(entity);
-        }
-
-        public void destroy(T entity) {
-            if(entity == null || entity.destroyed()) return;
-            entity.markDestroyed();
-            entitiesToDestroy.add(entity);
-        }
-
-        @SuppressWarnings("unchecked")
-        public <E extends T> E find(String id) {
-            return (E) lookupTable.get(id);
-        }
-
-        public boolean exists(String entityId) {
-            return lookupTable.containsKey(entityId);
-        }
-
-        public Stream<T> stream() {
-            return entities.stream();
-        }
-
-        public List<T> list() {
-            return Collections.unmodifiableList(entities);
-        }
+    public final class EntityCollection<T extends Entity> extends DeferredNodeCollection<T> {
 
         public void create(String entityId, BiFunction<String, String, ? extends T> constructor) {
             add(constructor.apply(World.this.id(), entityId));
         }
 
         @Override
-        public Iterator<T> iterator() {
-            return stream().iterator();
+        public void add(T node) {
+            if(node == null || !node.worldId().equals(id())) return;
+            super.add(node);
         }
 
-        private void runPendingTasks() {
-            while(!entitiesToAdd.isEmpty()) {
-                addEntity(entitiesToAdd.poll());
-            }
-            while(!entitiesToDestroy.isEmpty()) {
-                destroyEntity(entitiesToDestroy.poll());
-            }
-        }
-
-        private boolean addEntity(T entity) {
-            synchronized (this) {
-                if(entity == null || !entity.worldId().equals(id())) return false;
-                if(exists(entity.id())) return false;
-                entities.add(entity);
-                lookupTable.put(entity.id(), entity);
-                entity.onStart();
-                return true;
-            }
-        }
-
-        private void destroyEntity(T entity) {
-            synchronized (this) {
-                if(entity == null || !entity.worldId().equals(id())) return;
-                if(!exists(entity.id())) return;
-                entities.remove(entity);
-                lookupTable.remove(entity.id());
-                entity.onDestroy();
-            }
+        @Override
+        public void destroy(T node) {
+            if(node == null || !node.worldId().equals(id())) return;
+            super.destroy(node);
         }
     }
 }

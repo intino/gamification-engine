@@ -9,6 +9,7 @@ public class GamificationParameters {
 
     public GamificationParameters(Map<String, String> params) {
         this.timeZone = getOrElse(params, "gamification_time_zone", "Atlantic/Canary");
+        //TODO
         this.gamificationPath = getOrElse(params, "gamification_path", "./temp/gamification");
     }
 

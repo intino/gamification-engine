@@ -2,9 +2,7 @@ package io.intino.gamification.graph.model;
 
 import io.intino.gamification.util.data.Property;
 
-import java.util.LinkedHashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class Actor extends Entity {
 
@@ -49,12 +47,12 @@ public class Actor extends Entity {
         Drop, Destroy
     }
 
-    public final class Inventory {
+    public final class Inventory implements Iterable<Item> {
 
         private final Set<String> items;
 
         public Inventory() {
-            this.items = new LinkedHashSet<>();
+            this.items = Collections.synchronizedSet(new LinkedHashSet<>());
         }
 
         public boolean add(String itemId) {
@@ -92,6 +90,11 @@ public class Actor extends Entity {
 
         private void dropItems() {
             items.stream().<Item>map(world().items()::find).filter(Objects::nonNull).forEach(item -> item.owner(null));
+        }
+
+        @Override
+        public Iterator<Item> iterator() {
+            return items.stream().<Item>map(world().items()::find).filter(Objects::nonNull).iterator();
         }
     }
 }

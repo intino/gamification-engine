@@ -4,6 +4,7 @@ import io.intino.gamification.util.data.Property;
 import io.intino.gamification.util.data.ReadOnlyProperty;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
 import static io.intino.gamification.util.time.Crontab.Type.Cyclic;
@@ -24,6 +25,7 @@ public class World extends Node {
     private final EntityCollection<Item> items = new EntityCollection<>();
     private final SimpleNodeCollection<Mission> missions = new SimpleNodeCollection<>();
     private final SimpleNodeCollection<Achievement> achievements = new SimpleNodeCollection<>();
+    private final AtomicReference<Runnable> matchTask = new AtomicReference<>();
 
     public World(String id) {
         super(id);
@@ -46,6 +48,9 @@ public class World extends Node {
             shouldSaveGraph |= items.sealContents();
         }
         if(shouldSaveGraph) graph().save();
+
+        Runnable task = matchTask.getAndSet(null);
+        if(task != null) task.run();
     }
 
     private void checkMatchExpiration() {
@@ -68,13 +73,15 @@ public class World extends Node {
     }
 
     public void currentMatch(Match match) {
-        final Match oldMatch = currentMatch.get();
-        if(oldMatch != null) {
-            oldMatch.end();
-            finishedMatches.add(match);
-        }
-        currentMatch.set(match);
-        if(match != null) match.begin();
+        matchTask.set(() -> {
+            final Match oldMatch = currentMatch.get();
+            if(oldMatch != null) {
+                oldMatch.end();
+                finishedMatches.add(match);
+            }
+            currentMatch.set(match);
+            if(match != null) match.begin();
+        });
     }
 
     public ReadOnlyProperty<Match> currentMatchProperty() {

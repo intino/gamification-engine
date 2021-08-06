@@ -56,7 +56,7 @@ public class GameLoop {
 
         private void endFrame() {
             ++GameTime.frame;
-            /*if(graph.shouldSave())*/ saveGraph();
+            if(graph.shouldSave()) saveGraph();
         }
 
         private void saveGraph() {

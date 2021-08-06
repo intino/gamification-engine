@@ -5,21 +5,21 @@ import io.intino.gamification.util.data.ReadOnlyProperty;
 
 public class Item extends Entity {
 
-    private final Property<Actor> owner = new Property<>();
+    private final Property<String> ownerId = new Property<>();
 
     public Item(String world, String id) {
         super(world, id);
     }
 
-    public Actor owner() {
-        return owner.get();
+    public String owner() {
+        return ownerId.get();
     }
 
-    void owner(Actor owner) {
-        this.owner.set(owner);
+    void owner(String owner) {
+        this.ownerId.set(owner);
     }
 
-    public ReadOnlyProperty<Actor> ownerProperty() {
-        return owner;
+    public ReadOnlyProperty<String> ownerProperty() {
+        return ownerId;
     }
 }

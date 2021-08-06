@@ -23,6 +23,10 @@ public abstract class Node implements Serializable {
         return id;
     }
 
+    public GamificationGraph graph() {
+        return GamificationGraph.get();
+    }
+
     public boolean enabled() {
         return enabled.get();
     }

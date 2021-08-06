@@ -9,6 +9,10 @@ import java.util.TimeZone;
 
 public class Crontab {
 
+    public static Crontab undefined() {
+        return new Crontab();
+    }
+
     private final CronExpression cronExpression;
     private final Type type;
 

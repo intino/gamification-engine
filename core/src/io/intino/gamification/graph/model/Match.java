@@ -19,35 +19,30 @@ public class Match extends WorldNode {
     private final Property<Instant> startTime = new Property<>();
     private final Property<Instant> endTime = new Property<>();
     private final Property<State> state = new Property<>(State.Created);
-    private final List<Mission> missions;
     private final Map<String, PlayerState> players;
     private final Map<String, ActorState> npcs;
     private final Crontab crontab;
     private final Queue<MissionProgressTask> missionProgressTasks;
 
-    public Match(String world, String id, List<Mission> missions) {
-        this(world, id, missions, new Crontab());
+    public Match(String world, String id) {
+        this(world, id, Crontab.undefined());
     }
 
-    public Match(String world, String id, List<Mission> missions, Crontab crontab) {
-        this(0, world, id, missions, crontab);
+    public Match(String world, String id, Crontab crontab) {
+        this(0, world, id, crontab);
     }
 
-    private Match(int instance, String world, String id, List<Mission> missions) {
-        this(instance, world, id, missions, new Crontab());
+    private Match(int instance, String world, String id) {
+        this(instance, world, id, Crontab.undefined());
     }
 
-    private Match(int instance, String world, String id, List<Mission> missions, Crontab crontab) {
+    private Match(int instance, String world, String id, Crontab crontab) {
         super(world, id);
         this.instance = instance;
-        this.missions = List.copyOf(missions);
         this.players = new HashMap<>();
         this.npcs = new HashMap<>();
         this.crontab = crontab;
         this.missionProgressTasks = new ArrayDeque<>();
-
-        //RLP
-        begin();
     }
 
     void begin() {
@@ -74,20 +69,14 @@ public class Match extends WorldNode {
         }
     }
 
-    private void notifyEntities(Consumer<Entity> routine) {
-        world().players().stream().filter(Entity::enabled).forEach(routine);
-        world().npcs().stream().filter(Entity::enabled).forEach(routine);
-        world().items().stream().filter(Entity::enabled).forEach(routine);
-    }
-
     private void checkMissionsExpiration() {
         players.values().forEach(ps -> ps.missionAssignments().forEach(this::check));
     }
 
     private void check(MissionAssignment missionAssignment) {
-        Mission mission = findMission(missionAssignment.missionId());
-        boolean hasExpired = mission.hasExpired(missionAssignment.creationTime());
-        if(hasExpired) {
+        Mission mission = world().missions().find(missionAssignment.missionId());
+        if(mission == null) return;
+        if(mission.hasExpired(missionAssignment.creationTime())) {
             Progress progress = missionAssignment.progress();
             if(progress.state() == InProgress) progress.fail();
         }
@@ -95,15 +84,24 @@ public class Match extends WorldNode {
 
     void end() {
         endTime.set(TimeUtils.currentInstant());
-        onEnd();
-        notifyEntities(e -> e.onMatchEnd(this));
-        state.set(State.Finished);
+        try {
+            onEnd();
+        } finally {
+            notifyEntities(e -> e.onMatchEnd(this));
+            state.set(State.Finished);
+        }
+    }
+
+    private void notifyEntities(Consumer<Entity> routine) {
+        world().players().stream().filter(Entity::enabled).forEach(routine);
+        world().npcs().stream().filter(Entity::enabled).forEach(routine);
+        world().items().stream().filter(Entity::enabled).forEach(routine);
     }
 
     Match copy() {
         final int instance = this.instance + 1;
         final String id = id() + "_" + instance;
-        return new Match(instance, worldId(), id, missions, crontab);
+        return new Match(instance, worldId(), id, crontab);
     }
 
     boolean hasExpired() {
@@ -141,14 +139,6 @@ public class Match extends WorldNode {
 
     public ReadOnlyProperty<State> stateProperty() {
         return state;
-    }
-
-    public List<Mission> missions() {
-        return missions;
-    }
-
-    public Mission findMission(String id) {
-        return missions.stream().filter(m -> m.id().equals(id)).findFirst().orElse(null);
     }
 
     public PlayerState player(String playerId) {

@@ -36,7 +36,7 @@ public class GameLoop {
 
     private class GameLoopUpdate extends TimerTask {
 
-        private long lastFrameTime;
+        private long lastFrameTime = System.currentTimeMillis();
 
         @Override
         public void run() {
@@ -46,12 +46,6 @@ public class GameLoop {
                 graph.update();
             }
             endFrame();
-            //TODO
-            try {
-                core.graphSerializer().save();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
         }
 
         private void beginFrame() {
@@ -62,6 +56,17 @@ public class GameLoop {
 
         private void endFrame() {
             ++GameTime.frame;
+            if(graph.shouldSave()) saveGraph();
+        }
+
+        private void saveGraph() {
+            System.out.println("Saving graph...");
+            final long start = System.currentTimeMillis();
+
+            core.graphSerializer().save();
+
+            final float time = (System.currentTimeMillis() - start);
+            System.out.println("Graph serialized after: " + time + " ms");
         }
     }
 }

@@ -122,13 +122,22 @@ public class World extends Node {
 
         @Override
         public void add(T node) {
-            if(node == null || !node.worldId().equals(id())) return;
+            if(node == null || !node.worldId().equals(World.this.id())) return;
             super.add(node);
         }
 
         @Override
         public void destroy(T node) {
-            if(node == null || !node.worldId().equals(id())) return;
+            //TODO THIS IS NOT AVAILABLE
+            //TODO REGISTRAR LOG
+            System.out.println("El id es...");
+            try {
+                //TODO REGISTRAR LOG
+                System.out.println(World.this.id());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if(node == null || !node.worldId().equals(World.this.id())) return;
             super.destroy(node);
         }
     }

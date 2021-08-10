@@ -1,14 +1,13 @@
 package org.example.cinepolis.control.gamification;
 
-import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.graph.model.*;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.events.FixAsset;
+import org.example.cinepolis.control.gamification.mission.FixOneAsset;
 import org.example.cinepolis.control.graph.Asset;
 import org.example.cinepolis.control.graph.Employee;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,20 +35,13 @@ public class Adapter {
 
     public void initialize() {
         world = World.create(GamificationConfig.WorldId);
-        world.currentMatch(new Match(GamificationConfig.WorldId, "match"));
-        world.missions().add(missionDefinition());
+        world.currentMatch(new Match(GamificationConfig.WorldId, "match"/*, new Crontab("0 0/10 * ? * * *")*/));
+        world.missions().add(new FixOneAsset());
         world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
     }
 
-    private Mission missionDefinition() {
-        Mission mission = new Mission("mission1", "Arregla 1 proyector", 1);
-        mission.subscribe(FixAsset.class, new MissionEventListener<FixAsset>() {
-            @Override
-            public void invoke(FixAsset event, Mission mission, Player player, MissionAssignment missionAssignment) {
-                missionAssignment.progress().increment();
-            }
-        });
-        return mission;
+    public void initialize(World world) {
+        this.world = world;
     }
 
     public void adapt(AssetAlert event) {
@@ -60,22 +52,28 @@ public class Adapter {
                 .map(Employee::id)
                 .collect(Collectors.toList());
 
-        employees.forEach(e -> world.currentMatch().player(e).assignMission("mission1"));
+        employees.forEach(e -> world.currentMatch().player(e).assignMission("FixOneAsset"));
+
+        /*Item item = world.items().find(event.asset());
+        if(item == null) return;
+        Actor actor = item.owner();
+        if(!(actor instanceof Player)) return;
+        world.currentMatch().player(actor.id()).assignMission("mission1");*/
     }
 
     public void adapt(DeregisterAsset event) {
-        //Item item = world.item(event.id());
         Item item = world.items().find(event.id());
         world.items().destroy(item);
     }
 
     public void adapt(DismissEmployee event) {
-        //Player player = world.player(event.id());
         Player player = world.players().find(event.id());
         world.players().destroy(player);
     }
 
     public void adapt(FixedAsset event) {
+        boolean anyAsset = box.graph().assetList().stream().anyMatch(as -> as.id().equals(event.asset()) && as.alerts().stream().anyMatch(al -> al.id().equals(event.alert())));
+        if(!anyAsset) return;
         FixAsset fixAssetEvent = new FixAsset(GamificationConfig.WorldId, event.employee());
         box.engine().eventManager().publish(fixAssetEvent);
     }

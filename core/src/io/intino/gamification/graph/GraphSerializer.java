@@ -33,7 +33,7 @@ public class GraphSerializer {
 
     private void saveWorld(World world) {
         File file = FileUtils.createFile(rootDirectory + "/world#" + world.id() + ".json");
-        FileUtils.write(file, Json.toJsonPretty(world));
+        Json.write(world, file);
     }
 
     public void load() {
@@ -45,7 +45,9 @@ public class GraphSerializer {
     }
 
     private void load(File worldFile, List<World> worlds) {
-        worlds.add(Json.fromJson(FileUtils.read(worldFile), World.class));
+        World world = Json.read(World.class, worldFile);
+        //TODO WORLD ES NULO
+        worlds.add(world);
     }
 
     private boolean isWorldFile(File file) {

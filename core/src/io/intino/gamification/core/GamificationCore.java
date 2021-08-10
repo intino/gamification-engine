@@ -30,6 +30,7 @@ public class GamificationCore {
         this.graphViewer = new GraphViewer(this);
         this.eventManager = new EventManager(this);
         this.gameLoop = new GameLoop(this);
+        //TODO CAMBIAR AL METODO START
         this.gameLoop.start();
     }
 

@@ -60,6 +60,7 @@ public class GameLoop {
         }
 
         private void saveGraph() {
+            //TODO REGISTRAR LOG
             System.out.println("Saving graph...");
             final long start = System.currentTimeMillis();
 
@@ -70,6 +71,7 @@ public class GameLoop {
             }
 
             final float time = (System.currentTimeMillis() - start);
+            //TODO REGISTRAR LOG
             System.out.println("Graph serialized after: " + time + " ms");
         }
     }

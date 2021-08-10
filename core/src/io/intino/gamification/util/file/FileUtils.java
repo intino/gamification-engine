@@ -1,5 +1,7 @@
 package io.intino.gamification.util.file;
 
+import io.intino.gamification.util.Logger;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -17,8 +19,7 @@ public class FileUtils {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                //TODO REGISTRAR ERROR
-                e.printStackTrace();
+                Logger.error(e);
             }
         }
 
@@ -36,8 +37,7 @@ public class FileUtils {
             BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
             bw.append(text).close();
         } catch (IOException e) {
-            //TODO REGISTRAR ERROR
-            e.printStackTrace();
+            Logger.error(e);
         }
     }
 
@@ -46,8 +46,7 @@ public class FileUtils {
         try {
             content = Files.readString(file.toPath());
         } catch (IOException e) {
-            //TODO REGISTRAR ERROR
-            e.printStackTrace();
+            Logger.error(e);
         }
         return content;
     }
@@ -56,8 +55,7 @@ public class FileUtils {
         try {
             Files.writeString(file.toPath(), text);
         } catch (IOException e) {
-            //TODO REGISTRAR ERROR
-            e.printStackTrace();
+            Logger.error(e);
         }
     }
 }

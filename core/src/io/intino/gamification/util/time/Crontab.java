@@ -1,7 +1,10 @@
 package io.intino.gamification.util.time;
 
+import com.google.gson.Gson;
+import io.intino.gamification.util.Logger;
 import org.quartz.CronExpression;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
@@ -43,8 +46,7 @@ public class Crontab {
             cronExpression = new CronExpression(expression);
             cronExpression.setTimeZone(TimeZone.getTimeZone(TimeUtils.timeZone()));
         } catch (ParseException e) {
-            //TODO CONTROLAR ERROR
-            e.printStackTrace();
+            Logger.error(e);
         }
         return cronExpression;
     }

@@ -18,6 +18,7 @@ public class Player extends Actor {
 
     public Progress getAchievementProgress(String achievementId) {
         Achievement achievement = world().achievements().find(achievementId);
+        //TODO REGISTRAR ERROR
         if(achievement == null) throw new NoSuchElementException("Achievement " + achievementId + " does not exist");
         return achievementProgress.computeIfAbsent(achievementId, id -> new Progress(achievement.total()));
     }

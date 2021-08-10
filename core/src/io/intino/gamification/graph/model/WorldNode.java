@@ -8,6 +8,7 @@ abstract class WorldNode extends Node {
 
     public WorldNode(String worldId, String id) {
         super(id);
+        //TODO REGISTRAR ERROR
         if(worldId == null) throw new NullPointerException("World cannot be null");
         this.worldId = worldId;
     }

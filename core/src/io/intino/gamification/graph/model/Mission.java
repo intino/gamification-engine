@@ -6,23 +6,18 @@ import io.intino.gamification.events.MissionProgressEvent;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
-public class Mission extends Node implements Comparable<Mission> {
+public abstract class Mission extends Node implements Comparable<Mission> {
 
-    private static final long NO_EXPIRATION_TIME = Long.MAX_VALUE;
+    protected static final long NO_EXPIRATION_TIME = Long.MAX_VALUE;
 
     private final String description;
     private final int stepsToComplete;
     private final int priority;
     private final long expirationTimeSeconds;
-
-    public Mission(String id, String description, int stepsToComplete) {
-        this(id, description, stepsToComplete, 0);
-    }
-
-    public Mission(String id, String description, int stepsToComplete, int priority) {
-        this(id, description, stepsToComplete, priority, NO_EXPIRATION_TIME);
-    }
 
     public Mission(String id, String description, int stepsToComplete, int priority, long expirationTimeSeconds) {
         super(id);
@@ -32,7 +27,7 @@ public class Mission extends Node implements Comparable<Mission> {
         this.expirationTimeSeconds = expirationTimeSeconds;
     }
 
-    public <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
+    protected <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
         EventManager.get().addEventCallback(eventType, event -> {
             World world = GamificationGraph.get().worlds().find(event.worldId());
             Match match = world.currentMatch();
@@ -61,10 +56,10 @@ public class Mission extends Node implements Comparable<Mission> {
     }
 
     private MissionAssignment missionAssigmentOfPlayer(String missionId, Player player) {
-        return player.world()
+        Match.PlayerState playerState = player.world()
                 .currentMatch()
-                .player(player.id())
-                .missionAssignment(missionId);
+                .player(player.id());
+        return playerState != null ? playerState.missionAssignment(missionId) : null;
     }
 
     private Player playerWithId(World world, String id) {
@@ -102,4 +97,8 @@ public class Mission extends Node implements Comparable<Mission> {
     public int compareTo(Mission o) {
         return Integer.compare(priority, o.priority);
     }
+
+    protected abstract void setProgressCallbacks();
+    protected void onMissionComplete(MissionAssignment missionAssignment) {}
+    protected void onMissionFail(MissionAssignment missionAssignment) {}
 }

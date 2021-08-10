@@ -33,7 +33,7 @@ public class AlertMounter implements Mounter {
 
 	public void handle(org.example.cinepolis.datahub.events.cinepolis.FixedAsset event) {
 
-		Asset asset = box.graph().asset(event.asset());
+		/*Asset asset = box.graph().asset(event.asset());
 		if(asset == null) return;
 		Alert alert = box.graph().alert(asset.alerts(), event.alert());
 		if(alert == null) return;
@@ -41,7 +41,7 @@ public class AlertMounter implements Mounter {
 		asset.alerts().remove(alert);
 
 		asset.save$();
-		alert.delete$();
+		alert.delete$();*/
 	}
 
 	public void handle(Event event) {

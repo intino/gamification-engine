@@ -195,6 +195,7 @@ public class Match extends WorldNode {
 
         public MissionAssignment assignMission(String missionId) {
             Mission mission = world().missions().find(missionId);
+            //TODO REGISTRAR ERROR
             if(mission == null) throw new NoSuchElementException("Mission " + missionId + " not exists");
             MissionAssignment missionAssignment = new MissionAssignment(missionId, actorId(), mission.total());
             missionAssignments.add(missionAssignment);

@@ -6,7 +6,7 @@ import io.intino.gamification.util.data.ReadOnlyProperty;
 public class Item extends Entity {
 
     private final Property<String> ownerId = new Property<>();
-    private boolean isPlayer;
+    private boolean ownerIsPlayer;
 
     public Item(String world, String id) {
         super(world, id);
@@ -18,7 +18,7 @@ public class Item extends Entity {
 
     void owner(Actor owner) {
         this.ownerId.set(owner != null ? owner.id() : null);
-        this.isPlayer = owner instanceof Player;
+        this.ownerIsPlayer = owner instanceof Player;
     }
 
     public ReadOnlyProperty<String> ownerIdProperty() {
@@ -28,7 +28,7 @@ public class Item extends Entity {
     @SuppressWarnings("unchecked")
     public <T extends Actor> T owner() {
         if(ownerId.get() == null) return null;
-        if(isPlayer) return (T) world().players().find(ownerId.get());
+        if(ownerIsPlayer) return (T) world().players().find(ownerId.get());
         return (T) world().npcs().find(ownerId.get());
     }
 }

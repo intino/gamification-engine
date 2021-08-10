@@ -15,6 +15,7 @@ public abstract class Node implements Serializable {
     private final Property<Boolean> destroyed = new Property<>(false);
 
     public Node(String id) {
+        //TODO REGISTRAR ERROR
         if(id == null) throw new NullPointerException("Id cannot be null");
         this.id = id;
     }
@@ -23,7 +24,7 @@ public abstract class Node implements Serializable {
         return id;
     }
 
-    public GamificationGraph graph() {
+    GamificationGraph graph() {
         return GamificationGraph.get();
     }
 

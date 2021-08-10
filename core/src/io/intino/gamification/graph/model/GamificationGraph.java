@@ -18,6 +18,7 @@ public class GamificationGraph {
     private final AtomicBoolean saveRequested;
 
     public GamificationGraph(GamificationCore core) {
+        //TODO REGISTRAR ERROR
         if(core == null) throw new IllegalArgumentException("GamificationCore cannot be null");
         this.core = core;
         this.worlds = new DeferredNodeCollection<>();

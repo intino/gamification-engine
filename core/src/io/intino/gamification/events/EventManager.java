@@ -20,6 +20,7 @@ public class EventManager {
     private final Map<Class<? extends GamificationEvent>, List<EventCallback<? extends GamificationEvent>>> eventCallbacks;
 
     public EventManager(GamificationCore core) {
+        //TODO REGISTRAR ERROR
         if(core == null) throw new NullPointerException("GamificationCore cannot be null");
         EventManager.instance = this;
         this.core = core;

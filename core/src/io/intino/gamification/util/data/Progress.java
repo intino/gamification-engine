@@ -11,6 +11,7 @@ public final class Progress {
     }
 
     public Progress(int total, int current) {
+        //TODO REGISTRAR ERROR
         if(total <= 0) throw new IllegalArgumentException("Total must be > 0");
         this.total = total;
         this.current = Math.min(total, current);

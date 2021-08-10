@@ -3,6 +3,7 @@ package org.example.cinepolis.control.box;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.gamification.util.time.TimeUtils;
+import org.example.cinepolis.control.gamification.GamificationConfig;
 import org.example.cinepolis.datahub.events.cinepolis.AssetAlert;
 import org.example.cinepolis.datahub.events.cinepolis.HireEmployee;
 import org.example.cinepolis.datahub.events.cinepolis.RegisterAsset;
@@ -13,13 +14,15 @@ import java.nio.file.Files;
 import java.time.Instant;
 import java.util.*;
 
-import static org.example.cinepolis.control.box.DatamartUtils.*;
+import static org.example.cinepolis.control.box.DatamartUtils.completeAlert;
+import static org.example.cinepolis.control.box.DatamartUtils.generateAlert;
 
 public class DatamartUpdater {
 
     public static void initialize(ControlBox box) {
-        box.graph().clear();
-        box.adapter().initialize();
+
+        box.adapter().initialize(box.engine().graphViewer().world(GamificationConfig.WorldId));
+        /*box.adapter().initialize();
 
         try {
             List<Theater> theaters = new ArrayList<>();
@@ -48,6 +51,7 @@ public class DatamartUpdater {
                 messageQueue.addAll(getMessagesOf(getMessageReaderOf(confFile)));
             }
 
+            //TODO REGISTRAR LOG
             System.out.println("------------------------------------------------");
 
             for (File statusFile : Objects.requireNonNull(new File(box.configuration().home() + "/data/assets/status").listFiles())) {
@@ -69,25 +73,37 @@ public class DatamartUpdater {
                 if(theater != null) box.terminal().publish(registerAsset(asset, theater));
             });
 
+            //TODO REGISTRAR LOG
             System.out.println();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        /*box.terminal().publish(deleteEmployee("empleado1"));
-        box.terminal().publish(deleteAsset("asset4"));
+        //No se puede acceder al mundo de las listas
+        //box.terminal().publish(deleteEmployee("e54"));
+        //box.terminal().publish(deleteAsset("10.116.46.29"));
 
-        box.terminal().publish(generateAlert("alert1", "asset5", AssetAlert.Importance.Important, 1, "Arregla el asset 5"));
-        box.terminal().publish(generateAlert("alert2", "asset7", AssetAlert.Importance.Low, 2, "Arregla el asset 7"));
-        box.terminal().publish(generateAlert("alert3", "asset10", AssetAlert.Importance.Medium, 3, "Arregla el asset 10"));
-        box.terminal().publish(generateAlert("alert4", "asset15", AssetAlert.Importance.Medium, 3, "Arregla el asset 15"));
+        Map<org.example.cinepolis.control.graph.Employee, ArrayList<org.example.cinepolis.control.graph.Asset>> assetsByEmployee = new HashMap<>();
+        box.graph().assetList().forEach(a -> {
+            org.example.cinepolis.control.graph.Employee employee = box.graph().employeeByArea(a.area());
+            if(employee != null) {
+                assetsByEmployee.computeIfAbsent(employee, k -> new ArrayList<>());
+                assetsByEmployee.get(employee).add(a);
+            }
+        });
 
-        box.terminal().publish(completeAlert("alert1", "asset5", "empleado2"));
-        box.terminal().publish(completeAlert("alert2", "asset10", "empleado3"));
-        box.terminal().publish(completeAlert("alert3", "asset10", "empleado3"));
-        box.terminal().publish(completeAlert("alert4", "asset15", "empleado5"));*/
+        box.terminal().publish(generateAlert("alert1", "10.96.18.45", AssetAlert.Importance.Important, 1, "Arregla el asset 10.96.18.45"));
+        box.terminal().publish(generateAlert("alert2", "10.99.9.43", AssetAlert.Importance.Low, 2, "Arregla el asset 10.99.9.43"));
+        box.terminal().publish(generateAlert("alert3", "10.98.2.43", AssetAlert.Importance.Medium, 3, "Arregla el asset 10.98.2.43"));
+        box.terminal().publish(generateAlert("alert4", "10.100.7.25", AssetAlert.Importance.Medium, 3, "Arregla el asset 10.100.7.25"));
 
+        box.terminal().publish(completeAlert("alert1", "10.96.18.45", "e12"));
+        box.terminal().publish(completeAlert("alert2", "10.99.9.43", "e43"));   //Empleado mal, es e42
+        box.terminal().publish(completeAlert("alert2", "10.98.2.43", "e46"));   //Alerta mal, es alert3
+        box.terminal().publish(completeAlert("alert4", "10.100.7.24", "e24"));  //IP mal, es .25*/
+
+        //TODO REGISTRAR LOG
         System.out.println();
     }
 
@@ -215,6 +231,7 @@ public class DatamartUpdater {
                 if(attribute.equals("country")) continue;
                 if(attribute.equals("type")) continue;
                 if(attribute.equals("mode")) continue;
+                //TODO REGISTRAR LOG
                 System.out.println(attribute);
             }
         }

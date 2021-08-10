@@ -15,7 +15,6 @@ public class MissionAssignment implements Comparable<MissionAssignment> {
     public MissionAssignment(String missionId, String playerId, int total) {
         this.missionId = missionId;
         this.playerId = playerId;
-        //TODO PONER TOTAL EN MISION
         this.progress = new Progress(total);
         this.creationTime = TimeUtils.currentInstant();
     }

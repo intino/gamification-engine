@@ -1,6 +1,9 @@
 package io.intino.gamification.util.data;
 
-public final class Progress {
+import java.io.Serializable;
+
+//RLP
+public final class Progress implements Serializable {
 
     private final int total;
     private int current;

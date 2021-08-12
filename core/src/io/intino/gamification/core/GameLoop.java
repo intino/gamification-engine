@@ -2,6 +2,7 @@ package io.intino.gamification.core;
 
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.model.GamificationGraph;
+import io.intino.gamification.util.Logger;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -56,23 +57,16 @@ public class GameLoop {
 
         private void endFrame() {
             ++GameTime.frame;
-            if(graph.shouldSave()) saveGraph();
+            //TODO
+            /*if(graph.shouldSave())*/ saveGraph();
         }
 
         private void saveGraph() {
-            //TODO REGISTRAR LOG
-            System.out.println("Saving graph...");
+            Logger.info("Saving graph...");
             final long start = System.currentTimeMillis();
-
-            try {
-                core.graphSerializer().save();
-            } catch(Exception e) {
-                e.printStackTrace();
-            }
-
+            core.graphSerializer().save();
             final float time = (System.currentTimeMillis() - start);
-            //TODO REGISTRAR LOG
-            System.out.println("Graph serialized after: " + time + " ms");
+            Logger.info("Graph serialized after: " + time + " ms");
         }
     }
 }

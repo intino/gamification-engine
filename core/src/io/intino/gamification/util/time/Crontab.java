@@ -1,6 +1,5 @@
 package io.intino.gamification.util.time;
 
-import com.google.gson.Gson;
 import io.intino.gamification.util.Logger;
 import org.quartz.CronExpression;
 
@@ -10,7 +9,7 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.TimeZone;
 
-public class Crontab {
+public class Crontab implements Serializable {
 
     public static Crontab undefined() {
         return new Crontab();

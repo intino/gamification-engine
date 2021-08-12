@@ -1,4 +1,4 @@
-package io.intino.gamification.util.data;
+package io.intino.gamification.graph.property;
 
 import java.util.Objects;
 

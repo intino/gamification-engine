@@ -1,11 +1,12 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.util.data.Progress;
-import io.intino.gamification.util.data.Property;
-import io.intino.gamification.util.data.ReadOnlyProperty;
+import io.intino.gamification.graph.property.Property;
+import io.intino.gamification.graph.property.ReadOnlyProperty;
 import io.intino.gamification.util.time.Crontab;
 import io.intino.gamification.util.time.TimeUtils;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
@@ -70,7 +71,12 @@ public class Match extends WorldNode {
     }
 
     private void checkMissionsExpiration() {
-        players.values().forEach(ps -> ps.missionAssignments().forEach(this::check));
+        //TODO CONCURRENT MODIFICATION EXCEPTION (solucionado)
+        for (PlayerState playerState : players.values()) {
+            for (MissionAssignment missionAssignment : playerState.missionAssignments()) {
+                check(missionAssignment);
+            }
+        }
     }
 
     private void check(MissionAssignment missionAssignment) {
@@ -84,6 +90,15 @@ public class Match extends WorldNode {
 
     void end() {
         endTime.set(TimeUtils.currentInstant());
+
+        //RLP
+        for (PlayerState playerState : players.values()) {
+            for (MissionAssignment missionAssignment : playerState.missionAssignments()) {
+                Progress progress = missionAssignment.progress();
+                if(progress.state() == InProgress) progress.fail();
+            }
+        }
+
         try {
             onEnd();
         } finally {
@@ -142,11 +157,17 @@ public class Match extends WorldNode {
     }
 
     public PlayerState player(String playerId) {
-        return players.computeIfAbsent(playerId, PlayerState::new);
+        //RLP
+        synchronized (this) {
+            return players.computeIfAbsent(playerId, PlayerState::new);
+        }
     }
 
     public ActorState npc(String npcId) {
-        return npcs.computeIfAbsent(npcId, ActorState::new);
+        //RLP
+        synchronized (this) {
+            return npcs.computeIfAbsent(npcId, ActorState::new);
+        }
     }
 
     Crontab crontab() {
@@ -157,7 +178,8 @@ public class Match extends WorldNode {
         Created, Running, Finished
     }
 
-    public static class ActorState {
+    //RLP
+    public static class ActorState implements Serializable {
 
         private final String actorId;
         private long score;

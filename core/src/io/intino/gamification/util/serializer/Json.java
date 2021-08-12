@@ -1,4 +1,4 @@
-package io.intino.gamification.util.data;
+package io.intino.gamification.util.serializer;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

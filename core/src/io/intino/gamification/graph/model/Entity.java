@@ -10,6 +10,7 @@ public abstract class Entity extends WorldNode {
         return world().currentMatch();
     }
 
+    //TODO: Las entidades deberían actualizarse con el mundo
     protected void onMatchBegin(Match match) {}
     protected void onMatchUpdate(Match match) {}
     protected void onMatchEnd(Match match) {}

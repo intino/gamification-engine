@@ -1,7 +1,8 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.util.data.Property;
+import io.intino.gamification.graph.property.Property;
 
+import java.io.Serializable;
 import java.util.*;
 
 public class Actor extends Entity {
@@ -47,7 +48,7 @@ public class Actor extends Entity {
         Drop, Destroy
     }
 
-    public final class Inventory implements Iterable<Item> {
+    public final class Inventory implements Iterable<Item>, Serializable {
 
         private final Set<String> items;
 

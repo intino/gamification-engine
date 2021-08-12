@@ -1,6 +1,6 @@
 package io.intino.gamification.events;
 
-import io.intino.gamification.util.data.Json;
+import io.intino.gamification.util.serializer.Json;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;

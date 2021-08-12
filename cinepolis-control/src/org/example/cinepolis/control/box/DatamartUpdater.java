@@ -3,7 +3,6 @@ package org.example.cinepolis.control.box;
 import io.intino.alexandria.message.Message;
 import io.intino.alexandria.message.MessageReader;
 import io.intino.gamification.util.time.TimeUtils;
-import org.example.cinepolis.control.gamification.GamificationConfig;
 import org.example.cinepolis.datahub.events.cinepolis.AssetAlert;
 import org.example.cinepolis.datahub.events.cinepolis.HireEmployee;
 import org.example.cinepolis.datahub.events.cinepolis.RegisterAsset;
@@ -21,8 +20,7 @@ public class DatamartUpdater {
 
     public static void initialize(ControlBox box) {
 
-        box.adapter().initialize(box.engine().graphViewer().world(GamificationConfig.WorldId));
-        /*box.adapter().initialize();
+        box.adapter().initialize();
 
         try {
             List<Theater> theaters = new ArrayList<>();
@@ -50,9 +48,6 @@ public class DatamartUpdater {
             for (File confFile : Objects.requireNonNull(new File(box.configuration().home() + "/data/assets/configuration").listFiles())) {
                 messageQueue.addAll(getMessagesOf(getMessageReaderOf(confFile)));
             }
-
-            //TODO REGISTRAR LOG
-            System.out.println("------------------------------------------------");
 
             for (File statusFile : Objects.requireNonNull(new File(box.configuration().home() + "/data/assets/status").listFiles())) {
                 messageQueue.addAll(getMessagesOf(getMessageReaderOf(statusFile)));
@@ -103,7 +98,6 @@ public class DatamartUpdater {
         box.terminal().publish(completeAlert("alert2", "10.98.2.43", "e46"));   //Alerta mal, es alert3
         box.terminal().publish(completeAlert("alert4", "10.100.7.24", "e24"));  //IP mal, es .25*/
 
-        //TODO REGISTRAR LOG
         System.out.println();
     }
 

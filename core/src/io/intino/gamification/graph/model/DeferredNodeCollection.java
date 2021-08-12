@@ -1,26 +1,30 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.util.data.NodeCollection;
+import io.intino.gamification.graph.model.Node;
+import io.intino.gamification.graph.property.NodeCollection;
+import io.intino.gamification.graph.property.SerializableCollection;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Stream;
 
-public class DeferredNodeCollection<T extends Node> implements NodeCollection<T> {
+public class DeferredNodeCollection<T extends Node> extends SerializableCollection implements NodeCollection<T> {
 
     public static final int DEFAULT_INITIAL_CAPACITY = 1024;
 
     private final List<T> nodes;
-    private final Map<String, T> lookupTable; // TODO: could be transient
     private final Queue<T> nodesToAdd;
     private final Queue<T> nodesToDestroy;
+    //RLP
+    private transient Map<String, T> lookupTable;
 
     public DeferredNodeCollection() {
         this(DEFAULT_INITIAL_CAPACITY);
     }
 
     public DeferredNodeCollection(int initialCapacity) {
+        super();
         this.nodes = Collections.synchronizedList(new ArrayList<>(initialCapacity));
         this.lookupTable = new ConcurrentHashMap<>(initialCapacity);
         this.nodesToAdd = new ConcurrentLinkedQueue<>();
@@ -36,6 +40,7 @@ public class DeferredNodeCollection<T extends Node> implements NodeCollection<T>
     @Override
     public void destroy(T node) {
         if(node == null || node.destroyed()) return;
+        //TODO: usar la property de destroy, y separar estas clases en otros paquetes
         node.markDestroyed();
         nodesToDestroy.add(node);
     }
@@ -88,6 +93,16 @@ public class DeferredNodeCollection<T extends Node> implements NodeCollection<T>
             nodes.remove(node);
             lookupTable.remove(node.id());
             node.onDestroy();
+        }
+    }
+
+    @Override
+    protected void initTransientAttributes() {
+        lookupTable = new ConcurrentHashMap<>();
+        if(nodes != null) {
+            for (T node : nodes) {
+                lookupTable.put(node.id(), node);
+            }
         }
     }
 }

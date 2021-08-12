@@ -1,16 +1,5 @@
 package io.intino.gamification.test;
 
-import io.intino.gamification.graph.model.Actor;
-import io.intino.gamification.graph.model.Player;
-import io.intino.gamification.graph.model.World;
-import io.intino.gamification.util.data.Json;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
-
 public class TestJson {
 
     /*public static void main(String[] args) throws IOException {

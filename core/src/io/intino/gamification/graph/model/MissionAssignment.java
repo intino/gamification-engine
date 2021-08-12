@@ -3,9 +3,11 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
+import java.io.Serializable;
 import java.time.Instant;
 
-public class MissionAssignment implements Comparable<MissionAssignment> {
+//RLP
+public class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
 
     private final String missionId;
     private final String playerId;

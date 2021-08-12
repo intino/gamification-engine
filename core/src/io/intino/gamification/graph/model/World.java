@@ -1,9 +1,12 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.util.data.Property;
-import io.intino.gamification.util.data.ReadOnlyProperty;
+import io.intino.gamification.graph.property.Property;
+import io.intino.gamification.graph.property.ReadOnlyProperty;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 
@@ -19,13 +22,13 @@ public class World extends Node {
     }
 
     private final Property<Match> currentMatch = new Property<>();
-    private final SortedSet<Match> finishedMatches = new TreeSet<>(Comparator.comparing(Match::endTime));
+    private final List<Match> finishedMatches = new ArrayList<>();
     private final EntityCollection<Player> players = new EntityCollection<>();
     private final EntityCollection<Actor> npcs = new EntityCollection<>();
     private final EntityCollection<Item> items = new EntityCollection<>();
     private final SimpleNodeCollection<Mission> missions = new SimpleNodeCollection<>();
     private final SimpleNodeCollection<Achievement> achievements = new SimpleNodeCollection<>();
-    private final AtomicReference<Runnable> matchTask = new AtomicReference<>();
+    private transient AtomicReference<Runnable> matchTask;
 
     public World(String id) {
         super(id);
@@ -72,15 +75,17 @@ public class World extends Node {
         return currentMatch.get();
     }
 
-    public void currentMatch(Match match) {
+    public void currentMatch(Match nextMatch) {
+        //TODO CONTROLAR ERROR
+        if(!nextMatch.worldId().equals(id())) throw new IllegalArgumentException("WorldId of match and world are different");
         matchTask.set(() -> {
             final Match oldMatch = currentMatch.get();
             if(oldMatch != null) {
                 oldMatch.end();
-                finishedMatches.add(match);
+                finishedMatches.add(oldMatch);
             }
-            currentMatch.set(match);
-            if(match != null) match.begin();
+            currentMatch.set(nextMatch);
+            if(nextMatch != null) nextMatch.begin();
         });
     }
 
@@ -109,7 +114,12 @@ public class World extends Node {
     }
 
     public Collection<Match> finishedMatches() {
-        return Collections.unmodifiableSet(finishedMatches);
+        return Collections.unmodifiableList(finishedMatches);
+    }
+
+    @Override
+    protected void initTransientAttributes() {
+        matchTask = new AtomicReference<>();
     }
 
     public final class EntityCollection<T extends Entity> extends DeferredNodeCollection<T> {

@@ -3,7 +3,7 @@ package io.intino.gamification.graph;
 import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.GamificationGraph;
 import io.intino.gamification.graph.model.World;
-import io.intino.gamification.util.data.Json;
+import io.intino.gamification.util.serializer.Binary;
 import io.intino.gamification.util.file.FileUtils;
 
 import java.io.File;
@@ -33,7 +33,7 @@ public class GraphSerializer {
 
     private void saveWorld(World world) {
         File file = FileUtils.createFile(rootDirectory + "/world#" + world.id() + ".json");
-        Json.write(world, file);
+        Binary.write(world, file);
     }
 
     public void load() {
@@ -45,9 +45,7 @@ public class GraphSerializer {
     }
 
     private void load(File worldFile, List<World> worlds) {
-        World world = Json.read(World.class, worldFile);
-        //TODO WORLD ES NULO
-        worlds.add(world);
+        worlds.add(Binary.read(worldFile));
     }
 
     private boolean isWorldFile(File file) {

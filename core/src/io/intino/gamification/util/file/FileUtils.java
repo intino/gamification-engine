@@ -1,11 +1,9 @@
 package io.intino.gamification.util.file;
 
+import io.intino.gamification.graph.model.World;
 import io.intino.gamification.util.Logger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 
 public class FileUtils {
@@ -32,29 +30,19 @@ public class FileUtils {
         return folder;
     }
 
-    public static void appendIn(File file, String text) {
-        try {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(file, true));
-            bw.append(text).close();
-        } catch (IOException e) {
+    public static Object readObject(File file) {
+        try (ObjectInputStream reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
+            return reader.readObject();
+        } catch (Exception e) {
             Logger.error(e);
         }
+        return null;
     }
 
-    public static String read(File file) {
-        String content = "";
-        try {
-            content = Files.readString(file.toPath());
-        } catch (IOException e) {
-            Logger.error(e);
-        }
-        return content;
-    }
-
-    public static void write(File file, String text) {
-        try {
-            Files.writeString(file.toPath(), text);
-        } catch (IOException e) {
+    public static void writeObject(File file, Object object) {
+        try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
+            writer.writeObject(object);
+        } catch (Exception e) {
             Logger.error(e);
         }
     }

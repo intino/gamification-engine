@@ -1,12 +1,14 @@
 package io.intino.gamification.graph.model;
 
 import com.google.gson.Gson;
-import io.intino.gamification.util.data.Property;
-import io.intino.gamification.util.data.ReadOnlyProperty;
+import io.intino.gamification.graph.property.Property;
+import io.intino.gamification.graph.property.ReadOnlyProperty;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
+//TODO: No hay método enableProperty. O quitar los métodos onEnable/onDisable, o llamarlos desde un observer creado
 public abstract class Node implements Serializable {
 
     private final String id;
@@ -14,18 +16,16 @@ public abstract class Node implements Serializable {
     private final Property<Boolean> enabled = new Property<>(true);
     private final Property<Boolean> destroyed = new Property<>(false);
 
-    public Node(String id) {
+    Node(String id) {
         //TODO REGISTRAR ERROR
         if(id == null) throw new NullPointerException("Id cannot be null");
         this.id = id;
+        //RLP
+        initTransientAttributes();
     }
 
     public final String id() {
         return id;
-    }
-
-    GamificationGraph graph() {
-        return GamificationGraph.get();
     }
 
     public boolean enabled() {
@@ -52,9 +52,20 @@ public abstract class Node implements Serializable {
         return this.destroyed;
     }
 
+    GamificationGraph graph() {
+        return GamificationGraph.get();
+    }
+
     void markDestroyed() {
         destroyed.set(true);
     }
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        initTransientAttributes();
+    }
+
+    protected void initTransientAttributes() {}
 
     protected void onStart() {}
     protected void onDestroy() {}
@@ -77,6 +88,6 @@ public abstract class Node implements Serializable {
 
     @Override
     public String toString() {
-        return new Gson().toJson(this);
+        return new Gson().toJson(this);     //TODO: Usar Json
     }
 }

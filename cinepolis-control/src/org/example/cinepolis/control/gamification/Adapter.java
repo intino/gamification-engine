@@ -1,6 +1,7 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.graph.model.*;
+import io.intino.gamification.util.time.Crontab;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.events.FixAsset;
 import org.example.cinepolis.control.gamification.mission.FixOneAsset;
@@ -34,14 +35,15 @@ public class Adapter {
     }
 
     public void initialize() {
-        world = World.create(GamificationConfig.WorldId);
-        world.currentMatch(new Match(GamificationConfig.WorldId, "match"/*, new Crontab("0 0/10 * ? * * *")*/));
-        world.missions().add(new FixOneAsset());
-        world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
-    }
-
-    public void initialize(World world) {
-        this.world = world;
+        World world = box.engine().graphViewer().world(GamificationConfig.WorldId);
+        if(world == null) {
+            this.world = World.create(GamificationConfig.WorldId);
+            this.world.currentMatch(new Match(GamificationConfig.WorldId, "match"/*, new Crontab("0 0/10 * 1/1 * ? *")*/));
+            this.world.missions().add(new FixOneAsset());
+            this.world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
+        } else {
+            this.world = world;
+        }
     }
 
     public void adapt(AssetAlert event) {
@@ -52,7 +54,9 @@ public class Adapter {
                 .map(Employee::id)
                 .collect(Collectors.toList());
 
-        employees.forEach(e -> world.currentMatch().player(e).assignMission("FixOneAsset"));
+        for(String employee : employees) {
+            world.currentMatch().player(employee).assignMission("FixOneAsset");
+        }
 
         /*Item item = world.items().find(event.asset());
         if(item == null) return;
@@ -81,18 +85,18 @@ public class Adapter {
     public void adapt(HireEmployee event) {
         Player player = new Player(GamificationConfig.WorldId, event.id());
         world.players().add(player);
-        //box.graph().assetsByArea(event.area()).forEach(a -> player.inventory().add(a.id()));
+        box.graph().assetsByArea(event.area()).forEach(a -> player.inventory().add(a.id()));
     }
 
     public void adapt(RegisterAsset event) {
         Item item = new Item(world.id(), event.id());
         world.items().add(item);
 
-        /*Employee employee = box.graph().employeeByArea(event.area());
+        Employee employee = box.graph().employeeByArea(event.area());
         if(employee == null) return;
         Player player = world.players().find(employee.id());
         player.inventoryPolicy(Actor.InventoryPolicy.Drop);
         //player.inventory().policy(Actor.InventoryPolicy.Drop);
-        player.inventory().add(item);*/
+        player.inventory().add(item);
     }
 }

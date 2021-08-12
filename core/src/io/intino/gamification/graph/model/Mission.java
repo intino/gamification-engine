@@ -3,12 +3,13 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.events.MissionProgressEvent;
+import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+
+import static io.intino.gamification.util.data.Progress.State.Complete;
+import static io.intino.gamification.util.data.Progress.State.Failed;
 
 public abstract class Mission extends Node implements Comparable<Mission> {
 
@@ -25,6 +26,8 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         this.stepsToComplete = stepsToComplete;
         this.priority = priority;
         this.expirationTimeSeconds = expirationTimeSeconds;
+        //RLP
+        setProgressCallbacks();
     }
 
     protected <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
@@ -50,8 +53,23 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         if(player != null) {
             MissionAssignment missionAssignment = missionAssigmentOfPlayer(mission.id(), player);
             if(missionAssignment != null) {
+                //RLP
+                Progress.State previousState = missionAssignment.progress().state();
                 listener.invoke(event, mission, player, missionAssignment);
+                Progress.State newState = missionAssignment.progress().state();
+                if(newState != previousState) {
+                    notifyStateChange(newState, missionAssignment);
+                }
             }
+        }
+    }
+
+    //RLP
+    private void notifyStateChange(Progress.State state, MissionAssignment missionAssignment) {
+        if(state == Complete) {
+            onMissionComplete(missionAssignment);
+        } else if(state == Failed) {
+            onMissionFail(missionAssignment);
         }
     }
 
@@ -96,6 +114,11 @@ public abstract class Mission extends Node implements Comparable<Mission> {
     @Override
     public int compareTo(Mission o) {
         return Integer.compare(priority, o.priority);
+    }
+
+    @Override
+    protected void initTransientAttributes() {
+        setProgressCallbacks();
     }
 
     protected abstract void setProgressCallbacks();

@@ -1,5 +1,7 @@
 package io.intino.gamification.util.data;
 
+import io.intino.gamification.util.Logger;
+
 import java.io.Serializable;
 
 //RLP
@@ -14,8 +16,11 @@ public final class Progress implements Serializable {
     }
 
     public Progress(int total, int current) {
-        //TODO REGISTRAR ERROR
-        if(total <= 0) throw new IllegalArgumentException("Total must be > 0");
+        if(total <= 0) {
+            IllegalArgumentException e = new IllegalArgumentException("Total must be > 0");
+            Logger.error(e);
+            throw e;
+        }
         this.total = total;
         this.current = Math.min(total, current);
         this.failed = false;
@@ -26,12 +31,14 @@ public final class Progress implements Serializable {
     }
 
     public Progress set(int current) {
-        this.current = Math.min(total, current);
+        //RLP
+        if(state() == State.InProgress) this.current = Math.min(total, current);
         return this;
     }
 
     public Progress increment() {
-        this.current = Math.min(total, current + 1);
+        //RLP
+        if(state() == State.InProgress) this.current = Math.min(total, current + 1);
         return this;
     }
 

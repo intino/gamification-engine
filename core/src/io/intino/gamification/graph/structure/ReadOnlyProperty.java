@@ -1,4 +1,4 @@
-package io.intino.gamification.graph.property;
+package io.intino.gamification.graph.structure;
 
 import java.io.IOException;
 import java.io.Serializable;

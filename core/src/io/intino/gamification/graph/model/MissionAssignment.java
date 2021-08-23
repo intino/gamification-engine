@@ -1,28 +1,45 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.io.Serializable;
 import java.time.Instant;
 
-//RLP
-public class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
+import static io.intino.gamification.util.data.Progress.State.InProgress;
 
+//RLP
+public final class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
+
+    private final String worldId;
     private final String missionId;
     private final String playerId;
     private final Progress progress;
     private final Instant creationTime;
 
-    public MissionAssignment(String missionId, String playerId, int total) {
+    public MissionAssignment(String worldId, String missionId, String playerId, int total) {
+        this.worldId = worldId;
         this.missionId = missionId;
         this.playerId = playerId;
         this.progress = new Progress(total);
         this.creationTime = TimeUtils.currentInstant();
     }
 
+    public String woldId() {
+       return worldId;
+    }
+
+    public World world() {
+        return GamificationGraph.get().worlds().find(worldId);
+    }
+
     public String missionId() {
         return missionId;
+    }
+
+    public Mission mission() {
+        return world().missions().find(missionId);
     }
 
     public String playerId() {
@@ -35,6 +52,23 @@ public class MissionAssignment implements Comparable<MissionAssignment>, Seriali
 
     public Instant creationTime() {
         return this.creationTime;
+    }
+
+    //RLP
+    public void assignPoints(int score) {
+        Match match = world().currentMatch();
+        if(match == null || !match.isAvailable()) return;
+        match.player(playerId).addScore(score);
+    }
+
+    //RLP
+    public void checkExpiration() {
+        if(mission().hasExpired(creationTime)) fail();
+    }
+
+    //RLP
+    void fail() {
+        if(progress().state() == InProgress) progress().fail();
     }
 
     @Override

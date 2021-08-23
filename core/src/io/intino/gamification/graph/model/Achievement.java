@@ -11,11 +11,11 @@ public class Achievement extends Node {
         this.stepsToComplete = stepsToComplete;
     }
 
-    public String description() {
+    public final String description() {
         return description;
     }
 
-    public int total() {
+    public final int total() {
         return stepsToComplete;
     }
 }

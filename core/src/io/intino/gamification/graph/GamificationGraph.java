@@ -1,7 +1,10 @@
-package io.intino.gamification.graph.model;
+package io.intino.gamification.graph;
 
 import io.intino.gamification.core.GamificationCore;
-import io.intino.gamification.graph.property.NodeCollection;
+import io.intino.gamification.graph.model.World;
+import io.intino.gamification.graph.model.DeferredNodeCollection;
+import io.intino.gamification.graph.structure.NodeCollection;
+import io.intino.gamification.util.Logger;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,8 +21,11 @@ public class GamificationGraph {
     private final AtomicBoolean saveRequested;
 
     public GamificationGraph(GamificationCore core) {
-        //TODO CONTROLAR ERROR
-        if(core == null) throw new IllegalArgumentException("GamificationCore cannot be null");
+        if(core == null) {
+            IllegalArgumentException e = new IllegalArgumentException("GamificationCore cannot be null");
+            Logger.error(e);
+            throw e;
+        }
         this.core = core;
         this.worlds = new DeferredNodeCollection<>();
         this.saveRequested = new AtomicBoolean(true);
@@ -33,7 +39,7 @@ public class GamificationGraph {
     public void update() {
         if(worlds.sealContents()) save();
         for (World world : worlds) {
-            world.update();
+            if(world != null) world.update();
         }
     }
 

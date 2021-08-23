@@ -1,7 +1,6 @@
 package io.intino.gamification.graph;
 
 import io.intino.gamification.core.GamificationCore;
-import io.intino.gamification.graph.model.GamificationGraph;
 import io.intino.gamification.graph.model.World;
 import io.intino.gamification.util.serializer.Binary;
 import io.intino.gamification.util.file.FileUtils;
@@ -32,7 +31,8 @@ public class GraphSerializer {
     }
 
     private void saveWorld(World world) {
-        File file = FileUtils.createFile(rootDirectory + "/world#" + world.id() + ".json");
+        //TODO
+        File file = FileUtils.createFile(rootDirectory + "/world#" + world.id() + ".bin");
         Binary.write(world, file);
     }
 

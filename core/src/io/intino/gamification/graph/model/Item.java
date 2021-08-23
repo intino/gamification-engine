@@ -1,18 +1,19 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.property.Property;
-import io.intino.gamification.graph.property.ReadOnlyProperty;
+import io.intino.gamification.graph.structure.Property;
+import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
 public class Item extends Entity {
 
     private final Property<String> ownerId = new Property<>();
     private boolean ownerIsPlayer;
 
-    public Item(String world, String id) {
-        super(world, id);
+    public Item(String worldId, String id) {
+        super(worldId, id);
+
     }
 
-    public String ownerId() {
+    public final String ownerId() {
         return ownerId.get();
     }
 
@@ -21,12 +22,12 @@ public class Item extends Entity {
         this.ownerIsPlayer = owner instanceof Player;
     }
 
-    public ReadOnlyProperty<String> ownerIdProperty() {
+    public final ReadOnlyProperty<String> ownerIdProperty() {
         return ownerId;
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends Actor> T owner() {
+    public final <T extends Actor> T owner() {
         if(ownerId.get() == null) return null;
         if(ownerIsPlayer) return (T) world().players().find(ownerId.get());
         return (T) world().npcs().find(ownerId.get());

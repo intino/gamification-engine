@@ -68,7 +68,6 @@ public class DatamartUpdater {
                 if(theater != null) box.terminal().publish(registerAsset(asset, theater));
             });
 
-            //TODO REGISTRAR LOG
             System.out.println();
 
         } catch (Exception e) {
@@ -225,7 +224,6 @@ public class DatamartUpdater {
                 if(attribute.equals("country")) continue;
                 if(attribute.equals("type")) continue;
                 if(attribute.equals("mode")) continue;
-                //TODO REGISTRAR LOG
                 System.out.println(attribute);
             }
         }

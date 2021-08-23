@@ -1,7 +1,7 @@
 package io.intino.gamification.core;
 
 import io.intino.gamification.events.EventManager;
-import io.intino.gamification.graph.model.GamificationGraph;
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.Logger;
 
 import java.util.Timer;
@@ -57,8 +57,7 @@ public class GameLoop {
 
         private void endFrame() {
             ++GameTime.frame;
-            //TODO
-            /*if(graph.shouldSave())*/ saveGraph();
+            if(graph.shouldSave()) saveGraph();
         }
 
         private void saveGraph() {

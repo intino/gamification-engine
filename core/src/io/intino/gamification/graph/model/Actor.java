@@ -1,6 +1,7 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.property.Property;
+import io.intino.gamification.graph.structure.Property;
+import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
 import java.io.Serializable;
 import java.util.*;
@@ -9,38 +10,40 @@ public class Actor extends Entity {
 
     private final Property<Long> score = new Property<>(0L);
     private final Inventory inventory = new Inventory();
-    private final Property<InventoryPolicy> inventoryPolicy = new Property<>(InventoryPolicy.Drop);
 
-    public Actor(String world, String id) {
-        super(world, id);
+    public Actor(String worldId, String id) {
+        super(worldId, id);
     }
 
-    public long score() {
+    public final long score() {
         return score.get();
     }
 
-    public void score(long score) {
+    public final void score(long score) {
         this.score.set(score);
     }
 
-    public Property<Long> scoreProperty() {
+    public final ReadOnlyProperty<Long> scoreProperty() {
         return score;
     }
 
-    public InventoryPolicy inventoryPolicy() {
-        return this.inventoryPolicy.get();
+    public final long totalScore() {
+        long score = this.score.get();
+
+        World world = world();
+        if(!world.isAvailable()) return score;
+
+        Match match = world.currentMatch();
+        if(match == null || !match.isAvailable()) return score;
+
+        return score + (this instanceof Player ? match.player(id()).score() : match.npc(id()).score());
     }
 
-    public void inventoryPolicy(InventoryPolicy policy) {
-        if(policy == null) return;
-        this.inventoryPolicy.set(policy);
+    public final void addScore(long score) {
+        this.score.set(this.score() + score);
     }
 
-    public Property<InventoryPolicy> inventoryPolicyProperty() {
-        return this.inventoryPolicy;
-    }
-
-    public Inventory inventory() {
+    public final Inventory inventory() {
         return inventory;
     }
 
@@ -51,6 +54,7 @@ public class Actor extends Entity {
     public final class Inventory implements Iterable<Item>, Serializable {
 
         private final Set<String> items;
+        private final Property<InventoryPolicy> policy = new Property<>(InventoryPolicy.Drop);
 
         public Inventory() {
             this.items = Collections.synchronizedSet(new LinkedHashSet<>());
@@ -81,7 +85,7 @@ public class Actor extends Entity {
         }
 
         private void destroy() {
-            if(inventoryPolicy() == InventoryPolicy.Drop) dropItems();
+            if(policy() == InventoryPolicy.Drop) dropItems();
             else destroyItems();
         }
 
@@ -91,6 +95,19 @@ public class Actor extends Entity {
 
         private void dropItems() {
             items.stream().<Item>map(world().items()::find).filter(Objects::nonNull).forEach(item -> item.owner(null));
+        }
+
+        public final InventoryPolicy policy() {
+            return this.policy.get();
+        }
+
+        public final void policy(InventoryPolicy policy) {
+            if(policy == null) return;
+            this.policy.set(policy);
+        }
+
+        public final Property<InventoryPolicy> policyProperty() {
+            return this.policy;
         }
 
         @Override

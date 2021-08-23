@@ -1,11 +1,11 @@
-package org.example.cinepolis.control.gamification.mission;
+package util.model;
 
 import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.graph.model.Mission;
 import io.intino.gamification.graph.model.MissionAssignment;
 import io.intino.gamification.graph.model.Player;
 import io.intino.gamification.util.data.Progress;
-import org.example.cinepolis.control.gamification.events.FixAsset;
+import util.events.FixAsset;
 
 public class FixOneAsset extends Mission {
 

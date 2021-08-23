@@ -1,8 +1,7 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.model.Node;
-import io.intino.gamification.graph.property.NodeCollection;
-import io.intino.gamification.graph.property.SerializableCollection;
+import io.intino.gamification.graph.structure.NodeCollection;
+import io.intino.gamification.graph.structure.SerializableCollection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +16,12 @@ public class SimpleNodeCollection<T extends Node> extends SerializableCollection
     @Override
     public void add(T node) {
         collection.put(node.id(), node);
-        //RLP
-        node.onStart();
+        node.onCreate();
     }
 
     @Override
     public void destroy(T node) {
         collection.remove(node.id());
-        //RLP
         node.onDestroy();
     }
 

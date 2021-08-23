@@ -1,8 +1,8 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.model.Node;
-import io.intino.gamification.graph.property.NodeCollection;
-import io.intino.gamification.graph.property.SerializableCollection;
+import io.intino.gamification.graph.structure.NodeCollection;
+import io.intino.gamification.graph.structure.SerializableCollection;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,7 +16,6 @@ public class DeferredNodeCollection<T extends Node> extends SerializableCollecti
     private final List<T> nodes;
     private final Queue<T> nodesToAdd;
     private final Queue<T> nodesToDestroy;
-    //RLP
     private transient Map<String, T> lookupTable;
 
     public DeferredNodeCollection() {
@@ -39,9 +38,9 @@ public class DeferredNodeCollection<T extends Node> extends SerializableCollecti
 
     @Override
     public void destroy(T node) {
-        if(node == null || node.destroyed()) return;
-        //TODO: usar la property de destroy, y separar estas clases en otros paquetes
-        node.markDestroyed();
+        //TODO: Se comprueba si está destruido???
+        //if(node == null || node.destroyed()) return;
+        //node.destroy();
         nodesToDestroy.add(node);
     }
 
@@ -66,7 +65,7 @@ public class DeferredNodeCollection<T extends Node> extends SerializableCollecti
         return Collections.unmodifiableList(nodes);
     }
 
-    boolean sealContents() {
+    public boolean sealContents() {
         final boolean hasChanged = !nodesToAdd.isEmpty() || !nodesToDestroy.isEmpty();
         while(!nodesToAdd.isEmpty()) {
             addNode(nodesToAdd.poll());
@@ -82,7 +81,7 @@ public class DeferredNodeCollection<T extends Node> extends SerializableCollecti
             if(exists(node.id())) return false;
             nodes.add(node);
             lookupTable.put(node.id(), node);
-            node.onStart();
+            node.onCreate();
             return true;
         }
     }

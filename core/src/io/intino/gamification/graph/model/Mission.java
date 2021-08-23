@@ -3,13 +3,12 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.events.MissionProgressEvent;
-import io.intino.gamification.util.data.Progress;
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
 
-import static io.intino.gamification.util.data.Progress.State.Complete;
-import static io.intino.gamification.util.data.Progress.State.Failed;
+import static io.intino.gamification.util.data.Progress.State;
 
 public abstract class Mission extends Node implements Comparable<Mission> {
 
@@ -20,21 +19,35 @@ public abstract class Mission extends Node implements Comparable<Mission> {
     private final int priority;
     private final long expirationTimeSeconds;
 
+    public Mission(String id, String description, int stepsToComplete) {
+        this(id, description, stepsToComplete, 0, NO_EXPIRATION_TIME);
+    }
+
+    public Mission(String id, String description, int stepsToComplete, int priority) {
+        this(id, description, stepsToComplete, priority, NO_EXPIRATION_TIME);
+    }
+
+    public Mission(String id, String description, int stepsToComplete, long expirationTimeSeconds) {
+        this(id, description, stepsToComplete, 0, expirationTimeSeconds);
+    }
+
     public Mission(String id, String description, int stepsToComplete, int priority, long expirationTimeSeconds) {
         super(id);
         this.description = description;
         this.stepsToComplete = stepsToComplete;
         this.priority = priority;
         this.expirationTimeSeconds = expirationTimeSeconds;
-        //RLP
-        setProgressCallbacks();
     }
 
-    protected <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
+    protected final <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
         EventManager.get().addEventCallback(eventType, event -> {
             World world = GamificationGraph.get().worlds().find(event.worldId());
+            if(world == null || !world.isAvailable()) return;
+
             Match match = world.currentMatch();
-            if(match != null) addMissionProgressTask(listener, event, world, match);
+            if(match == null || !match.isAvailable()) return;
+
+            addMissionProgressTask(listener, event, world, match);
         });
     }
 
@@ -49,31 +62,26 @@ public abstract class Mission extends Node implements Comparable<Mission> {
 
     private <T extends MissionProgressEvent> void invokeTask(MissionEventListener<T> listener, T event, World world) {
         Mission mission = Mission.this;
+        if(!mission.isAvailable()) return;
+
         Player player = playerWithId(world, event.playerId());
-        if(player != null) {
-            MissionAssignment missionAssignment = missionAssigmentOfPlayer(mission.id(), player);
-            if(missionAssignment != null) {
-                //RLP
-                Progress.State previousState = missionAssignment.progress().state();
-                listener.invoke(event, mission, player, missionAssignment);
-                Progress.State newState = missionAssignment.progress().state();
-                if(newState != previousState) {
-                    notifyStateChange(newState, missionAssignment);
-                }
-            }
-        }
+        if(player == null || !player.isAvailable()) return;
+
+        MissionAssignment missionAssignment = missionAssignmentOfPlayer(mission.id(), player);
+        if(missionAssignment == null) return;
+
+        State previousState = missionAssignment.progress().state();
+        listener.invoke(event, mission, player, missionAssignment);
+        State newState = missionAssignment.progress().state();
+        if(newState != previousState) notifyStateChange(missionAssignment, newState);
     }
 
     //RLP
-    private void notifyStateChange(Progress.State state, MissionAssignment missionAssignment) {
-        if(state == Complete) {
-            onMissionComplete(missionAssignment);
-        } else if(state == Failed) {
-            onMissionFail(missionAssignment);
-        }
+    private void notifyStateChange(MissionAssignment assignment, State newState) {
+        if(newState == State.Complete || newState == State.Failed) onMissionEnd(assignment);
     }
 
-    private MissionAssignment missionAssigmentOfPlayer(String missionId, Player player) {
+    private MissionAssignment missionAssignmentOfPlayer(String missionId, Player player) {
         Match.PlayerState playerState = player.world()
                 .currentMatch()
                 .player(player.id());
@@ -95,19 +103,19 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         return expirationTimeSeconds != NO_EXPIRATION_TIME;
     }
 
-    public String description() {
+    public final String description() {
         return this.description;
     }
 
-    public int total() {
+    public final int total() {
         return stepsToComplete;
     }
 
-    public int priority() {
+    public final int priority() {
         return this.priority;
     }
 
-    public long expirationTimeSeconds() {
+    public final long expirationTimeSeconds() {
         return this.expirationTimeSeconds;
     }
 
@@ -117,11 +125,10 @@ public abstract class Mission extends Node implements Comparable<Mission> {
     }
 
     @Override
-    protected void initTransientAttributes() {
+    void initTransientAttributes() {
         setProgressCallbacks();
     }
 
     protected abstract void setProgressCallbacks();
-    protected void onMissionComplete(MissionAssignment missionAssignment) {}
-    protected void onMissionFail(MissionAssignment missionAssignment) {}
+    protected void onMissionEnd(MissionAssignment missionAssignment) {}
 }

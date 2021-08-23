@@ -1,8 +1,7 @@
-package io.intino.gamification.graph.property;
+package io.intino.gamification.graph.structure;
 
 import io.intino.gamification.graph.model.Node;
 
-import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;

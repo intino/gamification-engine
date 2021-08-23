@@ -1,26 +1,29 @@
 package io.intino.gamification.graph.model;
 
-import com.google.gson.Gson;
-import io.intino.gamification.graph.property.Property;
-import io.intino.gamification.graph.property.ReadOnlyProperty;
+import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.structure.Property;
+import io.intino.gamification.graph.structure.ReadOnlyProperty;
+import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.serializer.Json;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Objects;
 
-//TODO: No hay método enableProperty. O quitar los métodos onEnable/onDisable, o llamarlos desde un observer creado
 public abstract class Node implements Serializable {
 
     private final String id;
-    //TODO CONTROLAR ENTIDADES DESACTIVADAS AL TERMINAR UNA MISIÓN/PARTIDA
-    private final Property<Boolean> enabled = new Property<>(true);
-    private final Property<Boolean> destroyed = new Property<>(false);
+    //TODO (REVISAR BIEN DONDE SE USA)
+    //private final Property<Boolean> enabled = new Property<>(true);
+    //private final Property<Boolean> destroyed = new Property<>(false);
 
     Node(String id) {
-        //TODO REGISTRAR ERROR
-        if(id == null) throw new NullPointerException("Id cannot be null");
+        if(id == null) {
+            NullPointerException e = new NullPointerException("Id cannot be null");
+            Logger.error(e);
+            throw e;
+        }
         this.id = id;
-        //RLP
         initTransientAttributes();
     }
 
@@ -28,11 +31,16 @@ public abstract class Node implements Serializable {
         return id;
     }
 
-    public boolean enabled() {
+    public final boolean isAvailable() {
+        //TODO
+        return true;
+    }
+
+    /*public final boolean enabled() {
         return enabled.get();
     }
 
-    public boolean destroyed() {
+    public final boolean destroyed() {
         return destroyed.get();
     }
 
@@ -48,16 +56,16 @@ public abstract class Node implements Serializable {
         onDisable();
     }
 
-    public ReadOnlyProperty<Boolean> destroyedProperty() {
-        return this.destroyed;
+    public final void destroy() {
+        destroyed.set(true);
     }
+
+    public final ReadOnlyProperty<Boolean> destroyedProperty() {
+        return this.destroyed;
+    }*/
 
     GamificationGraph graph() {
         return GamificationGraph.get();
-    }
-
-    void markDestroyed() {
-        destroyed.set(true);
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -65,9 +73,27 @@ public abstract class Node implements Serializable {
         initTransientAttributes();
     }
 
-    protected void initTransientAttributes() {}
+    //RLP
+    public final void update() {
+        if(isAvailable()) {
+            preUpdate();
+            onUpdate();
+            updateChildren();
+            postUpdate();
+        }
+    }
 
-    protected void onStart() {}
+    //RLP
+    void preUpdate() {}
+    void updateChildren() {}
+    void postUpdate() {}
+
+    //RLP
+    void initTransientAttributes() {}
+
+    //RLP
+    protected void onCreate() {}
+    protected void onUpdate() {}
     protected void onDestroy() {}
 
     protected void onEnable() {}
@@ -88,6 +114,6 @@ public abstract class Node implements Serializable {
 
     @Override
     public String toString() {
-        return new Gson().toJson(this);     //TODO: Usar Json
+        return Json.toJson(this);
     }
 }

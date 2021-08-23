@@ -1,7 +1,6 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.graph.model.*;
-import io.intino.gamification.util.time.Crontab;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.events.FixAsset;
 import org.example.cinepolis.control.gamification.mission.FixOneAsset;
@@ -14,18 +13,6 @@ import java.util.stream.Collectors;
 
 public class Adapter {
 
-    /*public class Tecnico extends Player {
-
-        public Tecnico(String world, String id) {
-            super(world, id);
-        }
-
-        public void onMatchBegin(Match match) {
-            this.world().achievements().find("achievement1");
-            this.getAchievementProgress("achievement1").increment();
-        }
-    }*/
-
     private final ControlBox box;
 
     private World world;
@@ -37,7 +24,7 @@ public class Adapter {
     public void initialize() {
         World world = box.engine().graphViewer().world(GamificationConfig.WorldId);
         if(world == null) {
-            this.world = World.create(GamificationConfig.WorldId);
+            this.world = new World(GamificationConfig.WorldId);
             this.world.currentMatch(new Match(GamificationConfig.WorldId, "match"/*, new Crontab("0 0/10 * 1/1 * ? *")*/));
             this.world.missions().add(new FixOneAsset());
             this.world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
@@ -55,14 +42,9 @@ public class Adapter {
                 .collect(Collectors.toList());
 
         for(String employee : employees) {
+            //TODO: No es más cómodo asignar la misión a través del player??
             world.currentMatch().player(employee).assignMission("FixOneAsset");
         }
-
-        /*Item item = world.items().find(event.asset());
-        if(item == null) return;
-        Actor actor = item.owner();
-        if(!(actor instanceof Player)) return;
-        world.currentMatch().player(actor.id()).assignMission("mission1");*/
     }
 
     public void adapt(DeregisterAsset event) {
@@ -84,19 +66,18 @@ public class Adapter {
 
     public void adapt(HireEmployee event) {
         Player player = new Player(GamificationConfig.WorldId, event.id());
+        player.inventory().policy(Actor.InventoryPolicy.Drop);
         world.players().add(player);
         box.graph().assetsByArea(event.area()).forEach(a -> player.inventory().add(a.id()));
     }
 
     public void adapt(RegisterAsset event) {
-        Item item = new Item(world.id(), event.id());
+        Item item = new Item(GamificationConfig.WorldId, event.id());
         world.items().add(item);
 
         Employee employee = box.graph().employeeByArea(event.area());
         if(employee == null) return;
         Player player = world.players().find(employee.id());
-        player.inventoryPolicy(Actor.InventoryPolicy.Drop);
-        //player.inventory().policy(Actor.InventoryPolicy.Drop);
         player.inventory().add(item);
     }
 }

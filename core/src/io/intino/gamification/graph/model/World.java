@@ -1,7 +1,8 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.property.Property;
-import io.intino.gamification.graph.property.ReadOnlyProperty;
+import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.structure.Property;
+import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,12 +16,6 @@ import static io.intino.gamification.util.time.Crontab.Type.Cyclic;
 @SuppressWarnings("all")
 public class World extends Node {
 
-    public static World create(String id) {
-        World world = new World(id);
-        GamificationGraph.get().worlds().add(world);
-        return world;
-    }
-
     private final Property<Match> currentMatch = new Property<>();
     private final List<Match> finishedMatches = new ArrayList<>();
     private final EntityCollection<Player> players = new EntityCollection<>();
@@ -32,18 +27,37 @@ public class World extends Node {
 
     public World(String id) {
         super(id);
+        //TODO
+        GamificationGraph.get().worlds().add(this);
     }
 
-    protected void update() {
-        runPendingTasks();
+    @Override
+    void preUpdate() {
+        saveGraph();
+        runMatchTask();
+    }
+
+    @Override
+    void updateChildren() {
         final Match match = currentMatch();
-        if(match != null) {
-            match.update();
-            checkMatchExpiration();
-        }
+        if(match != null && match.isAvailable()) match.update();
+
+        players.stream().filter(Entity::isAvailable).forEach(p -> p.update());
+        npcs.stream().filter(Entity::isAvailable).forEach(n -> n.update());
+        items.stream().filter(Entity::isAvailable).forEach(i -> i.update());
     }
 
-    private void runPendingTasks() {
+    @Override
+    void postUpdate() {
+        if(currentMatch.get() != null) checkMatchExpiration();
+    }
+
+    @Override
+    void initTransientAttributes() {
+        matchTask = new AtomicReference<>();
+    }
+
+    private void saveGraph() {
         boolean shouldSaveGraph = false;
         {
             shouldSaveGraph |= players.sealContents();
@@ -51,7 +65,9 @@ public class World extends Node {
             shouldSaveGraph |= items.sealContents();
         }
         if(shouldSaveGraph) graph().save();
+    }
 
+    private void runMatchTask() {
         Runnable task = matchTask.getAndSet(null);
         if(task != null) task.run();
     }
@@ -64,62 +80,81 @@ public class World extends Node {
     }
 
     private void handleMatchExpiration(Match oldMatch) {
-        currentMatch(nextMatch(oldMatch));
+        addPointsToActors(oldMatch);
+        currentMatch(nextMatchFrom(oldMatch), true);
     }
 
-    private Match nextMatch(Match match) {
+    private void addPointsToActors(Match match) {
+        match.players().forEach(p -> p.actor().addScore(p.score()));
+        match.npcs().forEach(n -> n.actor().addScore(n.score()));
+    }
+
+    private Match nextMatchFrom(Match match) {
         return match.crontab().type() == Cyclic ? match.copy() : null;
     }
 
-    public Match currentMatch() {
-        return currentMatch.get();
-    }
+    //RLP
+    private void currentMatch(Match nextMatch, boolean reboot) {
 
-    public void currentMatch(Match nextMatch) {
-        //TODO CONTROLAR ERROR
-        if(!nextMatch.worldId().equals(id())) throw new IllegalArgumentException("WorldId of match and world are different");
+        final Match oldMatch = currentMatch.get();
+        if((oldMatch != null && !oldMatch.isAvailable()) || (nextMatch != null && !nextMatch.isAvailable())) return;
+
         matchTask.set(() -> {
-            final Match oldMatch = currentMatch.get();
-            if(oldMatch != null) {
-                oldMatch.end();
-                finishedMatches.add(oldMatch);
-            }
-            currentMatch.set(nextMatch);
-            if(nextMatch != null) nextMatch.begin();
+            finish(oldMatch, reboot);
+            start(nextMatch, reboot);
         });
     }
 
-    public ReadOnlyProperty<Match> currentMatchProperty() {
+    private void finish(Match match, boolean reboot) {
+        if(match != null) {
+            if(!reboot) match.onDestroy();
+            match.end();
+            finishedMatches.add(match);
+        }
+    }
+
+    private void start(Match match, boolean reboot) {
+        currentMatch.set(match);
+        if(match != null) {
+            if(!reboot) match.onCreate();
+            match.begin();
+        }
+    }
+
+    public final Match currentMatch() {
+        return currentMatch.get();
+    }
+
+    public final void currentMatch(Match nextMatch) {
+        currentMatch(nextMatch, false);
+    }
+
+    public final ReadOnlyProperty<Match> currentMatchProperty() {
         return currentMatch;
     }
 
-    public EntityCollection<Player> players() {
-        return players;
-    }
-
-    public EntityCollection<Actor> npcs() {
-        return npcs;
-    }
-
-    public EntityCollection<Item> items() {
-        return items;
-    }
-
-    public SimpleNodeCollection<Mission> missions() {
-        return missions;
-    }
-
-    public SimpleNodeCollection<Achievement> achievements() {
-        return achievements;
-    }
-
-    public Collection<Match> finishedMatches() {
+    public final Collection<Match> finishedMatches() {
         return Collections.unmodifiableList(finishedMatches);
     }
 
-    @Override
-    protected void initTransientAttributes() {
-        matchTask = new AtomicReference<>();
+    public final EntityCollection<Player> players() {
+        return players;
+    }
+
+    public final EntityCollection<Actor> npcs() {
+        return npcs;
+    }
+
+    public final EntityCollection<Item> items() {
+        return items;
+    }
+
+    public final SimpleNodeCollection<Mission> missions() {
+        return missions;
+    }
+
+    public final SimpleNodeCollection<Achievement> achievements() {
+        return achievements;
     }
 
     public final class EntityCollection<T extends Entity> extends DeferredNodeCollection<T> {
@@ -132,21 +167,12 @@ public class World extends Node {
 
         @Override
         public void add(T node) {
-            if(node == null || !node.worldId().equals(World.this.id())) return;
+            if(node == null) return;
             super.add(node);
         }
 
         @Override
         public void destroy(T node) {
-            //TODO THIS IS NOT AVAILABLE
-            //TODO REGISTRAR LOG
-            System.out.println("El id es...");
-            try {
-                //TODO REGISTRAR LOG
-                System.out.println(World.this.id());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
             if(node == null || !node.worldId().equals(World.this.id())) return;
             super.destroy(node);
         }

@@ -2,5 +2,5 @@ package org.example.cinepolis.control.gamification;
 
 public class GamificationConfig {
 
-    public static String WorldId = "Cinesa";
+    public static final String WorldId = "Cinesa";
 }

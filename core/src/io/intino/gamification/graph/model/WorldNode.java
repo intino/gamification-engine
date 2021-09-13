@@ -19,10 +19,6 @@ abstract class WorldNode extends Node {
         this.worldId = worldId;
     }
 
-    public final String worldId() {
-        return this.worldId;
-    }
-
     public final World world() {
         return GamificationGraph.get().worlds().find(worldId);
     }

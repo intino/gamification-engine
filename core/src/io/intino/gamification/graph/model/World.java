@@ -1,6 +1,6 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.model.Match.ActorState;
 import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
@@ -27,8 +27,6 @@ public class World extends Node {
 
     public World(String id) {
         super(id);
-        //TODO
-        GamificationGraph.get().worlds().add(this);
     }
 
     @Override
@@ -49,12 +47,22 @@ public class World extends Node {
 
     @Override
     void postUpdate() {
-        if(currentMatch.get() != null) checkMatchExpiration();
+        if(currentMatch.get() != null && currentMatch().isAvailable()) checkMatchExpiration();
     }
 
     @Override
     void initTransientAttributes() {
         matchTask = new AtomicReference<>();
+    }
+
+    @Override
+    void destroyChildren() {
+        final Match match = currentMatch();
+        if(match != null && match.isAvailable()) match.markAsDestroyed();
+
+        players.stream().filter(Entity::isAvailable).forEach(p -> p.markAsDestroyed());
+        npcs.stream().filter(Entity::isAvailable).forEach(n -> n.markAsDestroyed());
+        items.stream().filter(Entity::isAvailable).forEach(i -> i.markAsDestroyed());
     }
 
     private void saveGraph() {
@@ -64,7 +72,6 @@ public class World extends Node {
             shouldSaveGraph |= npcs.sealContents();
             shouldSaveGraph |= items.sealContents();
         }
-        if(shouldSaveGraph) graph().save();
     }
 
     private void runMatchTask() {
@@ -81,52 +88,52 @@ public class World extends Node {
 
     private void handleMatchExpiration(Match oldMatch) {
         addPointsToActors(oldMatch);
-        currentMatch(nextMatchFrom(oldMatch), true);
+        currentMatch(nextMatchFrom(oldMatch));
     }
 
     private void addPointsToActors(Match match) {
-        match.players().forEach(p -> p.actor().addScore(p.score()));
-        match.npcs().forEach(n -> n.actor().addScore(n.score()));
+        match.players().forEach(this::addPointsTo);
+        match.npcs().forEach(this::addPointsTo);
+    }
+
+    private void addPointsTo(ActorState state) {
+        Actor actor = state.actor();
+        if(actor != null && actor.isAvailable()) {
+            actor.addScore(state.score());
+        }
     }
 
     private Match nextMatchFrom(Match match) {
         return match.crontab().type() == Cyclic ? match.copy() : null;
     }
 
-    //RLP
-    private void currentMatch(Match nextMatch, boolean reboot) {
+    public void currentMatch(Match nextMatch) {
 
         final Match oldMatch = currentMatch.get();
         if((oldMatch != null && !oldMatch.isAvailable()) || (nextMatch != null && !nextMatch.isAvailable())) return;
 
         matchTask.set(() -> {
-            finish(oldMatch, reboot);
-            start(nextMatch, reboot);
+            finish(oldMatch);
+            start(nextMatch);
         });
     }
 
-    private void finish(Match match, boolean reboot) {
+    private void finish(Match match) {
         if(match != null) {
-            if(!reboot) match.onDestroy();
             match.end();
             finishedMatches.add(match);
         }
     }
 
-    private void start(Match match, boolean reboot) {
+    private void start(Match match) {
         currentMatch.set(match);
         if(match != null) {
-            if(!reboot) match.onCreate();
             match.begin();
         }
     }
 
     public final Match currentMatch() {
         return currentMatch.get();
-    }
-
-    public final void currentMatch(Match nextMatch) {
-        currentMatch(nextMatch, false);
     }
 
     public final ReadOnlyProperty<Match> currentMatchProperty() {
@@ -173,7 +180,7 @@ public class World extends Node {
 
         @Override
         public void destroy(T node) {
-            if(node == null || !node.worldId().equals(World.this.id())) return;
+            if(node == null || !node.world().id().equals(World.this.id())) return;
             super.destroy(node);
         }
     }

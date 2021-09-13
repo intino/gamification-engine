@@ -16,6 +16,7 @@ import static io.intino.gamification.util.time.Crontab.Type.Undefined;
 
 public class Match extends WorldNode {
 
+    private final String idBase;
     private final int instance;
     private final Property<Instant> startTime = new Property<>();
     private final Property<Instant> endTime = new Property<>();
@@ -23,24 +24,23 @@ public class Match extends WorldNode {
     private final Map<String, PlayerState> players;
     private final Map<String, ActorState> npcs;
     private final Crontab crontab;
-    //TODO: Debe ser transient???
-    private transient final Queue<MissionProgressTask> missionProgressTasks;
+    private transient Queue<MissionProgressTask> missionProgressTasks;
 
     public Match(String worldId, String id) {
         this(worldId, id, Crontab.undefined());
     }
 
     public Match(String worldId, String id, Crontab crontab) {
-        this(0, worldId, id, crontab);
+        this(0, worldId, id, id, crontab);
     }
 
-    private Match(int instance, String worldId, String id, Crontab crontab) {
+    protected Match(int instance, String worldId, String idBase, String id, Crontab crontab) {
         super(worldId, id);
+        this.idBase = idBase;
         this.instance = instance;
         this.players = new HashMap<>();
         this.npcs = new HashMap<>();
         this.crontab = crontab;
-        this.missionProgressTasks = new ArrayDeque<>();
     }
 
     void begin() {
@@ -68,7 +68,9 @@ public class Match extends WorldNode {
     void end() {
         endTime.set(TimeUtils.currentInstant());
 
-        missionAssignmentsOf(players).forEach(MissionAssignment::fail);
+        synchronized (this) {
+            missionAssignmentsOf(players).forEach(MissionAssignment::fail);
+        }
 
         try {
             onEnd();
@@ -95,28 +97,34 @@ public class Match extends WorldNode {
     }
 
     private void checkMissionsExpiration() {
-        missionAssignmentsOf(players).forEach(MissionAssignment::checkExpiration);
+        synchronized (this) {
+            missionAssignmentsOf(players).forEach(MissionAssignment::checkExpiration);
+        }
     }
 
     private List<MissionAssignment> missionAssignmentsOf(Map<String, PlayerState> players) {
-        //TODO comprobar que el actor no sea nulo
+
         return players.values().stream()
                 .filter(ps -> ps.actor() != null)
                 .filter(ps -> ps.actor().isAvailable())
                 .map(PlayerState::missionAssignments)
-                .flatMap(Collection::stream).collect(Collectors.toList());
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
-    //TODO: Mejorar
     Match copy() {
         final int instance = this.instance + 1;
-        final String id = id() + "_" + instance;
-        return new Match(instance, worldId(), id, crontab);
+        final String id = idBase + "_" + instance;
+        return newInstance(instance, world().id(), idBase, id, crontab);
+    }
+
+    protected Match newInstance(int instance, String worldId, String idBase, String id, Crontab crontab) {
+        return new Match(instance, worldId, idBase, id, crontab);
     }
 
     boolean hasExpired() {
         if(!hasExpirationTime()) return false;
-        return crontab.matches(startTime.get(), TimeUtils.currentInstant());
+        return crontab.matches(startTime.get());
     }
 
     private boolean hasExpirationTime() {
@@ -160,14 +168,12 @@ public class Match extends WorldNode {
     }
 
     public final PlayerState player(String playerId) {
-        //RLP
         synchronized (this) {
             return players.computeIfAbsent(playerId, PlayerState::new);
         }
     }
 
     public final ActorState npc(String npcId) {
-        //RLP
         synchronized (this) {
             return npcs.computeIfAbsent(npcId, ActorState::new);
         }
@@ -177,9 +183,17 @@ public class Match extends WorldNode {
         return crontab;
     }
 
+    @Override
+    void initTransientAttributes() {
+        this.missionProgressTasks = new ArrayDeque<>();
+    }
+
     protected void onBegin() {}
 
     protected void onEnd() {}
+
+    protected final void onCreate() {}
+    protected final void onDestroy() {}
 
     public enum State {
         Created, Running, Finished
@@ -193,10 +207,6 @@ public class Match extends WorldNode {
         private ActorState(String actorId) {
             this.actorId = actorId;
             this.score = 0;
-        }
-
-        public String actorId() {
-            return actorId;
         }
 
         public Actor actor() {
@@ -231,7 +241,7 @@ public class Match extends WorldNode {
             return actor != null ? actor : world().players().find(actorId);
         }
 
-        public MissionAssignment assignMission(String missionId) {
+        void assignMission(String missionId) {
             Mission mission = world().missions().find(missionId);
             if(mission == null) {
                 NoSuchElementException e = new NoSuchElementException("Mission " + missionId + " not exists");
@@ -239,21 +249,9 @@ public class Match extends WorldNode {
                 throw e;
             }
 
-            return missionAssignmentOf(mission);
-        }
-
-        private MissionAssignment missionAssignmentOf(Mission mission) {
-            //TODO MEJORAR
-            MissionAssignment missionAssignment = missionAssignments().stream()
-                    .filter(ma -> ma.missionId().equals(mission.id()))
-                    .findFirst().orElse(null);
-
-            if(missionAssignment == null) {
-                missionAssignment = new MissionAssignment(worldId(), mission.id(), actorId(), mission.total());
-                missionAssignments.add(missionAssignment);
+            if (missionAssignment(missionId) == null) {
+                missionAssignments.add(new MissionAssignment(world().id(), mission.id(), actorId, mission.total()));
             }
-
-            return missionAssignment;
         }
 
         public List<MissionAssignment> missionAssignments() {

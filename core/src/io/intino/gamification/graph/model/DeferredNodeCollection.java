@@ -1,6 +1,5 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.model.Node;
 import io.intino.gamification.graph.structure.NodeCollection;
 import io.intino.gamification.graph.structure.SerializableCollection;
 
@@ -38,9 +37,8 @@ public class DeferredNodeCollection<T extends Node> extends SerializableCollecti
 
     @Override
     public void destroy(T node) {
-        //TODO: Se comprueba si está destruido???
-        //if(node == null || node.destroyed()) return;
-        //node.destroy();
+        if(node == null || node.destroyed()) return;
+        node.markAsDestroyed();
         nodesToDestroy.add(node);
     }
 

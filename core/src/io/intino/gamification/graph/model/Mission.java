@@ -76,7 +76,6 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         if(newState != previousState) notifyStateChange(missionAssignment, newState);
     }
 
-    //RLP
     private void notifyStateChange(MissionAssignment assignment, State newState) {
         if(newState == State.Complete || newState == State.Failed) onMissionEnd(assignment);
     }

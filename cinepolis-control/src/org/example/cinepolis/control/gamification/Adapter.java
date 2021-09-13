@@ -3,13 +3,14 @@ package org.example.cinepolis.control.gamification;
 import io.intino.gamification.graph.model.*;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.events.FixAsset;
-import org.example.cinepolis.control.gamification.mission.FixOneAsset;
-import org.example.cinepolis.control.graph.Asset;
+import org.example.cinepolis.control.gamification.model.*;
 import org.example.cinepolis.control.graph.Employee;
 import org.example.cinepolis.datahub.events.cinepolis.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static io.intino.gamification.graph.model.Actor.InventoryPolicy.Drop;
 
 public class Adapter {
 
@@ -22,19 +23,24 @@ public class Adapter {
     }
 
     public void initialize() {
+
         World world = box.engine().graphViewer().world(GamificationConfig.WorldId);
         if(world == null) {
-            this.world = new World(GamificationConfig.WorldId);
-            this.world.currentMatch(new Match(GamificationConfig.WorldId, "match"/*, new Crontab("0 0/10 * 1/1 * ? *")*/));
-            this.world.missions().add(new FixOneAsset());
-            this.world.achievements().add(new Achievement("achievement1", "Empieza 2 partidas", 2));
+            this.world = new Cinema(GamificationConfig.WorldId);
+
+            FixOneAsset mission = new FixOneAsset();
+            this.world.missions().add(mission);
+            BeginTwoMatches achievement = new BeginTwoMatches();
+            this.world.achievements().add(achievement);
+
+            this.world.currentMatch(new Workday(GamificationConfig.WorldId, "match"));
         } else {
             this.world = world;
         }
     }
 
     public void adapt(AssetAlert event) {
-        Asset asset = box.graph().asset(event.asset());
+        org.example.cinepolis.control.graph.Asset asset = box.graph().asset(event.asset());
         if(asset == null) return;
 
         List<String> employees = box.graph().employeesByArea(asset.area()).stream()
@@ -42,8 +48,7 @@ public class Adapter {
                 .collect(Collectors.toList());
 
         for(String employee : employees) {
-            //TODO: No es más cómodo asignar la misión a través del player??
-            world.currentMatch().player(employee).assignMission("FixOneAsset");
+            world.players().find(employee).assignMission("FixOneAsset");
         }
     }
 
@@ -61,23 +66,30 @@ public class Adapter {
         boolean anyAsset = box.graph().assetList().stream().anyMatch(as -> as.id().equals(event.asset()) && as.alerts().stream().anyMatch(al -> al.id().equals(event.alert())));
         if(!anyAsset) return;
         FixAsset fixAssetEvent = new FixAsset(GamificationConfig.WorldId, event.employee());
-        box.engine().eventManager().publish(fixAssetEvent);
+        box.engine().eventPublisher().publish(fixAssetEvent);
     }
 
     public void adapt(HireEmployee event) {
-        Player player = new Player(GamificationConfig.WorldId, event.id());
-        player.inventory().policy(Actor.InventoryPolicy.Drop);
-        world.players().add(player);
-        box.graph().assetsByArea(event.area()).forEach(a -> player.inventory().add(a.id()));
+
+        Technician technician = new Technician(world.id(), event.id());
+        technician.inventory().policy(Drop);
+
+        for (org.example.cinepolis.control.graph.Asset asset : box.graph().assetsByArea(event.area())) {
+            Asset item = new Asset(world.id(), asset.id());
+            world.items().add(item);
+            technician.inventory().add(item);
+        }
+
+        world.players().add(technician);
     }
 
     public void adapt(RegisterAsset event) {
-        Item item = new Item(GamificationConfig.WorldId, event.id());
-        world.items().add(item);
+        Asset asset = new Asset(GamificationConfig.WorldId, event.id());
+        world.items().add(asset);
 
         Employee employee = box.graph().employeeByArea(event.area());
         if(employee == null) return;
         Player player = world.players().find(employee.id());
-        player.inventory().add(item);
+        player.inventory().add(asset);
     }
 }

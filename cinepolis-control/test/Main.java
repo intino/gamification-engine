@@ -1,7 +1,5 @@
-import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.util.Log;
-import org.example.cinepolis.control.gamification.GamificationConfig;
+import io.intino.gamification.graph.GamificationGraph;
 import util.events.FixAsset;
 import util.model.*;
 
@@ -17,32 +15,31 @@ public class Main {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("gamification_time_zone", "Atlantic/Canary");
         parameters.put("gamification_path", "./gamification");
-
-        Log.LoggerInstance.set(getLogger());
+        parameters.put("gamification_saving_cron", "0 0/1 * 1/1 * ? *");
 
         GamificationEngine engine = new GamificationEngine(parameters);
         engine.launch();
 
         /* ----------------------------------------------------------------- */
 
-        Cinesa world = createWorld();
+        Cinema world = createWorld();
 
         world.currentMatch(new Workday("world", "match"));
 
         //TODO: EL CURRENT MATCH DEBE ESTAR INICIALIZADO
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
         world.players().forEach(p -> p.assignMission("FixOneAsset"));
 
-        engine.eventManager().publish(new FixAsset(world.id(), "t1"));
-        engine.eventManager().publish(new FixAsset(world.id(), "t3"));
+        engine.eventPublisher()
+                .publish(new FixAsset(world.id(), "t1"))
+                .publish(new FixAsset(world.id(), "t3"));
 
         deleteTechnician(world, "t5");
     }
 
-    private static Cinesa createWorld() {
-
-        Cinesa world = new Cinesa("world");
+    private static Cinema createWorld() {
+        Cinema world = new Cinema("world");
 
         FixOneAsset mission = new FixOneAsset();
         world.missions().add(mission);
@@ -55,10 +52,12 @@ public class Main {
         initTechnician(world, "t4", Arrays.asList("a7", "a8"));
         initTechnician(world, "t5", Arrays.asList("a9", "a10"));
 
+        GamificationGraph.get().worlds().add(world);
+
         return world;
     }
 
-    private static void initTechnician(Cinesa world, String technicianId, List<String> assetIds) {
+    private static void initTechnician(Cinema world, String technicianId, List<String> assetIds) {
         Technician technician = new Technician(world.id(), technicianId);
 
         for (String assetId : assetIds) {
@@ -70,36 +69,7 @@ public class Main {
         world.players().add(technician);
     }
 
-    private static void deleteTechnician(Cinesa world, String technicianId) {
+    private static void deleteTechnician(Cinema world, String technicianId) {
         world.players().destroy(world.players().find(technicianId));
-    }
-
-    private static Log.Logger getLogger() {
-        return new Log.Logger() {
-            @Override
-            public void debug(String message) {
-                Logger.debug(message);
-            }
-
-            @Override
-            public void info(String message) {
-                Logger.info(message);
-            }
-
-            @Override
-            public void warn(String message) {
-                Logger.warn(message);
-            }
-
-            @Override
-            public void error(String message) {
-                Logger.error(message);
-            }
-
-            @Override
-            public void error(String message, Throwable e) {
-                Logger.error(message, e);
-            }
-        };
     }
 }

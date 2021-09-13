@@ -1,10 +1,10 @@
 package io.intino.gamification.core;
 
-import io.intino.gamification.api.Configuration;
+import io.intino.gamification.api.EventPublisher;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GraphSerializer;
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.graph.GraphViewer;
+import io.intino.gamification.api.GraphViewer;
 
 public class GamificationCore {
 
@@ -13,6 +13,7 @@ public class GamificationCore {
     private GraphSerializer graphSerializer;
     private GraphViewer graphViewer;
     private EventManager eventManager;
+    private EventPublisher eventPublisher;
     private GameLoop gameLoop;
 
     public GamificationCore(GamificationParameters gamificationParameters) {
@@ -29,6 +30,7 @@ public class GamificationCore {
         this.graphSerializer = new GraphSerializer(this);
         this.graphViewer = new GraphViewer(this);
         this.eventManager = new EventManager(this);
+        this.eventPublisher = new EventPublisher(this);
         this.gameLoop = new GameLoop(this);
         this.gameLoop.start();
     }
@@ -55,5 +57,9 @@ public class GamificationCore {
 
     public GameLoop gameLoop() {
         return gameLoop;
+    }
+
+    public EventPublisher eventPublisher() {
+        return eventPublisher;
     }
 }

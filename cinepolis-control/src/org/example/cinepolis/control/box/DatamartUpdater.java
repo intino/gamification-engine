@@ -13,8 +13,7 @@ import java.nio.file.Files;
 import java.time.Instant;
 import java.util.*;
 
-import static org.example.cinepolis.control.box.DatamartUtils.completeAlert;
-import static org.example.cinepolis.control.box.DatamartUtils.generateAlert;
+import static org.example.cinepolis.control.box.DatamartUtils.*;
 
 public class DatamartUpdater {
 
@@ -68,15 +67,12 @@ public class DatamartUpdater {
                 if(theater != null) box.terminal().publish(registerAsset(asset, theater));
             });
 
-            System.out.println();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        //No se puede acceder al mundo de las listas
-        //box.terminal().publish(deleteEmployee("e54"));
-        //box.terminal().publish(deleteAsset("10.116.46.29"));
+        box.terminal().publish(deleteEmployee("e54"));
+        box.terminal().publish(deleteAsset("10.116.46.29"));
 
         Map<org.example.cinepolis.control.graph.Employee, ArrayList<org.example.cinepolis.control.graph.Asset>> assetsByEmployee = new HashMap<>();
         box.graph().assetList().forEach(a -> {
@@ -96,8 +92,6 @@ public class DatamartUpdater {
         box.terminal().publish(completeAlert("alert2", "10.99.9.43", "e43"));   //Empleado mal, es e42
         box.terminal().publish(completeAlert("alert2", "10.98.2.43", "e46"));   //Alerta mal, es alert3
         box.terminal().publish(completeAlert("alert4", "10.100.7.24", "e24"));  //IP mal, es .25*/
-
-        System.out.println();
     }
 
     private static RegisterAsset registerAsset(Asset value, Theater theater) {

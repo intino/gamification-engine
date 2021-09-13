@@ -43,6 +43,7 @@ public class GameLoop {
         public void run() {
             beginFrame();
             {
+                core.graphSerializer().checkCronSave();
                 eventManager.pollEvents();
                 graph.update();
             }

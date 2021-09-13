@@ -1,8 +1,8 @@
 package io.intino.gamification.graph;
 
 import io.intino.gamification.core.GamificationCore;
-import io.intino.gamification.graph.model.World;
 import io.intino.gamification.graph.model.DeferredNodeCollection;
+import io.intino.gamification.graph.model.World;
 import io.intino.gamification.graph.structure.NodeCollection;
 import io.intino.gamification.util.Log;
 
@@ -37,14 +37,11 @@ public class GamificationGraph {
     }
 
     public void update() {
-        if(worlds.sealContents()) save();
-        for (World world : worlds) {
-            if(world != null) world.update();
-        }
-    }
+        worlds.sealContents();
 
-    public void save() {
-        shouldSave(true);
+        for (World world : worlds) {
+            if(world != null && world.isAvailable()) world.update();
+        }
     }
 
     public void shouldSave(boolean shouldSave) {

@@ -1,10 +1,8 @@
 package io.intino.gamification.util.file;
 
-import io.intino.gamification.graph.model.World;
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 
 import java.io.*;
-import java.nio.file.Files;
 
 public class FileUtils {
 
@@ -17,7 +15,7 @@ public class FileUtils {
             try {
                 file.createNewFile();
             } catch (IOException e) {
-                Logger.error(e);
+                Log.error(e);
             }
         }
 
@@ -34,7 +32,7 @@ public class FileUtils {
         try (ObjectInputStream reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)))) {
             return reader.readObject();
         } catch (Exception e) {
-            Logger.error(e);
+            Log.error(e);
         }
         return null;
     }
@@ -43,7 +41,7 @@ public class FileUtils {
         try (ObjectOutputStream writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file)))) {
             writer.writeObject(object);
         } catch (Exception e) {
-            Logger.error(e);
+            Log.error(e);
         }
     }
 }

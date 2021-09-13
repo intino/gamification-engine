@@ -1,6 +1,6 @@
 package io.intino.gamification.util.time;
 
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 import org.quartz.CronExpression;
 
 import java.io.Serializable;
@@ -45,7 +45,7 @@ public class Crontab implements Serializable {
             cronExpression = new CronExpression(expression);
             cronExpression.setTimeZone(TimeZone.getTimeZone(TimeUtils.timeZone()));
         } catch (ParseException e) {
-            Logger.error(e);
+            Log.error(e);
         }
         return cronExpression;
     }

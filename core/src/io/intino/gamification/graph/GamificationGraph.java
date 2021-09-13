@@ -4,7 +4,7 @@ import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.World;
 import io.intino.gamification.graph.model.DeferredNodeCollection;
 import io.intino.gamification.graph.structure.NodeCollection;
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -23,7 +23,7 @@ public class GamificationGraph {
     public GamificationGraph(GamificationCore core) {
         if(core == null) {
             IllegalArgumentException e = new IllegalArgumentException("GamificationCore cannot be null");
-            Logger.error(e);
+            Log.error(e);
             throw e;
         }
         this.core = core;

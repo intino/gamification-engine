@@ -2,7 +2,7 @@ package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.graph.structure.ReadOnlyProperty;
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 import io.intino.gamification.util.time.Crontab;
 import io.intino.gamification.util.time.TimeUtils;
 
@@ -235,7 +235,7 @@ public class Match extends WorldNode {
             Mission mission = world().missions().find(missionId);
             if(mission == null) {
                 NoSuchElementException e = new NoSuchElementException("Mission " + missionId + " not exists");
-                Logger.error(e);
+                Log.error(e.getMessage(), e);
                 throw e;
             }
 

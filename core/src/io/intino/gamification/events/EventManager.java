@@ -1,7 +1,7 @@
 package io.intino.gamification.events;
 
 import io.intino.gamification.core.GamificationCore;
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,7 +23,7 @@ public class EventManager {
     public EventManager(GamificationCore core) {
         if(core == null) {
             NullPointerException e = new NullPointerException("GamificationCore cannot be null");
-            Logger.error(e);
+            Log.error(e);
             throw e;
         }
         EventManager.instance = this;

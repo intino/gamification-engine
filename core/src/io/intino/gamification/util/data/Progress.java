@@ -1,6 +1,6 @@
 package io.intino.gamification.util.data;
 
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public final class Progress implements Serializable {
     public Progress(int total, int current) {
         if(total <= 0) {
             IllegalArgumentException e = new IllegalArgumentException("Total must be > 0");
-            Logger.error(e);
+            Log.error(e);
             throw e;
         }
         this.total = total;

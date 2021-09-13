@@ -3,7 +3,7 @@ package io.intino.gamification.util.serializer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonWriter;
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 
 import java.io.*;
 
@@ -21,7 +21,7 @@ public final class Json {
         try (Reader fileReader = new BufferedReader(new FileReader(file))) {
             return jsonPrettySerializer().fromJson(fileReader, clazz);
         } catch (Exception e) {
-            Logger.error(e);
+            Log.error(e);
         }
         return null;
     }
@@ -31,7 +31,7 @@ public final class Json {
         try (Writer fileWriter = new BufferedWriter(new FileWriter(file))) {
             jsonPrettySerializer().toJson(obj, obj.getClass(), new JsonWriter(fileWriter));
         } catch (Exception e) {
-            Logger.error(e);
+            Log.error(e);
         }
     }
 

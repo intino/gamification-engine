@@ -1,6 +1,6 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 import io.intino.gamification.util.data.Progress;
 
 import java.util.*;
@@ -21,7 +21,7 @@ public class Player extends Actor {
         Achievement achievement = world().achievements().find(achievementId);
         if(achievement == null) {
             NoSuchElementException e = new NoSuchElementException("Achievement " + achievementId + " does not exist");
-            Logger.error(e);
+            Log.error(e.getMessage(), e);
             throw e;
         }
         return achievementProgress.computeIfAbsent(achievementId, id -> new Progress(achievement.total()));

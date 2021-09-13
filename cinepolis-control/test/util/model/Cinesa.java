@@ -2,9 +2,9 @@ package util.model;
 
 import io.intino.gamification.graph.model.World;
 
-public class Cinema extends World {
+public class Cinesa extends World {
 
-    public Cinema(String id) {
+    public Cinesa(String id) {
         super(id);
     }
 

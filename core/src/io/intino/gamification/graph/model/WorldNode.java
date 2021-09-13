@@ -1,7 +1,7 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.util.Log;
 
 import java.util.Objects;
 
@@ -13,7 +13,7 @@ abstract class WorldNode extends Node {
         super(id);
         if(worldId == null) {
             NullPointerException e = new NullPointerException("World cannot be null");
-            Logger.error(e);
+            Log.error(e.getMessage(), e);
             throw e;
         }
         this.worldId = worldId;

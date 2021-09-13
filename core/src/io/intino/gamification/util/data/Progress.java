@@ -4,7 +4,6 @@ import io.intino.gamification.util.Logger;
 
 import java.io.Serializable;
 
-//RLP
 public final class Progress implements Serializable {
 
     private final int total;
@@ -31,13 +30,11 @@ public final class Progress implements Serializable {
     }
 
     public Progress set(int current) {
-        //RLP
         if(state() == State.InProgress) this.current = Math.min(total, current);
         return this;
     }
 
     public Progress increment() {
-        //RLP
         if(state() == State.InProgress) this.current = Math.min(total, current + 1);
         return this;
     }

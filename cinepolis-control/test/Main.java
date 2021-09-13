@@ -1,4 +1,5 @@
 import io.intino.gamification.GamificationEngine;
+import io.intino.gamification.graph.GamificationGraph;
 import util.events.FixAsset;
 import util.model.*;
 
@@ -14,6 +15,7 @@ public class Main {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("gamification_time_zone", "Atlantic/Canary");
         parameters.put("gamification_path", "./gamification");
+        parameters.put("gamification_saving_cron", "0 0/1 * 1/1 * ? *");
 
         GamificationEngine engine = new GamificationEngine(parameters);
         engine.launch();
@@ -29,8 +31,9 @@ public class Main {
 
         world.players().forEach(p -> p.assignMission("FixOneAsset"));
 
-        engine.eventManager().publish(new FixAsset(world.id(), "t1"));
-        engine.eventManager().publish(new FixAsset(world.id(), "t3"));
+        engine.eventPublisher()
+                .publish(new FixAsset(world.id(), "t1"))
+                .publish(new FixAsset(world.id(), "t3"));
 
         deleteTechnician(world, "t5");
     }
@@ -48,6 +51,8 @@ public class Main {
         initTechnician(world, "t3", Arrays.asList("a5", "a6"));
         initTechnician(world, "t4", Arrays.asList("a7", "a8"));
         initTechnician(world, "t5", Arrays.asList("a9", "a10"));
+
+        GamificationGraph.get().worlds().add(world);
 
         return world;
     }

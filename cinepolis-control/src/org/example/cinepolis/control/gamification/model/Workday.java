@@ -1,4 +1,4 @@
-package util.model;
+package org.example.cinepolis.control.gamification.model;
 
 import io.intino.gamification.graph.model.Match;
 import io.intino.gamification.util.time.Crontab;
@@ -11,10 +11,6 @@ public class Workday extends Match {
 
     public Workday(String worldId, String id, Crontab crontab) {
         super(worldId, id, crontab);
-    }
-
-    protected Workday(int instance, String worldId, String idBase, String id, Crontab crontab) {
-        super(instance, worldId, idBase, id, crontab);
     }
 
     @Override
@@ -40,10 +36,5 @@ public class Workday extends Match {
     @Override
     protected void onDisable() {
 
-    }
-
-    @Override
-    protected Match newInstance(int instance, String worldId, String idBase, String id, Crontab crontab) {
-        return new Workday(instance, worldId, idBase, id, crontab);
     }
 }

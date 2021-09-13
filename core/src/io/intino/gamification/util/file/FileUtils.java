@@ -1,10 +1,8 @@
 package io.intino.gamification.util.file;
 
-import io.intino.gamification.graph.model.World;
 import io.intino.gamification.util.Logger;
 
 import java.io.*;
-import java.nio.file.Files;
 
 public class FileUtils {
 

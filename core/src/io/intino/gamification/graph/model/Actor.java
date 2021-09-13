@@ -5,6 +5,7 @@ import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Actor extends Entity {
 
@@ -60,6 +61,13 @@ public class Actor extends Entity {
             this.items = Collections.synchronizedSet(new LinkedHashSet<>());
         }
 
+        public List<Item> items() {
+            return items.stream()
+                    .map(i -> world().items().<Item>find(i))
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
+        }
+
         public boolean add(String itemId) {
             return add(world().items().find(itemId));
         }
@@ -90,7 +98,7 @@ public class Actor extends Entity {
         }
 
         private void destroyItems() {
-            items.stream().<Item>map(world().items()::find).filter(Objects::nonNull).forEach(item -> item.owner(null));
+            items.stream().<Item>map(world().items()::find).filter(Objects::nonNull).forEach(item -> world().items().destroy(item));
         }
 
         private void dropItems() {

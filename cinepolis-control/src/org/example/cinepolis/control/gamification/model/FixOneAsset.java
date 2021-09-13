@@ -1,4 +1,4 @@
-package org.example.cinepolis.control.gamification.mission;
+package org.example.cinepolis.control.gamification.model;
 
 import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.graph.model.Mission;
@@ -16,7 +16,7 @@ public class FixOneAsset extends Mission {
     private static final long EXPIRATION_TIME_SECONDS = 700;
 
     public FixOneAsset() {
-        super(ID, DESCRIPTION, STEPS_TO_COMPLETE);
+        super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY, EXPIRATION_TIME_SECONDS);
     }
 
     @Override
@@ -31,7 +31,6 @@ public class FixOneAsset extends Mission {
 
     @Override
     protected void onMissionEnd(MissionAssignment assignment) {
-        //RLP
         int deltaScore = Math.round(scoreOfStatus(assignment) + scoreOfProgress(assignment) + scoreOfFail(assignment));
         assignment.assignPoints(deltaScore);
     }

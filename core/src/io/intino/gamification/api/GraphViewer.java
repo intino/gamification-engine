@@ -1,4 +1,4 @@
-package io.intino.gamification.graph;
+package io.intino.gamification.api;
 
 import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.World;

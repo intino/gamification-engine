@@ -2,7 +2,6 @@ package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.structure.Property;
-import io.intino.gamification.graph.structure.ReadOnlyProperty;
 import io.intino.gamification.util.Logger;
 import io.intino.gamification.util.serializer.Json;
 
@@ -13,9 +12,8 @@ import java.util.Objects;
 public abstract class Node implements Serializable {
 
     private final String id;
-    //TODO (REVISAR BIEN DONDE SE USA)
-    //private final Property<Boolean> enabled = new Property<>(true);
-    //private final Property<Boolean> destroyed = new Property<>(false);
+    private final Property<Boolean> enabled = new Property<>(true);
+    private final Property<Boolean> destroyed = new Property<>(false);
 
     Node(String id) {
         if(id == null) {
@@ -32,11 +30,10 @@ public abstract class Node implements Serializable {
     }
 
     public final boolean isAvailable() {
-        //TODO
-        return true;
+        return enabled.get() && !destroyed.get();
     }
 
-    /*public final boolean enabled() {
+    public final boolean enabled() {
         return enabled.get();
     }
 
@@ -56,11 +53,13 @@ public abstract class Node implements Serializable {
         onDisable();
     }
 
-    public final void destroy() {
+    public final void markAsDestroyed() {
         destroyed.set(true);
+        destroyChildren();
     }
 
-    public final ReadOnlyProperty<Boolean> destroyedProperty() {
+    //TODO: No podemos devolverlo porque no se puede pillar cuándo se cambia el estado para destruir a sus hijos
+    /*public final ReadOnlyProperty<Boolean> destroyedProperty() {
         return this.destroyed;
     }*/
 
@@ -73,7 +72,6 @@ public abstract class Node implements Serializable {
         initTransientAttributes();
     }
 
-    //RLP
     public final void update() {
         if(isAvailable()) {
             preUpdate();
@@ -83,15 +81,13 @@ public abstract class Node implements Serializable {
         }
     }
 
-    //RLP
     void preUpdate() {}
     void updateChildren() {}
+    void destroyChildren() {}
     void postUpdate() {}
 
-    //RLP
     void initTransientAttributes() {}
 
-    //RLP
     protected void onCreate() {}
     protected void onUpdate() {}
     protected void onDestroy() {}

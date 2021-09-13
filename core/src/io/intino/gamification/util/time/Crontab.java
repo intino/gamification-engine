@@ -9,6 +9,9 @@ import java.time.Instant;
 import java.util.Date;
 import java.util.TimeZone;
 
+import static io.intino.gamification.util.time.TimeUtils.currentInstant;
+import static io.intino.gamification.util.time.TimeUtils.dateOf;
+
 public class Crontab implements Serializable {
 
     public static Crontab undefined() {
@@ -34,7 +37,7 @@ public class Crontab implements Serializable {
     }
 
     private Type typeOf(CronExpression cronExpression) {
-        Date firstDate = cronExpression.getTimeAfter(TimeUtils.dateOf(TimeUtils.currentInstant()));
+        Date firstDate = cronExpression.getTimeAfter(dateOf(currentInstant()));
         Date secondDate = cronExpression.getTimeAfter(firstDate);
         return secondDate == null ? Type.OneTime : Type.Cyclic;
     }
@@ -54,9 +57,9 @@ public class Crontab implements Serializable {
         return type;
     }
 
-    public boolean matches(Instant start, Instant now) {
-        Instant finishDate = cronExpression.getTimeAfter(TimeUtils.dateOf(start)).toInstant();
-        return !now.isBefore(finishDate);
+    public boolean matches(Instant start) {
+        Instant finishDate = cronExpression.getTimeAfter(dateOf(start)).toInstant();
+        return !currentInstant().isBefore(finishDate);
     }
 
     public enum Type {

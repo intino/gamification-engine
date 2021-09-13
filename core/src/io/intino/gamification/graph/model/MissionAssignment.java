@@ -9,7 +9,6 @@ import java.time.Instant;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
 
-//RLP
 public final class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
 
     private final String worldId;
@@ -54,19 +53,16 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
         return this.creationTime;
     }
 
-    //RLP
     public void assignPoints(int score) {
         Match match = world().currentMatch();
         if(match == null || !match.isAvailable()) return;
         match.player(playerId).addScore(score);
     }
 
-    //RLP
     public void checkExpiration() {
         if(mission().hasExpired(creationTime)) fail();
     }
 
-    //RLP
     void fail() {
         if(progress().state() == InProgress) progress().fail();
     }

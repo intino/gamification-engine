@@ -2,7 +2,8 @@ package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.structure.Property;
-import io.intino.gamification.util.Logger;
+import io.intino.gamification.graph.structure.ReadOnlyProperty;
+import io.intino.gamification.util.Log;
 import io.intino.gamification.util.serializer.Json;
 
 import java.io.IOException;
@@ -18,7 +19,7 @@ public abstract class Node implements Serializable {
     Node(String id) {
         if(id == null) {
             NullPointerException e = new NullPointerException("Id cannot be null");
-            Logger.error(e);
+            Log.error(e);
             throw e;
         }
         this.id = id;
@@ -58,10 +59,9 @@ public abstract class Node implements Serializable {
         destroyChildren();
     }
 
-    //TODO: No podemos devolverlo porque no se puede pillar cuándo se cambia el estado para destruir a sus hijos
-    /*public final ReadOnlyProperty<Boolean> destroyedProperty() {
+    public final ReadOnlyProperty<Boolean> destroyedProperty() {
         return this.destroyed;
-    }*/
+    }
 
     GamificationGraph graph() {
         return GamificationGraph.get();

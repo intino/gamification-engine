@@ -1,8 +1,9 @@
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.model.*;
+import io.intino.gamification.graph.structure.Property;
 import org.example.cinepolis.control.gamification.model.Asset;
 import util.events.FixAsset;
-import util.model.Cinema;
+import util.model.Cinesa;
 import util.model.Technician;
 
 import java.util.HashMap;
@@ -39,7 +40,7 @@ public class PerformanceTest {
 
     private static void createWorld(GamificationEngine engine, String id) throws InterruptedException {
 
-        Cinema world = new Cinema(id);
+        Cinesa world = new Cinesa(id);
 
         for (int i = 0; i < achievements; i++) {
             world.achievements().add(new Achievement("achievement-" + i, "description", 1));

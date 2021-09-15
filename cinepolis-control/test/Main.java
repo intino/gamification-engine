@@ -1,5 +1,7 @@
+import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.util.Log;
 import util.events.FixAsset;
 import util.model.*;
 
@@ -46,7 +48,7 @@ public class Main {
 
         FixOneAsset mission = new FixOneAsset();
         world.missions().add(mission);
-        BeginTwoMatches achievement = new BeginTwoMatches();
+        MonthEmployee achievement = new MonthEmployee();
         world.achievements().add(achievement);
 
         initTechnician(world, "t1", Arrays.asList("a1", "a2"));

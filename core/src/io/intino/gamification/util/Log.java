@@ -1,6 +1,6 @@
 package io.intino.gamification.util;
 
-import io.intino.gamification.api.Configuration;
+import io.intino.gamification.core.Configuration;
 
 import java.util.logging.Level;
 

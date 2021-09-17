@@ -72,19 +72,7 @@ public abstract class Node implements Serializable {
         initTransientAttributes();
     }
 
-    public final void update() {
-        if(isAvailable()) {
-            preUpdate();
-            onUpdate();
-            updateChildren();
-            postUpdate();
-        }
-    }
-
-    void preUpdate() {}
-    void updateChildren() {}
     void destroyChildren() {}
-    void postUpdate() {}
 
     void initTransientAttributes() {}
 

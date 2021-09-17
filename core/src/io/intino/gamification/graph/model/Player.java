@@ -3,6 +3,7 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.data.Progress;
 
+import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -46,10 +47,38 @@ public class Player extends Actor {
                 .map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
-    public final void assignMission(String missionId) {
-        if(!world().isAvailable()) return;
+    public final void assignMission(String missionId, Instant expirationTime) {
+        Match match = availableMatch();
+        if(match != null) {
+            match.player(id()).assignMission(missionId, expirationTime);
+        }
+    }
+
+    public void failMission(String missionId) {
+        Match match = availableMatch();
+        if(match != null) {
+            match.player(id()).failMission(missionId);
+        }
+    }
+
+    public void completeMission(String missionId) {
+        Match match = availableMatch();
+        if(match != null) {
+            match.player(id()).completeMission(missionId);
+        }
+    }
+
+    public void cancelMission(String missionId) {
+        Match match = availableMatch();
+        if(match != null) {
+            match.player(id()).cancelMission(missionId);
+        }
+    }
+
+    private Match availableMatch() {
+        if(!world().isAvailable()) return null;
         Match match = world().currentMatch();
-        if(match == null || !match().isAvailable()) return;
-        match.player(id()).assignMission(missionId);
+        if(match == null || !match().isAvailable()) return null;
+        return match;
     }
 }

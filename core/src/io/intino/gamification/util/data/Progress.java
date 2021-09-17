@@ -44,17 +44,22 @@ public final class Progress implements Serializable {
         return this;
     }
 
+    public Progress complete() {
+        this.current = this.total;
+        return this;
+    }
+
     public State state() {
-        if(complete()) return State.Complete;
-        if(!failed()) return State.InProgress;
+        if(isCompleted()) return State.Complete;
+        if(!isFailed()) return State.InProgress;
         return State.Failed;
     }
 
-    private boolean complete() {
+    private boolean isCompleted() {
         return !failed && get() >= 1.0f;
     }
 
-    private boolean failed() {
+    private boolean isFailed() {
         return this.failed;
     }
 

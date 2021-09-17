@@ -1,4 +1,4 @@
-package util.model;
+package io.intino.gamification.test.util.model;
 
 import io.intino.gamification.graph.model.Achievement;
 

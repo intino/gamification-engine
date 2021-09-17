@@ -9,12 +9,10 @@ public class GamificationParameters {
 
     private final String timeZone;
     private final String gamificationPath;
-    private final String savingCron;
 
     public GamificationParameters(Map<String, String> params) {
         this.timeZone = getOrElse(params, "gamification_time_zone");
         this.gamificationPath = getOrElse(params, "gamification_path");
-        this.savingCron = getOrElse(params, "gamification_saving_cron");
     }
 
     public String timeZone() {
@@ -23,10 +21,6 @@ public class GamificationParameters {
 
     public String gamificationPath() {
         return gamificationPath;
-    }
-
-    public String savingCron() {
-        return savingCron;
     }
 
     private String getOrElse(Map<String, String> params, String param) {

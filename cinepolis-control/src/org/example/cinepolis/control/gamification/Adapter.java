@@ -24,16 +24,16 @@ public class Adapter {
 
     public void initialize() {
 
-        World world = box.engine().graphViewer().world(GamificationConfig.WorldId);
+        World world = box.engine().graph().createWorld(new Cinema(GamificationConfig.WorldId));
         if(world == null) {
             this.world = new Cinema(GamificationConfig.WorldId);
 
             FixOneAsset mission = new FixOneAsset();
             this.world.missions().add(mission);
-            BeginTwoMatches achievement = new BeginTwoMatches();
+            MonthEmployee achievement = new MonthEmployee();
             this.world.achievements().add(achievement);
 
-            this.world.currentMatch(new Workday(GamificationConfig.WorldId, "match"));
+            this.world.startNewMatch(new Workday(GamificationConfig.WorldId, "match"));
         } else {
             this.world = world;
         }
@@ -48,7 +48,8 @@ public class Adapter {
                 .collect(Collectors.toList());
 
         for(String employee : employees) {
-            world.players().find(employee).assignMission("FixOneAsset");
+            //TODO
+            world.players().find(employee).assignMission("FixOneAsset", null);
         }
     }
 

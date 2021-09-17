@@ -16,8 +16,6 @@ public class EventManager {
     }
 
     private final GamificationCore core;
-    private volatile Queue<GamificationEvent> frontEventQueue;
-    private volatile Queue<GamificationEvent> backEventQueue;
     private final Map<Class<? extends GamificationEvent>, List<EventCallback<? extends GamificationEvent>>> eventCallbacks;
 
     public EventManager(GamificationCore core) {
@@ -28,14 +26,12 @@ public class EventManager {
         }
         EventManager.instance = this;
         this.core = core;
-        this.frontEventQueue = new PriorityQueue<>();
-        this.backEventQueue = new PriorityQueue<>();
         this.eventCallbacks = new ConcurrentHashMap<>();
     }
 
     public void publish(GamificationEvent event) {
         if(event == null) return;
-        frontEventQueue.add(event);
+        invokeEventCallbacks(event, eventCallbacks.get(event.getClass()));
     }
 
     public <T extends GamificationEvent> void addEventCallback(Class<T> eventClass, EventCallback<T> callback) {
@@ -43,28 +39,10 @@ public class EventManager {
         eventCallbacks.computeIfAbsent(eventClass, c -> new ArrayList<>()).add(callback);
     }
 
-    public void pollEvents() {
-        final Queue<GamificationEvent> eventQueue = swapEventQueues();
-        while(!eventQueue.isEmpty()) {
-            final GamificationEvent event = eventQueue.poll();
-            invokeEventCallbacks(event, eventCallbacks.get(event.getClass()));
-        }
-    }
-
     private void invokeEventCallbacks(GamificationEvent event, List<EventCallback<? extends GamificationEvent>> callbacks) {
         if(callbacks == null) return;
         for(EventCallback callback : callbacks) {
             callback.notify(event);
-        }
-    }
-
-    private Queue<GamificationEvent> swapEventQueues() {
-        synchronized (EventManager.class) {
-            Queue<GamificationEvent> eventQueue = frontEventQueue;
-            Queue<GamificationEvent> tmp = backEventQueue;
-            backEventQueue = frontEventQueue;
-            frontEventQueue = tmp;
-            return eventQueue;
         }
     }
 }

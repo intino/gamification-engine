@@ -24,7 +24,6 @@ Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Parameter("port")
 	Parameter("gamification_path")
 	Parameter("gamification_time_zone")
-	Parameter("gamification_saving_cron")
 
 RunConfiguration local
 	Argument("home", "temp")
@@ -37,7 +36,6 @@ RunConfiguration local
 	Argument("port", "9000")
 	Argument("gamification_path", "temp/datamarts/cinepolis-gamification")
 	Argument("gamification_time_zone", "Atlantic/Canary")
-	Argument("gamification_saving_cron", "0 0/1 * 1/1 * ? *")
 
 Repository(identifier = "intino-maven")
 	Release(url = "https://artifactory.intino.io/artifactory/releases")

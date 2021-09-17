@@ -1,6 +1,5 @@
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.model.*;
-import io.intino.gamification.graph.structure.Property;
 import org.example.cinepolis.control.gamification.model.Asset;
 import util.events.FixAsset;
 import util.model.Cinesa;
@@ -8,6 +7,9 @@ import util.model.Technician;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static io.intino.gamification.util.time.Scale.Day;
+import static io.intino.gamification.util.time.TimeUtils.*;
 
 public class PerformanceTest {
 
@@ -24,7 +26,6 @@ public class PerformanceTest {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("gamification_time_zone", "Atlantic/Canary");
         parameters.put("gamification_path", "./temp/datamarts/cinepolis-gamification");
-        parameters.put("gamification_saving_cron", "0 0/1 * 1/1 * ? *");
 
         GamificationEngine engine = new GamificationEngine(parameters);
         engine.launch();
@@ -65,14 +66,14 @@ public class PerformanceTest {
 
         for (int i = 0; i < matches; i++) {
             Thread.sleep(100);
-            world.currentMatch(new Match(world.id(), "match-" + i));
+            world.startNewMatch(new Match(world.id(), "match-" + i));
         }
 
         Thread.sleep(3000);
 
         for (Player player : world.players()) {
             for (Mission mission : world.missions()) {
-                player.assignMission(mission.id());
+                player.assignMission(mission.id(), truncateTo(nextInstant(currentInstant(), Day), Day));
             }
         }
 

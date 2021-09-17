@@ -1,12 +1,9 @@
 package io.intino.gamification.graph;
 
 import io.intino.gamification.core.GamificationCore;
-import io.intino.gamification.graph.model.DeferredNodeCollection;
+import io.intino.gamification.graph.model.NodeCollection;
 import io.intino.gamification.graph.model.World;
-import io.intino.gamification.graph.structure.NodeCollection;
 import io.intino.gamification.util.Log;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GamificationGraph {
 
@@ -17,8 +14,7 @@ public class GamificationGraph {
     }
 
     private final GamificationCore core;
-    private final DeferredNodeCollection<World> worlds;
-    private final AtomicBoolean saveRequested;
+    private final NodeCollection<World> worlds;
 
     public GamificationGraph(GamificationCore core) {
         if(core == null) {
@@ -27,28 +23,20 @@ public class GamificationGraph {
             throw e;
         }
         this.core = core;
-        this.worlds = new DeferredNodeCollection<>();
-        this.saveRequested = new AtomicBoolean(true);
+        this.worlds = new NodeCollection<>();
         GamificationGraph.instance = this;
+    }
+
+    public World createWorld(World world) {
+        worlds.add(world);
+        return world;
     }
 
     public NodeCollection<World> worlds() {
         return worlds;
     }
 
-    public void update() {
-        worlds.sealContents();
-
-        for (World world : worlds) {
-            if(world != null && world.isAvailable()) world.update();
-        }
-    }
-
-    public void shouldSave(boolean shouldSave) {
-        saveRequested.set(shouldSave);
-    }
-
-    public boolean shouldSave() {
-        return saveRequested.get();
+    public void save() {
+        core.graphSerializer().save();
     }
 }

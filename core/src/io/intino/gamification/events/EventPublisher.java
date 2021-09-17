@@ -1,7 +1,6 @@
-package io.intino.gamification.api;
+package io.intino.gamification.events;
 
 import io.intino.gamification.core.GamificationCore;
-import io.intino.gamification.events.GamificationEvent;
 
 public class EventPublisher {
 

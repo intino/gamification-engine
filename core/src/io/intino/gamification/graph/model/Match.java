@@ -3,7 +3,6 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.graph.structure.ReadOnlyProperty;
 import io.intino.gamification.util.Log;
-import io.intino.gamification.util.time.Crontab;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.io.Serializable;
@@ -12,35 +11,20 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.util.time.Crontab.Type.Undefined;
+import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public class Match extends WorldNode {
 
-    private final String idBase;
-    private final int instance;
     private final Property<Instant> startTime = new Property<>();
     private final Property<Instant> endTime = new Property<>();
     private final Property<State> state = new Property<>(State.Created);
     private final Map<String, PlayerState> players;
     private final Map<String, ActorState> npcs;
-    private final Crontab crontab;
-    private transient Queue<MissionProgressTask> missionProgressTasks;
 
     public Match(String worldId, String id) {
-        this(worldId, id, Crontab.undefined());
-    }
-
-    public Match(String worldId, String id, Crontab crontab) {
-        this(0, worldId, id, id, crontab);
-    }
-
-    protected Match(int instance, String worldId, String idBase, String id, Crontab crontab) {
         super(worldId, id);
-        this.idBase = idBase;
-        this.instance = instance;
         this.players = new HashMap<>();
         this.npcs = new HashMap<>();
-        this.crontab = crontab;
     }
 
     void begin() {
@@ -50,26 +34,16 @@ public class Match extends WorldNode {
         state.set(State.Running);
     }
 
-    @Override
-    void preUpdate() {
-        runMissionProgressTasks();
-    }
-
-    @Override
-    void updateChildren() {
-        notifyEntities(e -> e.onMatchUpdate(this));
-    }
-
-    @Override
-    void postUpdate() {
-        checkMissionsExpiration();
-    }
-
     void end() {
         endTime.set(TimeUtils.currentInstant());
 
         synchronized (this) {
-            missionAssignmentsOf(players).forEach(MissionAssignment::fail);
+            missionAssignmentsOf(players).forEach(missionAssignment -> {
+                if(missionAssignment.progress().state() == InProgress) {
+                    missionAssignment.update(missionAssignment.progress().state());
+                    missionAssignment.progress().fail();
+                }
+            });
         }
 
         try {
@@ -80,26 +54,10 @@ public class Match extends WorldNode {
         }
     }
 
-    private void runMissionProgressTasks() {
-        while (!missionProgressTasks.isEmpty()) {
-            MissionProgressTask task = missionProgressTasks.poll();
-            Player player = world().players().find(task.playerId);
-            if(player != null && player.isAvailable()) {
-                task.execute();
-            }
-        }
-    }
-
     private void notifyEntities(Consumer<Entity> routine) {
         world().players().stream().filter(Node::isAvailable).forEach(routine);
         world().npcs().stream().filter(Node::isAvailable).forEach(routine);
         world().items().stream().filter(Node::isAvailable).forEach(routine);
-    }
-
-    private void checkMissionsExpiration() {
-        synchronized (this) {
-            missionAssignmentsOf(players).forEach(MissionAssignment::checkExpiration);
-        }
     }
 
     private List<MissionAssignment> missionAssignmentsOf(Map<String, PlayerState> players) {
@@ -112,27 +70,11 @@ public class Match extends WorldNode {
                 .collect(Collectors.toList());
     }
 
-    Match copy() {
-        final int instance = this.instance + 1;
-        final String id = idBase + "_" + instance;
-        return newInstance(instance, world().id(), idBase, id, crontab);
-    }
-
-    protected Match newInstance(int instance, String worldId, String idBase, String id, Crontab crontab) {
-        return new Match(instance, worldId, idBase, id, crontab);
-    }
-
-    boolean hasExpired() {
-        if(!hasExpirationTime()) return false;
-        return crontab.matches(startTime.get());
-    }
-
-    private boolean hasExpirationTime() {
-        return crontab.type() != Undefined;
-    }
-
-    void addMissionProgressTask(MissionProgressTask task) {
-        missionProgressTasks.add(task);
+    void runMissionProgressTask(MissionProgressTask task) {
+        Player player = world().players().find(task.playerId);
+        if(player != null && player.isAvailable()) {
+            task.execute();
+        }
     }
 
     public final Instant startTime() {
@@ -159,12 +101,12 @@ public class Match extends WorldNode {
         return state;
     }
 
-    public final List<PlayerState> players() {
-        return new ArrayList<>(players.values());
+    public final Map<String, PlayerState> players() {
+        return Collections.unmodifiableMap(players);
     }
 
-    public final List<ActorState> npcs() {
-        return new ArrayList<>(npcs.values());
+    public final Map<String, ActorState> npcs() {
+        return Collections.unmodifiableMap(npcs);
     }
 
     public final PlayerState player(String playerId) {
@@ -177,15 +119,6 @@ public class Match extends WorldNode {
         synchronized (this) {
             return npcs.computeIfAbsent(npcId, ActorState::new);
         }
-    }
-
-    Crontab crontab() {
-        return crontab;
-    }
-
-    @Override
-    void initTransientAttributes() {
-        this.missionProgressTasks = new ArrayDeque<>();
     }
 
     protected void onBegin() {}
@@ -241,7 +174,7 @@ public class Match extends WorldNode {
             return actor != null ? actor : world().players().find(actorId);
         }
 
-        void assignMission(String missionId) {
+        void assignMission(String missionId, Instant expirationTime) {
             Mission mission = world().missions().find(missionId);
             if(mission == null) {
                 NoSuchElementException e = new NoSuchElementException("Mission " + missionId + " not exists");
@@ -250,7 +183,7 @@ public class Match extends WorldNode {
             }
 
             if (missionAssignment(missionId) == null) {
-                missionAssignments.add(new MissionAssignment(world().id(), mission.id(), actorId, mission.total()));
+                missionAssignments.add(new MissionAssignment(world().id(), mission.id(), actorId, mission.total(), expirationTime));
             }
         }
 
@@ -262,6 +195,24 @@ public class Match extends WorldNode {
             return missionAssignments.stream()
                     .filter(ma -> ma.missionId().equals(missionId))
                     .findFirst().orElse(null);
+        }
+
+        public void failMission(String missionId) {
+            missionAssignments.stream()
+                    .filter(ma -> ma.missionId().equals(missionId))
+                    .forEach(MissionAssignment::fail);
+        }
+
+        public void completeMission(String missionId) {
+            missionAssignments.stream()
+                    .filter(ma -> ma.missionId().equals(missionId))
+                    .forEach(MissionAssignment::complete);
+        }
+
+        public void cancelMission(String missionId) {
+            missionAssignments.removeIf(ma ->
+                    ma.missionId().equals(missionId) && ma.progress().state() == InProgress
+            );
         }
     }
 

@@ -77,8 +77,8 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-common:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-client:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.42.v20210604" level="project" />
-    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.7" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:terminal-jms:4.1.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:ingestion:4.0.5" level="project" />
+    <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.7" level="project" />
   </component>
 </module>

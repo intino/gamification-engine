@@ -1,4 +1,4 @@
-package org.example.cinepolis.control.gamification.model;
+package io.intino.gamification.test.util.model;
 
 import io.intino.gamification.graph.model.Match;
 
@@ -10,7 +10,7 @@ public class Workday extends Match {
 
     @Override
     protected void onBegin() {
-        world().players().forEach(p -> p.achievementProgress("MonthEmployee").increment());
+
     }
 
     @Override

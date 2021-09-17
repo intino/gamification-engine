@@ -15,11 +15,6 @@ public class Technician extends Player {
     }
 
     @Override
-    protected void onMatchUpdate(Match match) {
-
-    }
-
-    @Override
     protected void onMatchEnd(Match match) {
 
     }

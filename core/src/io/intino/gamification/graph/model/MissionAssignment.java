@@ -7,7 +7,7 @@ import io.intino.gamification.util.time.TimeUtils;
 import java.io.Serializable;
 import java.time.Instant;
 
-import static io.intino.gamification.util.data.Progress.State.InProgress;
+import static io.intino.gamification.util.data.Progress.State.*;
 
 public final class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
 
@@ -16,13 +16,15 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
     private final String playerId;
     private final Progress progress;
     private final Instant creationTime;
+    private final Instant expirationTime;
 
-    public MissionAssignment(String worldId, String missionId, String playerId, int total) {
+    public MissionAssignment(String worldId, String missionId, String playerId, int total, Instant expirationTime) {
         this.worldId = worldId;
         this.missionId = missionId;
         this.playerId = playerId;
         this.progress = new Progress(total);
         this.creationTime = TimeUtils.currentInstant();
+        this.expirationTime = expirationTime;
     }
 
     public String woldId() {
@@ -53,22 +55,44 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
         return this.creationTime;
     }
 
-    public void assignPoints(int score) {
+    public Instant expirationTime() {
+        return this.creationTime;
+    }
+
+    public void addPoints(int score) {
         Match match = world().currentMatch();
         if(match == null || !match.isAvailable()) return;
         match.player(playerId).addScore(score);
     }
 
-    public void checkExpiration() {
-        if(mission().hasExpired(creationTime)) fail();
+    void fail() {
+        if(progress().state() == InProgress) {
+            progress.fail();
+            update(Failed);
+        }
     }
 
-    void fail() {
-        if(progress().state() == InProgress) progress().fail();
+    void complete() {
+        if(progress().state() == InProgress) {
+            progress.complete();
+            update(Complete);
+        }
+    }
+
+    public void update(Progress.State newState) {
+        if(newState == Complete) {
+            mission().onMissionComplete(this);
+        } else if(newState == Failed) {
+            mission().onMissionFail(this);
+        } else if(newState == InProgress) {
+            mission().onMissionIncomplete(this);
+        }
+        mission().onMissionEnd(this);
     }
 
     @Override
     public String toString() {
+        //TODO: REVISAR TIMES
         return "MissionAssignment{" +
                 "missionId='" + missionId + '\'' +
                 ", playerId='" + playerId + '\'' +

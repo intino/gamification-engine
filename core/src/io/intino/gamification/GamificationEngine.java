@@ -1,10 +1,10 @@
 package io.intino.gamification;
 
 import io.intino.gamification.core.Configuration;
-import io.intino.gamification.api.EventPublisher;
+import io.intino.gamification.events.EventPublisher;
 import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.core.GamificationParameters;
-import io.intino.gamification.api.GraphViewer;
+import io.intino.gamification.graph.GamificationGraph;
 
 import java.util.Map;
 
@@ -15,7 +15,7 @@ public class GamificationEngine {
     private GamificationCore core;
 
     private Configuration configuration;
-    private GraphViewer graphViewer;
+    private GamificationGraph graph;
     private EventPublisher eventPublisher;
 
     public GamificationEngine(Map<String, String> params) {
@@ -27,7 +27,7 @@ public class GamificationEngine {
         this.core.start();
 
         this.configuration = core.configuration();
-        this.graphViewer = core.graphViewer();
+        this.graph = core.graph();
         this.eventPublisher = core.eventPublisher();
     }
 
@@ -35,8 +35,8 @@ public class GamificationEngine {
         return this.configuration;
     }
 
-    public GraphViewer graphViewer() {
-        return this.graphViewer;
+    public GamificationGraph graph() {
+        return this.graph;
     }
 
     public EventPublisher eventPublisher() {

@@ -1,19 +1,22 @@
-package util.model;
+package io.intino.gamification.test.util.model;
 
 import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.graph.model.Mission;
 import io.intino.gamification.graph.model.MissionAssignment;
 import io.intino.gamification.graph.model.Player;
-import util.events.FixAsset;
+import io.intino.gamification.test.util.events.FixAsset;
 
-public class FixOneAsset extends Mission {
+public class FixFiveAsset extends Mission {
 
-    private static final String ID = "FixOneAsset";
-    private static final String DESCRIPTION = "Arregla un proyector";
-    private static final int STEPS_TO_COMPLETE = 2;
+    private static final String ID = "FixFiveAsset";
+    private static final String DESCRIPTION = "Arregla cinco proyectores";
+    private static final int STEPS_TO_COMPLETE = 5;
     private static final int PRIORITY = 0;
+    public static final int COMPLETE_SCORE = 100;
+    public static final int FAIL_SCORE = -50;
+    public static final int DO_NOTHING_SCORE = -25;
 
-    public FixOneAsset() {
+    public FixFiveAsset() {
         super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY);
     }
 
@@ -29,19 +32,19 @@ public class FixOneAsset extends Mission {
 
     @Override
     protected void onMissionComplete(MissionAssignment missionAssignment) {
-        missionAssignment.addPoints(100);
+        missionAssignment.addPoints(COMPLETE_SCORE);
     }
 
     @Override
     protected void onMissionFail(MissionAssignment missionAssignment) {
-        missionAssignment.addPoints(-50);
+        missionAssignment.addPoints(FAIL_SCORE);
     }
 
     @Override
     protected void onMissionIncomplete(MissionAssignment missionAssignment) {
         float progress = missionAssignment.progress().get();
         if(progress == 0) {
-            missionAssignment.addPoints(-25);
+            missionAssignment.addPoints(DO_NOTHING_SCORE);
         } else {
             missionAssignment.addPoints(Math.round(100 * progress));
         }

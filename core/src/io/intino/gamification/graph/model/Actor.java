@@ -40,7 +40,7 @@ public class Actor extends Entity {
         return score + (this instanceof Player ? match.player(id()).score() : match.npc(id()).score());
     }
 
-    public final void addScore(long score) {
+    void addScore(long score) {
         this.score.set(this.score() + score);
     }
 

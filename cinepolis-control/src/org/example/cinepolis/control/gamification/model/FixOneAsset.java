@@ -13,10 +13,9 @@ public class FixOneAsset extends Mission {
     private static final String DESCRIPTION = "Arregla un proyector";
     private static final int STEPS_TO_COMPLETE = 1;
     private static final int PRIORITY = 0;
-    private static final long EXPIRATION_TIME_SECONDS = 700;
 
     public FixOneAsset() {
-        super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY, EXPIRATION_TIME_SECONDS);
+        super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY);
     }
 
     @Override
@@ -32,7 +31,7 @@ public class FixOneAsset extends Mission {
     @Override
     protected void onMissionEnd(MissionAssignment assignment) {
         int deltaScore = Math.round(scoreOfStatus(assignment) + scoreOfProgress(assignment) + scoreOfFail(assignment));
-        assignment.assignPoints(deltaScore);
+        assignment.addPoints(deltaScore);
     }
 
     private float scoreOfStatus(MissionAssignment assignment) {

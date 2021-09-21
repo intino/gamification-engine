@@ -42,15 +42,6 @@ public class Missions_ {
         world.players().forEach(p -> p.assignMission("FixFiveAsset", truncateTo(nextInstant(currentInstant(), Day), Day)));
     }
 
-
-//        //TODO: Fallar misión a propósito
-//        world.players().find("t6").failMission("FixOneAsset");
-//        world.players().find("t9").failMission("FixOneAsset");
-//
-//        //TODO: Completar misión a propósito
-//        world.players().find("t7").completeMission("FixOneAsset");
-//        world.players().find("t10").completeMission("FixOneAsset");
-
     @Test
     public void test1() {
 

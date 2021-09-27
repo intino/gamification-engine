@@ -27,6 +27,10 @@ import static org.junit.Assert.assertEquals;
 public class Missions_ {
 
     private static final float EPSILON = 0.00001f;
+    private static final boolean DONT_FINISH_MATCH = false;
+    private static final boolean FINISH_MATCH = true;
+    private static final Missions_.Action NO_ACTION = null;
+    private static final Progress.State NO_STATE = null;
 
     private static GamificationEngine engine;
     private static Cinesa world;
@@ -50,30 +54,30 @@ public class Missions_ {
     @Parameterized.Parameters
     public static Object[][] cases() {
         return new Object[][]{
-                {0, false, null, 0, 0f, Progress.State.InProgress},
-                {3, false, null, 0, 0.6f, Progress.State.InProgress},
-                {5, false, null, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {0, true, null, DO_NOTHING_SCORE, 0f, Progress.State.Failed},
-                {3, true, null, 60, 0.6f, Progress.State.Failed},
-                {5, true, null, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {0, false, Missions_.Action.Cancel, 0, 0, null},
-                {3, false, Missions_.Action.Cancel, 0, 0, null},
-                {5, false, Missions_.Action.Cancel, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {0, true, Missions_.Action.Cancel, 0, 0, null},
-                {3, true, Missions_.Action.Cancel, 0, 0, null},
-                {5, true, Missions_.Action.Cancel, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {0, false, Missions_.Action.Fail, FAIL_SCORE, 0f, Progress.State.Failed},
-                {3, false, Missions_.Action.Fail, FAIL_SCORE, 0.6f, Progress.State.Failed},
-                {5, false, Missions_.Action.Fail, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {0, true, Missions_.Action.Fail, FAIL_SCORE, 0f, Progress.State.Failed},
-                {3, true, Missions_.Action.Fail, FAIL_SCORE, 0.6f, Progress.State.Failed},
-                {5, true, Missions_.Action.Fail, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {0, false, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {3, false, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {5, false, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {0, true, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {3, true, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
-                {5, true, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete}
+                {0, DONT_FINISH_MATCH, NO_ACTION, 0, 0f, Progress.State.InProgress},
+                {3, DONT_FINISH_MATCH, NO_ACTION, 0, 0.6f, Progress.State.InProgress},
+                {5, DONT_FINISH_MATCH, NO_ACTION, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {0, FINISH_MATCH, NO_ACTION, DO_NOTHING_SCORE, 0f, Progress.State.Failed},
+                {3, FINISH_MATCH, NO_ACTION, 60, 0.6f, Progress.State.Failed},
+                {5, FINISH_MATCH, NO_ACTION, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {0, DONT_FINISH_MATCH, Missions_.Action.Cancel, 0, 0, NO_STATE},
+                {3, DONT_FINISH_MATCH, Missions_.Action.Cancel, 0, 0, NO_STATE},
+                {5, DONT_FINISH_MATCH, Missions_.Action.Cancel, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {0, FINISH_MATCH, Missions_.Action.Cancel, 0, 0, NO_STATE},
+                {3, FINISH_MATCH, Missions_.Action.Cancel, 0, 0, NO_STATE},
+                {5, FINISH_MATCH, Missions_.Action.Cancel, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {0, DONT_FINISH_MATCH, Missions_.Action.Fail, FAIL_SCORE, 0f, Progress.State.Failed},
+                {3, DONT_FINISH_MATCH, Missions_.Action.Fail, FAIL_SCORE, 0.6f, Progress.State.Failed},
+                {5, DONT_FINISH_MATCH, Missions_.Action.Fail, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {0, FINISH_MATCH, Missions_.Action.Fail, FAIL_SCORE, 0f, Progress.State.Failed},
+                {3, FINISH_MATCH, Missions_.Action.Fail, FAIL_SCORE, 0.6f, Progress.State.Failed},
+                {5, FINISH_MATCH, Missions_.Action.Fail, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {0, DONT_FINISH_MATCH, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {3, DONT_FINISH_MATCH, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {5, DONT_FINISH_MATCH, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {0, FINISH_MATCH, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {3, FINISH_MATCH, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete},
+                {5, FINISH_MATCH, Missions_.Action.Complete, COMPLETE_SCORE, 1f, Progress.State.Complete}
         };
     }
 

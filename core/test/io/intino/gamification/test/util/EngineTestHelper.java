@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class EngineUtils_ {
+public class EngineTestHelper {
 
     public static GamificationEngine getEngine() {
 

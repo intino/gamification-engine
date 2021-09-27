@@ -3,10 +3,16 @@ package org.example.cinepolis.control.gamification.model;
 import io.intino.gamification.graph.model.Match;
 import io.intino.gamification.graph.model.Player;
 
-public class Technician extends Player {
+import java.util.ArrayList;
+import java.util.List;
 
-    public Technician(String worldId, String id) {
+public class Employee extends Player {
+
+    private final List<Cinema> cinemas;
+
+    public Employee(String worldId, String id) {
         super(worldId, id);
+        this.cinemas = new ArrayList<>();
     }
 
     @Override

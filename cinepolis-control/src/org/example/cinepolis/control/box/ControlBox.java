@@ -38,7 +38,7 @@ public class ControlBox extends AbstractBox {
 	}
 
 	public void afterStart() {
-		DatamartUpdater.initialize(this);
+
 	}
 
 	public void beforeStop() {

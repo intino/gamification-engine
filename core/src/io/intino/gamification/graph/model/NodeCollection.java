@@ -14,6 +14,12 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         node.onCreate();
     }
 
+    public void addAll(Collection<T> nodes) {
+        for (T node : nodes) {
+            add(node);
+        }
+    }
+
     public void destroy(T node) {
         collection.remove(node.id());
         node.onDestroy();
@@ -33,7 +39,8 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     }
 
     public List<T> list() {
-        return new ArrayList<>(collection.values());
+        //todo
+        return Collections.unmodifiableList(new ArrayList<>(collection.values()));
     }
 
     @Override

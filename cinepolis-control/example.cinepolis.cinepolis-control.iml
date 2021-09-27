@@ -30,7 +30,6 @@
     <orderEntry type="library" name="Intino: io.intino.alexandria:mapp:1.1.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:tris:1.0.0" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:primitives:1.0.4" level="project" />
-    <orderEntry type="module" module-name="core" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:logger4j:1.0.1" level="project" />
     <orderEntry type="library" name="Intino: org.slf4j:slf4j-log4j12:1.7.25" level="project" />
     <orderEntry type="library" name="Intino: log4j:log4j:1.2.17" level="project" />
@@ -79,6 +78,7 @@
     <orderEntry type="library" name="Intino: org.eclipse.jetty.websocket:websocket-api:9.4.42.v20210604" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:terminal-jms:4.1.2" level="project" />
     <orderEntry type="library" name="Intino: io.intino.alexandria:ingestion:4.0.5" level="project" />
+    <orderEntry type="module" module-name="core" />
     <orderEntry type="library" name="Intino: com.google.code.gson:gson:2.8.7" level="project" />
   </component>
 </module>

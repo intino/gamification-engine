@@ -103,4 +103,6 @@ public abstract class Mission extends Node implements Comparable<Mission> {
     protected void onMissionFail(MissionAssignment missionAssignment) {}
     protected void onMissionIncomplete(MissionAssignment missionAssignment) {}
     protected void onMissionEnd(MissionAssignment missionAssignment) {}
+
+    protected void onProgressChange(MissionAssignment missionAssignment, Integer oldValue, Integer newValue) {}
 }

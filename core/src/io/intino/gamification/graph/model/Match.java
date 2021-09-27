@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
@@ -22,8 +23,12 @@ public class Match extends WorldNode {
     private final Map<String, ActorState> npcs;
 
     public Match(String worldId, String id) {
+        this(worldId, id, new HashMap<>());
+    }
+
+    public Match(String worldId, String id, Map<String, Match.PlayerState> persistencePlayerState) {
         super(worldId, id);
-        this.players = new HashMap<>();
+        this.players = persistencePlayerState;
         this.npcs = new HashMap<>();
     }
 
@@ -37,14 +42,13 @@ public class Match extends WorldNode {
     void end() {
         endTime.set(TimeUtils.currentInstant());
 
-        synchronized (this) {
-            missionAssignmentsOf(players).forEach(missionAssignment -> {
-                if(missionAssignment.progress().state() == InProgress) {
-                    missionAssignment.update(missionAssignment.progress().state());
-                    missionAssignment.progress().fail();
-                }
-            });
-        }
+        //TODO: QUITÉ EL SYNCHRONIZED
+        missionAssignmentsOf(players).forEach(ma -> {
+            if(ma.hasExpired() && ma.progress().state() == InProgress) {
+                ma.update(ma.progress().state());
+                ma.progress().fail();
+            }
+        });
 
         try {
             onEnd();
@@ -121,8 +125,21 @@ public class Match extends WorldNode {
         }
     }
 
-    protected void onBegin() {}
+    public Map<String, PlayerState> persistencePlayerState() {
+        return players.values().stream()
+                .map(this::filter)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(ps -> ps.actorId, Function.identity()));
+    }
 
+    private PlayerState filter(PlayerState playerState) {
+        PlayerState newPlayerState = playerState.copy();
+        newPlayerState.missionAssignments.removeIf(MissionAssignment::hasExpired);
+        if(newPlayerState.missionAssignments().size() == 0) return null;
+        return newPlayerState;
+    }
+
+    protected void onBegin() {}
     protected void onEnd() {}
 
     protected final void onCreate() {}
@@ -183,7 +200,7 @@ public class Match extends WorldNode {
             }
 
             if (missionAssignment(missionId) == null) {
-                missionAssignments.add(new MissionAssignment(world().id(), mission.id(), actorId, mission.total(), expirationTime));
+                missionAssignments.add(new MissionAssignment(world().id(), id(), mission.id(), actorId, mission.total(), expirationTime));
             }
         }
 
@@ -213,6 +230,14 @@ public class Match extends WorldNode {
             missionAssignments.removeIf(ma ->
                     ma.missionId().equals(missionId) && ma.progress().state() == InProgress
             );
+        }
+
+        public PlayerState copy() {
+            PlayerState ps = new PlayerState(actorId);
+            for (MissionAssignment missionAssignment : missionAssignments) {
+                ps.missionAssignments.add(missionAssignment.copy());
+            }
+            return ps;
         }
     }
 

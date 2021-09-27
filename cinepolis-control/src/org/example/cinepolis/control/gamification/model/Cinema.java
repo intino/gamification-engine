@@ -1,35 +1,10 @@
 package org.example.cinepolis.control.gamification.model;
 
-import io.intino.gamification.graph.model.World;
+import io.intino.gamification.graph.model.Actor;
 
-public class Cinema extends World {
+public class Cinema extends Actor {
 
-    public Cinema(String id) {
-        super(id);
-    }
-
-    @Override
-    protected void onCreate() {
-
-    }
-
-    @Override
-    protected void onUpdate() {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-
-    }
-
-    @Override
-    protected void onEnable() {
-
-    }
-
-    @Override
-    protected void onDisable() {
-
+    public Cinema(String worldId, String id) {
+        super(worldId, id);
     }
 }

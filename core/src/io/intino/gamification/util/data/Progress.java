@@ -1,5 +1,7 @@
 package io.intino.gamification.util.data;
 
+import io.intino.gamification.graph.structure.Property;
+import io.intino.gamification.graph.structure.ReadOnlyProperty;
 import io.intino.gamification.util.Log;
 
 import java.io.Serializable;
@@ -7,7 +9,7 @@ import java.io.Serializable;
 public final class Progress implements Serializable {
 
     private final int total;
-    private int current;
+    private final Property<Integer> current;
     private boolean failed;
 
     public Progress(int total) {
@@ -21,22 +23,22 @@ public final class Progress implements Serializable {
             throw e;
         }
         this.total = total;
-        this.current = Math.min(total, current);
+        this.current = new Property<>();
+        this.current.set(Math.min(total, current));
         this.failed = false;
     }
 
     public float get() {
-        return this.current / (float) this.total;
+        return this.current.get() / (float) this.total;
     }
 
     public Progress set(int current) {
-        if(state() == State.InProgress) this.current = Math.min(total, current);
+        if(state() == State.InProgress) this.current.set(Math.min(total, current));
         return this;
     }
 
     public Progress increment() {
-        if(state() == State.InProgress) this.current = Math.min(total, current + 1);
-        return this;
+        return set(current.get() + 1);
     }
 
     public Progress fail() {
@@ -45,7 +47,7 @@ public final class Progress implements Serializable {
     }
 
     public Progress complete() {
-        this.current = this.total;
+        this.current.set(this.total);
         return this;
     }
 
@@ -61,6 +63,18 @@ public final class Progress implements Serializable {
 
     private boolean isFailed() {
         return this.failed;
+    }
+
+    public int current() {
+        return current.get();
+    }
+
+    public ReadOnlyProperty<Integer> currentProperty() {
+        return current;
+    }
+
+    public int total() {
+        return total;
     }
 
     public enum State {

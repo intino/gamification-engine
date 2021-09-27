@@ -4,16 +4,13 @@ import io.intino.gamification.graph.model.Match.ActorState;
 import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.BiFunction;
 
 @SuppressWarnings("all")
 public class World extends Node {
 
     private final Property<Match> currentMatch = new Property<>();
-    private final List<Match> finishedMatches = new ArrayList<>();
+    private final NodeCollection<Match> finishedMatches = new NodeCollection<>();
     private final EntityCollection<Player> players = new EntityCollection<>();
     private final EntityCollection<Actor> npcs = new EntityCollection<>();
     private final EntityCollection<Item> items = new EntityCollection<>();
@@ -73,8 +70,13 @@ public class World extends Node {
         return currentMatch;
     }
 
-    public final List<Match> finishedMatches() {
-        return Collections.unmodifiableList(finishedMatches);
+    public final NodeCollection<Match> finishedMatches() {
+        return finishedMatches;
+    }
+
+    public Match match(String matchId) {
+        if(currentMatch() != null && currentMatch().id().equals(matchId)) return currentMatch();
+        return finishedMatches.find(matchId);
     }
 
     public final EntityCollection<Player> players() {

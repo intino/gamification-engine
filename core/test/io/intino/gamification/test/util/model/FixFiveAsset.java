@@ -32,21 +32,21 @@ public class FixFiveAsset extends Mission {
 
     @Override
     protected void onMissionComplete(MissionAssignment missionAssignment) {
-        missionAssignment.addPoints(COMPLETE_SCORE);
+        missionAssignment.playerState().addScore(COMPLETE_SCORE);
     }
 
     @Override
     protected void onMissionFail(MissionAssignment missionAssignment) {
-        missionAssignment.addPoints(FAIL_SCORE);
+        missionAssignment.playerState().addScore(FAIL_SCORE);
     }
 
     @Override
     protected void onMissionIncomplete(MissionAssignment missionAssignment) {
         float progress = missionAssignment.progress().get();
         if(progress == 0) {
-            missionAssignment.addPoints(DO_NOTHING_SCORE);
+            missionAssignment.playerState().addScore(DO_NOTHING_SCORE);
         } else {
-            missionAssignment.addPoints(Math.round(100 * progress));
+            missionAssignment.playerState().addScore(Math.round(100 * progress));
         }
     }
 }

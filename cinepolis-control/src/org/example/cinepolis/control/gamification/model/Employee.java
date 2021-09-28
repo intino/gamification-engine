@@ -15,6 +15,10 @@ public class Employee extends Player {
         this.cinemas = new ArrayList<>();
     }
 
+    public List<Cinema> cinemas() {
+        return cinemas;
+    }
+
     @Override
     protected void onMatchBegin(Match match) {
 

@@ -6,4 +6,10 @@ Sentinel NewMatch as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
 Sentinel PointChecker as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
 	mean = "Cada día"
 
+Sentinel MissionEndChecker as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
+	mean = "Cada hora"
+
+Sentinel CinemaWeeklyVisit as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
+	mean = "Cada semana"
+
 //Falta añadir el generador de misiones

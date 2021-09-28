@@ -100,21 +100,21 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
         return match().player(playerId);
     }
 
-    void fail() {
+    public void fail() {
         if(progress().state() == InProgress) {
             progress.fail();
             update(Failed);
         }
     }
 
-    void complete() {
+    public void complete() {
         if(progress().state() == InProgress) {
             progress.complete();
             update(Complete);
         }
     }
 
-    public void update(Progress.State newState) {
+    void update(Progress.State newState) {
         if(newState == Complete) {
             mission().onMissionComplete(this);
         } else if(newState == Failed) {

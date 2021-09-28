@@ -5,12 +5,12 @@ import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.model.Match;
 import io.intino.gamification.test.util.EngineTestHelper;
 import io.intino.gamification.test.util.events.FixAsset;
-import io.intino.gamification.test.util.model.Asset;
 import io.intino.gamification.test.util.model.Cinesa;
 import io.intino.gamification.test.util.model.FixFiveAsset;
 import io.intino.gamification.test.util.model.Workday;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.data.Progress.State;
+import io.intino.gamification.util.time.TimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +19,6 @@ import org.junit.runners.Parameterized;
 import java.util.Arrays;
 
 import static io.intino.gamification.test.util.model.FixFiveAsset.*;
-import static io.intino.gamification.util.time.Scale.Day;
-import static io.intino.gamification.util.time.TimeUtils.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(org.junit.runners.Parameterized.class)
@@ -95,7 +93,7 @@ public class Missions_ {
 
         world.startNewMatch(new Workday("world", "match"));
 
-        world.players().forEach(p -> p.assignMission("FixFiveAsset", truncateTo(nextInstant(currentInstant(), Day), Day)));
+        world.players().forEach(p -> p.assignMission("FixFiveAsset", TimeUtils.getInstantOf(1970)));
     }
 
     @Test

@@ -42,7 +42,6 @@ public class Match extends WorldNode {
     void end() {
         endTime.set(TimeUtils.currentInstant());
 
-        //TODO: QUITÉ EL SYNCHRONIZED
         missionAssignmentsOf(players).forEach(ma -> {
             if(ma.hasExpired() && ma.progress().state() == InProgress) {
                 ma.update(ma.progress().state());

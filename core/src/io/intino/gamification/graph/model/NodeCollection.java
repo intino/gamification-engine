@@ -39,8 +39,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     }
 
     public List<T> list() {
-        //todo
-        return Collections.unmodifiableList(new ArrayList<>(collection.values()));
+        return List.copyOf(collection.values());
     }
 
     @Override

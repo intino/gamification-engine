@@ -16,22 +16,27 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
     private final String missionId;
     private final String playerId;
     private final Progress progress;
-    private Instant creationTime;
+    private final Instant creationTime;
     private Instant expirationTime;
+    private boolean endsWithMatch;
     private boolean enabled;
 
-    public MissionAssignment(String worldId, String matchId, String missionId, String playerId, int total, Instant expirationTime) {
+    public MissionAssignment(String worldId, String matchId, String missionId, String playerId, int total, Instant expirationTime, boolean endsWithMatch) {
+        this(worldId, matchId, missionId, playerId, total, TimeUtils.currentInstant(), expirationTime, endsWithMatch, true);
+    }
+
+    private MissionAssignment(String worldId, String matchId, String missionId, String playerId, int total, Instant creationTime, Instant expirationTime, boolean endsWithMatch, boolean enabled) {
         this.worldId = worldId;
         this.matchId = matchId;
         this.missionId = missionId;
         this.playerId = playerId;
         this.progress = initProgress(total);
-        this.creationTime = TimeUtils.currentInstant();
+        this.creationTime = creationTime;
         this.expirationTime = expirationTime;
-        this.enabled = true;
+        this.endsWithMatch = endsWithMatch;
+        this.enabled = enabled;
     }
 
-    //TODO: revisar
     private Progress initProgress(int total) {
         Progress progress = new Progress(total);
         progress.currentProperty()
@@ -83,6 +88,14 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
         return this.expirationTime = expirationTime;
     }
 
+    public boolean endsWithMatch() {
+        return endsWithMatch;
+    }
+
+    public void endsWithMatch(boolean endsWithMatch) {
+        this.endsWithMatch = endsWithMatch;
+    }
+
     public boolean enabled() {
         return enabled;
     }
@@ -126,9 +139,7 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
     }
 
     public MissionAssignment copy() {
-        MissionAssignment missionAssignment = new MissionAssignment(worldId, matchId, missionId, playerId, progress.total(), expirationTime);
-        missionAssignment.creationTime = this.creationTime;
-        missionAssignment.enabled = this.enabled;
+        MissionAssignment missionAssignment = new MissionAssignment(worldId, matchId, missionId, playerId, progress.total(), creationTime, expirationTime, endsWithMatch, enabled);
         missionAssignment.progress.set(this.progress.current());
 
         return missionAssignment;

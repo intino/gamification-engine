@@ -32,7 +32,7 @@ public class Main {
 
         world.startNewMatch(new Workday("world", "match"));
 
-        world.players().forEach(p -> p.assignMission("FixOneAsset", truncateTo(nextInstant(currentInstant(), Day), Day)));
+        world.players().forEach(p -> p.assignMission("FixOneAsset", truncateTo(nextInstant(currentInstant(), Day), Day), true));
 
         engine.eventPublisher()
 //                .publish(new FixAsset(world.id(), "t1"))

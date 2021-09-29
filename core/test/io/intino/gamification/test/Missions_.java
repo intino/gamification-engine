@@ -10,7 +10,6 @@ import io.intino.gamification.test.util.model.FixFiveAsset;
 import io.intino.gamification.test.util.model.Workday;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.data.Progress.State;
-import io.intino.gamification.util.time.TimeUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -93,7 +92,7 @@ public class Missions_ {
 
         world.startNewMatch(new Workday("world", "match"));
 
-        world.players().forEach(p -> p.assignMission("FixFiveAsset", TimeUtils.getInstantOf(1970)));
+        world.players().forEach(p -> p.assignMission("FixFiveAsset", null, true));
     }
 
     @Test

@@ -47,10 +47,10 @@ public class Player extends Actor {
                 .map(Map.Entry::getKey).collect(Collectors.toList());
     }
 
-    public final void assignMission(String missionId, Instant expirationTime) {
+    public final void assignMission(String missionId, Instant expirationTime, boolean endsWithMatch) {
         Match match = availableMatch();
         if(match != null) {
-            match.player(id()).assignMission(missionId, expirationTime);
+            match.player(id()).assignMission(missionId, expirationTime, endsWithMatch);
         }
     }
 

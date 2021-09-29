@@ -43,7 +43,7 @@ public class Match extends WorldNode {
         endTime.set(TimeUtils.currentInstant());
 
         missionAssignmentsOf(players).forEach(ma -> {
-            if(ma.hasExpired() && ma.progress().state() == InProgress) {
+            if(endWithinThisMatch(ma) && ma.progress().state() == InProgress) {
                 ma.update(ma.progress().state());
                 ma.progress().fail();
             }
@@ -133,9 +133,13 @@ public class Match extends WorldNode {
 
     private PlayerState filter(PlayerState playerState) {
         PlayerState newPlayerState = playerState.copy();
-        newPlayerState.missionAssignments.removeIf(MissionAssignment::hasExpired);
+        newPlayerState.missionAssignments.removeIf(this::endWithinThisMatch);
         if(newPlayerState.missionAssignments().size() == 0) return null;
         return newPlayerState;
+    }
+
+    private boolean endWithinThisMatch(MissionAssignment missionAssignment) {
+        return missionAssignment.hasExpired() || missionAssignment.endsWithMatch();
     }
 
     protected void onBegin() {}
@@ -190,7 +194,7 @@ public class Match extends WorldNode {
             return actor != null ? actor : world().players().find(actorId);
         }
 
-        void assignMission(String missionId, Instant expirationTime) {
+        void assignMission(String missionId, Instant expirationTime, boolean endsWithMatch) {
             Mission mission = world().missions().find(missionId);
             if(mission == null) {
                 NoSuchElementException e = new NoSuchElementException("Mission " + missionId + " not exists");
@@ -199,7 +203,7 @@ public class Match extends WorldNode {
             }
 
             if (missionAssignment(missionId) == null) {
-                missionAssignments.add(new MissionAssignment(world().id(), id(), mission.id(), actorId, mission.total(), expirationTime));
+                missionAssignments.add(new MissionAssignment(world().id(), id(), mission.id(), actorId, mission.total(), expirationTime, endsWithMatch));
             }
         }
 

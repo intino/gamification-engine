@@ -67,7 +67,7 @@ public class Adapter {
                 .collect(Collectors.toList());
 
         for(String employee : employees) {
-            world.players().find(employee).assignMission("FixOneAsset", null);
+            world.players().find(employee).assignMission("FixOneAsset", null, true);
         }
     }
 

@@ -1,6 +1,5 @@
 package org.example.cinepolis.control.gamification.model;
 
-import io.intino.gamification.graph.model.Match;
 import io.intino.gamification.graph.model.Player;
 
 import java.util.ArrayList;
@@ -9,48 +8,24 @@ import java.util.List;
 public class Employee extends Player {
 
     private final List<Cinema> cinemas;
+    private long seasonScore;
 
     public Employee(String worldId, String id) {
         super(worldId, id);
         this.cinemas = new ArrayList<>();
+        this.seasonScore = 0;
+        scoreProperty().addObserver((oldValue, newValue) -> seasonScore += newValue - oldValue);
     }
 
     public List<Cinema> cinemas() {
         return cinemas;
     }
 
-    @Override
-    protected void onMatchBegin(Match match) {
-
+    public long seasonScore() {
+        return seasonScore;
     }
 
-    @Override
-    protected void onMatchEnd(Match match) {
-
-    }
-
-    @Override
-    protected void onCreate() {
-
-    }
-
-    @Override
-    protected void onUpdate() {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-
-    }
-
-    @Override
-    protected void onEnable() {
-
-    }
-
-    @Override
-    protected void onDisable() {
-
+    public void seasonScore(int seasonScore) {
+        this.seasonScore = seasonScore;
     }
 }

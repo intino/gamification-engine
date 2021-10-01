@@ -48,7 +48,7 @@ public class Adapter {
         return Arrays.asList(
                 new AtencionTickets(),
                 new ParosFuncion(),
-                new RegistroTimeTracker(),
+                new EntradaTimeTracker(),
                 new ReportesServicio(),
                 new EnvioPlanner()
         );

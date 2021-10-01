@@ -1,16 +1,11 @@
 package org.example.cinepolis.control.gamification.model.mission;
 
-import io.intino.gamification.graph.model.MissionAssignment;
-
-public class AtencionTickets extends CinesaMission {
+public class AtencionTickets extends TimePenaltyMission {
 
     private static final String ID = "AtencionTickets";
     private static final String DESCRIPTION = "Tickets completados";
     private static final int STEPS_TO_COMPLETE = 1;
     private static final int PRIORITY = 1;
-
-    private static final int MAX_POINTS = 100;
-    private static final int DAILY_PENALTY = 10;
 
     public AtencionTickets() {
         super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY);
@@ -22,12 +17,19 @@ public class AtencionTickets extends CinesaMission {
     }
 
     @Override
-    public int maxPoints() {
-        return MAX_POINTS;
-    }
+    protected void initPenaltyMap() {
+        penaltyMap.put(7, -5);
+        penaltyMap.put(8, -5);
 
-    @Override
-    public int dailyPenalty() {
-        return DAILY_PENALTY;
+        penaltyMap.put(9, -5);
+        penaltyMap.put(10, -5);
+
+        penaltyMap.put(11, -10);
+        penaltyMap.put(12, -10);
+
+        penaltyMap.put(13, -5);
+        penaltyMap.put(14, -5);
+
+        penaltyMap.put(15, -50);
     }
 }

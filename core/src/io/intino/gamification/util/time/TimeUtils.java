@@ -3,6 +3,7 @@ package io.intino.gamification.util.time;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
 
@@ -161,6 +162,28 @@ public class TimeUtils {
 				millis = 7 * 24 * 60 * 60 * 1000;
 		}
 		return millis * amount;
+	}
+
+	public static long getInstantDiff(Instant instant1, Instant instant2, Scale scale) {
+		if(instant1 == null || instant2 == null) return -1;
+		long diffInSeconds = Math.abs(instant1.getEpochSecond() - instant2.getEpochSecond());
+		return timeUnitOf(scale).convert(diffInSeconds, TimeUnit.SECONDS);
+	}
+
+	private static TimeUnit timeUnitOf(Scale scale) {
+		switch (scale) {
+			case Day:
+				return TimeUnit.DAYS;
+			case Hour:
+				return TimeUnit.HOURS;
+			case Millis:
+				return TimeUnit.MILLISECONDS;
+			case Minute:
+				return TimeUnit.MINUTES;
+			case Second:
+				return TimeUnit.SECONDS;
+		}
+		throw new IllegalArgumentException("La escala no está permitida");
 	}
 
 	public static boolean instantIsInRange(Instant instant, Instant from, Instant to) {

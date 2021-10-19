@@ -9,12 +9,12 @@ public class FixFiveAssetAssignment extends MissionAssignment {
     private static int total = 5;
     private static boolean endsWithMatch = true;
 
-    public FixFiveAssetAssignment(World world, String playerId) {
-        super(world.id(), world.currentMatch().id(), missionId, playerId, total, null, endsWithMatch);
+    public FixFiveAssetAssignment(String missionId, int stepsToComplete, ExpirationTime expirationTime) {
+        super(missionId, stepsToComplete, expirationTime);
     }
 
     @Override
-    protected MissionAssignment getCopyOf(MissionAssignment missionAssignment) {
-        return new FixFiveAssetAssignment(world(), playerId());
+    protected MissionAssignment getCopy() {
+        return null;
     }
 }

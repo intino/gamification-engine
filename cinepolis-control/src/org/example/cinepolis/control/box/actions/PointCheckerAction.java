@@ -2,8 +2,9 @@ package org.example.cinepolis.control.box.actions;
 
 import io.intino.gamification.graph.model.Match;
 import io.intino.gamification.graph.model.MissionAssignment;
+import io.intino.gamification.util.time.Scale;
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.gamification.model.mission.TimePenaltyMission;
+import org.example.cinepolis.control.gamification.model.mission.CinepolisMission;
 
 import java.time.Instant;
 
@@ -41,20 +42,15 @@ public class PointCheckerAction {
 	private int penaltyOf(MissionAssignment missionAssignment) {
 
 		if(missionAssignment.enabled() && missionAssignment.progress().state() == InProgress) {
-			return penaltyOf((TimePenaltyMission) missionAssignment.mission(), missionAssignment);
+			return penaltyOf((CinepolisMission) missionAssignment.mission(), missionAssignment);
 		}
 
 		return 0;
 	}
 
-	private int penaltyOf(TimePenaltyMission mission, MissionAssignment missionAssignment) {
-
-		int timeFromStart = (int) getInstantDiff(now, missionAssignment.creationTime(), mission.scale());
-
-		if(mission.penaltyOf(timeFromStart) != null) {
-			return mission.penaltyOf(timeFromStart);
-		}
-
-		return 0;
+	private int penaltyOf(CinepolisMission mission, MissionAssignment missionAssignment) {
+		int day = (int) getInstantDiff(now, missionAssignment.creationTime(), Scale.Day);
+		int hour = (int) getInstantDiff(now, missionAssignment.creationTime(), Scale.Hour);
+		return mission.penalizationAt(day, hour);
 	}
 }

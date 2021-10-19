@@ -1,17 +1,28 @@
 package org.example.cinepolis.control.gamification.model.mission;
 
-import io.intino.gamification.util.time.Scale;
+import io.intino.gamification.graph.model.MissionAssignment;
 
-public class ParosFuncion extends TimePenaltyMission {
+import java.time.Instant;
 
-    private static final String ID = "ParosFuncion";
-    private static final String DESCRIPTION = "Horas de atención";
-    private static final int STEPS_TO_COMPLETE = 1;
-    private static final int PRIORITY = 1;
+import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.*;
+
+@Name("Paros de función")
+@Description("Atender al paro de función en menos de 20 horas")
+@Category(CategoryValue.Actividades)
+@Frequency(FrequencyValue.Eventual)
+@Priority(PriorityValue.MuyAlta)
+
+@Penalization(hour = "20", points = 10)
+@Penalization(hour = "25", points = 20)
+@Penalization(hour = "30", points = 30)
+@Penalization(hour = "35", points = 45)
+@Penalization(hour = "40", points = 60)
+@Penalization(hour = "45", points = 75)
+@Penalization(hour = "50", points = 100)
+public class ParosFuncion extends CinepolisMission {
 
     public ParosFuncion() {
-        super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY);
-        scale = Scale.Hour;
+        super(ParosFuncion.class.getSimpleName());
     }
 
     @Override
@@ -19,13 +30,20 @@ public class ParosFuncion extends TimePenaltyMission {
 
     }
 
-    @Override
-    protected void initPenaltyMap() {
-        penaltyMap.put(20, -10);
-        addPenaltyBetween(21, 25, 10);
-        addPenaltyBetween(26, 30, 10);
-        addPenaltyBetween(31, 40, 10);
-        addPenaltyBetween(41, 50, 10);
-        penaltyMap.put(51, -50);
+    public Assignment assignment() {
+        return new Assignment(id(), 1, new MissionAssignment.ExpirationTime(Instant.now().plusSeconds(50 * 3600)));
     }
+
+    public static class Assignment extends MissionAssignment {
+
+        protected Assignment(String missionId, int stepsToComplete, ExpirationTime expirationTime) {
+            super(missionId, stepsToComplete, expirationTime);
+        }
+
+        @Override
+        protected MissionAssignment getCopy() {
+            return new Assignment(missionId(), progress().total(), expirationTime());
+        }
+    }
+
 }

@@ -139,7 +139,7 @@ public class Match extends WorldNode {
     }
 
     private boolean endWithinThisMatch(MissionAssignment missionAssignment) {
-        return missionAssignment.hasExpired() || missionAssignment.endsWithMatch();
+        return missionAssignment.hasExpired() || missionAssignment.expirationTime().endsWithMatch();
     }
 
     protected void onBegin() {}
@@ -194,7 +194,7 @@ public class Match extends WorldNode {
             return actor != null ? actor : world().players().find(actorId);
         }
 
-        final void assignMission(MissionAssignment missionAssignment) {
+        public void assignMission(MissionAssignment missionAssignment) {
             Mission mission = world().missions().find(missionAssignment.missionId());
             if(mission == null) {
                 NoSuchElementException e = new NoSuchElementException("Mission " + missionAssignment.missionId() + " not exists");
@@ -202,6 +202,11 @@ public class Match extends WorldNode {
                 throw e;
             }
 
+            missionAssignment.worldId(world().id());
+            missionAssignment.matchId(id());
+            missionAssignment.playerId(actorId);
+
+            // Multiples assignments -> mission??
             if (missionAssignment(missionAssignment.missionId()) == null) {
                 missionAssignments.add(missionAssignment);
             }

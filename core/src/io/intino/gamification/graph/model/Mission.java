@@ -11,17 +11,15 @@ import static io.intino.gamification.util.data.Progress.State.*;
 public abstract class Mission extends Node implements Comparable<Mission> {
 
     private final String description;
-    private final int stepsToComplete;  //TODO: Se puede quitar???
     private final int priority;
 
-    public Mission(String id, String description, int stepsToComplete) {
-        this(id, description, stepsToComplete, 0);
+    public Mission(String id, String description) {
+        this(id, description, 0);
     }
 
-    public Mission(String id, String description, int stepsToComplete, int priority) {
+    public Mission(String id, String description, int priority) {
         super(id);
         this.description = description;
-        this.stepsToComplete = stepsToComplete;
         this.priority = priority;
     }
 
@@ -77,10 +75,6 @@ public abstract class Mission extends Node implements Comparable<Mission> {
 
     public final String description() {
         return this.description;
-    }
-
-    public final int total() {
-        return stepsToComplete;
     }
 
     public final int priority() {

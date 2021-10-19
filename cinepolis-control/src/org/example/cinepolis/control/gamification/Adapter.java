@@ -1,12 +1,14 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.graph.model.*;
+import io.intino.gamification.graph.model.Item;
+import io.intino.gamification.graph.model.Mission;
+import io.intino.gamification.graph.model.Player;
+import io.intino.gamification.graph.model.World;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.events.FixAsset;
 import org.example.cinepolis.control.gamification.model.Asset;
 import org.example.cinepolis.control.gamification.model.Employee;
-import org.example.cinepolis.control.gamification.model.FixOneAssetAssignment;
 import org.example.cinepolis.control.gamification.model.mission.*;
 import org.example.cinepolis.control.graph.ControlGraph;
 import org.example.cinepolis.datahub.events.cinepolis.*;
@@ -44,7 +46,7 @@ public class Adapter {
 
     private List<Mission> initMissions() {
         return Arrays.asList(
-                new AtencionTickets(),
+                new AtencionTicketsOTRSMission(),
                 new ParosFuncion(),
                 new EntradaTimeTracker(),
                 new ReportesServicio(),
@@ -66,7 +68,7 @@ public class Adapter {
                 .collect(Collectors.toList());
 
         for(String employee : employees) {
-            world.players().find(employee).assignMission(new FixOneAssetAssignment(world().id(), world().currentMatch().id(), employee));
+            //world.players().find(employee).assignMission(new FixOneAssetAssignment(world().id(), world().currentMatch().id(), employee));
         }
     }
 

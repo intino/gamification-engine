@@ -14,7 +14,7 @@ public class FixOneAsset extends Mission {
     private static final int PRIORITY = 0;
 
     public FixOneAsset() {
-        super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY);
+        super(ID);
     }
 
     @Override

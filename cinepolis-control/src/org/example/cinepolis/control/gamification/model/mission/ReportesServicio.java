@@ -1,17 +1,21 @@
 package org.example.cinepolis.control.gamification.model.mission;
 
-import io.intino.gamification.graph.model.Mission;
 import io.intino.gamification.graph.model.MissionAssignment;
 
-public class ReportesServicio extends Mission {
+import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.*;
+import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.CategoryValue.Actividades;
+import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.FrequencyValue.Diaria;
+import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.PriorityValue.MuyAlta;
 
-    private static final String ID = "ReportesServicio";
-    private static final String DESCRIPTION = "Reporte enviado";
-    private static final int STEPS_TO_COMPLETE = 1;
-    private static final int PRIORITY = 1;
+@Name("Reporte de servicio")
+@Description("Envío del reporte de servicio")
+@Category(Actividades)
+@Frequency(Diaria)
+@Priority(MuyAlta)
+public class ReportesServicio extends CinepolisMission {
 
     public ReportesServicio() {
-        super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY);
+        super(ReportesServicio.class.getSimpleName());
     }
 
     @Override
@@ -19,13 +23,29 @@ public class ReportesServicio extends Mission {
 
     }
 
-    @Override
-    protected void onMissionComplete(MissionAssignment missionAssignment) {
-        missionAssignment.playerState().addScore(100);
+    public Assignment assignment() {
+        return new Assignment(id(), 1, new MissionAssignment.ExpirationTime());
     }
 
-    @Override
-    protected void onMissionFail(MissionAssignment missionAssignment) {
-        missionAssignment.playerState().addScore(-100);
+    public static class Assignment extends MissionAssignment {
+
+        protected Assignment(String missionId, int stepsToComplete, ExpirationTime expirationTime) {
+            super(missionId, stepsToComplete, expirationTime);
+        }
+
+        @Override
+        protected void onMissionComplete() {
+            playerState().addScore(CinepolisMission.maxPointsOf((CinepolisMission) mission()));
+        }
+
+        @Override
+        protected void onMissionFail() {
+            playerState().addScore(-CinepolisMission.maxPointsOf((CinepolisMission) mission()));
+        }
+
+        @Override
+        protected MissionAssignment getCopy() {
+            return null;
+        }
     }
 }

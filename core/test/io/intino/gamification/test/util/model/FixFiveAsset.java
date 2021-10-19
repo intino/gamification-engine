@@ -17,7 +17,7 @@ public class FixFiveAsset extends Mission {
     public static final int DO_NOTHING_SCORE = -25;
 
     public FixFiveAsset() {
-        super(ID, DESCRIPTION, STEPS_TO_COMPLETE, PRIORITY);
+        super(ID);
     }
 
     @Override
@@ -30,23 +30,23 @@ public class FixFiveAsset extends Mission {
         });
     }
 
-    @Override
-    protected void onMissionComplete(MissionAssignment missionAssignment) {
-        missionAssignment.playerState().addScore(COMPLETE_SCORE);
-    }
-
-    @Override
-    protected void onMissionFail(MissionAssignment missionAssignment) {
-        missionAssignment.playerState().addScore(FAIL_SCORE);
-    }
-
-    @Override
-    protected void onMissionIncomplete(MissionAssignment missionAssignment) {
-        float progress = missionAssignment.progress().get();
-        if(progress == 0) {
-            missionAssignment.playerState().addScore(DO_NOTHING_SCORE);
-        } else {
-            missionAssignment.playerState().addScore(Math.round(100 * progress));
-        }
-    }
+//    @Override
+//    protected void onMissionComplete(MissionAssignment missionAssignment) {
+//        missionAssignment.playerState().addScore(COMPLETE_SCORE);
+//    }
+//
+//    @Override
+//    protected void onMissionFail(MissionAssignment missionAssignment) {
+//        missionAssignment.playerState().addScore(FAIL_SCORE);
+//    }
+//
+//    @Override
+//    protected void onMissionIncomplete(MissionAssignment missionAssignment) {
+//        float progress = missionAssignment.progress().get();
+//        if(progress == 0) {
+//            missionAssignment.playerState().addScore(DO_NOTHING_SCORE);
+//        } else {
+//            missionAssignment.playerState().addScore(Math.round(100 * progress));
+//        }
+//    }
 }

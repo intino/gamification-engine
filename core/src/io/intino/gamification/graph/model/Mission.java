@@ -10,8 +10,12 @@ import static io.intino.gamification.util.data.Progress.State.*;
 
 public abstract class Mission extends Node implements Comparable<Mission> {
 
-    private final String description;
-    private final int priority;
+    private String description;
+    private int priority;
+
+    public Mission(String id) {
+        super(id);
+    }
 
     public Mission(String id, String description) {
         this(id, description, 0);
@@ -21,6 +25,16 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         super(id);
         this.description = description;
         this.priority = priority;
+    }
+
+    public Mission description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Mission priority(int priority) {
+        this.priority = priority;
+        return this;
     }
 
     protected final <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
@@ -92,11 +106,4 @@ public abstract class Mission extends Node implements Comparable<Mission> {
     }
 
     protected abstract void setProgressCallbacks();
-
-    protected void onMissionComplete(MissionAssignment missionAssignment) {}
-    protected void onMissionFail(MissionAssignment missionAssignment) {}
-    protected void onMissionIncomplete(MissionAssignment missionAssignment) {}
-    protected void onMissionEnd(MissionAssignment missionAssignment) {}
-
-    protected void onProgressChange(MissionAssignment missionAssignment, Integer oldValue, Integer newValue) {}
 }

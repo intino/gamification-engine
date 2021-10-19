@@ -51,7 +51,7 @@ public class Missions_ {
 
     @Parameterized.Parameters
     public static Object[][] cases() {
-        return new Object[][]{
+        return new Object[][] {
                 {0, DONT_FINISH_MATCH, NO_ACTION, 0, 0f, Progress.State.InProgress},
                 {3, DONT_FINISH_MATCH, NO_ACTION, 0, 0.6f, Progress.State.InProgress},
                 {5, DONT_FINISH_MATCH, NO_ACTION, COMPLETE_SCORE, 1f, Progress.State.Complete},
@@ -93,7 +93,8 @@ public class Missions_ {
 
         world.startNewMatch(new Workday("world", "match"));
 
-        world.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment(world, p.id())));
+        // FIXME
+        //world.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment(world, p.id())));
     }
 
     @Test

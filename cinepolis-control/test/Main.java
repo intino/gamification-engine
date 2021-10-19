@@ -2,6 +2,7 @@ import io.intino.alexandria.logger.Logger;
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.Log;
+import org.example.cinepolis.control.gamification.model.mission.AtencionTicketsOTRSMission;
 import util.events.FixAsset;
 import util.model.*;
 
@@ -28,6 +29,11 @@ public class Main {
         Cinesa world = createWorld();
 
         world.startNewMatch(new Workday("world", "match"));
+
+        AtencionTicketsOTRSMission m = new AtencionTicketsOTRSMission();
+        AtencionTicketsOTRSMission.Assignment assignment = m.assignment(1);
+
+        world.players().find("").assignMission(assignment);
 
         //world.players().forEach(p -> p.assignMission("FixOneAsset", truncateTo(nextInstant(currentInstant(), Day), Day), true));
 

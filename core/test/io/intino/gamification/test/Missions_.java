@@ -7,6 +7,7 @@ import io.intino.gamification.test.util.EngineTestHelper;
 import io.intino.gamification.test.util.events.FixAsset;
 import io.intino.gamification.test.util.model.Cinesa;
 import io.intino.gamification.test.util.model.FixFiveAsset;
+import io.intino.gamification.test.util.model.FixFiveAssetAssignment;
 import io.intino.gamification.test.util.model.Workday;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.data.Progress.State;
@@ -92,7 +93,7 @@ public class Missions_ {
 
         world.startNewMatch(new Workday("world", "match"));
 
-        world.players().forEach(p -> p.assignMission("FixFiveAsset", null, true));
+        world.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment(world, p.id())));
     }
 
     @Test

@@ -1,14 +1,12 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.graph.model.Item;
-import io.intino.gamification.graph.model.Mission;
-import io.intino.gamification.graph.model.Player;
-import io.intino.gamification.graph.model.World;
+import io.intino.gamification.graph.model.*;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.events.FixAsset;
 import org.example.cinepolis.control.gamification.model.Asset;
 import org.example.cinepolis.control.gamification.model.Employee;
+import org.example.cinepolis.control.gamification.model.FixOneAssetAssignment;
 import org.example.cinepolis.control.gamification.model.mission.*;
 import org.example.cinepolis.control.graph.ControlGraph;
 import org.example.cinepolis.datahub.events.cinepolis.*;
@@ -61,13 +59,14 @@ public class Adapter {
     public void adapt(AssetAlert event) {
         org.example.cinepolis.control.graph.Asset asset = graph.asset(event.asset());
         if(asset == null) return;
+        if(world.currentMatch() == null) return;
 
         List<String> employees = graph.employeesByArea(asset.area()).stream()
                 .map(org.example.cinepolis.control.graph.Employee::id)
                 .collect(Collectors.toList());
 
         for(String employee : employees) {
-            world.players().find(employee).assignMission("FixOneAsset", null, true);
+            world.players().find(employee).assignMission(new FixOneAssetAssignment(world().id(), world().currentMatch().id(), employee));
         }
     }
 

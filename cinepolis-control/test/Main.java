@@ -10,9 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static io.intino.gamification.util.time.Scale.Day;
-import static io.intino.gamification.util.time.TimeUtils.*;
-
 public class Main {
 
     public static void main(String[] args) {
@@ -32,7 +29,7 @@ public class Main {
 
         world.startNewMatch(new Workday("world", "match"));
 
-        world.players().forEach(p -> p.assignMission("FixOneAsset", truncateTo(nextInstant(currentInstant(), Day), Day), true));
+        //world.players().forEach(p -> p.assignMission("FixOneAsset", truncateTo(nextInstant(currentInstant(), Day), Day), true));
 
         engine.eventPublisher()
 //                .publish(new FixAsset(world.id(), "t1"))

@@ -73,7 +73,8 @@ public class PerformanceTest {
 
         for (Player player : world.players()) {
             for (Mission mission : world.missions()) {
-                player.assignMission(mission.id(), truncateTo(nextInstant(currentInstant(), Day), Day));
+                //TODO
+                //player.assignMission(mission.id(), truncateTo(nextInstant(currentInstant(), Day), Day));
             }
         }
 

@@ -194,16 +194,16 @@ public class Match extends WorldNode {
             return actor != null ? actor : world().players().find(actorId);
         }
 
-        void assignMission(String missionId, Instant expirationTime, boolean endsWithMatch) {
-            Mission mission = world().missions().find(missionId);
+        final void assignMission(MissionAssignment missionAssignment) {
+            Mission mission = world().missions().find(missionAssignment.missionId());
             if(mission == null) {
-                NoSuchElementException e = new NoSuchElementException("Mission " + missionId + " not exists");
+                NoSuchElementException e = new NoSuchElementException("Mission " + missionAssignment.missionId() + " not exists");
                 Log.error(e.getMessage(), e);
                 throw e;
             }
 
-            if (missionAssignment(missionId) == null) {
-                missionAssignments.add(new MissionAssignment(world().id(), id(), mission.id(), actorId, mission.total(), expirationTime, endsWithMatch));
+            if (missionAssignment(missionAssignment.missionId()) == null) {
+                missionAssignments.add(missionAssignment);
             }
         }
 

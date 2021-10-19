@@ -9,7 +9,7 @@ import java.time.Instant;
 
 import static io.intino.gamification.util.data.Progress.State.*;
 
-public final class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
+public class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
 
     private final String worldId;
     private final String matchId;
@@ -44,83 +44,83 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
         return progress;
     }
 
-    public String woldId() {
+    public final String woldId() {
        return worldId;
     }
 
-    public World world() {
+    public final World world() {
         return GamificationGraph.get().worlds().find(worldId);
     }
 
-    public String matchId() {
+    public final String matchId() {
         return matchId;
     }
 
-    public Match match() {
+    public final Match match() {
         return world().match(matchId);
     }
 
-    public String missionId() {
+    public final String missionId() {
         return missionId;
     }
 
-    public Mission mission() {
+    public final Mission mission() {
         return world().missions().find(missionId);
     }
 
-    public String playerId() {
+    public final String playerId() {
         return playerId;
     }
 
-    public Progress progress() {
+    public final Progress progress() {
         return progress;
     }
 
-    public Instant creationTime() {
+    public final Instant creationTime() {
         return this.creationTime;
     }
 
-    public Instant expirationTime() {
+    public final Instant expirationTime() {
         return this.expirationTime;
     }
 
-    public Instant expirationTime(Instant expirationTime) {
+    public final Instant expirationTime(Instant expirationTime) {
         return this.expirationTime = expirationTime;
     }
 
-    public boolean endsWithMatch() {
+    public final boolean endsWithMatch() {
         return endsWithMatch;
     }
 
-    public void endsWithMatch(boolean endsWithMatch) {
+    public final void endsWithMatch(boolean endsWithMatch) {
         this.endsWithMatch = endsWithMatch;
     }
 
-    public boolean enabled() {
+    public final boolean enabled() {
         return enabled;
     }
 
-    public void enabled(boolean enabled) {
+    public final void enabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    public boolean hasExpired() {
+    public final boolean hasExpired() {
         if(expirationTime == null) return false;
         return !expirationTime.isAfter(TimeUtils.currentInstant());
     }
 
-    public Match.PlayerState playerState() {
+    public final Match.PlayerState playerState() {
         return match().player(playerId);
     }
 
-    public void fail() {
+    public final void fail() {
         if(progress().state() == InProgress) {
             progress.fail();
             update(Failed);
         }
     }
 
-    public void complete() {
+    public final void complete() {
         if(progress().state() == InProgress) {
             progress.complete();
             update(Complete);
@@ -138,7 +138,8 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
         mission().onMissionEnd(this);
     }
 
-    public MissionAssignment copy() {
+    public final MissionAssignment copy() {
+        //TODO: Se puede hacer copia?
         MissionAssignment missionAssignment = new MissionAssignment(worldId, matchId, missionId, playerId, progress.total(), creationTime, expirationTime, endsWithMatch, enabled);
         missionAssignment.progress.set(this.progress.current());
 
@@ -146,7 +147,7 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
     }
 
     @Override
-    public String toString() {
+    public final String toString() {
         //TODO: REVISAR TIMES
         return "MissionAssignment{" +
                 "missionId='" + missionId + '\'' +
@@ -156,7 +157,7 @@ public final class MissionAssignment implements Comparable<MissionAssignment>, S
     }
 
     @Override
-    public int compareTo(MissionAssignment o) {
+    public final int compareTo(MissionAssignment o) {
         return creationTime.compareTo(o.creationTime);
     }
 }

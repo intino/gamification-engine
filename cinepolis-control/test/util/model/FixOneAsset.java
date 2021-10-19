@@ -29,21 +29,21 @@ public class FixOneAsset extends Mission {
 
     @Override
     protected void onMissionComplete(MissionAssignment missionAssignment) {
-        missionAssignment.addPoints(100);
+        missionAssignment.playerState().addScore(100);
     }
 
     @Override
     protected void onMissionFail(MissionAssignment missionAssignment) {
-        missionAssignment.addPoints(-50);
+        missionAssignment.playerState().addScore(-50);
     }
 
     @Override
     protected void onMissionIncomplete(MissionAssignment missionAssignment) {
         float progress = missionAssignment.progress().get();
         if(progress == 0) {
-            missionAssignment.addPoints(-25);
+            missionAssignment.playerState().addScore(-25);
         } else {
-            missionAssignment.addPoints(Math.round(100 * progress));
+            missionAssignment.playerState().addScore(Math.round(100 * progress));
         }
     }
 }

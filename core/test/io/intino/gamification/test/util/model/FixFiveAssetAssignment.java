@@ -12,4 +12,9 @@ public class FixFiveAssetAssignment extends MissionAssignment {
     public FixFiveAssetAssignment(World world, String playerId) {
         super(world.id(), world.currentMatch().id(), missionId, playerId, total, null, endsWithMatch);
     }
+
+    @Override
+    protected MissionAssignment getCopyOf(MissionAssignment missionAssignment) {
+        return new FixFiveAssetAssignment(world(), playerId());
+    }
 }

@@ -9,7 +9,7 @@ import java.time.Instant;
 
 import static io.intino.gamification.util.data.Progress.State.*;
 
-public class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
+public abstract class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
 
     private final String worldId;
     private final String matchId;
@@ -21,24 +21,24 @@ public class MissionAssignment implements Comparable<MissionAssignment>, Seriali
     private boolean endsWithMatch;
     private boolean enabled;
 
-    public MissionAssignment(String worldId, String matchId, String missionId, String playerId, int total, Instant expirationTime, boolean endsWithMatch) {
-        this(worldId, matchId, missionId, playerId, total, TimeUtils.currentInstant(), expirationTime, endsWithMatch, true);
+    protected MissionAssignment(String worldId, String matchId, String missionId, String playerId, int stepsToComplete, Instant expirationTime, boolean endsWithMatch) {
+        this(worldId, matchId, missionId, playerId, stepsToComplete, TimeUtils.currentInstant(), expirationTime, endsWithMatch, true);
     }
 
-    private MissionAssignment(String worldId, String matchId, String missionId, String playerId, int total, Instant creationTime, Instant expirationTime, boolean endsWithMatch, boolean enabled) {
+    private MissionAssignment(String worldId, String matchId, String missionId, String playerId, int stepsToComplete, Instant creationTime, Instant expirationTime, boolean endsWithMatch, boolean enabled) {
         this.worldId = worldId;
         this.matchId = matchId;
         this.missionId = missionId;
         this.playerId = playerId;
-        this.progress = initProgress(total);
+        this.progress = initProgress(stepsToComplete);
         this.creationTime = creationTime;
         this.expirationTime = expirationTime;
         this.endsWithMatch = endsWithMatch;
         this.enabled = enabled;
     }
 
-    private Progress initProgress(int total) {
-        Progress progress = new Progress(total);
+    private Progress initProgress(int stepsToComplete) {
+        Progress progress = new Progress(stepsToComplete);
         progress.currentProperty()
                 .addObserver((oldValue, newValue) -> mission().onProgressChange(MissionAssignment.this, oldValue, newValue));
         return progress;
@@ -138,21 +138,27 @@ public class MissionAssignment implements Comparable<MissionAssignment>, Seriali
         mission().onMissionEnd(this);
     }
 
-    public final MissionAssignment copy() {
-        //TODO: Se puede hacer copia?
-        MissionAssignment missionAssignment = new MissionAssignment(worldId, matchId, missionId, playerId, progress.total(), creationTime, expirationTime, endsWithMatch, enabled);
+     MissionAssignment copy() {
+        MissionAssignment missionAssignment = getCopyOf(this);
         missionAssignment.progress.set(this.progress.current());
 
         return missionAssignment;
     }
 
+    protected abstract MissionAssignment getCopyOf(MissionAssignment missionAssignment);
+
     @Override
-    public final String toString() {
-        //TODO: REVISAR TIMES
+    public String toString() {
         return "MissionAssignment{" +
-                "missionId='" + missionId + '\'' +
+                "worldId='" + worldId + '\'' +
+                ", matchId='" + matchId + '\'' +
+                ", missionId='" + missionId + '\'' +
                 ", playerId='" + playerId + '\'' +
                 ", progress=" + progress +
+                ", creationTime=" + creationTime +
+                ", expirationTime=" + expirationTime +
+                ", endsWithMatch=" + endsWithMatch +
+                ", enabled=" + enabled +
                 '}';
     }
 

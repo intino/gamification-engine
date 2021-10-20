@@ -3,7 +3,7 @@ dsl Konos
 Sentinel NewMatch as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
 	mean = "Cada semana"
 
-Sentinel PointChecker as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
+Sentinel CheckPenalty as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
 	mean = "Cada hora"
 
 Sentinel NewSeason as ClockListener(pattern = "", timeZone = "Atlantic/Canary")

@@ -7,7 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 public abstract class CinepolisMission extends Mission {
@@ -22,7 +21,7 @@ public abstract class CinepolisMission extends Mission {
     private final CategoryValue categoryValue;
     private final FrequencyValue frequencyValue;
     private final PriorityValue priorityValue;
-    private final Map<PenalizationTime, Integer> penalizationMap;
+    private final Map<Integer, Integer> penalizationMap;
 
     public CinepolisMission(String id) {
         super(id);
@@ -65,28 +64,37 @@ public abstract class CinepolisMission extends Mission {
         return priorityValue;
     }
 
-    public int penalizationAt(int day, int hour) {
-        return penalizationMap.getOrDefault(new PenalizationTime(String.valueOf(day), String.valueOf(hour)), 0);
+    public int penalizationAt(int elapsedHours) {
+        return penalizationMap.getOrDefault(elapsedHours, 0);
     }
 
-    public Map<PenalizationTime, Integer> penalizationMap() {
+    public Map<Integer, Integer> penalizationMap() {
         return Collections.unmodifiableMap(penalizationMap);
     }
 
-    private Map<PenalizationTime, Integer> buildPenalizationMap() {
+    private Map<Integer, Integer> buildPenalizationMap() {
 
-        Map<PenalizationTime, Integer> map = new TreeMap<>();
+        Map<Integer, Integer> map = new TreeMap<>();
 
         Penalizations p = getClass().getAnnotation(Penalizations.class);
         if(p == null) return map;
 
         int lastPenalizationPoints = 0;
         for (Penalization penalization : p.value()) {
-            map.put(new PenalizationTime(penalization.day(), penalization.hour()), Math.abs(penalization.points()) - lastPenalizationPoints);
+            map.put(getHoursOf(penalization), Math.abs(penalization.points()) - lastPenalizationPoints);
             lastPenalizationPoints = penalization.points();
         }
 
         return map;
+    }
+
+    private int getHoursOf(Penalization penalization) {
+        //TODO: Controlar la hora de finalización de las misiones
+        if(penalization.day().equals("*")) {
+            return Integer.parseInt(penalization.hour());
+        } else {
+            return 24 * Integer.parseInt(penalization.day());
+        }
     }
 
     @Override
@@ -173,66 +181,5 @@ public abstract class CinepolisMission extends Mission {
     @Target(ElementType.TYPE)
     public @interface Penalizations {
         Penalization[] value();
-    }
-
-    public static class PenalizationTime implements Comparable<PenalizationTime> {
-
-        public final String day;
-        public final String hour;
-
-        public PenalizationTime(String day, String hour) {
-            this.day = day;
-            this.hour = hour;
-        }
-
-        public boolean matches(int day, int hour) {
-            if(!this.day.equals("*") && Integer.parseInt(this.day) != day) return false;
-            return this.hour.equals("*") || Integer.parseInt(this.hour) == hour;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PenalizationTime that = (PenalizationTime) o;
-            return day == that.day && hour == that.hour;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(day, hour);
-        }
-
-        @Override
-        public int compareTo(PenalizationTime o) {
-            return Integer.compare(weightOf(this), weightOf(o));
-        }
-
-        private static int weightOf(PenalizationTime pt) {
-
-            int w = 0;
-
-            if(pt.day.equals("*")) {
-                w = -100;
-            } else {
-                w += 100 * Integer.parseInt(pt.day);
-            }
-
-            if(pt.hour.equals("*")) {
-                w += -1;
-            } else {
-                w += Integer.parseInt(pt.hour);
-            }
-
-            return w;
-        }
-
-        @Override
-        public String toString() {
-            return "{" +
-                    "day='" + day + '\'' +
-                    ", hour='" + hour + '\'' +
-                    '}';
-        }
     }
 }

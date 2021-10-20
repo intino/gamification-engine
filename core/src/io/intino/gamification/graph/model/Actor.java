@@ -1,7 +1,6 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.Property;
-import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
 import java.io.Serializable;
 import java.util.*;
@@ -9,39 +8,10 @@ import java.util.stream.Collectors;
 
 public class Actor extends Entity {
 
-    private final Property<Long> score = new Property<>(0L);
     private final Inventory inventory = new Inventory();
 
     public Actor(String worldId, String id) {
         super(worldId, id);
-    }
-
-    public final long score() {
-        return score.get();
-    }
-
-    public final void score(long score) {
-        this.score.set(score);
-    }
-
-    public final ReadOnlyProperty<Long> scoreProperty() {
-        return score;
-    }
-
-    public final long totalScore() {
-        long score = this.score.get();
-
-        World world = world();
-        if(!world.isAvailable()) return score;
-
-        Match match = world.currentMatch();
-        if(match == null || !match.isAvailable()) return score;
-
-        return score + (this instanceof Player ? match.player(id()).score() : match.npc(id()).score());
-    }
-
-    void addScore(long score) {
-        this.score.set(this.score() + score);
     }
 
     public final Inventory inventory() {

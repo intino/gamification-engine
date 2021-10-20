@@ -49,8 +49,7 @@ public class PointCheckerAction {
 	}
 
 	private int penaltyOf(CinepolisMission mission, MissionAssignment missionAssignment) {
-		int day = (int) getInstantDiff(now, missionAssignment.creationTime(), Scale.Day);
-		int hour = (int) getInstantDiff(now, missionAssignment.creationTime(), Scale.Hour);
-		return mission.penalizationAt(day, hour);
+		int elapsedHours = (int) getInstantDiff(now, missionAssignment.creationTime(), Scale.Hour);
+		return mission.penalizationAt(elapsedHours);
 	}
 }

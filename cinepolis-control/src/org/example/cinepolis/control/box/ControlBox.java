@@ -5,7 +5,10 @@ import io.intino.magritte.framework.Graph;
 import org.example.cinepolis.control.Archetype;
 import org.example.cinepolis.control.box.mounters.MounterFactory;
 import org.example.cinepolis.control.gamification.Adapter;
+import org.example.cinepolis.control.gamification.Dispatcher;
 import org.example.cinepolis.control.graph.ControlGraph;
+
+import java.awt.*;
 
 public class ControlBox extends AbstractBox {
 
@@ -14,6 +17,7 @@ public class ControlBox extends AbstractBox {
 	private ControlGraph graph;
 	private MounterFactory mounter;
 	private Adapter adapter;
+	private Dispatcher dispatcher;
 
 	public ControlBox(String[] args) {
 		this(new ControlConfiguration(args));
@@ -35,6 +39,7 @@ public class ControlBox extends AbstractBox {
 	public void beforeStart() {
 		this.mounter = new MounterFactory(this);
 		this.adapter = new Adapter(this);
+		this.dispatcher = new Dispatcher(this);
 	}
 
 	public void afterStart() {
@@ -71,5 +76,9 @@ public class ControlBox extends AbstractBox {
 
 	public Adapter adapter() {
 		return this.adapter;
+	}
+
+	public Dispatcher gamificationEventDispatcher() {
+		return this.dispatcher;
 	}
 }

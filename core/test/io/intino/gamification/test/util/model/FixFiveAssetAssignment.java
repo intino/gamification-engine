@@ -1,7 +1,6 @@
 package io.intino.gamification.test.util.model;
 
 import io.intino.gamification.graph.model.MissionAssignment;
-import io.intino.gamification.graph.model.World;
 
 public class FixFiveAssetAssignment extends MissionAssignment {
 

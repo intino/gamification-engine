@@ -28,8 +28,15 @@ public class Match extends WorldNode {
 
     public Match(String worldId, String id, Map<String, Match.PlayerState> persistencePlayerState) {
         super(worldId, id);
-        this.players = persistencePlayerState;
+        this.players = clean(persistencePlayerState);
         this.npcs = new HashMap<>();
+    }
+
+    private Map<String, PlayerState> clean(Map<String, PlayerState> persistencePlayerState) {
+        for (PlayerState playerState : persistencePlayerState.values()) {
+            playerState.score(0);
+        }
+        return persistencePlayerState;
     }
 
     void begin() {

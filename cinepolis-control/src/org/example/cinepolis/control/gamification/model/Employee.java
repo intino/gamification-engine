@@ -8,13 +8,14 @@ import java.util.List;
 public class Employee extends Player {
 
     private final List<Cinema> cinemas;
-    private long seasonScore;
+    private long missionScore;
+    private long healthScore;
 
     public Employee(String worldId, String id) {
         super(worldId, id);
         this.cinemas = new ArrayList<>();
-        this.seasonScore = 0;
-        scoreProperty().addObserver((oldValue, newValue) -> seasonScore += newValue - oldValue);
+        this.missionScore = 0;
+        this.healthScore = 0;
     }
 
     public List<Cinema> cinemas() {
@@ -22,10 +23,26 @@ public class Employee extends Player {
     }
 
     public long seasonScore() {
-        return seasonScore;
+        return missionScore + healthScore;
     }
 
-    public void seasonScore(int seasonScore) {
-        this.seasonScore = seasonScore;
+    public long missionScore() {
+        return missionScore;
+    }
+
+    public long healthScore() {
+        return healthScore;
+    }
+
+    public void addMissionScore(long score) {
+        this.missionScore += score;
+    }
+
+    public void missionScore(long missionScore) {
+        this.missionScore = missionScore;
+    }
+
+    public void healthScore(long healthScore) {
+        this.healthScore = healthScore;
     }
 }

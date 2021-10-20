@@ -21,6 +21,8 @@ import static io.intino.gamification.graph.model.Actor.InventoryPolicy.Drop;
 
 public class Adapter {
 
+    //TODO: El adapter debe crear eventos de gamificación a partir de los eventos de cinépolis
+
     private final GamificationEngine engine;
     private final ControlGraph graph;
 

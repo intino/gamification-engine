@@ -20,6 +20,8 @@ public class NewSeasonAction {
 
 	private void adjustScoreOf(Employee employee) {
 		//TODO EL PROBLEMA ES QUE NO SE QUEDA REGISTRADA LA PUNTUACION DE LAS SEASONS
-		employee.seasonScore(0);
+		employee.score();
+		employee.healthScore(0);
+		employee.missionScore(0);
 	}
 }

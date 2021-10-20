@@ -2,14 +2,14 @@ dsl Legio
 
 Artifact("org.example.cinepolis", "1.0.0-SNAPSHOT") control as Product
 	Model("Proteo", "3.0.2", "4.1.1")
-	Box("Konos", "8.13.0")
-	DataHub("org.example.cinepolis.datahub", "cinepolis-terminal", "1.0.0-SNAPSHOT")
+	Box("Konos", "8.14.10")
+	DataHub("org.example.cinepolis.datahub", "gamification-terminal", "1.0.0-SNAPSHOT")
 	Imports
-		Compile("io.intino.alexandria", "core-framework", "2.1.0")
-    	Compile("io.intino.alexandria", "datalake", "4.0.2")
+		Compile("io.intino.alexandria", "core-framework", "2.1.1")
+    	Compile("io.intino.alexandria", "datalake", "4.0.3")
     	Compile("io.intino.alexandria", "scheduler-framework", "1.1.1")
+    	Compile("io.intino.alexandria", "logger4j", "1.0.1")
     	Compile("io.intino.gamification", "core", "1.0.2-SNAPSHOT")
-    	Compile("io.intino.alexandria", "rest", "3.3.0")
 		Test("junit", "junit", "LATEST")
 
 	Package(mode = ModulesAndLibrariesExtracted) as Runnable("org.example.cinepolis.control.box.Main")

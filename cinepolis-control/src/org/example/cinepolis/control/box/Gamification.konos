@@ -12,10 +12,10 @@ Sentinel NewSeason as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
 Sentinel MissionEndChecker as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
 	mean = "Cada hora"
 
-
-//Sentinel CinemaWeeklyVisit as ClockListener(pattern = "", timeZone = "Atlantic/Canary")
-//	mean = "Cada semana"
-//
+Subscriber(event = "gamification.CheckPenalties", subscriberId = "CheckPenalties") checkPenaltiesSubscriber
+Subscriber(event = "gamification.NewSeason", subscriberId = "NewSeason") newSeasonSubscriber
+Subscriber(event = "gamification.NewMatch", subscriberId = "NewMatch") newMatchSubscriber
+Subscriber(event = "gamification.MissionEndChecker", subscriberId = "MissionEndChecker") missionEndCheckerSubscriber
 
 
 //Falta añadir el generador de misiones

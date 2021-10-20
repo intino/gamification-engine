@@ -1,0 +1,8 @@
+dsl Ness
+
+Namespace gamification
+
+	Event CheckPenalties
+	Event NewSeason
+	Event NewMatch
+	Event MissionEndChecker

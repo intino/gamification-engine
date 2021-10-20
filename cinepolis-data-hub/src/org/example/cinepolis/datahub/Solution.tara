@@ -1,9 +1,11 @@
 dsl Ness
 
 use CinepolisEvents
+use GamificationEvents
 
 Broker(path = empty, port = empty, secondaryPort = empty)
 	User("cinepolis", "cinepolis")
+	User("gamification", "gamification")
 
 Datalake(scale = Month, path = empty) dl
 
@@ -14,6 +16,11 @@ Datalake(scale = Month, path = empty) dl
 	Tank assetAlert as Event(cinepolis.AssetAlert)
 	Tank fixedAsset as Event(cinepolis.FixedAsset)
 
-Terminal cinepolisTerminal
-	Publish (dl.hireEmployee dl.dismissEmployee dl.registerAsset dl.deregisterAsset dl.assetAlert dl.fixedAsset)
-	Subscribe (dl.hireEmployee dl.dismissEmployee dl.registerAsset dl.deregisterAsset dl.assetAlert dl.fixedAsset)
+	Tank newMatch as Event(gamification.NewMatch)
+	Tank checkPenalties as Event(gamification.CheckPenalties)
+	Tank newSeason as Event(gamification.NewSeason)
+	Tank missionEndChecker as Event(gamification.MissionEndChecker)
+
+Terminal gamificationTerminal
+	Publish (dl.hireEmployee dl.dismissEmployee dl.registerAsset dl.deregisterAsset dl.assetAlert dl.fixedAsset dl.newMatch dl.checkPenalties dl.newSeason dl.missionEndChecker)
+	Subscribe (dl.hireEmployee dl.dismissEmployee dl.registerAsset dl.deregisterAsset dl.assetAlert dl.fixedAsset dl.newMatch dl.checkPenalties dl.newSeason dl.missionEndChecker)

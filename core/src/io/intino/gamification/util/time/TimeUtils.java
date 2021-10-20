@@ -337,4 +337,8 @@ public class TimeUtils {
 	private static int getFebruaryDaysOf(int year) {
 		return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0) ? 29 : 28;
 	}
+
+	public static Instant toInstant(LocalDate date) {
+		return getInstantOf(date.getYear(), date.getMonth().getValue(), date.getDayOfMonth());
+	}
 }

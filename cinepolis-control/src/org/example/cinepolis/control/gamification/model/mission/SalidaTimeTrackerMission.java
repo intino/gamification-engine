@@ -5,17 +5,17 @@ import io.intino.gamification.graph.model.MissionAssignment;
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.*;
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.CategoryValue.Actividades;
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.FrequencyValue.Diaria;
-import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.PriorityValue.MuyAlta;
+import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.PriorityValue.Alta;
 
-@Name("Reporte de servicio")
-@Description("Envío del reporte de servicio")
+@Name("Registro de salida en Time Tracker")
+@Description("Registrar la salida en el sistema de Time Tracker")
 @Category(Actividades)
 @Frequency(Diaria)
-@Priority(MuyAlta)
-public class ReportesServicio extends CinepolisMission {
+@Priority(Alta)
+public class SalidaTimeTrackerMission extends CinepolisMission {
 
-    public ReportesServicio() {
-        super(ReportesServicio.class.getSimpleName());
+    public SalidaTimeTrackerMission() {
+        super(SalidaTimeTrackerMission.class.getSimpleName());
     }
 
     @Override
@@ -45,7 +45,7 @@ public class ReportesServicio extends CinepolisMission {
 
         @Override
         protected MissionAssignment getCopy() {
-            return null;
+            return new Assignment(missionId(), progress().total(), expirationTime());
         }
     }
 }

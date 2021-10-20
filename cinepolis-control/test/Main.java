@@ -33,6 +33,8 @@ public class Main {
         AtencionTicketsOTRSMission m = new AtencionTicketsOTRSMission();
         AtencionTicketsOTRSMission.Assignment assignment = m.assignment(1);
 
+        System.out.println(m);
+
         world.players().find("").assignMission(assignment);
 
         //world.players().forEach(p -> p.assignMission("FixOneAsset", truncateTo(nextInstant(currentInstant(), Day), Day), true));

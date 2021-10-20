@@ -47,10 +47,10 @@ public class Adapter {
     private List<Mission> initMissions() {
         return Arrays.asList(
                 new AtencionTicketsOTRSMission(),
-                new ParosFuncion(),
-                new EntradaTimeTracker(),
-                new ReportesServicio(),
-                new EnvioPlanner()
+                new ParosFuncionMission(),
+                new EntradaTimeTrackerMission(),
+                new ReportesServicioMission(),
+                new EnvioPlannerMission()
         );
     }
 

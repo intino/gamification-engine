@@ -89,6 +89,17 @@ public abstract class CinepolisMission extends Mission {
         return map;
     }
 
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "name='" + name + '\'' +
+                ", category=" + categoryValue +
+                ", frequency=" + frequencyValue +
+                ", priority=" + priorityValue +
+                ", penalization=" + penalizationMap +
+                '}';
+    }
+
     public enum CategoryValue {
         Gestion,
         Actividades,

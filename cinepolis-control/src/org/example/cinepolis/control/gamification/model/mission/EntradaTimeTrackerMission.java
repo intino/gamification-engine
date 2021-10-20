@@ -7,15 +7,15 @@ import static org.example.cinepolis.control.gamification.model.mission.Cinepolis
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.FrequencyValue.Diaria;
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.PriorityValue.Alta;
 
-@Name("Registro de salida en Time Tracker")
-@Description("Registrar la salida en el sistema de Time Tracker")
+@Name("Registro de entrada en Time Tracker")
+@Description("Registrar la entrada en el sistema de Time Tracker")
 @Category(Actividades)
 @Frequency(Diaria)
 @Priority(Alta)
-public class SalidaTimeTracker extends CinepolisMission {
+public class EntradaTimeTrackerMission extends CinepolisMission {
 
-    public SalidaTimeTracker() {
-        super(SalidaTimeTracker.class.getSimpleName());
+    public EntradaTimeTrackerMission() {
+        super(EntradaTimeTrackerMission.class.getSimpleName());
     }
 
     @Override

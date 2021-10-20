@@ -19,10 +19,10 @@ import static org.example.cinepolis.control.gamification.model.mission.Cinepolis
 @Penalization(hour = "40", points = 60)
 @Penalization(hour = "45", points = 75)
 @Penalization(hour = "50", points = 100)
-public class ParosFuncion extends CinepolisMission {
+public class ParosFuncionMission extends CinepolisMission {
 
-    public ParosFuncion() {
-        super(ParosFuncion.class.getSimpleName());
+    public ParosFuncionMission() {
+        super(ParosFuncionMission.class.getSimpleName());
     }
 
     @Override

@@ -8,6 +8,11 @@ public class Achievement extends Node {
         super(id);
     }
 
+    public Achievement(String id, String description) {
+        super(id);
+        this.description = description;
+    }
+
     public String name() {
         return id();
     }

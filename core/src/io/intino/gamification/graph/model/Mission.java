@@ -6,6 +6,9 @@ import io.intino.gamification.events.MissionProgressEvent;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.data.Progress;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 import static io.intino.gamification.util.data.Progress.State.*;
 
 public abstract class Mission extends Node implements Comparable<Mission> {
@@ -65,22 +68,20 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         Player player = playerWithId(world, event.playerId());
         if(player == null || !player.isAvailable()) return;
 
-        MissionAssignment missionAssignment = missionAssignmentOfPlayer(mission.id(), player);
-        if(missionAssignment == null) return;
-
-        Progress.State previousState = missionAssignment.progress().state();
-        listener.invoke(event, mission, player, missionAssignment);
-        Progress.State newState = missionAssignment.progress().state();
-        if(newState != previousState && newState != InProgress) {
-            missionAssignment.update(newState);
-        }
+        missionAssignmentOfPlayer(mission.id(), player).forEach(missionAssignment -> {
+            Progress.State previousState = missionAssignment.progress().state();
+            listener.invoke(event, mission, player, missionAssignment);
+            Progress.State newState = missionAssignment.progress().state();
+            if(newState != previousState && newState != InProgress) {
+                missionAssignment.update(newState);
+            }
+        });
     }
 
-    private MissionAssignment missionAssignmentOfPlayer(String missionId, Player player) {
-        Match.PlayerState playerState = player.world()
-                .currentMatch()
-                .player(player.id());
-        return playerState != null ? playerState.missionAssignment(missionId) : null;
+    private Stream<MissionAssignment> missionAssignmentOfPlayer(String missionId, Player player) {
+        Match.PlayerState playerState = player.world().currentMatch().player(player.id());
+        if(playerState == null) return Stream.empty();
+        return playerState.missionAssignments().stream().filter(m -> m.missionId().equals(missionId));
     }
 
     private Player playerWithId(World world, String id) {

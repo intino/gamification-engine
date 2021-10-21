@@ -1,49 +1,42 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.util.Log;
-import io.intino.gamification.util.data.Progress;
+import io.intino.gamification.util.time.TimeUtils;
 
-import java.util.*;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
-
-import static io.intino.gamification.util.data.Progress.State.*;
 
 public class Player extends Actor {
 
-    private final Map<String, Progress> achievementProgress;
+    private final List<ObtainedAchievement> achievements;
 
     public Player(String worldId, String id) {
         super(worldId, id);
-        this.achievementProgress = new HashMap<>();
+        this.achievements = new ArrayList<>();
     }
 
-    public final Progress achievementProgress(String achievementId) {
-        Achievement achievement = world().achievements().find(achievementId);
-        if(achievement == null) {
-            NoSuchElementException e = new NoSuchElementException("Achievement " + achievementId + " does not exist");
-            Log.error(e.getMessage(), e);
-            throw e;
-        }
-        return achievementProgress.computeIfAbsent(achievementId, id -> new Progress(achievement.total()));
+    public final List<ObtainedAchievement> achievements() {
+        return Collections.unmodifiableList(achievements);
     }
 
-    public final Collection<Map.Entry<String, Progress>> achievementProgress() {
-        return achievementProgress.entrySet();
+    public final List<ObtainedAchievement> obtainedAchievementsOf(String achievementId) {
+        return achievements.stream().filter(a -> a.achievement().equals(achievementId)).collect(Collectors.toList());
     }
 
-    public final List<String> completedAchievements() {
-        return achievementProgress().stream().filter(entry -> entry.getValue().state() == Complete)
-                .map(Map.Entry::getKey).collect(Collectors.toList());
+    public void addAchievement(String achievementId) {
+        achievements.add(new ObtainedAchievement(achievementId, id(), TimeUtils.currentInstant()));
     }
 
-    public final List<String> failedAchievements() {
-        return achievementProgress().stream().filter(entry -> entry.getValue().state() == Failed)
-                .map(Map.Entry::getKey).collect(Collectors.toList());
+    public void addAchievement(String achievementId, Instant instant) {
+        achievements.add(new ObtainedAchievement(achievementId, id(), instant));
+        achievements.sort(Comparator.naturalOrder());
     }
 
-    public final List<String> inProgressAchievements() {
-        return achievementProgress().stream().filter(entry -> entry.getValue().state() == InProgress)
-                .map(Map.Entry::getKey).collect(Collectors.toList());
+    public void removeAchievement(int index) {
+        achievements.remove(index);
     }
 
     public final void assignMission(MissionAssignment missionAssignment) {

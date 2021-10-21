@@ -6,3 +6,5 @@ Namespace gamification
 	Event NewSeason
 	Event NewMatch
 	Event MissionEndChecker
+
+	Event FixAsset

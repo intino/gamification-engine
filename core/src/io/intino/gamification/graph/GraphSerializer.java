@@ -2,14 +2,20 @@ package io.intino.gamification.graph;
 
 import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.World;
+import io.intino.gamification.util.Log;
 import io.intino.gamification.util.file.FileUtils;
 import io.intino.gamification.util.serializer.Binary;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import static java.nio.file.StandardCopyOption.*;
 
 public class GraphSerializer {
 
@@ -31,7 +37,14 @@ public class GraphSerializer {
 
     private void saveWorld(World world) {
         File file = FileUtils.createFile(rootDirectory + "/world#" + world.id() + ".gmf");
-        Binary.write(world, file);
+        File temp = new File(file.getAbsolutePath() + ".tmp");
+        Binary.write(world, temp);
+        try {
+            Files.move(temp.toPath(), file.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
+            Files.delete(temp.toPath());
+        } catch (IOException e) {
+            Log.error(e);
+        }
     }
 
     public void load() {

@@ -1,6 +1,5 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.model.Match.ActorState;
 import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.graph.structure.ReadOnlyProperty;
 
@@ -40,25 +39,11 @@ public class World extends Node {
     }
 
     public void finishCurrentMatch() {
-
         Match match = currentMatch.get();
         if(match != null && match.isAvailable()) {
-            addPointsToActors(currentMatch.get());
             match.end();
             finishedMatches.add(match);
             currentMatch.set(null);
-        }
-    }
-
-    private void addPointsToActors(Match match) {
-        match.players().values().forEach(this::addPointsTo);
-        match.npcs().values().forEach(this::addPointsTo);
-    }
-
-    private void addPointsTo(ActorState state) {
-        Actor actor = state.actor();
-        if(actor != null && actor.isAvailable()) {
-            actor.addScore(state.score());
         }
     }
 

@@ -1,9 +1,10 @@
 package io.intino.gamification.graph.model;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Objects;
 
-public final class ObtainedAchievement implements Comparable<ObtainedAchievement> {
+public final class ObtainedAchievement implements Comparable<ObtainedAchievement>, Serializable {
 
     private final String achievement;
     private final String actorId;

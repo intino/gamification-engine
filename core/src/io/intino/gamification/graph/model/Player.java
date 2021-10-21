@@ -22,7 +22,7 @@ public class Player extends Actor {
         return Collections.unmodifiableList(achievements);
     }
 
-    public final List<ObtainedAchievement> obtainedAchievementsOf(String achievementId) {
+    public final List<ObtainedAchievement> achievementsOfType(String achievementId) {
         return achievements.stream().filter(a -> a.achievement().equals(achievementId)).collect(Collectors.toList());
     }
 

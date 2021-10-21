@@ -25,27 +25,13 @@ public abstract class CinepolisMission extends Mission {
 
     public CinepolisMission(String id) {
         super(id);
-        this.name = find(Name.class);
-        this.description(find(Description.class));
-        this.categoryValue = find(Category.class);
-        this.frequencyValue = find(Frequency.class);
-        this.priorityValue = find(Priority.class);
+        this.name = findAttribute(getClass(), Name.class);
+        this.description(findAttribute(getClass(), Description.class));
+        this.categoryValue = findAttribute(getClass(), Category.class);
+        this.frequencyValue = findAttribute(getClass(), Frequency.class);
+        this.priorityValue = findAttribute(getClass(), Priority.class);
         this.penalizationMap = buildPenalizationMap();
         this.priority(Math.round(100 * priorityValue.multiplier));
-    }
-
-    protected <T> T find(Class<? extends Annotation> annotationType) {
-        Annotation annotation = getClass().getAnnotation(annotationType);
-        if(annotation == null) {
-            throw new IllegalStateException(getClass().getSimpleName() + " has not been annotated with " + annotationType.getSimpleName());
-        }
-        try {
-            Method method = annotation.getClass().getMethod("value");
-            return (T) method.invoke(annotation);
-        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     public String name() {
@@ -106,6 +92,20 @@ public abstract class CinepolisMission extends Mission {
                 ", priority=" + priorityValue +
                 ", penalization=" + penalizationMap +
                 '}';
+    }
+
+    public static <T> T findAttribute(Class<? extends CinepolisMission> missionClass, Class<? extends Annotation> annotationType) {
+        Annotation annotation = missionClass.getAnnotation(annotationType);
+        if(annotation == null) {
+            throw new IllegalStateException(missionClass.getSimpleName() + " has not been annotated with " + annotationType.getSimpleName());
+        }
+        try {
+            Method method = annotation.getClass().getMethod("value");
+            return (T) method.invoke(annotation);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public enum CategoryValue {

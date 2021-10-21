@@ -11,6 +11,7 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
 
@@ -71,7 +72,6 @@ public class Match extends WorldNode {
     }
 
     private List<MissionAssignment> missionAssignmentsOf(Map<String, PlayerState> players) {
-
         return players.values().stream()
                 .filter(ps -> ps.actor() != null)
                 .filter(ps -> ps.actor().isAvailable())
@@ -202,6 +202,8 @@ public class Match extends WorldNode {
         }
 
         public void assignMission(MissionAssignment missionAssignment) {
+            if(missionAssignment == null) throw new NullPointerException("MissionAssignment cannot be null");
+
             Mission mission = world().missions().find(missionAssignment.missionId());
             if(mission == null) {
                 NoSuchElementException e = new NoSuchElementException("Mission " + missionAssignment.missionId() + " not exists");
@@ -213,20 +215,15 @@ public class Match extends WorldNode {
             missionAssignment.matchId(id());
             missionAssignment.playerId(actorId);
 
-            // Multiples assignments -> mission??
-            if (missionAssignment(missionAssignment.missionId()) == null) {
-                missionAssignments.add(missionAssignment);
-            }
+            missionAssignments.add(missionAssignment);
         }
 
         public List<MissionAssignment> missionAssignments() {
             return Collections.unmodifiableList(missionAssignments);
         }
 
-        public MissionAssignment missionAssignment(String missionId) {
-            return missionAssignments.stream()
-                    .filter(ma -> ma.missionId().equals(missionId))
-                    .findFirst().orElse(null);
+        public Stream<MissionAssignment> missionAssignmentsOf(String missionId) {
+            return missionAssignments.stream().filter(m -> m.missionId().equals(missionId));
         }
 
         public void failMission(String missionId) {

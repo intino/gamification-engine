@@ -2,20 +2,30 @@ package io.intino.gamification.graph.model;
 
 public class Achievement extends Node {
 
-    private final String description;
-    private final int stepsToComplete;
+    private String description;
 
-    public Achievement(String id, String description, int stepsToComplete) {
+    public Achievement(String id) {
         super(id);
-        this.description = description;
-        this.stepsToComplete = stepsToComplete;
     }
 
-    public final String description() {
+    public String name() {
+        return id();
+    }
+
+    public Achievement description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public String description() {
         return description;
     }
 
-    public final int total() {
-        return stepsToComplete;
+    @Override
+    public String toString() {
+        return "Achievement{" +
+                "name=" + id() +
+                "description='" + description + '\'' +
+                '}';
     }
 }

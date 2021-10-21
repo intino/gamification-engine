@@ -9,7 +9,7 @@ public class MonthEmployee extends Achievement {
     private static final int STEPS_TO_COMPLETE = 1;
 
     public MonthEmployee() {
-        super(_id(), _description(), STEPS_TO_COMPLETE);
+        super(_id(), _description());
     }
 
     private static String _id() {

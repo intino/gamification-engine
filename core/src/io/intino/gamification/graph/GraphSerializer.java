@@ -41,7 +41,7 @@ public class GraphSerializer {
         Binary.write(world, temp);
         try {
             Files.move(temp.toPath(), file.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
-            Files.delete(temp.toPath());
+            if(temp.exists()) Files.delete(temp.toPath());
         } catch (IOException e) {
             Log.error(e);
         }

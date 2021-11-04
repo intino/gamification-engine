@@ -2,21 +2,20 @@ package io.intino.gamification.graph.model;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.Objects;
 
 public final class ObtainedAchievement implements Comparable<ObtainedAchievement>, Serializable {
 
-    private final String achievement;
-    private final String actorId;
+    private final String achievementId;
+    private final String playerId;
     private final Instant instant;
 
-    public ObtainedAchievement(String achievement, String actorId, Instant instant) {
-        this.achievement = achievement;
-        this.actorId = actorId;
+    public ObtainedAchievement(String achievementId, String playerId, Instant instant) {
+        this.achievementId = achievementId;
+        this.playerId = playerId;
         this.instant = instant;
     }
 
-    public String achievement() {
+    /*public String achievement() {
         return this.achievement;
     }
 
@@ -48,7 +47,7 @@ public final class ObtainedAchievement implements Comparable<ObtainedAchievement
                 ", actorId='" + actorId + '\'' +
                 ", instant=" + instant +
                 '}';
-    }
+    }*/
 
     @Override
     public int compareTo(ObtainedAchievement o) {

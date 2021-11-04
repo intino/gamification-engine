@@ -2,7 +2,7 @@ package io.intino.gamification.graph;
 
 import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.NodeCollection;
-import io.intino.gamification.graph.model.World;
+import io.intino.gamification.graph.model.Competition;
 import io.intino.gamification.util.Log;
 
 public class GamificationGraph {
@@ -14,7 +14,7 @@ public class GamificationGraph {
     }
 
     private final GamificationCore core;
-    private final NodeCollection<World> worlds;
+    private final NodeCollection<Competition> competitions;
 
     public GamificationGraph(GamificationCore core) {
         if(core == null) {
@@ -23,17 +23,17 @@ public class GamificationGraph {
             throw e;
         }
         this.core = core;
-        this.worlds = new NodeCollection<>();
+        this.competitions = new NodeCollection<>();
         GamificationGraph.instance = this;
     }
 
-    public World createWorld(World world) {
-        worlds.add(world);
-        return world;
+    public Competition createCompetition(Competition competition) {
+        competitions.add(competition);
+        return competition;
     }
 
-    public NodeCollection<World> worlds() {
-        return worlds;
+    public NodeCollection<Competition> competitions() {
+        return competitions;
     }
 
     public void save() {

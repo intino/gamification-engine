@@ -1,16 +1,16 @@
 package io.intino.gamification.graph.model;
 
-public abstract class Entity extends WorldNode {
+public abstract class Entity extends CompetitionNode {
 
-    public Entity(String worldId, String id) {
-        super(worldId, id);
+    public Entity(String id) {
+        super(id);
     }
 
-    public final Match match() {
+    /*public final Round match() {
         return world().currentMatch();
-    }
+    }*/
 
-    protected void onMatchBegin(Match match) {}
-    protected void onMatchEnd(Match match) {}
+    protected void onMatchBegin(Round round) {}
+    protected void onMatchEnd(Round round) {}
 }
 

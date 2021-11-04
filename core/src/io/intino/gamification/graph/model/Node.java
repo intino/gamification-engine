@@ -1,6 +1,5 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.graph.structure.ReadOnlyProperty;
 import io.intino.gamification.util.Log;
@@ -54,7 +53,7 @@ public abstract class Node implements Serializable {
         onDisable();
     }
 
-    public final void markAsDestroyed() {
+    void markAsDestroyed() {
         destroyed.set(true);
         destroyChildren();
     }
@@ -63,17 +62,13 @@ public abstract class Node implements Serializable {
         return this.destroyed;
     }
 
-    GamificationGraph graph() {
-        return GamificationGraph.get();
-    }
-
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         initTransientAttributes();
     }
 
+    void init() {}
     void destroyChildren() {}
-
     void initTransientAttributes() {}
 
     protected void onCreate() {}

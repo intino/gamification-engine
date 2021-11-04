@@ -1,24 +1,26 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.util.time.TimeUtils;
+public class Player extends Entity {
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-public class Player extends Actor {
-
-    private final List<ObtainedAchievement> achievements;
-
-    public Player(String worldId, String id) {
-        super(worldId, id);
-        this.achievements = new ArrayList<>();
+    public Player(String id) {
+        super(id);
     }
 
-    public final List<ObtainedAchievement> achievements() {
+    public final void assignMission(MissionAssignment missionAssignment) {
+        Season season = availableSeason();
+        if(season != null) {
+            season.playerStates().find(id()).assignMission(missionAssignment);
+        }
+    }
+
+    private Season availableSeason() {
+        if(!competition().isAvailable()) return null;
+        Season season = competition().currentSeason();
+        if(season == null || !season.isAvailable()) return null;
+        return season;
+    }
+
+    /*public final List<ObtainedAchievement> achievements() {
         return Collections.unmodifiableList(achievements);
     }
 
@@ -39,38 +41,26 @@ public class Player extends Actor {
         achievements.remove(index);
     }
 
-    public final void assignMission(MissionAssignment missionAssignment) {
-        Match match = availableMatch();
-        if(match != null) {
-            match.player(id()).assignMission(missionAssignment);
-        }
-    }
+
 
     public void failMission(String missionId) {
-        Match match = availableMatch();
-        if(match != null) {
-            match.player(id()).failMission(missionId);
+        Round round = availableMatch();
+        if(round != null) {
+            round.player(id()).failMission(missionId);
         }
     }
 
     public void completeMission(String missionId) {
-        Match match = availableMatch();
-        if(match != null) {
-            match.player(id()).completeMission(missionId);
+        Round round = availableMatch();
+        if(round != null) {
+            round.player(id()).completeMission(missionId);
         }
     }
 
     public void cancelMission(String missionId) {
-        Match match = availableMatch();
-        if(match != null) {
-            match.player(id()).cancelMission(missionId);
+        Round round = availableMatch();
+        if(round != null) {
+            round.player(id()).cancelMission(missionId);
         }
-    }
-
-    private Match availableMatch() {
-        if(!world().isAvailable()) return null;
-        Match match = world().currentMatch();
-        if(match == null || !match().isAvailable()) return null;
-        return match;
-    }
+    }*/
 }

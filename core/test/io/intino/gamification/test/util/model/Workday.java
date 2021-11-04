@@ -1,11 +1,11 @@
 package io.intino.gamification.test.util.model;
 
-import io.intino.gamification.graph.model.Match;
+import io.intino.gamification.graph.model.Season;
 
-public class Workday extends Match {
+public class Workday extends Season {
 
-    public Workday(String worldId, String id) {
-        super(worldId, id);
+    public Workday(String id) {
+        super(id);
     }
 
     @Override

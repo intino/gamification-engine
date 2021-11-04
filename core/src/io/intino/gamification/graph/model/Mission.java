@@ -3,15 +3,13 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.events.MissionProgressEvent;
-import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.data.Progress;
 
-import java.util.List;
 import java.util.stream.Stream;
 
-import static io.intino.gamification.util.data.Progress.State.*;
+import static io.intino.gamification.util.data.Progress.State.InProgress;
 
-public abstract class Mission extends Node implements Comparable<Mission> {
+public abstract class Mission extends CompetitionNode implements Comparable<Mission> {
 
     private String description;
     private int priority;
@@ -30,42 +28,35 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         this.priority = priority;
     }
 
-    public Mission description(String description) {
-        this.description = description;
-        return this;
-    }
-
-    public Mission priority(int priority) {
-        this.priority = priority;
-        return this;
-    }
-
+    //TODO HACE FALTA??
     protected final <T extends MissionProgressEvent> void subscribe(Class<T> eventType, MissionEventListener<T> listener) {
         EventManager.get().addEventCallback(eventType, event -> {
-            World world = GamificationGraph.get().worlds().find(event.worldId());
-            if(world == null || !world.isAvailable()) return;
+            Competition competition = competition();
+            if(!competition.isAvailable()) return;
 
-            Match match = world.currentMatch();
-            if(match == null || !match.isAvailable()) return;
+            Season season = competition.currentSeason();
+            if(season == null || !season.isAvailable()) return;
 
-            addMissionProgressTask(listener, event, world, match);
+            addMissionProgressTask(listener, event, competition, season);
         });
     }
 
-    private <T extends MissionProgressEvent> void addMissionProgressTask(MissionEventListener<T> listener, T event, World world, Match match) {
-        match.runMissionProgressTask(new Match.MissionProgressTask(event.playerId()) {
+    //TODO: Hace falta???
+    private <T extends MissionProgressEvent> void addMissionProgressTask(MissionEventListener<T> listener, T event, Competition competition, Season season) {
+        season.runMissionProgressTask(new Season.MissionProgressTask(event.playerId()) {
             @Override
             void execute() {
-                invokeTask(listener, event, world);
+                invokeTask(listener, event, competition);
             }
         });
     }
 
-    private <T extends MissionProgressEvent> void invokeTask(MissionEventListener<T> listener, T event, World world) {
+    //TODO: Hace falta???
+    private <T extends MissionProgressEvent> void invokeTask(MissionEventListener<T> listener, T event, Competition competition) {
         Mission mission = Mission.this;
         if(!mission.isAvailable()) return;
 
-        Player player = playerWithId(world, event.playerId());
+        Player player = competition.players().find(event.playerId());
         if(player == null || !player.isAvailable()) return;
 
         missionAssignmentOfPlayer(mission.id(), player).forEach(missionAssignment -> {
@@ -79,26 +70,11 @@ public abstract class Mission extends Node implements Comparable<Mission> {
     }
 
     private Stream<MissionAssignment> missionAssignmentOfPlayer(String missionId, Player player) {
-        Match.PlayerState playerState = player.world().currentMatch().player(player.id());
+        Season season = competition().currentSeason();
+        if(season == null) return Stream.empty();
+        PlayerState playerState = season.playerStates().find(player.id());
         if(playerState == null) return Stream.empty();
         return playerState.missionAssignments().stream().filter(m -> m.missionId().equals(missionId));
-    }
-
-    private Player playerWithId(World world, String id) {
-        return world != null ? world.players().find(id) : null;
-    }
-
-    public final String description() {
-        return this.description;
-    }
-
-    public final int priority() {
-        return this.priority;
-    }
-
-    @Override
-    public int compareTo(Mission o) {
-        return Integer.compare(priority, o.priority);
     }
 
     @Override
@@ -106,5 +82,35 @@ public abstract class Mission extends Node implements Comparable<Mission> {
         setProgressCallbacks();
     }
 
+    @Override
+    public int compareTo(Mission o) {
+        return Integer.compare(priority, o.priority);
+    }
+
     protected abstract void setProgressCallbacks();
+
+    /*public Mission description(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public Mission priority(int priority) {
+        this.priority = priority;
+        return this;
+    }
+
+
+
+
+
+
+
+    public final int priority() {
+        return this.priority;
+    }
+
+
+
+
+    */
 }

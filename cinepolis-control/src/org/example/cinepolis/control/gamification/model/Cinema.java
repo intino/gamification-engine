@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.gamification.model;
 
-import io.intino.gamification.graph.model.Actor;
+import io.intino.gamification.graph.model.old.Actor;
 
 public class Cinema extends Actor {
 

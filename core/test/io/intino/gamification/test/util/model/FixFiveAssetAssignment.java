@@ -8,8 +8,9 @@ public class FixFiveAssetAssignment extends MissionAssignment {
     private static int total = 5;
     private static boolean endsWithMatch = true;
 
-    public FixFiveAssetAssignment(String missionId, int stepsToComplete, ExpirationTime expirationTime) {
-        super(missionId, stepsToComplete, expirationTime);
+    public FixFiveAssetAssignment() {
+        //TODO
+        super(missionId, total, null);
     }
 
     @Override

@@ -1,8 +1,8 @@
 package org.example.cinepolis.control.gamification.dispatcher;
 
-import io.intino.gamification.graph.model.Match;
+import io.intino.gamification.graph.model.Round;
 import io.intino.gamification.graph.model.MissionAssignment;
-import io.intino.gamification.graph.model.World;
+import io.intino.gamification.graph.model.Competition;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.datahub.events.gamification.MissionEndChecker;
 
@@ -17,18 +17,18 @@ public class MissionEndCheckerDispatcher extends Dispatcher<MissionEndChecker> {
     @Override
     public void dispatch(MissionEndChecker event) {
 
-        World world = box.adapter().world();
+        Competition competition = box.adapter().world();
 
-        Match match = world.currentMatch();
-        if(match == null) return;
+        Round round = competition.currentSeason();
+        if(round == null) return;
 
-        for (Match.PlayerState playerState : match.players().values()) {
-            check(playerState);
+        for (Round.Match match : round.players().values()) {
+            check(match);
         }
     }
 
-    private void check(Match.PlayerState playerState) {
-        for (MissionAssignment missionAssignment : playerState.missionAssignments()) {
+    private void check(Round.Match match) {
+        for (MissionAssignment missionAssignment : match.missionAssignments()) {
             if(missionAssignment.hasExpired() && missionAssignment.progress().state() == InProgress) {
                 missionAssignment.fail();
             }

@@ -1,7 +1,6 @@
 package io.intino.gamification.test.util;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.test.util.model.Asset;
 import io.intino.gamification.test.util.model.Cinesa;
 import io.intino.gamification.test.util.model.Technician;
 
@@ -24,14 +23,7 @@ public class EngineTestHelper {
     }
 
     public static void initTechnician(Cinesa world, String technicianId, List<String> assetIds) {
-        Technician technician = new Technician(world.id(), technicianId);
-
-        for (String assetId : assetIds) {
-            Asset asset = new Asset(world.id(), assetId);
-            world.items().add(asset);
-            technician.inventory().add(asset);
-        }
-
+        Technician technician = new Technician(technicianId);
         world.players().add(technician);
     }
 }

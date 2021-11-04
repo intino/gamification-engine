@@ -1,8 +1,8 @@
 package io.intino.gamification.test.util.model;
 
-import io.intino.gamification.graph.model.World;
+import io.intino.gamification.graph.model.Competition;
 
-public class Cinesa extends World {
+public class Cinesa extends Competition {
 
     public Cinesa(String id) {
         super(id);

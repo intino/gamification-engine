@@ -7,21 +7,45 @@ import java.util.stream.Stream;
 
 public class NodeCollection<T extends Node> extends SerializableCollection implements Iterable<T> {
 
-    private final Map<String, T> collection = new TreeMap<>();
+    private final String context;
+    private final Map<String, T> collection;
+
+    public NodeCollection() {
+        this(null, new TreeMap<>());
+    }
+
+    public NodeCollection(String context) {
+        this(context, new TreeMap<>());
+    }
+
+    public NodeCollection(Map<String, T> collection) {
+        this(null, collection);
+    }
+
+    public NodeCollection(String context, Map<String, T> collection) {
+        this.context = context;
+        this.collection = collection;
+    }
 
     public void add(T node) {
+        if(node == null) return;
+        if(!node.getClass().equals(Competition.class)) {
+            CompetitionNode competitionNode = ((CompetitionNode) node);
+            if(competitionNode.competitionId() != null) return;
+            competitionNode.competitionId(context);
+        }
         collection.put(node.id(), node);
+        node.init();
         node.onCreate();
     }
 
-    public void addAll(Collection<T> nodes) {
-        for (T node : nodes) {
-            add(node);
-        }
+    public void addAll(Collection<? extends T> nodes) {
+        nodes.forEach(this::add);
     }
 
     public void destroy(T node) {
         collection.remove(node.id());
+        node.markAsDestroyed();
         node.onDestroy();
     }
 
@@ -40,6 +64,14 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     public List<T> list() {
         return List.copyOf(collection.values());
+    }
+
+    public boolean isEmpty() {
+        return collection.isEmpty();
+    }
+
+    public T last() {
+        return collection.values().stream().skip(collection.size() - 1).findFirst().orElse(null);
     }
 
     @Override

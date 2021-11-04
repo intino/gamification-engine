@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.gamification.dispatcher;
 
-import io.intino.gamification.graph.model.Match;
+import io.intino.gamification.graph.model.Round;
 import io.intino.gamification.graph.model.MissionAssignment;
 import io.intino.gamification.util.time.Scale;
 import org.example.cinepolis.control.box.ControlBox;
@@ -24,21 +24,21 @@ public class CheckPenaltiesDispatcher extends Dispatcher<CheckPenalties> {
     @Override
     public void dispatch(CheckPenalties event) {
 
-        Match match = box.adapter().world().currentMatch();
+        Round round = box.adapter().world().currentSeason();
         now = currentInstant();
 
-        if(match == null) return;
+        if(round == null) return;
 
-        for (Match.PlayerState ps : match.players().values()) {
+        for (Round.Match ps : round.players().values()) {
             ps.addScore(penaltyOf(ps));
         }
     }
 
-    private int penaltyOf(Match.PlayerState playerState) {
+    private int penaltyOf(Round.Match match) {
 
         int penalty = 0;
 
-        for (MissionAssignment ma : playerState.missionAssignments()) {
+        for (MissionAssignment ma : match.missionAssignments()) {
             penalty += penaltyOf(ma);
         }
 

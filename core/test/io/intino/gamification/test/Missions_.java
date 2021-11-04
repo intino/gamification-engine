@@ -2,7 +2,7 @@ package io.intino.gamification.test;
 
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.graph.model.Match;
+import io.intino.gamification.graph.model.Round;
 import io.intino.gamification.test.util.EngineTestHelper;
 import io.intino.gamification.test.util.events.FixAsset;
 import io.intino.gamification.test.util.model.Cinesa;
@@ -84,26 +84,25 @@ public class Missions_ {
         engine = EngineTestHelper.getEngine();
         GamificationGraph graph = engine.graph();
         world = new Cinesa("world");
-        graph.createWorld(world);
+        graph.createCompetition(world);
 
         FixFiveAsset mission = new FixFiveAsset();
         world.missions().add(mission);
 
         EngineTestHelper.initTechnician(world, "t1", Arrays.asList("a1", "a2"));
 
-        world.startNewMatch(new Workday("world", "match"));
+        world.startNewSeason(new Workday("match"));
 
-        // FIXME
-        //world.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment(world, p.id())));
+        world.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment()));
     }
 
     @Test
     public void execute() {
        try {
 
-           Match.PlayerState playerState = setup();
-           checkMissionAssignment(playerState);
-           assertFinalScoreMatchesExpectedScore(playerState);
+           Round.Match match = setup();
+           checkMissionAssignment(match);
+           assertFinalScoreMatchesExpectedScore(match);
 
        } catch (AssertionError e) {
            AssertionError error = new AssertionError("Test " + this + " failed: " + e.getMessage());
@@ -112,41 +111,41 @@ public class Missions_ {
        }
     }
 
-    private void assertFinalScoreMatchesExpectedScore(Match.PlayerState playerState) {
-        assertEquals(score, playerState.score());
+    private void assertFinalScoreMatchesExpectedScore(Round.Match match) {
+        assertEquals(score, match.score());
     }
 
-    private void checkMissionAssignment(Match.PlayerState playerState) {
+    private void checkMissionAssignment(Round.Match match) {
 
         if(action == Action.Cancel && state != Progress.State.Complete) {
-            assertThereAreNoMissionAssignmentsLeft(playerState);
+            assertThereAreNoMissionAssignmentsLeft(match);
         } else {
-            assertMissionAssignmentIsStillPresent(playerState);
+            assertMissionAssignmentIsStillPresent(match);
         }
 
         if(action != Missions_.Action.Cancel || state == Progress.State.Complete) {
-            assertProgressMatchesExpectedProgress(playerState);
-            assertFinalStateMatchesExpected(playerState);
+            assertProgressMatchesExpectedProgress(match);
+            assertFinalStateMatchesExpected(match);
         }
     }
 
-    private void assertThereAreNoMissionAssignmentsLeft(Match.PlayerState playerState) {
-        assertEquals(0, playerState.missionAssignments().size());
+    private void assertThereAreNoMissionAssignmentsLeft(Round.Match match) {
+        assertEquals(0, match.missionAssignments().size());
     }
 
-    private void assertMissionAssignmentIsStillPresent(Match.PlayerState playerState) {
-        assertEquals(1, playerState.missionAssignments().size());
+    private void assertMissionAssignmentIsStillPresent(Round.Match match) {
+        assertEquals(1, match.missionAssignments().size());
     }
 
-    private void assertProgressMatchesExpectedProgress(Match.PlayerState playerState) {
-        assertEquals(progress, playerState.missionAssignments().get(0).progress().get(), EPSILON);
+    private void assertProgressMatchesExpectedProgress(Round.Match match) {
+        assertEquals(progress, match.missionAssignments().get(0).progress().get(), EPSILON);
     }
 
-    private void assertFinalStateMatchesExpected(Match.PlayerState playerState) {
-        assertEquals(state, playerState.missionAssignments().get(0).progress().state());
+    private void assertFinalStateMatchesExpected(Round.Match match) {
+        assertEquals(state, match.missionAssignments().get(0).progress().state());
     }
 
-    private Match.PlayerState setup() {
+    private Round.Match setup() {
 
         for (int i = 0; i < nFixAsset; i++) {
             engine.eventPublisher().publish(new FixAsset(world.id(), "t1"));
@@ -157,15 +156,15 @@ public class Missions_ {
         return getFinalPlayerState();
     }
 
-    private Match.PlayerState getFinalPlayerState() {
-        Match.PlayerState playerState;
+    private Round.Match getFinalPlayerState() {
+        Round.Match match;
         if(finishMatch) {
             world.finishCurrentMatch();
-            playerState = world.finishedMatches().find("match").players().get("t1");
+            match = world.finishedMatches().find("match").players().get("t1");
         } else {
-            playerState = world.currentMatch().players().get("t1");
+            match = world.currentSeason().players().get("t1");
         }
-        return playerState;
+        return match;
     }
 
     private void runAction() {

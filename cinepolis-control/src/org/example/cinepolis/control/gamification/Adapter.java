@@ -1,10 +1,10 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.graph.model.Item;
+import io.intino.gamification.graph.model.old.Item;
 import io.intino.gamification.graph.model.Mission;
 import io.intino.gamification.graph.model.Player;
-import io.intino.gamification.graph.model.World;
+import io.intino.gamification.graph.model.Competition;
 import org.example.cinepolis.control.box.ControlBox;
 import org.example.cinepolis.control.gamification.events.FixAsset;
 import org.example.cinepolis.control.gamification.model.Asset;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.graph.model.Actor.InventoryPolicy.Drop;
+import static io.intino.gamification.graph.model.old.Actor.InventoryPolicy.Drop;
 
 public class Adapter {
 
@@ -26,7 +26,7 @@ public class Adapter {
     private final GamificationEngine engine;
     private final ControlGraph graph;
 
-    private World world;
+    private Competition competition;
 
     public Adapter(ControlBox box) {
         this.engine = box.engine();
@@ -36,13 +36,13 @@ public class Adapter {
 
     public void initialize() {
 
-        World world = engine.graph().worlds().find(GamificationConfig.WorldId);
+        Competition competition = engine.graph().competitions().find(GamificationConfig.WorldId);
 
-        if(world == null) {
-            this.world = engine.graph().createWorld(new World(GamificationConfig.WorldId));
-            this.world.missions().addAll(initMissions());
+        if(competition == null) {
+            this.competition = engine.graph().createCompetition(new Competition(GamificationConfig.WorldId));
+            this.competition.missions().addAll(initMissions());
         } else {
-            this.world = world;
+            this.competition = competition;
         }
     }
 
@@ -56,14 +56,14 @@ public class Adapter {
         );
     }
 
-    public World world() {
-        return world;
+    public Competition world() {
+        return competition;
     }
 
     public void adapt(AssetAlert event) {
         org.example.cinepolis.control.graph.Asset asset = graph.asset(event.asset());
         if(asset == null) return;
-        if(world.currentMatch() == null) return;
+        if(competition.currentSeason() == null) return;
 
         List<String> employees = graph.employeesByArea(asset.area()).stream()
                 .map(org.example.cinepolis.control.graph.Employee::id)
@@ -75,13 +75,13 @@ public class Adapter {
     }
 
     public void adapt(DeregisterAsset event) {
-        Item item = world.items().find(event.id());
-        world.items().destroy(item);
+        Item item = competition.items().find(event.id());
+        competition.items().destroy(item);
     }
 
     public void adapt(DismissEmployee event) {
-        Player player = world.players().find(event.id());
-        world.players().destroy(player);
+        Player player = competition.players().find(event.id());
+        competition.players().destroy(player);
     }
 
     public void adapt(FixedAsset event) {
@@ -93,25 +93,25 @@ public class Adapter {
 
     public void adapt(HireEmployee event) {
 
-        Employee employee = new Employee(world.id(), event.id());
+        Employee employee = new Employee(competition.id(), event.id());
         employee.inventory().policy(Drop);
 
         for (org.example.cinepolis.control.graph.Asset asset : graph.assetsByArea(event.area())) {
-            Asset item = new Asset(world.id(), asset.id());
-            world.items().add(item);
+            Asset item = new Asset(competition.id(), asset.id());
+            competition.items().add(item);
             employee.inventory().add(item);
         }
 
-        world.players().add(employee);
+        competition.players().add(employee);
     }
 
     public void adapt(RegisterAsset event) {
         Asset asset = new Asset(GamificationConfig.WorldId, event.id());
-        world.items().add(asset);
+        competition.items().add(asset);
 
         org.example.cinepolis.control.graph.Employee employee = graph.employeeByArea(event.area());
         if(employee == null) return;
-        Player player = world.players().find(employee.id());
+        Player player = competition.players().find(employee.id());
         player.inventory().add(asset);
     }
 }

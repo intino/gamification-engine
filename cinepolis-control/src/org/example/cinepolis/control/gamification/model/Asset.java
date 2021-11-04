@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.gamification.model;
 
-import io.intino.gamification.graph.model.Item;
+import io.intino.gamification.graph.model.old.Item;
 
 public class Asset extends Item {
 

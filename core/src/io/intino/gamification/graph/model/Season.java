@@ -116,7 +116,7 @@ public class Season extends CompetitionNode {
     }
 
     public final NodeCollection<Round> rounds() {
-        //Devolver unmodifiable
+        //TODO Devolver unmodifiable
         return rounds;
     }
 

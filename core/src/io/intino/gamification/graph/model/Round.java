@@ -5,6 +5,7 @@ import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Round extends CompetitionNode {
@@ -68,18 +69,22 @@ public class Round extends CompetitionNode {
 
     public static class Match extends CompetitionNode {
 
-        private final List<Fact<Integer>> facts = new ArrayList<>();
+        private final List<Fact> facts = new ArrayList<>();
 
         Match(String playerId) {
             super(playerId);
         }
 
-        void addFact(Fact<Integer> fact) {
+        void addFact(Fact fact) {
             facts.add(fact);
         }
 
-        public int matchScore() {
-            return facts.stream().mapToInt(Fact::getValue).sum();
+        public final int matchScore() {
+            return facts.stream().mapToInt(Fact::value).sum();
+        }
+
+        public final List<Fact> facts() {
+            return Collections.unmodifiableList(facts);
         }
 
         /*public Actor actor() {

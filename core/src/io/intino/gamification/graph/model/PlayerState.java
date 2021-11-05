@@ -4,6 +4,7 @@ import io.intino.gamification.util.Log;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -13,7 +14,7 @@ public class PlayerState extends CompetitionNode {
 
     private final Season season;
     private NodeCollection<MissionAssignment> missionAssignments;
-    private final List<Fact<Integer>> facts = new ArrayList<>();
+    private final List<Fact> facts = new ArrayList<>();
 
     PlayerState(String id, Season season) {
         super(id);
@@ -59,14 +60,13 @@ public class PlayerState extends CompetitionNode {
         );
     }
 
-    public final void addFactOf(MissionAssignment assignment) {
-        Fact<Integer> fact = new Fact<>(TimeUtils.currentInstant(), Fact.Type.Mission, assignment.id(), assignment.score());
+    public final void addFact(Fact fact) {
         Round round = season.currentRound();
         if(round == null) return;
         round.matches().computeIfAbsent(id(), k -> new Round.Match(id())).addFact(fact);
     }
 
-    public void sealFacts(List<Fact<Integer>> facts) {
+    public void sealFacts(List<Fact> facts) {
         this.facts.addAll(facts);
     }
 
@@ -90,7 +90,7 @@ public class PlayerState extends CompetitionNode {
         return missionAssignments;
     }
 
-    List<Fact<Integer>> facts() {
-        return facts;
+    public final List<Fact> facts() {
+        return Collections.unmodifiableList(facts);
     }
 }

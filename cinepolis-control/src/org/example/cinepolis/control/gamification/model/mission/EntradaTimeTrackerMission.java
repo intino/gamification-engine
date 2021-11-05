@@ -1,6 +1,8 @@
 package org.example.cinepolis.control.gamification.model.mission;
 
+import io.intino.gamification.graph.model.Fact;
 import io.intino.gamification.graph.model.MissionAssignment;
+import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
 import java.util.function.Function;
@@ -44,12 +46,12 @@ public class EntradaTimeTrackerMission extends CinepolisMission {
         @Override
         protected void onMissionComplete() {
             //TODO: Revisar asignacion de puntos
-            playerState().addFactOf(this);
+            playerState().addFact(new Fact(TimeUtils.currentInstant(), Fact.Type.Mission, id(), score()));
         }
 
         @Override
         protected void onMissionFail() {
-            playerState().addFactOf(this);
+            playerState().addFact(new Fact(TimeUtils.currentInstant(), Fact.Type.Mission, id(), score()));
         }
 
         @Override

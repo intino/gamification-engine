@@ -2,6 +2,9 @@ package org.example.cinepolis.control.gamification.model.mission;
 
 import io.intino.gamification.graph.model.MissionAssignment;
 
+import java.time.Instant;
+import java.util.function.Function;
+
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.*;
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.CategoryValue.Actividades;
 import static org.example.cinepolis.control.gamification.model.mission.CinepolisMission.FrequencyValue.Diaria;
@@ -30,23 +33,28 @@ public class EntradaTimeTrackerMission extends CinepolisMission {
     public static class Assignment extends MissionAssignment {
 
         protected Assignment(String missionId, int stepsToComplete, ExpirationTime expirationTime) {
-            super(missionId, stepsToComplete, expirationTime);
+            super(missionId, stepsToComplete, expirationTime, new Function<Instant, Integer>() {
+                @Override
+                public Integer apply(Instant instant) {
+                    return 100;
+                }
+            });
         }
 
         @Override
         protected void onMissionComplete() {
-
-            playerState().addScore(CinepolisMission.maxPointsOf((CinepolisMission) mission()));
+            //TODO: Revisar asignacion de puntos
+            playerState().addFactOf(this);
         }
 
         @Override
         protected void onMissionFail() {
-            playerState().addScore(-CinepolisMission.maxPointsOf((CinepolisMission) mission()));
+            playerState().addFactOf(this);
         }
 
         @Override
         protected MissionAssignment getCopy() {
-            return new Assignment(missionId(), progress().total(), expirationTime());
+            return new Assignment(id(), progress().total(), expirationTime());
         }
     }
 }

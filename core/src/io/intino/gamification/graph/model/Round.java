@@ -40,6 +40,10 @@ public class Round extends CompetitionNode {
         return matches;
     }
 
+    State state() {
+        return state.get();
+    }
+
     protected void onBegin() {}
     protected void onEnd() {}
 
@@ -51,11 +55,15 @@ public class Round extends CompetitionNode {
 
         private final List<Fact<Integer>> facts = new ArrayList<>();
 
-        private Match(String playerId) {
+        Match(String playerId) {
             super(playerId);
         }
 
-        public int totalScore() {
+        void addFact(Fact<Integer> fact) {
+            facts.add(fact);
+        }
+
+        public int matchScore() {
             return facts.stream().mapToInt(Fact::getValue).sum();
         }
 

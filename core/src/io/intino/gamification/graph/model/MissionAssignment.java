@@ -4,20 +4,24 @@ import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
+import java.util.function.Function;
 
 import static io.intino.gamification.util.data.Progress.State.*;
 
 public abstract class MissionAssignment extends CompetitionNode {
 
     private final Progress progress;
+    private PlayerState playerState;
     private final Instant creationTime;
-    private ExpirationTime expirationTime;
+    private final ExpirationTime expirationTime;
+    private final Function<Instant, Integer> scoreFunction;
 
-    protected MissionAssignment(String missionId, int stepsToComplete, ExpirationTime expirationTime) {
+    protected MissionAssignment(String missionId, int stepsToComplete, ExpirationTime expirationTime, Function<Instant, Integer> scoreFunction) {
         super(missionId);
         this.progress = initProgress(stepsToComplete);
         this.creationTime = TimeUtils.currentInstant();
         this.expirationTime = expirationTime;
+        this.scoreFunction = scoreFunction;
     }
 
     boolean hasExpired() {
@@ -62,8 +66,16 @@ public abstract class MissionAssignment extends CompetitionNode {
         return progress;
     }
 
-    public final String missionId() {
-        return id();
+    public final Mission mission() {
+        return competition().missions().find(id());
+    }
+
+    public final PlayerState playerState() {
+        return this.playerState;
+    }
+
+    public final void playerState(PlayerState playerState) {
+        this.playerState = playerState;
     }
 
     public final Progress progress() {
@@ -72,6 +84,10 @@ public abstract class MissionAssignment extends CompetitionNode {
 
     public final ExpirationTime expirationTime() {
         return expirationTime;
+    }
+
+    public Integer score() {
+        return scoreFunction.apply(creationTime);
     }
 
     protected void onProgressChange(Integer oldValue, Integer newValue) {}

@@ -2,6 +2,9 @@ package io.intino.gamification.test.util.model;
 
 import io.intino.gamification.graph.model.MissionAssignment;
 
+import java.time.Instant;
+import java.util.function.Function;
+
 public class FixFiveAssetAssignment extends MissionAssignment {
 
     private static String missionId = "FixOneAsset";
@@ -10,7 +13,7 @@ public class FixFiveAssetAssignment extends MissionAssignment {
 
     public FixFiveAssetAssignment() {
         //TODO
-        super(missionId, total, null);
+        super(missionId, total, null, instant -> 100);
     }
 
     @Override

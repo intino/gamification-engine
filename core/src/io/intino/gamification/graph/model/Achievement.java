@@ -1,5 +1,7 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.graph.GamificationGraph;
+
 public class Achievement extends Node {
 
     private String description;
@@ -24,6 +26,13 @@ public class Achievement extends Node {
 
     public String description() {
         return description;
+    }
+
+    @Override
+    protected Competition parent() {
+        String[] ids = parentIds();
+        return GamificationGraph.get()
+                .competitions().find(ids[0]);
     }
 
     @Override

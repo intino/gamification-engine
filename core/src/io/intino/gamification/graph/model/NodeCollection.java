@@ -13,7 +13,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     private final Map<String, T> collection;
 
     public NodeCollection() {
-        this(null, new TreeMap<>());
+        this("", new TreeMap<>());
     }
 
     public NodeCollection(String context) {
@@ -21,7 +21,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     }
 
     public NodeCollection(Map<String, T> collection) {
-        this(null, collection);
+        this("", collection);
     }
 
     public NodeCollection(String context, Map<String, T> collection) {
@@ -32,9 +32,8 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     public void add(T node) {
         if(node == null) return;
         if(!node.getClass().equals(Competition.class)) {
-            CompetitionNode competitionNode = ((CompetitionNode) node);
-            if(competitionNode.competitionId() != null) return;
-            competitionNode.competitionId(context);
+            if(node.parent() != null) return;
+            node.parent(context);
         }
         collection.put(node.id(), node);
         node.init();

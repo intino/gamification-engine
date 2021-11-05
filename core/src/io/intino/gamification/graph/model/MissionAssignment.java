@@ -1,5 +1,6 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
@@ -8,10 +9,9 @@ import java.util.function.Function;
 
 import static io.intino.gamification.util.data.Progress.State.*;
 
-public abstract class MissionAssignment extends CompetitionNode {
+public abstract class MissionAssignment extends Node {
 
     private final Progress progress;
-    private PlayerState playerState;
     private final Instant creationTime;
     private final ExpirationTime expirationTime;
     private final Function<Instant, Integer> scoreFunction;
@@ -67,15 +67,7 @@ public abstract class MissionAssignment extends CompetitionNode {
     }
 
     public final Mission mission() {
-        return competition().missions().find(id());
-    }
-
-    public final PlayerState playerState() {
-        return this.playerState;
-    }
-
-    public final void playerState(PlayerState playerState) {
-        this.playerState = playerState;
+        return parent().parent().parent().missions().find(id());
     }
 
     public final Progress progress() {
@@ -88,6 +80,15 @@ public abstract class MissionAssignment extends CompetitionNode {
 
     public Integer score() {
         return scoreFunction.apply(creationTime);
+    }
+
+    @Override
+    protected PlayerState parent() {
+        String[] ids = parentIds();
+        return GamificationGraph.get()
+                .competitions().find(ids[0])
+                .seasons().find(ids[1])
+                .playerStates().find(ids[2]);
     }
 
     protected void onProgressChange(Integer oldValue, Integer newValue) {}

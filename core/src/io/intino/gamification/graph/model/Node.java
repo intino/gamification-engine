@@ -1,7 +1,6 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.Property;
-import io.intino.gamification.graph.structure.ReadOnlyProperty;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.serializer.Json;
 
@@ -12,6 +11,7 @@ import java.util.Objects;
 public abstract class Node implements Serializable {
 
     private final String id;
+    private String[] parentIds;
     private final Property<Boolean> enabled = new Property<>(true);
     private final Property<Boolean> destroyed = new Property<>(false);
 
@@ -27,6 +27,22 @@ public abstract class Node implements Serializable {
 
     public final String id() {
         return id;
+    }
+
+    public final String[] parentIds() {
+        return parentIds;
+    }
+
+    public final void parent(String parentId) {
+        parentIds = parentId.split("\\.");
+    }
+
+    public final String absoluteId() {
+        return build(parentIds) + "." + id;
+    }
+
+    private String build(String[] parentIds) {
+        return String.join(".", parentIds);
     }
 
     public final boolean isAvailable() {
@@ -53,19 +69,17 @@ public abstract class Node implements Serializable {
         onDisable();
     }
 
-    void markAsDestroyed() {
+    final void markAsDestroyed() {
         destroyed.set(true);
         destroyChildren();
-    }
-
-    public final ReadOnlyProperty<Boolean> destroyedProperty() {
-        return this.destroyed;
     }
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         initTransientAttributes();
     }
+
+    protected abstract Node parent();
 
     void init() {}
     void destroyChildren() {}

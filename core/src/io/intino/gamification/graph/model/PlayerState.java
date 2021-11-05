@@ -1,7 +1,7 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.Log;
-import io.intino.gamification.util.time.TimeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,23 +10,38 @@ import java.util.NoSuchElementException;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
 
-public class PlayerState extends CompetitionNode {
+public class PlayerState extends Node {
 
-    private final Season season;
     private NodeCollection<MissionAssignment> missionAssignments;
     private final List<Fact> facts = new ArrayList<>();
 
-    PlayerState(String id, Season season) {
+    PlayerState(String id) {
         super(id);
-        this.season = season;
     }
 
     @Override
     void init() {
-        this.missionAssignments = new NodeCollection<>(competitionId());
+        this.missionAssignments = new NodeCollection<>(absoluteId());
     }
 
-    public void assignMission(MissionAssignment missionAssignment) {
+    public final NodeCollection<MissionAssignment> missionAssignments() {
+        return missionAssignments;
+    }
+
+    @Override
+    void destroyChildren() {
+        missionAssignments.forEach(Node::markAsDestroyed);
+    }
+
+    @Override
+    protected Season parent() {
+        String[] ids = parentIds();
+        return GamificationGraph.get()
+                .competitions().find(ids[0])
+                .seasons().find(ids[1]);
+    }
+
+    /*public void assignMission(MissionAssignment missionAssignment) {
         if(missionAssignment == null) throw new NullPointerException("MissionAssignment cannot be null");
 
         Mission mission = competition().missions().find(missionAssignment.id());
@@ -37,7 +52,6 @@ public class PlayerState extends CompetitionNode {
         }
 
         //TODO: Asignar competicion, season, round y player a missionAssignment (los params que hagan falta)
-        missionAssignment.playerState(season.playerStates().find(id()));
 
         missionAssignments.add(missionAssignment);
     }
@@ -70,6 +84,19 @@ public class PlayerState extends CompetitionNode {
         this.facts.addAll(facts);
     }
 
+    void clearFacts() {
+        this.facts.clear();
+    }
+
+    void endMissions() {
+        missionAssignments.forEach(ma -> {
+            if(parent().endWithinThisSeason(ma) && ma.progress().state() == InProgress) {
+                ma.update(ma.progress().state());
+                ma.progress().fail();
+            }
+        });
+    }
+
     PlayerState copy() {
         PlayerState ps = new PlayerState(id(), season);
         for (MissionAssignment missionAssignment : missionAssignments) {
@@ -78,19 +105,17 @@ public class PlayerState extends CompetitionNode {
         return ps;
     }
 
-    Player player() {
-        return competition().players().find(id());
+    private Competition competition() {
+        return parent().parent();
     }
 
     public final Season season() {
         return season;
     }
 
-    public final NodeCollection<MissionAssignment> missionAssignments() {
-        return missionAssignments;
-    }
-
     public final List<Fact> facts() {
         return Collections.unmodifiableList(facts);
     }
+
+    */
 }

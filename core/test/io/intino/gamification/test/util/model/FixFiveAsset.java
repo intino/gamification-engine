@@ -20,24 +20,4 @@ public class FixFiveAsset extends Mission {
     protected void setProgressCallbacks() {
         subscribe("FixAsset", event -> event.missionAssignment().progress().increment());
     }
-
-//    @Override
-//    protected void onMissionComplete(MissionAssignment missionAssignment) {
-//        missionAssignment.playerState().addScore(COMPLETE_SCORE);
-//    }
-//
-//    @Override
-//    protected void onMissionFail(MissionAssignment missionAssignment) {
-//        missionAssignment.playerState().addScore(FAIL_SCORE);
-//    }
-//
-//    @Override
-//    protected void onMissionIncomplete(MissionAssignment missionAssignment) {
-//        float progress = missionAssignment.progress().get();
-//        if(progress == 0) {
-//            missionAssignment.playerState().addScore(DO_NOTHING_SCORE);
-//        } else {
-//            missionAssignment.playerState().addScore(Math.round(100 * progress));
-//        }
-//    }
 }

@@ -9,14 +9,16 @@ import java.util.List;
 
 public class Round extends CompetitionNode {
 
+    private final String seasonId;
     private final NodeCollection<Match> matches = new NodeCollection<>();
     private final Property<Instant> startTime = new Property<>();
     private final Property<Instant> endTime = new Property<>();
     private final Property<State> state = new Property<>(State.Created);
     //private final NodeCollection<ObtainedAchievement> obtainedAchievements;
 
-    public Round(String id) {
+    public Round(String id, String seasonId) {
         super(id);
+        this.seasonId = seasonId;
     }
 
     @Override
@@ -32,8 +34,21 @@ public class Round extends CompetitionNode {
 
     void end() {
         endTime.set(TimeUtils.currentInstant());
+        sealPoints();
         onEnd();
         state.set(State.Finished);
+    }
+
+    private void sealPoints() {
+        Season season = season();
+        matches.forEach(m -> {
+            season.playerStates().find(m.id()).sealFacts(List.copyOf(m.facts));
+            m.facts.clear();
+        });
+    }
+
+    Season season() {
+        return competition().seasons().find(seasonId);
     }
 
     public final NodeCollection<Match> matches() {

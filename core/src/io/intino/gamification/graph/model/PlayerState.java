@@ -66,6 +66,10 @@ public class PlayerState extends CompetitionNode {
         round.matches().computeIfAbsent(id(), k -> new Round.Match(id())).addFact(fact);
     }
 
+    public void sealFacts(List<Fact<Integer>> facts) {
+        this.facts.addAll(facts);
+    }
+
     PlayerState copy() {
         PlayerState ps = new PlayerState(id(), season);
         for (MissionAssignment missionAssignment : missionAssignments) {

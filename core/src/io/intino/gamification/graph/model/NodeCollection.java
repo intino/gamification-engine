@@ -3,6 +3,7 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.graph.structure.SerializableCollection;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class NodeCollection<T extends Node> extends SerializableCollection implements Iterable<T> {
@@ -49,33 +50,46 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         node.onDestroy();
     }
 
-    @SuppressWarnings("unchecked")
-    public <E extends T> E find(String id) {
-        return (E) collection.get(id);
-    }
-
     public boolean exists(String id) {
         return collection.containsKey(id);
     }
 
-    public Stream<T> stream() {
-        return collection.values().stream();
-    }
-
-    public List<T> list() {
-        return List.copyOf(collection.values());
+    @SuppressWarnings("unchecked")
+    public <E extends T> E find(String id) {
+        return (E) collection.get(id);
     }
 
     public boolean isEmpty() {
         return collection.isEmpty();
     }
 
+    @Override
+    public Iterator<T> iterator() {
+        return collection.values().iterator();
+    }
+
     public T last() {
         return collection.values().stream().skip(collection.size() - 1).findFirst().orElse(null);
     }
 
-    @Override
-    public Iterator<T> iterator() {
-        return collection.values().iterator();
+    public List<T> list() {
+        return List.copyOf(collection.values());
+    }
+
+    @SuppressWarnings("all")
+    public void removeIf(Predicate<T> predicate) {
+        Iterator<Map.Entry<String, T>> iterator = collection.entrySet().iterator();
+        while(iterator.hasNext()) {
+            Map.Entry<String, T> entry = iterator.next();
+            if(predicate.test(entry.getValue())) iterator.remove();
+        }
+    }
+
+    public int size() {
+        return collection.size();
+    }
+
+    public Stream<T> stream() {
+        return collection.values().stream();
     }
 }

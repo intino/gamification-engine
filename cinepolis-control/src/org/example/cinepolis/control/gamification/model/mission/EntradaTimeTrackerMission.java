@@ -35,6 +35,7 @@ public class EntradaTimeTrackerMission extends CinepolisMission {
 
         @Override
         protected void onMissionComplete() {
+
             playerState().addScore(CinepolisMission.maxPointsOf((CinepolisMission) mission()));
         }
 

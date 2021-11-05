@@ -1,9 +1,9 @@
 package io.intino.gamification;
 
 import io.intino.gamification.core.Configuration;
-import io.intino.gamification.events.EventPublisher;
 import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.core.GamificationParameters;
+import io.intino.gamification.events.MissionProgressEventManager;
 import io.intino.gamification.graph.GamificationGraph;
 
 import java.util.Map;
@@ -16,7 +16,7 @@ public class GamificationEngine {
 
     private Configuration configuration;
     private GamificationGraph graph;
-    private EventPublisher eventPublisher;
+    private MissionProgressEventManager missionProgressEventManager;
 
     public GamificationEngine(Map<String, String> params) {
         this.gamificationParameters = new GamificationParameters(params);
@@ -28,7 +28,7 @@ public class GamificationEngine {
 
         this.configuration = core.configuration();
         this.graph = core.graph();
-        this.eventPublisher = core.eventPublisher();
+        this.missionProgressEventManager = core.eventManager();
     }
 
     public Configuration configuration() {
@@ -39,7 +39,7 @@ public class GamificationEngine {
         return this.graph;
     }
 
-    public EventPublisher eventPublisher() {
-        return this.eventPublisher;
+    public MissionProgressEventManager eventManager() {
+        return this.missionProgressEventManager;
     }
 }

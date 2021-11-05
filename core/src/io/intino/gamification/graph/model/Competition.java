@@ -51,7 +51,7 @@ public class Competition extends Node {
         }
     }
 
-    public void finishCurrentMatch() {
+    public void finishCurrentSeason() {
         Season currentSeason = currentSeason();
         if(currentSeason != null && currentSeason.isAvailable()) currentSeason.end();
     }
@@ -60,6 +60,10 @@ public class Competition extends Node {
         if(seasons.isEmpty()) return null;
         Season season = seasons.last();
         return season.state() != Season.State.Finished ? null : season;
+    }
+
+    public final NodeCollection<Season> seasons() {
+        return seasons;
     }
 
     public final NodeCollection<Player> players() {

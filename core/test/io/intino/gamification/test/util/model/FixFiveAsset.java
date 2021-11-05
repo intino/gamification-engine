@@ -1,10 +1,6 @@
 package io.intino.gamification.test.util.model;
 
-import io.intino.gamification.events.MissionEventListener;
 import io.intino.gamification.graph.model.Mission;
-import io.intino.gamification.graph.model.MissionAssignment;
-import io.intino.gamification.graph.model.Player;
-import io.intino.gamification.test.util.events.FixAsset;
 
 public class FixFiveAsset extends Mission {
 
@@ -17,17 +13,12 @@ public class FixFiveAsset extends Mission {
     public static final int DO_NOTHING_SCORE = -25;
 
     public FixFiveAsset() {
-        super(ID);
+        super(ID, DESCRIPTION, PRIORITY);
     }
 
     @Override
     protected void setProgressCallbacks() {
-        subscribe(FixAsset.class, new MissionEventListener<FixAsset>() {
-            @Override
-            public void invoke(FixAsset event, Mission mission, Player player, MissionAssignment missionAssignment) {
-                missionAssignment.progress().increment();
-            }
-        });
+        subscribe("FixAsset", event -> event.missionAssignment().progress().increment());
     }
 
 //    @Override

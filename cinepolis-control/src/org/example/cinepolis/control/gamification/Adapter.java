@@ -1,27 +1,24 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.graph.model.old.Item;
+import io.intino.gamification.events.MissionProgressEventManager;
+import io.intino.gamification.graph.model.Competition;
 import io.intino.gamification.graph.model.Mission;
 import io.intino.gamification.graph.model.Player;
-import io.intino.gamification.graph.model.Competition;
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.gamification.events.FixAsset;
-import org.example.cinepolis.control.gamification.model.Asset;
 import org.example.cinepolis.control.gamification.model.Employee;
 import org.example.cinepolis.control.gamification.model.mission.*;
 import org.example.cinepolis.control.graph.ControlGraph;
-import org.example.cinepolis.datahub.events.cinepolis.*;
+import org.example.cinepolis.datahub.events.cinepolis.AssetAlert;
+import org.example.cinepolis.datahub.events.cinepolis.DismissEmployee;
+import org.example.cinepolis.datahub.events.cinepolis.FixedAsset;
+import org.example.cinepolis.datahub.events.cinepolis.HireEmployee;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.graph.model.old.Actor.InventoryPolicy.Drop;
-
 public class Adapter {
-
-    //TODO: El adapter debe crear eventos de gamificación a partir de los eventos de cinépolis
 
     private final GamificationEngine engine;
     private final ControlGraph graph;
@@ -74,11 +71,6 @@ public class Adapter {
         }
     }
 
-    public void adapt(DeregisterAsset event) {
-        Item item = competition.items().find(event.id());
-        competition.items().destroy(item);
-    }
-
     public void adapt(DismissEmployee event) {
         Player player = competition.players().find(event.id());
         competition.players().destroy(player);
@@ -87,31 +79,11 @@ public class Adapter {
     public void adapt(FixedAsset event) {
         boolean anyAsset = graph.assetList().stream().anyMatch(as -> as.id().equals(event.asset()) && as.alerts().stream().anyMatch(al -> al.id().equals(event.alert())));
         if(!anyAsset) return;
-        FixAsset fixAssetEvent = new FixAsset(GamificationConfig.WorldId, event.employee());
-        engine.eventPublisher().publish(fixAssetEvent);
+        MissionProgressEventManager.get().call(competition, "FixAsset", event.employee());
     }
 
     public void adapt(HireEmployee event) {
-
-        Employee employee = new Employee(competition.id(), event.id());
-        employee.inventory().policy(Drop);
-
-        for (org.example.cinepolis.control.graph.Asset asset : graph.assetsByArea(event.area())) {
-            Asset item = new Asset(competition.id(), asset.id());
-            competition.items().add(item);
-            employee.inventory().add(item);
-        }
-
+        Employee employee = new Employee(event.id());
         competition.players().add(employee);
-    }
-
-    public void adapt(RegisterAsset event) {
-        Asset asset = new Asset(GamificationConfig.WorldId, event.id());
-        competition.items().add(asset);
-
-        org.example.cinepolis.control.graph.Employee employee = graph.employeeByArea(event.area());
-        if(employee == null) return;
-        Player player = competition.players().find(employee.id());
-        player.inventory().add(asset);
     }
 }

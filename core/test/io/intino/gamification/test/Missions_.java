@@ -1,22 +1,19 @@
 package io.intino.gamification.test;
 
 import io.intino.gamification.GamificationEngine;
+import io.intino.gamification.events.MissionProgressEventManager;
 import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.model.PlayerState;
 import io.intino.gamification.graph.model.Round;
+import io.intino.gamification.graph.model.Season;
 import io.intino.gamification.test.util.EngineTestHelper;
-import io.intino.gamification.test.util.events.FixAsset;
-import io.intino.gamification.test.util.model.Cinesa;
-import io.intino.gamification.test.util.model.FixFiveAsset;
-import io.intino.gamification.test.util.model.FixFiveAssetAssignment;
-import io.intino.gamification.test.util.model.Workday;
+import io.intino.gamification.test.util.model.*;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.data.Progress.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
 
 import static io.intino.gamification.test.util.model.FixFiveAsset.*;
 import static org.junit.Assert.assertEquals;
@@ -31,7 +28,11 @@ public class Missions_ {
     private static final Progress.State NO_STATE = null;
 
     private static GamificationEngine engine;
-    private static Cinesa world;
+    private static Cinesa competition;
+
+    private Season season;
+    private Round.Match match;
+    private PlayerState playerState;
 
     private final int nFixAsset;
     private final boolean finishMatch;
@@ -83,26 +84,33 @@ public class Missions_ {
     public void before() {
         engine = EngineTestHelper.getEngine();
         GamificationGraph graph = engine.graph();
-        world = new Cinesa("world");
-        graph.createCompetition(world);
+
+        competition = new Cinesa("competition");
+        graph.createCompetition(competition);
 
         FixFiveAsset mission = new FixFiveAsset();
-        world.missions().add(mission);
+        competition.missions().add(mission);
 
-        EngineTestHelper.initTechnician(world, "t1", Arrays.asList("a1", "a2"));
+        Technician technician = new Technician("technician");
+        competition.players().add(technician);
 
-        world.startNewSeason(new Workday("match"));
+        competition.startNewSeason(new Workday("season"));
+        season = competition.currentSeason();
+        if(season == null) throw new RuntimeException("El season es null");
 
-        world.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment()));
+        season.startNewRound(new Round("round"));
+
+        competition.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment()));
     }
 
     @Test
     public void execute() {
        try {
 
-           Round.Match match = setup();
-           checkMissionAssignment(match);
-           assertFinalScoreMatchesExpectedScore(match);
+           setup();
+
+           checkMissionAssignment();
+           assertFinalScoreMatchesExpectedScore();
 
        } catch (AssertionError e) {
            AssertionError error = new AssertionError("Test " + this + " failed: " + e.getMessage());
@@ -111,73 +119,68 @@ public class Missions_ {
        }
     }
 
-    private void assertFinalScoreMatchesExpectedScore(Round.Match match) {
-        assertEquals(score, match.score());
+    private void assertFinalScoreMatchesExpectedScore() {
+        assertEquals(score, match.totalScore());
     }
 
-    private void checkMissionAssignment(Round.Match match) {
+    private void checkMissionAssignment() {
 
         if(action == Action.Cancel && state != Progress.State.Complete) {
-            assertThereAreNoMissionAssignmentsLeft(match);
+            assertThereAreNoMissionAssignmentsLeft(playerState);
         } else {
-            assertMissionAssignmentIsStillPresent(match);
+            assertMissionAssignmentIsStillPresent(playerState);
         }
 
         if(action != Missions_.Action.Cancel || state == Progress.State.Complete) {
-            assertProgressMatchesExpectedProgress(match);
-            assertFinalStateMatchesExpected(match);
+            assertProgressMatchesExpectedProgress(playerState);
+            assertFinalStateMatchesExpected(playerState);
         }
     }
 
-    private void assertThereAreNoMissionAssignmentsLeft(Round.Match match) {
-        assertEquals(0, match.missionAssignments().size());
+    private void assertThereAreNoMissionAssignmentsLeft(PlayerState playerState) {
+        assertEquals(0, playerState.missionAssignments().size());
     }
 
-    private void assertMissionAssignmentIsStillPresent(Round.Match match) {
-        assertEquals(1, match.missionAssignments().size());
+    private void assertMissionAssignmentIsStillPresent(PlayerState playerState) {
+        assertEquals(1, playerState.missionAssignments().size());
     }
 
-    private void assertProgressMatchesExpectedProgress(Round.Match match) {
-        assertEquals(progress, match.missionAssignments().get(0).progress().get(), EPSILON);
+    private void assertProgressMatchesExpectedProgress(PlayerState playerState) {
+        assertEquals(progress, playerState.missionAssignments().find("FixAsset").progress().get(), EPSILON);
     }
 
-    private void assertFinalStateMatchesExpected(Round.Match match) {
-        assertEquals(state, match.missionAssignments().get(0).progress().state());
+    private void assertFinalStateMatchesExpected(PlayerState playerState) {
+        assertEquals(state, playerState.missionAssignments().find("FixAsset").progress().state());
     }
 
-    private Round.Match setup() {
+    private void setup() {
 
         for (int i = 0; i < nFixAsset; i++) {
-            engine.eventPublisher().publish(new FixAsset(world.id(), "t1"));
+            MissionProgressEventManager.get().call(competition, "FixAsset", "technician");
         }
 
         runAction();
 
-        return getFinalPlayerState();
+        getFinalModel();
     }
 
-    private Round.Match getFinalPlayerState() {
-        Round.Match match;
-        if(finishMatch) {
-            world.finishCurrentMatch();
-            match = world.finishedMatches().find("match").players().get("t1");
-        } else {
-            match = world.currentSeason().players().get("t1");
-        }
-        return match;
+    private void getFinalModel() {
+        if(finishMatch) competition.finishCurrentSeason();
+        playerState = season.playerStates().find("technician");
+        match = season.rounds().find("round").matches().find("technician");
     }
 
     private void runAction() {
         if(action != null) {
             switch (action) {
                 case Cancel:
-                    world.players().find("t1").cancelMission("FixFiveAsset");
+                    competition.players().find("technician").cancelMission("FixFiveAsset");
                     break;
                 case Complete:
-                    world.players().find("t1").completeMission("FixFiveAsset");
+                    competition.players().find("technician").completeMission("FixFiveAsset");
                     break;
                 case Fail:
-                    world.players().find("t1").failMission("FixFiveAsset");
+                    competition.players().find("technician").failMission("FixFiveAsset");
                     break;
             }
         }

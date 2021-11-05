@@ -19,23 +19,23 @@ public class NewMatchDispatcher extends Dispatcher<NewMatch> {
     @Override
     public void dispatch(NewMatch event) {
 
-        Competition competition = box.adapter().world();
+        /*Competition competition = box.adapter().world();
 
         addMissionPointsToSeasonScore(competition.currentSeason().players().values());
-        startNewMatchIn(competition);
+        startNewMatchIn(competition);*/
     }
 
     private void addMissionPointsToSeasonScore(Collection<Round.Match> players) {
-        players.forEach(ps -> {
+        /*players.forEach(ps -> {
             Employee employee = (Employee) ps.actor();
             employee.addMissionScore(Math.max(ps.score(), 0));
-        });
+        });*/
     }
 
     private void startNewMatchIn(Competition competition) {
-        Map<String, Round.Match> persistencePlayerState = competition.currentSeason().persistencePlayerState();
-        competition.finishCurrentMatch();
-        competition.startNewSeason(new Round(competition.id(), getMatchId(), persistencePlayerState));
+        /*Map<String, Round.Match> persistencePlayerState = competition.currentSeason().persistencePlayerState();
+        competition.finishCurrentSeason();
+        competition.startNewSeason(new Round(competition.id(), getMatchId(), persistencePlayerState));*/
     }
 
     private String getMatchId() {

@@ -6,13 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static io.intino.gamification.util.data.Progress.State.InProgress;
+
 public class PlayerState extends CompetitionNode {
 
-    private final List<MissionAssignment> missionAssignments = new ArrayList<>();
+    private NodeCollection<MissionAssignment> missionAssignments;
     private final List<Fact<Integer>> facts = new ArrayList<>();
 
     PlayerState(String id) {
         super(id);
+    }
+
+    @Override
+    void init() {
+        this.missionAssignments = new NodeCollection<>(competitionId());
     }
 
     public void assignMission(MissionAssignment missionAssignment) {
@@ -25,9 +32,27 @@ public class PlayerState extends CompetitionNode {
             throw e;
         }
 
-        //TODO: Asignar competicion, season, round y player a missionAssignment
+        //TODO: Asignar competicion, season, round y player a missionAssignment (los params que hagan falta)
 
         missionAssignments.add(missionAssignment);
+    }
+
+    void failMission(String missionId) {
+        missionAssignments.stream()
+                .filter(ma -> ma.missionId().equals(missionId))
+                .forEach(MissionAssignment::fail);
+    }
+
+    void completeMission(String missionId) {
+        missionAssignments.stream()
+                .filter(ma -> ma.missionId().equals(missionId))
+                .forEach(MissionAssignment::complete);
+    }
+
+    void cancelMission(String missionId) {
+        missionAssignments.removeIf(ma ->
+                ma.missionId().equals(missionId) && ma.progress().state() == InProgress
+        );
     }
 
     PlayerState copy() {
@@ -42,7 +67,7 @@ public class PlayerState extends CompetitionNode {
         return competition().players().find(id());
     }
 
-    List<MissionAssignment> missionAssignments() {
+    public final NodeCollection<MissionAssignment> missionAssignments() {
         return missionAssignments;
     }
 

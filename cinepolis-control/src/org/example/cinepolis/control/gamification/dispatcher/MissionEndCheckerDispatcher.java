@@ -17,21 +17,21 @@ public class MissionEndCheckerDispatcher extends Dispatcher<MissionEndChecker> {
     @Override
     public void dispatch(MissionEndChecker event) {
 
-        Competition competition = box.adapter().world();
+        /*Competition competition = box.adapter().world();
 
         Round round = competition.currentSeason();
         if(round == null) return;
 
         for (Round.Match match : round.players().values()) {
             check(match);
-        }
+        }*/
     }
 
     private void check(Round.Match match) {
-        for (MissionAssignment missionAssignment : match.missionAssignments()) {
+        /*for (MissionAssignment missionAssignment : match.missionAssignments()) {
             if(missionAssignment.hasExpired() && missionAssignment.progress().state() == InProgress) {
                 missionAssignment.fail();
             }
-        }
+        }*/
     }
 }

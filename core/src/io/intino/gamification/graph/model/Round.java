@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Round extends CompetitionNode {
 
+    private final NodeCollection<Match> matches = new NodeCollection<>();
     private final Property<Instant> startTime = new Property<>();
     private final Property<Instant> endTime = new Property<>();
     private final Property<State> state = new Property<>(State.Created);
@@ -35,6 +36,10 @@ public class Round extends CompetitionNode {
         state.set(State.Finished);
     }
 
+    public final NodeCollection<Match> matches() {
+        return matches;
+    }
+
     protected void onBegin() {}
     protected void onEnd() {}
 
@@ -42,13 +47,16 @@ public class Round extends CompetitionNode {
         Created, Running, Finished
     }
 
-    public class Match {
+    public static class Match extends CompetitionNode {
 
-        private final String playerId;
-        private final List<Fact> facts = new ArrayList<>();
+        private final List<Fact<Integer>> facts = new ArrayList<>();
 
         private Match(String playerId) {
-            this.playerId = playerId;
+            super(playerId);
+        }
+
+        public int totalScore() {
+            return facts.stream().mapToInt(Fact::getValue).sum();
         }
 
         /*public Actor actor() {
@@ -67,38 +75,9 @@ public class Round extends CompetitionNode {
             this.score += delta;
         }
 
-        @Override
-        public Actor actor() {
-            Actor actor = super.actor();
-            return actor != null ? actor : world().players().find(playerId);
-        }
-
-
-
-        public List<MissionAssignment> missionAssignments() {
-            return Collections.unmodifiableList(missionAssignments);
-        }
 
         public Stream<MissionAssignment> missionAssignmentsOf(String missionId) {
             return missionAssignments.stream().filter(m -> m.missionId().equals(missionId));
-        }
-
-        public void failMission(String missionId) {
-            missionAssignments.stream()
-                    .filter(ma -> ma.missionId().equals(missionId))
-                    .forEach(MissionAssignment::fail);
-        }
-
-        public void completeMission(String missionId) {
-            missionAssignments.stream()
-                    .filter(ma -> ma.missionId().equals(missionId))
-                    .forEach(MissionAssignment::complete);
-        }
-
-        public void cancelMission(String missionId) {
-            missionAssignments.removeIf(ma ->
-                    ma.missionId().equals(missionId) && ma.progress().state() == InProgress
-            );
         }
 
         */

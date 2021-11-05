@@ -2,24 +2,15 @@ package org.example.cinepolis.control.gamification.model;
 
 import io.intino.gamification.graph.model.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Employee extends Player {
 
-    private final List<Cinema> cinemas;
     private long missionScore;
     private long healthScore;
 
-    public Employee(String worldId, String id) {
-        super(worldId, id);
-        this.cinemas = new ArrayList<>();
+    public Employee(String id) {
+        super(id);
         this.missionScore = 0;
         this.healthScore = 0;
-    }
-
-    public List<Cinema> cinemas() {
-        return cinemas;
     }
 
     public long seasonScore() {

@@ -19,6 +19,10 @@ public class Fact<T extends Number> {
         this.value = new Property<>(value);
     }
 
+    public T getValue() {
+        return value.get();
+    }
+
     private enum Type {
         Success, Fault, Mission, Bonus
     }

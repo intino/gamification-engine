@@ -1,11 +1,8 @@
 package io.intino.gamification.test.util;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.test.util.model.Cinesa;
-import io.intino.gamification.test.util.model.Technician;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class EngineTestHelper {
@@ -20,10 +17,5 @@ public class EngineTestHelper {
         engine.launch();
 
         return engine;
-    }
-
-    public static void initTechnician(Cinesa world, String technicianId, List<String> assetIds) {
-        Technician technician = new Technician(technicianId);
-        world.players().add(technician);
     }
 }

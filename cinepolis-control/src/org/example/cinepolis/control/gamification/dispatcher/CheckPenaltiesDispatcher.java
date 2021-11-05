@@ -24,17 +24,17 @@ public class CheckPenaltiesDispatcher extends Dispatcher<CheckPenalties> {
     @Override
     public void dispatch(CheckPenalties event) {
 
-        Round round = box.adapter().world().currentSeason();
+        /*Round round = box.adapter().world().currentSeason();
         now = currentInstant();
 
         if(round == null) return;
 
         for (Round.Match ps : round.players().values()) {
             ps.addScore(penaltyOf(ps));
-        }
+        }*/
     }
 
-    private int penaltyOf(Round.Match match) {
+    /*private int penaltyOf(Round.Match match) {
 
         int penalty = 0;
 
@@ -57,5 +57,5 @@ public class CheckPenaltiesDispatcher extends Dispatcher<CheckPenalties> {
     private int penaltyOf(CinepolisMission mission, MissionAssignment missionAssignment) {
         int elapsedHours = (int) getInstantDiff(now, missionAssignment.creationTime(), Scale.Hour);
         return mission.penalizationAt(elapsedHours);
-    }
+    }*/
 }

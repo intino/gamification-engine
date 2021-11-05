@@ -3,20 +3,18 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
-import java.io.Serializable;
 import java.time.Instant;
 
 import static io.intino.gamification.util.data.Progress.State.*;
 
-public abstract class MissionAssignment implements Comparable<MissionAssignment>, Serializable {
+public abstract class MissionAssignment extends CompetitionNode {
 
-    private final String missionId;
     private final Progress progress;
     private final Instant creationTime;
     private ExpirationTime expirationTime;
 
     protected MissionAssignment(String missionId, int stepsToComplete, ExpirationTime expirationTime) {
-        this.missionId = missionId;
+        super(missionId);
         this.progress = initProgress(stepsToComplete);
         this.creationTime = TimeUtils.currentInstant();
         this.expirationTime = expirationTime;
@@ -38,6 +36,20 @@ public abstract class MissionAssignment implements Comparable<MissionAssignment>
         onMissionEnd();
     }
 
+    final void fail() {
+        if(progress().state() == InProgress) {
+            progress.fail();
+            update(Failed);
+        }
+    }
+
+    final void complete() {
+        if(progress().state() == InProgress) {
+            progress.complete();
+            update(Complete);
+        }
+    }
+
     MissionAssignment copy() {
         MissionAssignment missionAssignment = getCopy();
         missionAssignment.progress.set(this.progress.current());
@@ -50,21 +62,16 @@ public abstract class MissionAssignment implements Comparable<MissionAssignment>
         return progress;
     }
 
-    String missionId() {
-        return missionId;
+    public final String missionId() {
+        return id();
     }
 
     public final Progress progress() {
         return progress;
     }
 
-    ExpirationTime expirationTime() {
+    public final ExpirationTime expirationTime() {
         return expirationTime;
-    }
-
-    @Override
-    public final int compareTo(MissionAssignment o) {
-        return creationTime.compareTo(o.creationTime);
     }
 
     protected void onProgressChange(Integer oldValue, Integer newValue) {}
@@ -75,27 +82,6 @@ public abstract class MissionAssignment implements Comparable<MissionAssignment>
     protected void onMissionEnd() {}
 
     protected abstract MissionAssignment getCopy();
-
-    /*
-
-    protected MissionAssignment() {
-        this.enabled = true;
-    }
-
-    public final void fail() {
-        if(progress().state() == InProgress) {
-            progress.fail();
-            update(Failed);
-        }
-    }
-
-    public final void complete() {
-        if(progress().state() == InProgress) {
-            progress.complete();
-            update(Complete);
-        }
-    }
-    */
 
     public static class ExpirationTime {
 

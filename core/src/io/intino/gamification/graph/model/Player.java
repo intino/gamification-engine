@@ -13,6 +13,27 @@ public class Player extends Entity {
         }
     }
 
+    public final void failMission(String missionId) {
+        Season season = availableSeason();
+        if(season != null) {
+            season.playerStates().find(id()).failMission(missionId);
+        }
+    }
+
+    public final void completeMission(String missionId) {
+        Season season = availableSeason();
+        if(season != null) {
+            season.playerStates().find(id()).completeMission(missionId);
+        }
+    }
+
+    public final void cancelMission(String missionId) {
+        Season season = availableSeason();
+        if(season != null) {
+            season.playerStates().find(id()).cancelMission(missionId);
+        }
+    }
+
     private Season availableSeason() {
         if(!competition().isAvailable()) return null;
         Season season = competition().currentSeason();
@@ -43,24 +64,5 @@ public class Player extends Entity {
 
 
 
-    public void failMission(String missionId) {
-        Round round = availableMatch();
-        if(round != null) {
-            round.player(id()).failMission(missionId);
-        }
-    }
-
-    public void completeMission(String missionId) {
-        Round round = availableMatch();
-        if(round != null) {
-            round.player(id()).completeMission(missionId);
-        }
-    }
-
-    public void cancelMission(String missionId) {
-        Round round = availableMatch();
-        if(round != null) {
-            round.player(id()).cancelMission(missionId);
-        }
-    }*/
+    */
 }

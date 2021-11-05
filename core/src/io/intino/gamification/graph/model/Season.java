@@ -4,7 +4,6 @@ import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -97,7 +96,7 @@ public class Season extends CompetitionNode {
                 .filter(ps -> ps.player() != null)
                 .filter(ps -> ps.player().isAvailable())
                 .map(PlayerState::missionAssignments)
-                .flatMap(Collection::stream)
+                .flatMap(NodeCollection::stream)
                 .collect(Collectors.toList());
     }
 
@@ -117,7 +116,11 @@ public class Season extends CompetitionNode {
         return persistencePlayerState;
     }
 
-    NodeCollection<PlayerState> playerStates() {
+    public final NodeCollection<Round> rounds() {
+        return rounds;
+    }
+
+    public final NodeCollection<PlayerState> playerStates() {
         return playerStates;
     }
 

@@ -40,14 +40,14 @@ public abstract class MissionAssignment extends CompetitionNode {
         onMissionEnd();
     }
 
-    final void fail() {
+    void fail() {
         if(progress().state() == InProgress) {
             progress.fail();
             update(Failed);
         }
     }
 
-    final void complete() {
+    void complete() {
         if(progress().state() == InProgress) {
             progress.complete();
             update(Complete);

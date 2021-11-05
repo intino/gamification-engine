@@ -1,5 +1,6 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.util.time.TimeUtils;
 
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
 
-public class Season extends CompetitionNode {
+public class Season extends Node {
 
     private NodeCollection<Round> rounds;
     private NodeCollection<PlayerState> playerStates;
@@ -25,17 +26,68 @@ public class Season extends CompetitionNode {
 
     @Override
     void init() {
-        this.rounds = new NodeCollection<>(competitionId());
-        this.playerStates = new NodeCollection<>(competitionId());
+        this.rounds = new NodeCollection<>(absoluteId());
+        this.playerStates = new NodeCollection<>(absoluteId());
         //this.obtainedAchievements = new NodeCollection<>(competitionId());
     }
 
-    public final void injectPersistencePlayerState(List<PlayerState> persistencePlayerState) {
-        this.playerStates().addAll(clean(persistencePlayerState));
+    public final NodeCollection<Round> rounds() {
+        //TODO Devolver unmodifiable
+        return rounds;
+    }
+
+    public final NodeCollection<PlayerState> playerStates() {
+        //TODO Devolver unmodifiable
+        return playerStates;
     }
 
     State state() {
         return state.get();
+    }
+
+    @Override
+    void destroyChildren() {
+        rounds.forEach(Node::markAsDestroyed);
+        playerStates.forEach(Node::markAsDestroyed);
+        //obtainedAchievements.forEach(Node::markAsDestroyed);
+    }
+
+    @Override
+    protected Competition parent() {
+        String[] ids = parentIds();
+        return GamificationGraph.get()
+                .competitions().find(ids[0]);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Season season = (Season) o;
+        return Objects.equals(rounds, season.rounds) && Objects.equals(playerStates, season.playerStates) && Objects.equals(startTime, season.startTime) && Objects.equals(endTime, season.endTime) && Objects.equals(state, season.state);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), rounds, playerStates, startTime, endTime, state);
+    }
+
+    @Override
+    public String toString() {
+        return "Season{" +
+                "rounds=" + rounds +
+                ", playerStates=" + playerStates +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", state=" + state +
+                '}';
+    }
+
+    /*
+
+    public final void injectPersistencePlayerState(List<PlayerState> persistencePlayerState) {
+        this.playerStates().addAll(clean(persistencePlayerState));
     }
 
     void begin() {
@@ -78,25 +130,7 @@ public class Season extends CompetitionNode {
     }
 
     private void endMissions() {
-
-        Season season = competition().currentSeason();
-        if(season == null) return;
-
-        missionAssignmentsOf(season.playerStates()).forEach(ma -> {
-            if(endWithinThisSeason(ma) && ma.progress().state() == InProgress) {
-                ma.update(ma.progress().state());
-                ma.progress().fail();
-            }
-        });
-    }
-
-    private List<MissionAssignment> missionAssignmentsOf(NodeCollection<PlayerState> players) {
-        return players.stream()
-                .filter(ps -> ps.player() != null)
-                .filter(ps -> ps.player().isAvailable())
-                .map(PlayerState::missionAssignments)
-                .flatMap(NodeCollection::stream)
-                .collect(Collectors.toList());
+        playerStates.forEach(PlayerState::endMissions);
     }
 
     private PlayerState filter(PlayerState playerState) {
@@ -106,26 +140,19 @@ public class Season extends CompetitionNode {
         return newPlayerState;
     }
 
-    private boolean endWithinThisSeason(MissionAssignment missionAssignment) {
+    boolean endWithinThisSeason(MissionAssignment missionAssignment) {
         return missionAssignment.hasExpired() || missionAssignment.expirationTime().endsWithMatch();
     }
 
     private List<PlayerState> clean(List<PlayerState> persistencePlayerState) {
-        persistencePlayerState.forEach(pps -> pps.facts().clear());
+        persistencePlayerState.forEach(PlayerState::clearFacts);
         return persistencePlayerState;
     }
 
-    public final NodeCollection<Round> rounds() {
-        //TODO Devolver unmodifiable
-        return rounds;
-    }
 
-    public final NodeCollection<PlayerState> playerStates() {
-        return playerStates;
-    }
 
     protected void onBegin() {}
-    protected void onEnd() {}
+    protected void onEnd() {}*/
 
     public enum State {
         Created, Running, Finished

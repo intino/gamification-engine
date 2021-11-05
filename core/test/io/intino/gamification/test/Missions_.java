@@ -98,7 +98,7 @@ public class Missions_ {
         season = competition.currentSeason();
         if(season == null) throw new RuntimeException("El season es null");
 
-        season.startNewRound(new Round("round", season.id()));
+        season.startNewRound(new Round("round"));
 
         competition.players().forEach(p -> p.assignMission(new FixFiveAssetAssignment()));
     }

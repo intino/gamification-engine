@@ -64,18 +64,17 @@ public class Season extends CompetitionNode {
         if(currentRound != null && currentRound.isAvailable()) currentRound.end();
     }
 
+    public Round currentRound() {
+        if(rounds.isEmpty()) return null;
+        Round round = rounds.last();
+        return round.state() != Round.State.Finished ? null : round;
+    }
+
     public final List<PlayerState> persistencePlayerState() {
         return playerStates.stream()
                 .map(this::filter)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-    }
-
-    void runMissionProgressTask(MissionProgressTask task) {
-        Player player = competition().players().find(task.playerId);
-        if(player != null && player.isAvailable()) {
-            task.execute();
-        }
     }
 
     private void endMissions() {
@@ -117,6 +116,7 @@ public class Season extends CompetitionNode {
     }
 
     public final NodeCollection<Round> rounds() {
+        //Devolver unmodifiable
         return rounds;
     }
 
@@ -129,16 +129,5 @@ public class Season extends CompetitionNode {
 
     public enum State {
         Created, Running, Finished
-    }
-
-    static abstract class MissionProgressTask {
-
-        private final String playerId;
-
-        protected MissionProgressTask(String playerId) {
-            this.playerId = playerId;
-        }
-
-        abstract void execute();
     }
 }

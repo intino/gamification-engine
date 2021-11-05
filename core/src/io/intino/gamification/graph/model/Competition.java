@@ -1,7 +1,6 @@
 package io.intino.gamification.graph.model;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 
 public class Competition extends Node {
 
@@ -63,6 +62,7 @@ public class Competition extends Node {
     }
 
     public final NodeCollection<Season> seasons() {
+        //TODO Devolver unmodifiable
         return seasons;
     }
 

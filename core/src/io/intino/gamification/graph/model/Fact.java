@@ -23,7 +23,7 @@ public class Fact<T extends Number> {
         return value.get();
     }
 
-    private enum Type {
+    enum Type {
         Success, Fault, Mission, Bonus
     }
 }

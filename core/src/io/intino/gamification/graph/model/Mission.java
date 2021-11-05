@@ -1,17 +1,13 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.events.MissionProgressEvent;
 import io.intino.gamification.events.MissionProgressEventCallback;
 import io.intino.gamification.events.MissionProgressEventManager;
-import io.intino.gamification.events.MissionProgressEvent;
 
 public abstract class Mission extends CompetitionNode implements Comparable<Mission> {
 
-    private String description;
-    private int priority;
-
-    public Mission(String id) {
-        super(id);
-    }
+    private final String description;
+    private final int priority;
 
     public Mission(String id, String description) {
         this(id, description, 0);
@@ -25,14 +21,6 @@ public abstract class Mission extends CompetitionNode implements Comparable<Miss
 
     protected final <T extends MissionProgressEvent> void subscribe(String eventType, MissionProgressEventCallback<T> consumer) {
         MissionProgressEventManager.get().addEventCallback(eventType, consumer);
-    }
-
-    public final void description(String description) {
-        this.description = description;
-    }
-
-    public final void priority(int priority) {
-        this.priority = priority;
     }
 
     @Override

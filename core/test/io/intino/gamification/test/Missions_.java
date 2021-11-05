@@ -120,7 +120,7 @@ public class Missions_ {
     }
 
     private void assertFinalScoreMatchesExpectedScore() {
-        assertEquals(score, match.totalScore());
+        assertEquals(score, match.matchScore());
     }
 
     private void checkMissionAssignment() {

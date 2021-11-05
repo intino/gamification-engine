@@ -3,6 +3,7 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.graph.structure.SerializableCollection;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -42,6 +43,10 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     public void addAll(Collection<? extends T> nodes) {
         nodes.forEach(this::add);
+    }
+
+    public T computeIfAbsent(String key, Function<String, T> function) {
+        return collection.computeIfAbsent(key, function);
     }
 
     public void destroy(T node) {

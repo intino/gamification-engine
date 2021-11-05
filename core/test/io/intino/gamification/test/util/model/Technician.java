@@ -10,16 +10,6 @@ public class Technician extends Player {
     }
 
     @Override
-    protected void onMatchBegin(Round round) {
-
-    }
-
-    @Override
-    protected void onMatchEnd(Round round) {
-
-    }
-
-    @Override
     protected void onCreate() {
 
     }

@@ -11,6 +11,7 @@ public abstract class Entity extends Node {
     @Override
     protected Competition parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0]);
     }

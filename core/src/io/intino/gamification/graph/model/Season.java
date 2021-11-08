@@ -15,10 +15,9 @@ public class Season extends Node {
 
     private NodeCollection<Round> rounds;
     private NodeCollection<PlayerState> playerStates;
-    //private NodeCollection<ObtainedAchievement> obtainedAchievements;
-    private final Property<Instant> startTime = new Property<>();
-    private final Property<Instant> endTime = new Property<>();
-    private final Property<State> state = new Property<>(State.Created);
+    private Instant startTime;
+    private Instant endTime;
+    private State state = State.Created;
 
     public Season(String id) {
         super(id);
@@ -28,83 +27,72 @@ public class Season extends Node {
     void init() {
         this.rounds = new NodeCollection<>(absoluteId());
         this.playerStates = new NodeCollection<>(absoluteId());
-        //this.obtainedAchievements = new NodeCollection<>(competitionId());
+        this.startTime = Instant.now();
     }
 
     public final NodeCollection<Round> rounds() {
-        //TODO Devolver unmodifiable
         return rounds;
     }
 
     public final NodeCollection<PlayerState> playerStates() {
-        //TODO Devolver unmodifiable
         return playerStates;
     }
 
-    State state() {
-        return state.get();
+    public final State state() {
+        return state;
+    }
+
+    public Season state(State state) {
+        this.state = state;
+        return this;
+    }
+
+    public Instant startTime() {
+        return startTime;
+    }
+
+    public Season startTime(Instant startTime) {
+        this.startTime = startTime;
+        return this;
+    }
+
+    public Instant endTime() {
+        return endTime;
+    }
+
+    public Season endTime(Instant endTime) {
+        this.endTime = endTime;
+        return this;
     }
 
     @Override
     void destroyChildren() {
         rounds.forEach(Node::markAsDestroyed);
         playerStates.forEach(Node::markAsDestroyed);
-        //obtainedAchievements.forEach(Node::markAsDestroyed);
     }
 
     @Override
     protected Competition parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0]);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Season season = (Season) o;
-        return Objects.equals(rounds, season.rounds) && Objects.equals(playerStates, season.playerStates) && Objects.equals(startTime, season.startTime) && Objects.equals(endTime, season.endTime) && Objects.equals(state, season.state);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), rounds, playerStates, startTime, endTime, state);
-    }
-
-    @Override
-    public String toString() {
-        return "Season{" +
-                "rounds=" + rounds +
-                ", playerStates=" + playerStates +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", state=" + state +
-                '}';
-    }
-
-    /*
-
-    public final void injectPersistencePlayerState(List<PlayerState> persistencePlayerState) {
-        this.playerStates().addAll(clean(persistencePlayerState));
-    }
-
     void begin() {
-        startTime.set(TimeUtils.currentInstant());
+        startTime = TimeUtils.currentInstant();
         onBegin();
-        state.set(State.Running);
+        state = State.Running;
     }
 
     void end() {
-        endTime.set(TimeUtils.currentInstant());
+        endTime = TimeUtils.currentInstant();
         endMissions();
         onEnd();
-        state.set(State.Finished);
+        state = State.Finished;
     }
 
     public final void startNewRound(Round round) {
-
         if (round != null) {
             rounds.add(round);
             round.begin();
@@ -144,15 +132,33 @@ public class Season extends Node {
         return missionAssignment.hasExpired() || missionAssignment.expirationTime().endsWithMatch();
     }
 
-    private List<PlayerState> clean(List<PlayerState> persistencePlayerState) {
-        persistencePlayerState.forEach(PlayerState::clearFacts);
-        return persistencePlayerState;
+    protected void onBegin() {}
+    protected void onEnd() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Season season = (Season) o;
+        return Objects.equals(rounds, season.rounds) && Objects.equals(playerStates, season.playerStates) && Objects.equals(startTime, season.startTime) && Objects.equals(endTime, season.endTime) && Objects.equals(state, season.state);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), rounds, playerStates, startTime, endTime, state);
+    }
 
-
-    protected void onBegin() {}
-    protected void onEnd() {}*/
+    @Override
+    public String toString() {
+        return "Season{" +
+                "rounds=" + rounds +
+                ", playerStates=" + playerStates +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", state=" + state +
+                '}';
+    }
 
     public enum State {
         Created, Running, Finished

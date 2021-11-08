@@ -8,7 +8,7 @@ public class Fact {
     private final Instant ts;
     private final Type type;
     private final String name;
-    private final Integer value;
+    private final int value;
 
     public Fact(Instant ts, Type type, String name, int value) {
         this.ts = ts;
@@ -57,6 +57,6 @@ public class Fact {
     }
 
     public enum Type {
-        Success, Fault, Mission, Bonus
+        Success, Fault, Mission, Bonus, Achievement
     }
 }

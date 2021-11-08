@@ -31,7 +31,7 @@ public class GamificationParameters {
 
     private String getOrElse(Map<String, String> params, String param) {
         if(!params.containsKey(param)) {
-            NoSuchElementException e = new NoSuchElementException("Falta el atributo " + param);
+            NoSuchElementException e = new NoSuchElementException("Missing parameter " + param);
             Log.error(e);
             throw e;
         }

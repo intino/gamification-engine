@@ -2,8 +2,6 @@ package io.intino.gamification.util;
 
 import io.intino.gamification.core.Configuration;
 
-import java.util.logging.Level;
-
 public final class Log {
 
     public static final Configuration.Variable<Logger> LoggerInstance = new Configuration.Variable<>(Log.Logger.getDefault());
@@ -45,31 +43,29 @@ public final class Log {
         static Logger getDefault() {
             return new Logger() {
 
-                private final java.util.logging.Logger logger = java.util.logging.Logger.getLogger("GamificationEngine");
-
                 @Override
                 public void debug(String message) {
-                    logger.fine(message);
+                    io.intino.alexandria.logger.Logger.debug(message);
                 }
 
                 @Override
                 public void info(String message) {
-                    logger.info(message);
+                    io.intino.alexandria.logger.Logger.info(message);
                 }
 
                 @Override
                 public void warn(String message) {
-                    logger.warning(message);
+                    io.intino.alexandria.logger.Logger.warn(message);
                 }
 
                 @Override
                 public void error(String message) {
-                    logger.severe(message);
+                    io.intino.alexandria.logger.Logger.error(message);
                 }
 
                 @Override
                 public void error(String message, Throwable e) {
-                    logger.log(Level.SEVERE, message, e);
+                    io.intino.alexandria.logger.Logger.error(message, e);
                 }
             };
         }

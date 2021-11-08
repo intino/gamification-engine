@@ -70,6 +70,14 @@ public class Competition extends Node {
         return players;
     }
 
+    public NodeCollection<Entity> entities() {
+        return entities;
+    }
+
+    public NodeCollection<Achievement> achievements() {
+        return achievements;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

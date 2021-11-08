@@ -17,7 +17,7 @@ public class GamificationCore {
 
     public void start() {
         initSubSystems();
-        graphSerializer.load();
+        //graphSerializer.load(); TODO
     }
 
     private void initSubSystems() {

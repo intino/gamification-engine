@@ -24,12 +24,27 @@ public class PlayerState extends Node {
         this.missionAssignments = new NodeCollection<>(absoluteId());
     }
 
+    // Facts from finished matches
     public Stream<Fact> facts() {
-        return parent().rounds().stream().flatMap(round -> round.matches().find(id()).facts().stream());
+        return parent().rounds().stream()
+                .filter(round -> round.state() == Round.State.Finished)
+                .flatMap(round -> round.matches().find(id()).facts().stream());
     }
 
+    // All facts, including those in the current round
+    public Stream<Fact> rawFacts() {
+        return parent().rounds().stream()
+                .flatMap(round -> round.matches().find(id()).facts().stream());
+    }
+
+    // Score from finished matches
     public int score() {
         return facts().mapToInt(Fact::value).sum();
+    }
+
+    // Score, including points gained during the current round
+    public int rawScore() {
+        return rawFacts().mapToInt(Fact::value).sum();
     }
 
     public final NodeCollection<MissionAssignment> missionAssignments() {

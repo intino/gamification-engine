@@ -7,13 +7,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Stream;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public class PlayerState extends Node {
 
     private NodeCollection<MissionAssignment> missionAssignments;
-    private final List<Fact> facts = new ArrayList<>();
 
     PlayerState(String id) {
         super(id);
@@ -22,6 +22,14 @@ public class PlayerState extends Node {
     @Override
     void init() {
         this.missionAssignments = new NodeCollection<>(absoluteId());
+    }
+
+    public Stream<Fact> facts() {
+        return parent().rounds().stream().flatMap(round -> round.matches().find(id()).facts().stream());
+    }
+
+    public int score() {
+        return facts().mapToInt(Fact::value).sum();
     }
 
     public final NodeCollection<MissionAssignment> missionAssignments() {
@@ -36,12 +44,13 @@ public class PlayerState extends Node {
     @Override
     protected Season parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0])
                 .seasons().find(ids[1]);
     }
 
-    /*public void assignMission(MissionAssignment missionAssignment) {
+    public void assignMission(MissionAssignment missionAssignment) {
         if(missionAssignment == null) throw new NullPointerException("MissionAssignment cannot be null");
 
         Mission mission = competition().missions().find(missionAssignment.id());
@@ -74,20 +83,6 @@ public class PlayerState extends Node {
         );
     }
 
-    public final void addFact(Fact fact) {
-        Round round = season.currentRound();
-        if(round == null) return;
-        round.matches().computeIfAbsent(id(), k -> new Round.Match(id())).addFact(fact);
-    }
-
-    public void sealFacts(List<Fact> facts) {
-        this.facts.addAll(facts);
-    }
-
-    void clearFacts() {
-        this.facts.clear();
-    }
-
     void endMissions() {
         missionAssignments.forEach(ma -> {
             if(parent().endWithinThisSeason(ma) && ma.progress().state() == InProgress) {
@@ -98,7 +93,7 @@ public class PlayerState extends Node {
     }
 
     PlayerState copy() {
-        PlayerState ps = new PlayerState(id(), season);
+        PlayerState ps = new PlayerState(id());
         for (MissionAssignment missionAssignment : missionAssignments) {
             ps.missionAssignments.add(missionAssignment.copy());
         }
@@ -108,14 +103,4 @@ public class PlayerState extends Node {
     private Competition competition() {
         return parent().parent();
     }
-
-    public final Season season() {
-        return season;
-    }
-
-    public final List<Fact> facts() {
-        return Collections.unmodifiableList(facts);
-    }
-
-    */
 }

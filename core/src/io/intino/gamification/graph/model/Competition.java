@@ -1,6 +1,5 @@
 package io.intino.gamification.graph.model;
 
-import java.util.LinkedHashMap;
 import java.util.Objects;
 
 public class Competition extends Node {
@@ -9,11 +8,7 @@ public class Competition extends Node {
     private NodeCollection<Entity> entities;
     private NodeCollection<Player> players;
     private NodeCollection<Achievement> achievements;
-    //private NodeCollection<Record> records;
     private NodeCollection<Mission> missions;
-    //private NodeCollection<Bonus> bonus;
-    //private NodeCollection<Fail> fails;
-    //private NodeCollection<Success> successes;
 
     public Competition(String id) {
         super(id);
@@ -21,19 +16,14 @@ public class Competition extends Node {
 
     @Override
     void init() {
-        this.seasons = new NodeCollection<>(id(), new LinkedHashMap<>());
+        this.seasons = new NodeCollection<>(id());
         this.entities = new NodeCollection<>(id());
         this.players = new NodeCollection<>(id());
         this.achievements = new NodeCollection<>(id());
-        //this.records = new NodeCollection<>(id);
         this.missions = new NodeCollection<>(id());
-        //this.bonus = new NodeCollection<>(id);
-        //this.fails = new NodeCollection<>(id);
-        //this.successes = new NodeCollection<>(id);
     }
 
     public final NodeCollection<Season> seasons() {
-        //TODO Devolver unmodifiable
         return seasons;
     }
 
@@ -53,16 +43,31 @@ public class Competition extends Node {
         entities.forEach(Node::markAsDestroyed);
         players.forEach(Node::markAsDestroyed);
         achievements.forEach(Node::markAsDestroyed);
-        //records.forEach(Node::markAsDestroyed);
         missions.forEach(Node::markAsDestroyed);
-        //bonus.forEach(Node::markAsDestroyed);
-        //fails.forEach(Node::markAsDestroyed);
-        //successes.forEach(Node::markAsDestroyed);
     }
 
     @Override
     protected Node parent() {
         return null;
+    }
+
+    public void startNewSeason(Season season) {
+        if (season != null) {
+            if(currentSeason() == null) {
+                seasons.add(season);
+                season.begin();
+            }
+        }
+    }
+
+    public void finishCurrentSeason() {
+        Season currentSeason = currentSeason();
+        if(currentSeason != null && currentSeason.isAvailable()) currentSeason.end();
+    }
+
+
+    public final NodeCollection<Player> players() {
+        return players;
     }
 
     @Override
@@ -81,37 +86,6 @@ public class Competition extends Node {
 
     @Override
     public String toString() {
-        return "Competition{" +
-                "seasons=" + seasons +
-                ", entities=" + entities +
-                ", players=" + players +
-                ", achievements=" + achievements +
-                ", missions=" + missions +
-                '}';
+        return id();
     }
-
-    /*
-
-    public void startNewSeason(Season season) {
-
-        if (season != null) {
-            if(currentSeason() == null) {
-                seasons.add(season);
-                season.begin();
-            }
-        }
-    }
-
-    public void finishCurrentSeason() {
-        Season currentSeason = currentSeason();
-        if(currentSeason != null && currentSeason.isAvailable()) currentSeason.end();
-    }
-
-
-
-    public final NodeCollection<Player> players() {
-        return players;
-    }
-
-    */
 }

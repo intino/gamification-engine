@@ -85,6 +85,7 @@ public abstract class MissionAssignment extends Node {
     @Override
     protected PlayerState parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0])
                 .seasons().find(ids[1])

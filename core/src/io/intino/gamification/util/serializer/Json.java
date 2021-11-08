@@ -17,6 +17,10 @@ public final class Json {
         return jsonPrettySerializer().toJson(obj);
     }
 
+    public static <T> T fromJson(Class<T> clazz, String json) {
+        return jsonPrettySerializer().fromJson(json, clazz);
+    }
+
     public static <T> T read(Class<T> clazz, File file) {
         try (Reader fileReader = new BufferedReader(new FileReader(file))) {
             return jsonPrettySerializer().fromJson(fileReader, clazz);

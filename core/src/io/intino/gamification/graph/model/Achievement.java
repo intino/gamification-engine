@@ -42,6 +42,7 @@ public class Achievement extends Node {
     @Override
     public Competition parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0]);
     }

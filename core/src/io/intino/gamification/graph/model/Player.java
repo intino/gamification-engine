@@ -6,7 +6,7 @@ public class Player extends Entity {
         super(id);
     }
 
-    /*public final void assignMission(MissionAssignment missionAssignment) {
+    public final void assignMission(MissionAssignment missionAssignment) {
         Season season = availableSeason();
         if(season != null) {
             season.playerStates().find(id()).assignMission(missionAssignment);
@@ -39,5 +39,5 @@ public class Player extends Entity {
         Season season = parent().currentSeason();
         if(season == null || !season.isAvailable()) return null;
         return season;
-    }*/
+    }
 }

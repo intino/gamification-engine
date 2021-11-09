@@ -47,7 +47,7 @@ public class Competition extends Node {
     }
 
     @Override
-    protected Node parent() {
+    public Node parent() {
         return null;
     }
 

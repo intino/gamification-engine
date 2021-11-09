@@ -82,8 +82,12 @@ public abstract class MissionAssignment extends Node {
         return scoreFunction.apply(creationTime);
     }
 
+    public PlayerState player() {
+        return parent();
+    }
+
     @Override
-    protected PlayerState parent() {
+    public PlayerState parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()

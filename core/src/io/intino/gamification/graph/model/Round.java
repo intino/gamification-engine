@@ -76,8 +76,12 @@ public class Round extends Node {
         matches.forEach(Node::markAsDestroyed);
     }
 
+    public Season season() {
+        return parent();
+    }
+
     @Override
-    protected Season parent() {
+    public Season parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
@@ -133,8 +137,12 @@ public class Round extends Node {
             return Collections.unmodifiableList(facts);
         }
 
+        public Round round() {
+            return parent();
+        }
+
         @Override
-        protected Round parent() {
+        public Round parent() {
             String[] ids = parentIds();
             return GamificationGraph.get()
                     .competitions().find(ids[0])

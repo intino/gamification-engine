@@ -71,8 +71,12 @@ public class Season extends Node {
         playerStates.forEach(Node::markAsDestroyed);
     }
 
+    public Competition competition() {
+        return parent();
+    }
+
     @Override
-    protected Competition parent() {
+    public Competition parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()

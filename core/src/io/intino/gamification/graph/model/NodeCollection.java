@@ -1,7 +1,6 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.SerializableCollection;
-import io.intino.gamification.util.Log;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -29,7 +28,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         if(exists(node.id())) return false;
         if(!(node instanceof Competition)) {
             if(node.parent() != null) return false;
-            node.parent(context);
+            node.buildParents(context);
         }
         node.index = nodes.size();
         nodes.add(node);

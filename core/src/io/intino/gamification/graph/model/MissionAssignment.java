@@ -92,7 +92,7 @@ public abstract class MissionAssignment extends Node {
                 .playerStates().find(ids[2]);
     }
 
-    protected void onProgressChange(Integer oldValue, Integer newValue) {}
+    protected void onProgressChange(int oldValue, int newValue) {}
 
     protected void onMissionComplete() {}
     protected void onMissionFail() {}

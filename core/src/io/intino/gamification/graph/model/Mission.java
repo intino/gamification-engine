@@ -5,6 +5,8 @@ import io.intino.gamification.events.MissionProgressEventCallback;
 import io.intino.gamification.events.MissionProgressEventManager;
 import io.intino.gamification.graph.GamificationGraph;
 
+import java.util.Objects;
+
 public abstract class Mission extends Node {
 
     private final String description;
@@ -18,6 +20,14 @@ public abstract class Mission extends Node {
         super(id);
         this.description = description;
         this.priority = priority;
+    }
+
+    public String description() {
+        return description;
+    }
+
+    public int priority() {
+        return priority;
     }
 
     @Override
@@ -37,5 +47,14 @@ public abstract class Mission extends Node {
 
     protected final <T extends MissionProgressEvent> void subscribe(String eventType, MissionProgressEventCallback<T> consumer) {
         MissionProgressEventManager.get().addEventCallback(eventType, consumer);
+    }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "description='" + description + '\'' +
+                ", priority=" + priority +
+                ", id='" + id() + '\'' +
+                '}';
     }
 }

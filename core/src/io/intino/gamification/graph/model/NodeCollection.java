@@ -24,10 +24,11 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         this.lookupTable = new HashMap<>();
     }
 
-    public synchronized void add(T node) {
-        if(node == null) return;
+    public synchronized boolean add(T node) {
+        if(node == null) return false;
+        if(exists(node.id())) return false;
         if(!(node instanceof Competition)) {
-            if(node.parent() != null) return;
+            if(node.parent() != null) return false;
             node.parent(context);
         }
         node.index = nodes.size();
@@ -35,6 +36,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         lookupTable.put(node.id(), node);
         node.init();
         node.onCreate();
+        return true;
     }
 
     public void addAll(Collection<? extends T> nodes) {
@@ -150,7 +152,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
             }
 
             @Override
-            public synchronized void add(T node) {
+            public synchronized boolean add(T node) {
                 throw new UnsupportedOperationException("Collection is read only");
             }
 

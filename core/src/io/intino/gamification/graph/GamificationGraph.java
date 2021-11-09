@@ -27,11 +27,6 @@ public class GamificationGraph {
         GamificationGraph.instance = this;
     }
 
-    public Competition createCompetition(Competition competition) {
-        competitions.add(competition);
-        return competition;
-    }
-
     public NodeCollection<Competition> competitions() {
         return competitions;
     }

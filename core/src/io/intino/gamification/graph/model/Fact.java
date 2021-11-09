@@ -6,11 +6,11 @@ import java.util.Objects;
 public class Fact {
 
     private final Instant ts;
-    private final Type type;
+    private final String type;
     private final String name;
     private final int value;
 
-    public Fact(Instant ts, Type type, String name, int value) {
+    public Fact(Instant ts, String type, String name, int value) {
         this.ts = ts;
         this.type = type;
         this.name = name;
@@ -21,7 +21,7 @@ public class Fact {
         return ts;
     }
 
-    public Type type() {
+    public String type() {
         return type;
     }
 
@@ -38,7 +38,7 @@ public class Fact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Fact fact = (Fact) o;
-        return Objects.equals(ts, fact.ts) && type == fact.type && Objects.equals(name, fact.name) && Objects.equals(value, fact.value);
+        return Objects.equals(ts, fact.ts) && type.equals(fact.type) && Objects.equals(name, fact.name) && Objects.equals(value, fact.value);
     }
 
     @Override
@@ -54,9 +54,5 @@ public class Fact {
                 ", name='" + name + '\'' +
                 ", value=" + value +
                 '}';
-    }
-
-    public enum Type {
-        Success, Fault, Mission, Bonus, Achievement
     }
 }

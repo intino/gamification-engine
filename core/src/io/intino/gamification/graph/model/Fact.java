@@ -6,11 +6,11 @@ import java.util.Objects;
 public class Fact {
 
     private final Instant ts;
-    private final String type;
+    private final Type type;
     private final String name;
     private final int value;
 
-    public Fact(Instant ts, String type, String name, int value) {
+    public Fact(Instant ts, Type type, String name, int value) {
         this.ts = ts;
         this.type = type;
         this.name = name;
@@ -21,7 +21,7 @@ public class Fact {
         return ts;
     }
 
-    public String type() {
+    public Type type() {
         return type;
     }
 
@@ -54,5 +54,36 @@ public class Fact {
                 ", name='" + name + '\'' +
                 ", value=" + value +
                 '}';
+    }
+
+    public static class Type {
+
+        private final String name;
+
+        public Type(String name) {
+            this.name = name;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Type type = (Type) o;
+            return Objects.equals(name, type.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

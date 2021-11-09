@@ -7,34 +7,44 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static java.util.Objects.requireNonNull;
+
 public class NodeCollection<T extends Node> extends SerializableCollection implements Iterable<T> {
 
-    private final String context;
+    private String context;
     private final List<T> nodes;
     private final Map<String, T> lookupTable;
 
     public NodeCollection() {
-        this("");
-    }
-
-    public NodeCollection(String context) {
-        this.context = context;
         this.nodes = new ArrayList<>();
         this.lookupTable = new HashMap<>();
     }
 
+    public synchronized void init(String context) {
+        if(initialized()) throw new IllegalStateException("NodeCollection has been already initialized");
+        this.context = requireNonNull(context);
+    }
+
+    public boolean initialized() {
+        return context != null;
+    }
+
     public synchronized boolean add(T node) {
-        if(node == null) return false;
-        if(exists(node.id())) return false;
-        if(!(node instanceof Competition)) {
-            if(node.parent() != null) return false;
-            node.buildParents(context);
-        }
+        if(!meetPreconditions(node)) return false;
         node.index = nodes.size();
         nodes.add(node);
         lookupTable.put(node.id(), node);
         node.init();
         node.onCreate();
+        return true;
+    }
+
+    private boolean meetPreconditions(T node) {
+        if(!initialized()) throw new IllegalStateException("This collection is not initialized");
+        if(node == null) return false;
+        if(exists(node.id())) return false;
+        if(node.parent() != null) return false;
+        node.buildParents(context);
         return true;
     }
 

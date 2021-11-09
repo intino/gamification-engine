@@ -4,11 +4,13 @@ import java.util.Objects;
 
 public class Competition extends Node {
 
-    private NodeCollection<Season> seasons;
-    private NodeCollection<Entity> entities;
-    private NodeCollection<Player> players;
-    private NodeCollection<Achievement> achievements;
-    private NodeCollection<Mission> missions;
+    private final NodeCollection<Season> seasons = new NodeCollection<>();
+    private final NodeCollection<Entity> entities = new NodeCollection<>();
+    private final NodeCollection<Player> players = new NodeCollection<>();
+    private final NodeCollection<Achievement> achievements = new NodeCollection<>();
+    private final NodeCollection<Mission> missions = new NodeCollection<>();
+    private final NodeCollection<Success> successes = new NodeCollection<>();
+    private final NodeCollection<Foul> fouls = new NodeCollection<>();
 
     public Competition(String id) {
         super(id);
@@ -16,11 +18,13 @@ public class Competition extends Node {
 
     @Override
     void init() {
-        this.seasons = new NodeCollection<>(id());
-        this.entities = new NodeCollection<>(id());
-        this.players = new NodeCollection<>(id());
-        this.achievements = new NodeCollection<>(id());
-        this.missions = new NodeCollection<>(id());
+        seasons.init(absoluteId());
+        entities.init(absoluteId());
+        players.init(absoluteId());
+        achievements.init(absoluteId());
+        missions.init(absoluteId());
+        successes.init(absoluteId());
+        fouls.init(absoluteId());
     }
 
     public final NodeCollection<Season> seasons() {
@@ -76,6 +80,14 @@ public class Competition extends Node {
 
     public NodeCollection<Achievement> achievements() {
         return achievements;
+    }
+
+    public NodeCollection<Success> successes() {
+        return successes;
+    }
+
+    public NodeCollection<Foul> fouls() {
+        return fouls;
     }
 
     @Override

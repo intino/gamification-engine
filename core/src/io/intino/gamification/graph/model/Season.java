@@ -13,8 +13,8 @@ import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public class Season extends Node {
 
-    private NodeCollection<Round> rounds;
-    private NodeCollection<PlayerState> playerStates;
+    private final NodeCollection<Round> rounds = new NodeCollection<>();
+    private final NodeCollection<PlayerState> playerStates = new NodeCollection<>();
     private Instant startTime;
     private Instant endTime;
     private State state = State.Created;
@@ -25,8 +25,8 @@ public class Season extends Node {
 
     @Override
     void init() {
-        this.rounds = new NodeCollection<>(absoluteId());
-        this.playerStates = new NodeCollection<>(absoluteId());
+        this.rounds.init(absoluteId());
+        this.playerStates.init(absoluteId());
         this.startTime = Instant.now();
     }
 

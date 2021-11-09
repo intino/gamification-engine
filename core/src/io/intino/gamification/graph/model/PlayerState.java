@@ -13,7 +13,7 @@ import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public class PlayerState extends Node {
 
-    private NodeCollection<MissionAssignment> missionAssignments;
+    private final NodeCollection<MissionAssignment> missionAssignments = new NodeCollection<>();
 
     PlayerState(String id) {
         super(id);
@@ -21,7 +21,7 @@ public class PlayerState extends Node {
 
     @Override
     void init() {
-        this.missionAssignments = new NodeCollection<>(absoluteId());
+        missionAssignments.init(absoluteId());
     }
 
     // Facts from finished matches

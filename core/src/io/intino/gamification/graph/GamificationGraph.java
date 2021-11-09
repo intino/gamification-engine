@@ -24,6 +24,7 @@ public class GamificationGraph {
         }
         this.core = core;
         this.competitions = new NodeCollection<>();
+        competitions.init("");
         GamificationGraph.instance = this;
     }
 

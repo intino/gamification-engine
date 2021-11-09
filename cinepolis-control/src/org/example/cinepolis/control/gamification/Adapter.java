@@ -36,7 +36,7 @@ public class Adapter {
         Competition competition = engine.graph().competitions().find(GamificationConfig.WorldId);
 
         if(competition == null) {
-            this.competition = engine.graph().createCompetition(new Competition(GamificationConfig.WorldId));
+            this.competition = engine.graph().addCompetition(new Competition(GamificationConfig.WorldId));
             this.competition.missions().addAll(initMissions());
         } else {
             this.competition = competition;

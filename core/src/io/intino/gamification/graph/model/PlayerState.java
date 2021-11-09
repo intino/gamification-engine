@@ -56,8 +56,12 @@ public class PlayerState extends Node {
         missionAssignments.forEach(Node::markAsDestroyed);
     }
 
+    public Season season() {
+        return parent();
+    }
+
     @Override
-    protected Season parent() {
+    public Season parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()

@@ -40,7 +40,7 @@ public abstract class Node implements Serializable {
         return parentIds;
     }
 
-    public final void parent(String parentId) {
+    public final void buildParents(String parentId) {
         parentIds = parentId.split(PARENT_SEPARATOR);
     }
 
@@ -78,7 +78,7 @@ public abstract class Node implements Serializable {
         initTransientAttributes();
     }
 
-    protected abstract Node parent();
+    public abstract Node parent();
 
     void init() {}
     void destroyChildren() {}

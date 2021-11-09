@@ -35,8 +35,12 @@ public class Achievement extends Node {
         return description;
     }
 
+    public Competition competition() {
+        return parent();
+    }
+
     @Override
-    protected Competition parent() {
+    public Competition parent() {
         String[] ids = parentIds();
         return GamificationGraph.get()
                 .competitions().find(ids[0]);

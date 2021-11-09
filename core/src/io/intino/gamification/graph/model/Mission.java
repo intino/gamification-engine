@@ -35,8 +35,12 @@ public abstract class Mission extends Node {
         setProgressCallbacks();
     }
 
+    public Competition competition() {
+        return parent();
+    }
+
     @Override
-    protected Competition parent() {
+    public Competition parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()

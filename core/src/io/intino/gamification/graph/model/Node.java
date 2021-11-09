@@ -33,6 +33,7 @@ public abstract class Node implements Serializable {
     }
 
     public final String absoluteId() {
+        if(parentIds == null || parentIds.length == 0) return id;
         return String.join(PARENT_SEPARATOR, parentIds) + PARENT_SEPARATOR + id;
     }
 
@@ -41,6 +42,7 @@ public abstract class Node implements Serializable {
     }
 
     public final void buildParents(String parentId) {
+        if(parentId == null || parentId.isBlank()) return;
         parentIds = parentId.split(PARENT_SEPARATOR);
     }
 

@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class Round extends Node {
 
-    private NodeCollection<Match> matches;
+    private final NodeCollection<Match> matches = new NodeCollection<>();
     private Instant startTime;
     private Instant endTime;
     private State state = State.Created;
@@ -22,7 +22,7 @@ public class Round extends Node {
 
     @Override
     void init() {
-        this.matches = new NodeCollection<>(absoluteId());
+        matches.init(absoluteId());
     }
 
     public Instant startTime() {

@@ -1,8 +1,6 @@
 package io.intino.gamification.events;
 
-import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.Competition;
-import io.intino.gamification.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;

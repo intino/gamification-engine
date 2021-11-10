@@ -32,18 +32,39 @@ public class Competition extends Node {
         //this.successes = new NodeCollection<>(id);
     }
 
-    public final NodeCollection<Season> seasons() {
-        //TODO Devolver unmodifiable
-        return seasons;
-    }
-
     public final Season currentSeason() {
         if(seasons.isEmpty()) return null;
         Season season = seasons.last();
         return season.state() != Season.State.Finished ? null : season;
     }
 
+    public void startNewSeason(Season season) {
+
+        if (season != null) {
+            if(currentSeason() == null) {
+                seasons.add(season);
+                season.begin();
+            }
+        }
+    }
+
+    public void finishCurrentSeason() {
+        Season currentSeason = currentSeason();
+        if(currentSeason != null && currentSeason.isAvailable()) currentSeason.end();
+    }
+
+    public final NodeCollection<Season> seasons() {
+        //TODO Devolver unmodifiable
+        return seasons;
+    }
+
+    public final NodeCollection<Player> players() {
+        //TODO: Devolver unmodifiable
+        return players;
+    }
+
     public final NodeCollection<Mission> missions() {
+        //TODO: Devolver unmodifiable
         return missions;
     }
 
@@ -89,29 +110,4 @@ public class Competition extends Node {
                 ", missions=" + missions +
                 '}';
     }
-
-    /*
-
-    public void startNewSeason(Season season) {
-
-        if (season != null) {
-            if(currentSeason() == null) {
-                seasons.add(season);
-                season.begin();
-            }
-        }
-    }
-
-    public void finishCurrentSeason() {
-        Season currentSeason = currentSeason();
-        if(currentSeason != null && currentSeason.isAvailable()) currentSeason.end();
-    }
-
-
-
-    public final NodeCollection<Player> players() {
-        return players;
-    }
-
-    */
 }

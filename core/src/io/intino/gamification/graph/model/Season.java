@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.util.data.Progress.State.InProgress;
-
 public class Season extends Node {
 
     private NodeCollection<Round> rounds;
@@ -29,6 +27,65 @@ public class Season extends Node {
         this.rounds = new NodeCollection<>(absoluteId());
         this.playerStates = new NodeCollection<>(absoluteId());
         //this.obtainedAchievements = new NodeCollection<>(competitionId());
+    }
+
+    public Round currentRound() {
+        if(rounds.isEmpty()) return null;
+        Round round = rounds.last();
+        return round.state() != Round.State.Finished ? null : round;
+    }
+
+    public final void startNewRound(Round round) {
+
+        if (round != null) {
+            rounds.add(round);
+            round.begin();
+        }
+    }
+
+    public final void finishCurrentRound() {
+        Round currentRound = currentRound();
+        if(currentRound != null && currentRound.isAvailable()) currentRound.end();
+    }
+
+    public final List<PlayerState> persistencePlayerState() {
+        return playerStates.stream()
+                .map(this::filter)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private PlayerState filter(PlayerState playerState) {
+        PlayerState newPlayerState = playerState.copy();
+        newPlayerState.missionAssignments().removeIf(this::endWithinThisSeason);
+        if(newPlayerState.missionAssignments().size() == 0) return null;
+        return newPlayerState;
+    }
+
+    public final void injectPersistencePlayerState(List<PlayerState> persistencePlayerState) {
+        this.playerStates().addAll(clean(persistencePlayerState));
+    }
+
+    private List<PlayerState> clean(List<PlayerState> persistencePlayerState) {
+        persistencePlayerState.forEach(PlayerState::clearFacts);
+        return persistencePlayerState;
+    }
+
+    void begin() {
+        startTime.set(TimeUtils.currentInstant());
+        onBegin();
+        state.set(State.Running);
+    }
+
+    void end() {
+        endTime.set(TimeUtils.currentInstant());
+        playerStates.forEach(PlayerState::endMissions);
+        onEnd();
+        state.set(State.Finished);
+    }
+
+    boolean endWithinThisSeason(MissionAssignment missionAssignment) {
+        return missionAssignment.hasExpired() || missionAssignment.expirationTime().endsWithMatch();
     }
 
     public final NodeCollection<Round> rounds() {
@@ -84,75 +141,8 @@ public class Season extends Node {
                 '}';
     }
 
-    /*
-
-    public final void injectPersistencePlayerState(List<PlayerState> persistencePlayerState) {
-        this.playerStates().addAll(clean(persistencePlayerState));
-    }
-
-    void begin() {
-        startTime.set(TimeUtils.currentInstant());
-        onBegin();
-        state.set(State.Running);
-    }
-
-    void end() {
-        endTime.set(TimeUtils.currentInstant());
-        endMissions();
-        onEnd();
-        state.set(State.Finished);
-    }
-
-    public final void startNewRound(Round round) {
-
-        if (round != null) {
-            rounds.add(round);
-            round.begin();
-        }
-    }
-
-    public final void finishCurrentRound() {
-        Round currentRound = rounds.last();
-        if(currentRound != null && currentRound.isAvailable()) currentRound.end();
-    }
-
-    public Round currentRound() {
-        if(rounds.isEmpty()) return null;
-        Round round = rounds.last();
-        return round.state() != Round.State.Finished ? null : round;
-    }
-
-    public final List<PlayerState> persistencePlayerState() {
-        return playerStates.stream()
-                .map(this::filter)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
-    private void endMissions() {
-        playerStates.forEach(PlayerState::endMissions);
-    }
-
-    private PlayerState filter(PlayerState playerState) {
-        PlayerState newPlayerState = playerState.copy();
-        newPlayerState.missionAssignments().removeIf(this::endWithinThisSeason);
-        if(newPlayerState.missionAssignments().size() == 0) return null;
-        return newPlayerState;
-    }
-
-    boolean endWithinThisSeason(MissionAssignment missionAssignment) {
-        return missionAssignment.hasExpired() || missionAssignment.expirationTime().endsWithMatch();
-    }
-
-    private List<PlayerState> clean(List<PlayerState> persistencePlayerState) {
-        persistencePlayerState.forEach(PlayerState::clearFacts);
-        return persistencePlayerState;
-    }
-
-
-
     protected void onBegin() {}
-    protected void onEnd() {}*/
+    protected void onEnd() {}
 
     public enum State {
         Created, Running, Finished

@@ -28,6 +28,36 @@ public class Round extends Node {
         //this.obtainedAchievements = new NodeCollection<>(competitionId());
     }
 
+    void begin() {
+        startTime.set(TimeUtils.currentInstant());
+        onBegin();
+        state.set(State.Running);
+    }
+
+    void end() {
+        endTime.set(TimeUtils.currentInstant());
+        sealPoints();
+        onEnd();
+        state.set(State.Finished);
+    }
+
+    private void sealPoints() {
+        Season season = parent();
+        matches.forEach(m -> {
+            season.playerStates().find(m.id()).sealFacts(List.copyOf(m.facts));
+            m.facts.clear();
+        });
+    }
+
+    public final NodeCollection<Match> matches() {
+        //TODO: Devolver unmodificable
+        return matches;
+    }
+
+    State state() {
+        return state.get();
+    }
+
     @Override
     void destroyChildren() {
         matches.forEach(Node::markAsDestroyed);
@@ -66,43 +96,8 @@ public class Round extends Node {
                 '}';
     }
 
-    /*
-
-    void begin() {
-        startTime.set(TimeUtils.currentInstant());
-        onBegin();
-        state.set(State.Running);
-    }
-
-    void end() {
-        endTime.set(TimeUtils.currentInstant());
-        sealPoints();
-        onEnd();
-        state.set(State.Finished);
-    }
-
-    private void sealPoints() {
-        Season season = parent();
-        matches.forEach(m -> {
-            season.playerStates().find(m.id()).sealFacts(List.copyOf(m.facts));
-            m.facts.clear();
-        });
-    }
-
-    public final NodeCollection<Match> matches() {
-        return matches;
-    }
-
-    State state() {
-        return state.get();
-    }
-
-
-
     protected void onBegin() {}
     protected void onEnd() {}
-
-    */
 
     public enum State {
         Created, Running, Finished
@@ -116,16 +111,7 @@ public class Round extends Node {
             super(playerId);
         }
 
-        @Override
-        protected Round parent() {
-            String[] ids = parentIds();
-            return GamificationGraph.get()
-                    .competitions().find(ids[0])
-                    .seasons().find(ids[1])
-                    .rounds().find(ids[2]);
-        }
-
-        /*void addFact(Fact fact) {
+        void addFact(Fact fact) {
             facts.add(fact);
         }
 
@@ -137,6 +123,13 @@ public class Round extends Node {
             return Collections.unmodifiableList(facts);
         }
 
-        */
+        @Override
+        protected Round parent() {
+            String[] ids = parentIds();
+            return GamificationGraph.get()
+                    .competitions().find(ids[0])
+                    .seasons().find(ids[1])
+                    .rounds().find(ids[2]);
+        }
     }
 }

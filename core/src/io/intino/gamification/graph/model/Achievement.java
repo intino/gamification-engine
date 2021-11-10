@@ -5,18 +5,25 @@ import io.intino.gamification.graph.GamificationGraph;
 public class Achievement extends Node {
 
     private String description;
+    private final Type type;
 
-    public Achievement(String id) {
+    public Achievement(String id, Type type) {
         super(id);
+        this.type = type;
     }
 
-    public Achievement(String id, String description) {
+    public Achievement(String id, Type type, String description) {
         super(id);
+        this.type = type;
         this.description = description;
     }
 
     public String name() {
         return id();
+    }
+
+    public Type type() {
+        return this.type;
     }
 
     public Achievement description(String description) {
@@ -28,9 +35,14 @@ public class Achievement extends Node {
         return description;
     }
 
+    public Competition competition() {
+        return parent();
+    }
+
     @Override
-    protected Competition parent() {
+    public Competition parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0]);
     }
@@ -41,5 +53,9 @@ public class Achievement extends Node {
                 "name=" + id() +
                 "description='" + description + '\'' +
                 '}';
+    }
+
+    public enum Type {
+        Mention, Milestone, Prize, Record
     }
 }

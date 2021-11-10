@@ -24,12 +24,8 @@ public class GamificationGraph {
         }
         this.core = core;
         this.competitions = new NodeCollection<>();
+        competitions.init("");
         GamificationGraph.instance = this;
-    }
-
-    public Competition createCompetition(Competition competition) {
-        competitions.add(competition);
-        return competition;
     }
 
     public NodeCollection<Competition> competitions() {

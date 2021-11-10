@@ -4,10 +4,12 @@ public class Configuration {
 
     public final Variable<String> timeZone;
     public final Variable<String> gamificationPath;
+    public final Variable<String> gamificationDatamart;
 
     public Configuration(GamificationParameters gamificationParameters) {
         this.timeZone = new Variable<>(gamificationParameters.timeZone());
         this.gamificationPath = new Variable<>(gamificationParameters.gamificationPath());
+        this.gamificationDatamart = new Variable<>(gamificationParameters.gamificationDatamart());
     }
 
     public static final class Variable<T> {

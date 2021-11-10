@@ -8,7 +8,7 @@ public class Fact {
     private final Instant ts;
     private final Type type;
     private final String name;
-    private final Integer value;
+    private final int value;
 
     public Fact(Instant ts, Type type, String name, int value) {
         this.ts = ts;
@@ -38,7 +38,7 @@ public class Fact {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Fact fact = (Fact) o;
-        return Objects.equals(ts, fact.ts) && type == fact.type && Objects.equals(name, fact.name) && Objects.equals(value, fact.value);
+        return Objects.equals(ts, fact.ts) && type.equals(fact.type) && Objects.equals(name, fact.name) && Objects.equals(value, fact.value);
     }
 
     @Override
@@ -56,7 +56,34 @@ public class Fact {
                 '}';
     }
 
-    public enum Type {
-        Success, Fault, Mission, Bonus
+    public static class Type {
+
+        private final String name;
+
+        public Type(String name) {
+            this.name = name;
+        }
+
+        public String name() {
+            return name;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Type type = (Type) o;
+            return Objects.equals(name, type.name);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(name);
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }

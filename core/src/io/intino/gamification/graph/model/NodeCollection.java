@@ -3,97 +3,192 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.graph.structure.SerializableCollection;
 
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
 
 public class NodeCollection<T extends Node> extends SerializableCollection implements Iterable<T> {
 
-    private final String context;
-    private final Map<String, T> collection;
+    private String context;
+    private final List<T> nodes;
+    private final Map<String, T> lookupTable;
 
     public NodeCollection() {
-        this("", new TreeMap<>());
+        this.nodes = new ArrayList<>();
+        this.lookupTable = new HashMap<>();
     }
 
-    public NodeCollection(String context) {
-        this(context, new TreeMap<>());
+    public synchronized void init(String context) {
+        if(initialized()) throw new IllegalStateException("NodeCollection has been already initialized");
+        this.context = requireNonNull(context);
     }
 
-    public NodeCollection(Map<String, T> collection) {
-        this("", collection);
+    public boolean initialized() {
+        return context != null;
     }
 
-    public NodeCollection(String context, Map<String, T> collection) {
-        this.context = context;
-        this.collection = collection;
-    }
-
-    public void add(T node) {
-        if(node == null) return;
-        if(!node.getClass().equals(Competition.class)) {
-            if(node.parent() != null) return;
-            node.parent(context);
-        }
-        collection.put(node.id(), node);
+    public synchronized boolean add(T node) {
+        if(!meetPreconditions(node)) return false;
+        node.index = nodes.size();
+        nodes.add(node);
+        lookupTable.put(node.id(), node);
         node.init();
         node.onCreate();
+        return true;
+    }
+
+    private boolean meetPreconditions(T node) {
+        if(!initialized()) throw new IllegalStateException("This collection is not initialized");
+        if(node == null) return false;
+        if(exists(node.id())) return false;
+        if(node.parent() != null) return false;
+        node.buildParents(context);
+        return true;
     }
 
     public void addAll(Collection<? extends T> nodes) {
         nodes.forEach(this::add);
     }
 
-    public T computeIfAbsent(String key, Function<String, T> function) {
-        return collection.computeIfAbsent(key, function);
+    public T addIfNotExists(String key, Supplier<T> supplier) {
+        if(!exists(key)) add(supplier.get());
+        return find(key);
     }
 
-    public void destroy(T node) {
-        collection.remove(node.id());
+    public synchronized void destroy(T node) {
+        nodes.remove(node.index);
+        destroyInternal(node);
+    }
+
+    @SuppressWarnings("all")
+    public synchronized void removeIf(Predicate<T> predicate) {
+        Iterator<T> iterator = nodes.iterator();
+        while(iterator.hasNext()) {
+            T node = iterator.next();
+            if(predicate.test(node)) {
+                iterator.remove();
+                destroyInternal(node);
+            }
+        }
+    }
+
+    private void destroyInternal(T node) {
+        lookupTable.remove(node.id());
         node.markAsDestroyed();
         node.onDestroy();
+        node.index = Integer.MIN_VALUE;
     }
 
     public boolean exists(String id) {
-        return collection.containsKey(id);
+        return lookupTable.containsKey(id);
     }
 
     @SuppressWarnings("unchecked")
     public <E extends T> E find(String id) {
-        return (E) collection.get(id);
+        return (E) lookupTable.get(id);
     }
 
     public boolean isEmpty() {
-        return collection.isEmpty();
+        return size() == 0;
+    }
+
+    public int size() {
+        return nodes.size();
+    }
+
+    public T first() {
+        return nodes.isEmpty() ? null : nodes.get(0);
+    }
+
+    public T last() {
+        return nodes.isEmpty() ? null : nodes.get(nodes.size() - 1);
+    }
+
+    public T get(int index) {
+        return nodes.get(index);
+    }
+
+    public List<T> list() {
+        return Collections.unmodifiableList(nodes);
+    }
+
+    public Stream<T> stream() {
+        return lookupTable.values().stream();
+    }
+
+    public void sort(Comparator<T> comparator) {
+        nodes.sort(comparator);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return collection.values().iterator();
+        return lookupTable.values().iterator();
     }
 
-    public T last() {
-        return collection.values().stream().skip(collection.size() - 1).findFirst().orElse(null);
+    public boolean readOnly() {
+        return false;
     }
 
-    public List<T> list() {
-        return List.copyOf(collection.values());
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        NodeCollection<?> that = (NodeCollection<?>) o;
+        return context.equals(that.context) && nodes.equals(that.nodes);
     }
 
-    @SuppressWarnings("all")
-    public void removeIf(Predicate<T> predicate) {
-        Iterator<Map.Entry<String, T>> iterator = collection.entrySet().iterator();
-        while(iterator.hasNext()) {
-            Map.Entry<String, T> entry = iterator.next();
-            if(predicate.test(entry.getValue())) iterator.remove();
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hash(context, nodes);
     }
 
-    public int size() {
-        return collection.size();
+    @Override
+    public String toString() {
+        return "NodeCollection{" +
+                "context='" + context + '\'' +
+                ", nodes=" + nodes +
+                '}';
     }
 
-    public Stream<T> stream() {
-        return collection.values().stream();
+    public NodeCollection<T> asReadOnly() {
+        return new NodeCollection<>() {
+
+            @Override
+            public boolean readOnly() {
+                return true;
+            }
+
+            @Override
+            public synchronized boolean add(T node) {
+                throw new UnsupportedOperationException("Collection is read only");
+            }
+
+            @Override
+            public void addAll(Collection<? extends T> nodes) {
+                throw new UnsupportedOperationException("Collection is read only");
+            }
+
+            @Override
+            public T addIfNotExists(String key, Supplier<T> supplier) {
+                throw new UnsupportedOperationException("Collection is read only");
+            }
+
+            @Override
+            public synchronized void destroy(T node) {
+                throw new UnsupportedOperationException("Collection is read only");
+            }
+
+            @Override
+            public synchronized void removeIf(Predicate<T> predicate) {
+                throw new UnsupportedOperationException("Collection is read only");
+            }
+
+            @Override
+            public void sort(Comparator<T> comparator) {
+                throw new UnsupportedOperationException("Collection is read only");
+            }
+        };
     }
 }

@@ -8,9 +8,14 @@ public abstract class Entity extends Node {
         super(id);
     }
 
+    public Competition competition() {
+        return parent();
+    }
+
     @Override
-    protected Competition parent() {
+    public Competition parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0]);
     }

@@ -82,16 +82,21 @@ public abstract class MissionAssignment extends Node {
         return scoreFunction.apply(creationTime);
     }
 
+    public PlayerState player() {
+        return parent();
+    }
+
     @Override
-    protected PlayerState parent() {
+    public PlayerState parent() {
         String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0])
                 .seasons().find(ids[1])
                 .playerStates().find(ids[2]);
     }
 
-    protected void onProgressChange(Integer oldValue, Integer newValue) {}
+    protected void onProgressChange(int oldValue, int newValue) {}
 
     protected void onMissionComplete() {}
     protected void onMissionFail() {}

@@ -1,6 +1,7 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
@@ -11,10 +12,11 @@ import java.util.Objects;
 
 public class Round extends Node {
 
-    private final NodeCollection<Match> matches = new NodeCollection<>();
-    private Instant startTime;
-    private Instant endTime;
-    private State state = State.Created;
+    private NodeCollection<Match> matches;
+    private final Property<Instant> startTime = new Property<>();
+    private final Property<Instant> endTime = new Property<>();
+    private final Property<State> state = new Property<>(State.Created);
+    //private NodeCollection<ObtainedAchievement> obtainedAchievements;
 
     public Round(String id) {
         super(id);
@@ -22,68 +24,49 @@ public class Round extends Node {
 
     @Override
     void init() {
-        matches.init(absoluteId());
-    }
-
-    public Instant startTime() {
-        return this.startTime;
-    }
-
-    public Round startTime(Instant startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public Instant endTime() {
-        return this.endTime;
-    }
-
-    public Round endTime(Instant endTime) {
-        this.endTime = endTime;
-        return this;
-    }
-
-    public State state() {
-        return this.state;
-    }
-
-    public Round state(State state) {
-        this.state = state;
-        return this;
-    }
-
-    public final NodeCollection<Match> matches() {
-        return matches;
+        this.matches = new NodeCollection<>(absoluteId());
+        //this.obtainedAchievements = new NodeCollection<>(competitionId());
     }
 
     void begin() {
-        startTime = TimeUtils.currentInstant();
+        startTime.set(TimeUtils.currentInstant());
         onBegin();
-        state = State.Running;
+        state.set(State.Running);
     }
 
     void end() {
-        endTime = TimeUtils.currentInstant();
+        endTime.set(TimeUtils.currentInstant());
+        sealPoints();
         onEnd();
-        state = State.Finished;
+        state.set(State.Finished);
     }
 
-    protected void onBegin() {}
-    protected void onEnd() {}
+    private void sealPoints() {
+        Season season = parent();
+        matches.forEach(m -> {
+            season.playerStates().find(m.id()).sealFacts(List.copyOf(m.facts));
+            m.facts.clear();
+        });
+    }
+
+    public final NodeCollection<Match> matches() {
+        //TODO: Devolver unmodificable
+        return matches;
+    }
+
+    State state() {
+        return state.get();
+    }
 
     @Override
     void destroyChildren() {
         matches.forEach(Node::markAsDestroyed);
-    }
-
-    public Season season() {
-        return parent();
+        //obtainedAchievements.forEach(Node::markAsDestroyed);
     }
 
     @Override
-    public Season parent() {
+    protected Season parent() {
         String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0])
                 .seasons().find(ids[1]);
@@ -113,6 +96,9 @@ public class Round extends Node {
                 '}';
     }
 
+    protected void onBegin() {}
+    protected void onEnd() {}
+
     public enum State {
         Created, Running, Finished
     }
@@ -125,24 +111,20 @@ public class Round extends Node {
             super(playerId);
         }
 
-        public void addFact(Fact fact) {
+        void addFact(Fact fact) {
             facts.add(fact);
         }
 
-        public int score() {
+        public final int matchScore() {
             return facts.stream().mapToInt(Fact::value).sum();
         }
 
-        public List<Fact> facts() {
+        public final List<Fact> facts() {
             return Collections.unmodifiableList(facts);
         }
 
-        public Round round() {
-            return parent();
-        }
-
         @Override
-        public Round parent() {
+        protected Round parent() {
             String[] ids = parentIds();
             return GamificationGraph.get()
                     .competitions().find(ids[0])

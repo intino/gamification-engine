@@ -1,16 +1,19 @@
 package io.intino.gamification.graph.model;
 
+import java.util.LinkedHashMap;
 import java.util.Objects;
 
 public class Competition extends Node {
 
-    private final NodeCollection<Season> seasons = new NodeCollection<>();
-    private final NodeCollection<Entity> entities = new NodeCollection<>();
-    private final NodeCollection<Player> players = new NodeCollection<>();
-    private final NodeCollection<Achievement> achievements = new NodeCollection<>();
-    private final NodeCollection<Mission> missions = new NodeCollection<>();
-    private final NodeCollection<Success> successes = new NodeCollection<>();
-    private final NodeCollection<Foul> fouls = new NodeCollection<>();
+    private NodeCollection<Season> seasons;
+    private NodeCollection<Entity> entities;
+    private NodeCollection<Player> players;
+    private NodeCollection<Achievement> achievements;
+    //private NodeCollection<Record> records;
+    private NodeCollection<Mission> missions;
+    //private NodeCollection<Bonus> bonus;
+    //private NodeCollection<Fail> fails;
+    //private NodeCollection<Success> successes;
 
     public Competition(String id) {
         super(id);
@@ -18,17 +21,15 @@ public class Competition extends Node {
 
     @Override
     void init() {
-        seasons.init(absoluteId());
-        entities.init(absoluteId());
-        players.init(absoluteId());
-        achievements.init(absoluteId());
-        missions.init(absoluteId());
-        successes.init(absoluteId());
-        fouls.init(absoluteId());
-    }
-
-    public final NodeCollection<Season> seasons() {
-        return seasons;
+        this.seasons = new NodeCollection<>(id(), new LinkedHashMap<>());
+        this.entities = new NodeCollection<>(id());
+        this.players = new NodeCollection<>(id());
+        this.achievements = new NodeCollection<>(id());
+        //this.records = new NodeCollection<>(id);
+        this.missions = new NodeCollection<>(id());
+        //this.bonus = new NodeCollection<>(id);
+        //this.fails = new NodeCollection<>(id);
+        //this.successes = new NodeCollection<>(id);
     }
 
     public final Season currentSeason() {
@@ -37,25 +38,8 @@ public class Competition extends Node {
         return season.state() != Season.State.Finished ? null : season;
     }
 
-    public final NodeCollection<Mission> missions() {
-        return missions;
-    }
-
-    @Override
-    void destroyChildren() {
-        seasons.forEach(Node::markAsDestroyed);
-        entities.forEach(Node::markAsDestroyed);
-        players.forEach(Node::markAsDestroyed);
-        achievements.forEach(Node::markAsDestroyed);
-        missions.forEach(Node::markAsDestroyed);
-    }
-
-    @Override
-    public Node parent() {
-        return null;
-    }
-
     public void startNewSeason(Season season) {
+
         if (season != null) {
             if(currentSeason() == null) {
                 seasons.add(season);
@@ -69,25 +53,37 @@ public class Competition extends Node {
         if(currentSeason != null && currentSeason.isAvailable()) currentSeason.end();
     }
 
+    public final NodeCollection<Season> seasons() {
+        //TODO Devolver unmodifiable
+        return seasons;
+    }
 
     public final NodeCollection<Player> players() {
+        //TODO: Devolver unmodifiable
         return players;
     }
 
-    public NodeCollection<Entity> entities() {
-        return entities;
+    public final NodeCollection<Mission> missions() {
+        //TODO: Devolver unmodifiable
+        return missions;
     }
 
-    public NodeCollection<Achievement> achievements() {
-        return achievements;
+    @Override
+    void destroyChildren() {
+        seasons.forEach(Node::markAsDestroyed);
+        entities.forEach(Node::markAsDestroyed);
+        players.forEach(Node::markAsDestroyed);
+        achievements.forEach(Node::markAsDestroyed);
+        //records.forEach(Node::markAsDestroyed);
+        missions.forEach(Node::markAsDestroyed);
+        //bonus.forEach(Node::markAsDestroyed);
+        //fails.forEach(Node::markAsDestroyed);
+        //successes.forEach(Node::markAsDestroyed);
     }
 
-    public NodeCollection<Success> successes() {
-        return successes;
-    }
-
-    public NodeCollection<Foul> fouls() {
-        return fouls;
+    @Override
+    protected Node parent() {
+        return null;
     }
 
     @Override
@@ -106,6 +102,12 @@ public class Competition extends Node {
 
     @Override
     public String toString() {
-        return id();
+        return "Competition{" +
+                "seasons=" + seasons +
+                ", entities=" + entities +
+                ", players=" + players +
+                ", achievements=" + achievements +
+                ", missions=" + missions +
+                '}';
     }
 }

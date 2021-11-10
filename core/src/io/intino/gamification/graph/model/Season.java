@@ -9,15 +9,14 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static io.intino.gamification.util.data.Progress.State.InProgress;
-
 public class Season extends Node {
 
-    private final NodeCollection<Round> rounds = new NodeCollection<>();
-    private final NodeCollection<PlayerState> playerStates = new NodeCollection<>();
-    private Instant startTime;
-    private Instant endTime;
-    private State state = State.Created;
+    private NodeCollection<Round> rounds;
+    private NodeCollection<PlayerState> playerStates;
+    //private NodeCollection<ObtainedAchievement> obtainedAchievements;
+    private final Property<Instant> startTime = new Property<>();
+    private final Property<Instant> endTime = new Property<>();
+    private final Property<State> state = new Property<>(State.Created);
 
     public Season(String id) {
         super(id);
@@ -25,78 +24,19 @@ public class Season extends Node {
 
     @Override
     void init() {
-        this.rounds.init(absoluteId());
-        this.playerStates.init(absoluteId());
-        this.startTime = Instant.now();
+        this.rounds = new NodeCollection<>(absoluteId());
+        this.playerStates = new NodeCollection<>(absoluteId());
+        //this.obtainedAchievements = new NodeCollection<>(competitionId());
     }
 
-    public final NodeCollection<Round> rounds() {
-        return rounds;
-    }
-
-    public final NodeCollection<PlayerState> playerStates() {
-        return playerStates;
-    }
-
-    public final State state() {
-        return state;
-    }
-
-    public Season state(State state) {
-        this.state = state;
-        return this;
-    }
-
-    public Instant startTime() {
-        return startTime;
-    }
-
-    public Season startTime(Instant startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public Instant endTime() {
-        return endTime;
-    }
-
-    public Season endTime(Instant endTime) {
-        this.endTime = endTime;
-        return this;
-    }
-
-    @Override
-    void destroyChildren() {
-        rounds.forEach(Node::markAsDestroyed);
-        playerStates.forEach(Node::markAsDestroyed);
-    }
-
-    public Competition competition() {
-        return parent();
-    }
-
-    @Override
-    public Competition parent() {
-        String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
-        return GamificationGraph.get()
-                .competitions().find(ids[0]);
-    }
-
-    void begin() {
-        startTime = TimeUtils.currentInstant();
-        onBegin();
-        state = State.Running;
-    }
-
-    void end() {
-        endTime = TimeUtils.currentInstant();
-        endMissions();
-        onEnd();
-        state = State.Finished;
+    public Round currentRound() {
+        if(rounds.isEmpty()) return null;
+        Round round = rounds.last();
+        return round.state() != Round.State.Finished ? null : round;
     }
 
     public final void startNewRound(Round round) {
+
         if (round != null) {
             rounds.add(round);
             round.begin();
@@ -104,14 +44,8 @@ public class Season extends Node {
     }
 
     public final void finishCurrentRound() {
-        Round currentRound = rounds.last();
+        Round currentRound = currentRound();
         if(currentRound != null && currentRound.isAvailable()) currentRound.end();
-    }
-
-    public Round currentRound() {
-        if(rounds.isEmpty()) return null;
-        Round round = rounds.last();
-        return round.state() != Round.State.Finished ? null : round;
     }
 
     public final List<PlayerState> persistencePlayerState() {
@@ -121,10 +55,6 @@ public class Season extends Node {
                 .collect(Collectors.toList());
     }
 
-    private void endMissions() {
-        playerStates.forEach(PlayerState::endMissions);
-    }
-
     private PlayerState filter(PlayerState playerState) {
         PlayerState newPlayerState = playerState.copy();
         newPlayerState.missionAssignments().removeIf(this::endWithinThisSeason);
@@ -132,12 +62,59 @@ public class Season extends Node {
         return newPlayerState;
     }
 
+    public final void injectPersistencePlayerState(List<PlayerState> persistencePlayerState) {
+        this.playerStates().addAll(clean(persistencePlayerState));
+    }
+
+    private List<PlayerState> clean(List<PlayerState> persistencePlayerState) {
+        persistencePlayerState.forEach(PlayerState::clearFacts);
+        return persistencePlayerState;
+    }
+
+    void begin() {
+        startTime.set(TimeUtils.currentInstant());
+        onBegin();
+        state.set(State.Running);
+    }
+
+    void end() {
+        endTime.set(TimeUtils.currentInstant());
+        playerStates.forEach(PlayerState::endMissions);
+        onEnd();
+        state.set(State.Finished);
+    }
+
     boolean endWithinThisSeason(MissionAssignment missionAssignment) {
         return missionAssignment.hasExpired() || missionAssignment.expirationTime().endsWithMatch();
     }
 
-    protected void onBegin() {}
-    protected void onEnd() {}
+    public final NodeCollection<Round> rounds() {
+        //TODO Devolver unmodifiable
+        return rounds;
+    }
+
+    public final NodeCollection<PlayerState> playerStates() {
+        //TODO Devolver unmodifiable
+        return playerStates;
+    }
+
+    State state() {
+        return state.get();
+    }
+
+    @Override
+    void destroyChildren() {
+        rounds.forEach(Node::markAsDestroyed);
+        playerStates.forEach(Node::markAsDestroyed);
+        //obtainedAchievements.forEach(Node::markAsDestroyed);
+    }
+
+    @Override
+    protected Competition parent() {
+        String[] ids = parentIds();
+        return GamificationGraph.get()
+                .competitions().find(ids[0]);
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -163,6 +140,9 @@ public class Season extends Node {
                 ", state=" + state +
                 '}';
     }
+
+    protected void onBegin() {}
+    protected void onEnd() {}
 
     public enum State {
         Created, Running, Finished

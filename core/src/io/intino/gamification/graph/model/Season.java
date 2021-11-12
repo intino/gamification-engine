@@ -111,7 +111,7 @@ public class Season extends Node {
     public Round currentRound() {
         if(rounds.isEmpty()) return null;
         Round round = rounds.last();
-        return round.state() != Round.State.Finished ? null : round;
+        return round.state() == Round.State.Finished ? null : round;
     }
 
     public final List<PlayerState> persistencePlayerState() {

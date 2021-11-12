@@ -34,7 +34,7 @@ public class Competition extends Node {
     public final Season currentSeason() {
         if(seasons.isEmpty()) return null;
         Season season = seasons.last();
-        return season.state() != Season.State.Finished ? null : season;
+        return season.state() == Season.State.Finished ? null : season;
     }
 
     public final NodeCollection<Mission> missions() {

@@ -1,13 +1,13 @@
 package io.intino.gamification.events;
 
-import io.intino.gamification.graph.model.Competition;
+import io.intino.gamification.graph.model.Mission;
+import io.intino.gamification.graph.model.MissionAssignment;
+import io.intino.gamification.graph.model.PlayerState;
+import io.intino.gamification.graph.model.Season;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//@SuppressWarnings("all")
 public class MissionProgressEventManager {
 
     private static MissionProgressEventManager instance;
@@ -16,27 +16,36 @@ public class MissionProgressEventManager {
         return instance;
     }
 
-    private final Map<String, List<MissionProgressEventCallback<? extends MissionProgressEvent>>> eventCallbacks;
+    private final Map<String, MissionProgressEventCallback> eventCallback;
 
     public MissionProgressEventManager() {
         MissionProgressEventManager.instance = this;
-        this.eventCallbacks = new ConcurrentHashMap<>();
+        this.eventCallback = new ConcurrentHashMap<>();
     }
 
-    public <T extends MissionProgressEvent> void addEventCallback(String eventType, MissionProgressEventCallback<T> callback) {
+    public void setEventCallback(String missionId, MissionProgressEventCallback callback) {
         if(callback == null) return;
-        eventCallbacks.computeIfAbsent(eventType, k -> new ArrayList<>()).add(callback);
+        eventCallback.put(missionId, callback);
     }
 
-    public void call(Competition competition, String missionId, String playerId) {
-        MissionProgressEvent missionProgressEvent = new MissionProgressEvent(competition, missionId, playerId);
-        invokeCallbacks(eventCallbacks.get(missionId), missionProgressEvent);
-    }
+    public void callCallback(Mission mission, String playerId) {
 
-    private void invokeCallbacks(List<MissionProgressEventCallback<? extends MissionProgressEvent>> callbacks, MissionProgressEvent missionProgressEvent) {
-        if(callbacks == null) return;
-        for(MissionProgressEventCallback<? extends MissionProgressEvent> callback : callbacks) {
-            callback.castAndNotify(missionProgressEvent);
-        }
+        if(playerId == null) return;
+
+        MissionProgressEventCallback callback = eventCallback.get(mission.id());
+        if(callback == null) return;
+
+        Season season = mission.competition().currentSeason();
+        if(season == null) return;
+
+        PlayerState playerState = season.playerStates().find(playerId);
+        if(playerState == null) return;
+
+        MissionAssignment missionAssignment = playerState.missionAssignments().stream()
+                .filter(ma -> ma.missionId().equals(mission.id()))
+                .findFirst().orElse(null);
+        if(missionAssignment == null) return;
+
+        callback.notify(missionAssignment.progress());
     }
 }

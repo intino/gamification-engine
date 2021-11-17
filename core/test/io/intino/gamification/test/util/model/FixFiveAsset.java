@@ -15,9 +15,4 @@ public class FixFiveAsset extends Mission {
     public FixFiveAsset() {
         super(ID, DESCRIPTION, PRIORITY);
     }
-
-    @Override
-    protected void setProgressCallbacks() {
-        subscribe("FixAsset", event -> event.missionAssignment().progress().increment());
-    }
 }

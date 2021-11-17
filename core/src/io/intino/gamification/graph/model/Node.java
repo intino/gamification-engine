@@ -11,7 +11,6 @@ public abstract class Node implements Serializable {
 
     public static final String PARENT_SEPARATOR = "\\$";
 
-
     private final String id;
     private String[] parentIds = new String[0];
     private boolean enabled = true;

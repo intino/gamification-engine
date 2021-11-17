@@ -1,15 +1,12 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.graph.structure.Property;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public class Season extends Node {
 

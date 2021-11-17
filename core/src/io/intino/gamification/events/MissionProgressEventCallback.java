@@ -1,11 +1,13 @@
 package io.intino.gamification.events;
 
+import io.intino.gamification.util.data.Progress;
+
 @FunctionalInterface
-public interface MissionProgressEventCallback<T extends MissionProgressEvent> {
+public interface MissionProgressEventCallback {
 
-    void notify(T event);
+    void notify(Progress progress);
 
-    default void castAndNotify(MissionProgressEvent event) {
-        notify((T) event);
+    default void castAndNotify(Progress progress) {
+        notify(progress);
     }
 }

@@ -1,12 +1,7 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.util.Log;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Stream;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
@@ -71,34 +66,24 @@ public class PlayerState extends Node {
 
     public void assignMission(MissionAssignment missionAssignment) {
         if(missionAssignment == null) throw new NullPointerException("MissionAssignment cannot be null");
-
-        Mission mission = competition().missions().find(missionAssignment.id());
-        if(mission == null) {
-            NoSuchElementException e = new NoSuchElementException("Mission " + missionAssignment.id() + " not exists");
-            Log.error(e.getMessage(), e);
-            throw e;
-        }
-
-        //TODO: Asignar competicion, season, round y player a missionAssignment (los params que hagan falta)
-
         missionAssignments.add(missionAssignment);
     }
 
     void failMission(String missionId) {
         missionAssignments.stream()
-                .filter(ma -> ma.id().equals(missionId))
+                .filter(ma -> ma.missionId().equals(missionId))
                 .forEach(MissionAssignment::fail);
     }
 
     void completeMission(String missionId) {
         missionAssignments.stream()
-                .filter(ma -> ma.id().equals(missionId))
+                .filter(ma -> ma.missionId().equals(missionId))
                 .forEach(MissionAssignment::complete);
     }
 
     void cancelMission(String missionId) {
         missionAssignments.removeIf(ma ->
-                ma.id().equals(missionId) && ma.progress().state() == InProgress
+                ma.missionId().equals(missionId) && ma.progress().state() == InProgress
         );
     }
 

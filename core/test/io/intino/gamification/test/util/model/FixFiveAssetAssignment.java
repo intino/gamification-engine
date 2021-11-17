@@ -12,8 +12,7 @@ public class FixFiveAssetAssignment extends MissionAssignment {
     private static boolean endsWithMatch = true;
 
     public FixFiveAssetAssignment() {
-        //TODO
-        super(missionId, total, null, instant -> 100);
+        super("id", missionId, total, null, instant -> 100);
     }
 
     @Override

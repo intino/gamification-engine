@@ -11,15 +11,26 @@ import static io.intino.gamification.util.data.Progress.State.*;
 
 public abstract class MissionAssignment extends Node {
 
+    private final String missionId;
     private final Progress progress;
     private final Instant creationTime;
     private final ExpirationTime expirationTime;
-    private final Function<Instant, Integer> scoreFunction;
+    private final Function<MissionAssignment, Integer> scoreFunction;
 
-    protected MissionAssignment(String missionId, int stepsToComplete, ExpirationTime expirationTime, Function<Instant, Integer> scoreFunction) {
-        super(missionId);
+    protected MissionAssignment(String id, String missionId, int stepsToComplete, ExpirationTime expirationTime, Function<MissionAssignment, Integer> scoreFunction) {
+        super(id);
+        this.missionId = missionId;
         this.progress = initProgress(stepsToComplete);
         this.creationTime = TimeUtils.currentInstant();
+        this.expirationTime = expirationTime;
+        this.scoreFunction = scoreFunction;
+    }
+
+    protected MissionAssignment(String id, String missionId, Progress progress, Instant creationTime, ExpirationTime expirationTime, Function<MissionAssignment, Integer> scoreFunction) {
+        super(id);
+        this.missionId = missionId;
+        this.progress = progress;
+        this.creationTime = creationTime;
         this.expirationTime = expirationTime;
         this.scoreFunction = scoreFunction;
     }
@@ -67,11 +78,19 @@ public abstract class MissionAssignment extends Node {
     }
 
     public final Mission mission() {
-        return parent().parent().parent().missions().find(id());
+        return parent().parent().parent().missions().find(missionId);
+    }
+
+    public final String missionId() {
+        return missionId;
     }
 
     public final Progress progress() {
         return progress;
+    }
+
+    public final Instant creationTime() {
+        return creationTime;
     }
 
     public final ExpirationTime expirationTime() {
@@ -79,7 +98,7 @@ public abstract class MissionAssignment extends Node {
     }
 
     public Integer score() {
-        return scoreFunction.apply(creationTime);
+        return scoreFunction.apply(this);
     }
 
     public PlayerState player() {

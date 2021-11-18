@@ -20,6 +20,11 @@ public class Season extends Node {
         super(id);
     }
 
+    public Season(String id, List<PlayerState> persistencePlayerState) {
+        super(id);
+        this.playerStates.addAll(persistencePlayerState);
+    }
+
     @Override
     void init() {
         this.rounds.init(absoluteId());
@@ -52,7 +57,6 @@ public class Season extends Node {
         if(currentRound != null && currentRound.isAvailable()) currentRound.end();
     }
 
-    //TODO: Hace falta???
     public final List<PlayerState> persistencePlayerState() {
         return playerStates.stream()
                 .map(this::filter)

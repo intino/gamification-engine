@@ -3,7 +3,6 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.events.EventCallback;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.util.data.Progress;
 
 import java.util.Objects;
 

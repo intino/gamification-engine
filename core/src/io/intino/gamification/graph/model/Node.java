@@ -25,7 +25,7 @@ public abstract class Node implements Serializable {
         initTransientAttributes();
     }
 
-    void buildParents(String parentId) {
+    void setParentIds(String parentId) {
         if(parentId == null || parentId.isBlank()) return;
         parentIds = parentId.split(PARENT_SEPARATOR);
     }

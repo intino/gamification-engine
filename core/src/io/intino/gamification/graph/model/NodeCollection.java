@@ -34,6 +34,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         node.index(nodes.size());
         nodes.add(node);
         lookupTable.put(node.id(), node);
+        node.setParentIds(context);
         node.init();
         node.onCreate();
         return true;
@@ -43,9 +44,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         if(!initialized()) throw new IllegalStateException("This collection is not initialized");
         if(node == null) return false;
         if(exists(node.id())) return false;
-        if(node.parent() != null) return false;
-        node.buildParents(context);
-        return true;
+        return node.parent() == null;
     }
 
     public void addAll(Collection<? extends T> nodes) {

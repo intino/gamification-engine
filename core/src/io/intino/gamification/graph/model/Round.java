@@ -146,6 +146,7 @@ public class Round extends Node {
         @Override
         public final Round parent() {
             String[] ids = parentIds();
+            if(ids == null || ids.length == 0) return null;
             return GamificationGraph.get()
                     .competitions().find(ids[0])
                     .seasons().find(ids[1])

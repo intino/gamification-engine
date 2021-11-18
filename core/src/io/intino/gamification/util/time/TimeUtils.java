@@ -3,7 +3,6 @@ package io.intino.gamification.util.time;
 import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 public class TimeUtils {
 
@@ -21,6 +20,10 @@ public class TimeUtils {
 
 	public static Instant now() {
 		return getInstantOf(getZonedDateTimeOf());
+	}
+
+	public static LocalDateTime localDateTimeNow() {
+		return getLocalDateTimeOf(now());
 	}
 
 	public static Date dateOf(Instant instant) {
@@ -160,30 +163,35 @@ public class TimeUtils {
 				break;
 			case Week:
 				millis = 7 * 24 * 60 * 60 * 1000;
+				break;
+			default:
+				throw new IllegalArgumentException("La escala no está permitida");
 		}
 		return millis * amount;
 	}
 
-	public static long getInstantDiff(Instant instant1, Instant instant2, Scale scale) {
-		if(instant1 == null || instant2 == null) return -1;
-		long diffInSeconds = Math.abs(instant1.getEpochSecond() - instant2.getEpochSecond());
-		return timeUnitOf(scale).convert(diffInSeconds, TimeUnit.SECONDS);
-	}
+	public static long getInstantDiff(Instant instant1, Instant instant2, Scale scale, boolean includeCurrent) {
 
-	private static TimeUnit timeUnitOf(Scale scale) {
+		if(instant1 == null || instant2 == null) return -1;
+
+		float diff;
+
 		switch (scale) {
+			case Week:
 			case Day:
-				return TimeUnit.DAYS;
 			case Hour:
-				return TimeUnit.HOURS;
-			case Millis:
-				return TimeUnit.MILLISECONDS;
 			case Minute:
-				return TimeUnit.MINUTES;
-			case Second:
-				return TimeUnit.SECONDS;
+				diff = (instant2.toEpochMilli() - instant1.toEpochMilli()) / (float) getMillisOf(scale, 1);
+				break;
+			default:
+				throw new IllegalArgumentException("La escala no está permitida");
 		}
-		throw new IllegalArgumentException("La escala no está permitida");
+
+		if(diff % 1 == 0 || includeCurrent) {
+			return (long) Math.ceil(diff);
+		} else {
+			return (long) (Math.ceil(diff) - 1);
+		}
 	}
 
 	public static boolean instantIsInRange(Instant instant, Instant from, Instant to) {
@@ -211,7 +219,7 @@ public class TimeUtils {
 
 	private static LocalDateTime getLocalDateTimeOf(int year, int month, int day, int hour, int minute, int second, int millis) {
 		try {
-			return LocalDateTime.of(year, month, day, hour, minute);
+			return LocalDateTime.of(year, month, day, hour, minute, second, 1000000 * millis);
 		} catch (Exception e) {
 			return null;
 		}

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public abstract class Node implements Serializable {
 
-    private static final String PARENT_SEPARATOR = "\\$";
+    private static final String PARENT_SEPARATOR = "$";
 
     private final String id;
     private String[] parentIds = new String[0];
@@ -27,7 +27,7 @@ public abstract class Node implements Serializable {
 
     void setParentIds(String parentId) {
         if(parentId == null || parentId.isBlank()) return;
-        parentIds = parentId.split(PARENT_SEPARATOR);
+        parentIds = parentId.split("\\" + PARENT_SEPARATOR);
     }
 
     void markAsDestroyed() {

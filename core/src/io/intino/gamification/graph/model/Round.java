@@ -44,8 +44,7 @@ public class Round extends Node {
     }
 
     public final NodeCollection<Match> matches() {
-        //TODO: Revisar usos
-        return matches.asReadOnly();
+        return matches;
     }
 
     public final Instant startTime() {

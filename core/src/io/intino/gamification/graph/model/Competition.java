@@ -65,38 +65,31 @@ public class Competition extends Node {
     }
 
     public final NodeCollection<Season> seasons() {
-        //TODO: Revisar Uso
-        return seasons.asReadOnly();
+        return seasons;
     }
 
     public final NodeCollection<Entity> entities() {
-        //TODO: Revisar Uso
-        return entities.asReadOnly();
+        return entities;
     }
 
     public final NodeCollection<Player> players() {
-        //TODO: Revisar Uso
-        return players.asReadOnly();
+        return players;
     }
 
     public final NodeCollection<Mission> missions() {
-        //TODO: Revisar Uso
-        return missions.asReadOnly();
+        return missions;
     }
 
     public final NodeCollection<Reinforcement> successes() {
-        //TODO: Revisar Uso
-        return successes.asReadOnly();
+        return successes;
     }
 
     public final NodeCollection<Foul> fouls() {
-        //TODO: Revisar Uso
-        return fouls.asReadOnly();
+        return fouls;
     }
 
     public final NodeCollection<Achievement> achievements() {
-        //TODO: Revisar Uso
-        return achievements.asReadOnly();
+        return achievements;
     }
 
     @Override

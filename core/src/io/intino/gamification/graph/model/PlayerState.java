@@ -89,8 +89,7 @@ public final class PlayerState extends Node {
     }
 
     public final NodeCollection<MissionAssignment> missionAssignments() {
-        //TODO: Revisar uso
-        return missionAssignments.asReadOnly();
+        return missionAssignments;
     }
 
     private Competition competition() {

@@ -89,13 +89,11 @@ public class Season extends Node {
     }
 
     public final NodeCollection<Round> rounds() {
-        //TODO: Revisa uso
-        return rounds.asReadOnly();
+        return rounds;
     }
 
     public NodeCollection<PlayerState> playerStates() {
-        //TODO: Revisa uso
-        return playerStates.asReadOnly();
+        return playerStates;
     }
 
     public final Instant startTime() {

@@ -1,7 +1,7 @@
 package org.example.cinepolis.control.gamification;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.events.MissionProgressEventManager;
+import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.model.Competition;
 import io.intino.gamification.graph.model.Mission;
 import io.intino.gamification.graph.model.Player;
@@ -36,7 +36,8 @@ public class Adapter {
         Competition competition = engine.graph().competitions().find(GamificationConfig.WorldId);
 
         if(competition == null) {
-            this.competition = engine.graph().addCompetition(new Competition(GamificationConfig.WorldId));
+            this.competition = new Competition(GamificationConfig.WorldId);
+            engine.graph().competitions().add(this.competition);
             this.competition.missions().addAll(initMissions());
         } else {
             this.competition = competition;
@@ -67,7 +68,8 @@ public class Adapter {
                 .collect(Collectors.toList());
 
         for(String employee : employees) {
-            //world.players().find(employee).assignMission(new FixOneAssetAssignment(world().id(), world().currentMatch().id(), employee));
+            //TODO
+            //competition.players().find(employee).assignMission(new AtencionTicketsOTRSMission(world().id(), world().currentMatch().id(), employee));
         }
     }
 
@@ -79,7 +81,8 @@ public class Adapter {
     public void adapt(FixedAsset event) {
         boolean anyAsset = graph.assetList().stream().anyMatch(as -> as.id().equals(event.asset()) && as.alerts().stream().anyMatch(al -> al.id().equals(event.alert())));
         if(!anyAsset) return;
-        MissionProgressEventManager.get().call(competition, "FixAsset", event.employee());
+        Mission mission = competition.missions().find("AtencionTicketsOTRSMission");
+        EventManager.get().callCallback(mission, event.employee());
     }
 
     public void adapt(HireEmployee event) {

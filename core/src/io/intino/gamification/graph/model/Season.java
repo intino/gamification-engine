@@ -24,42 +24,8 @@ public class Season extends Node {
     void init() {
         this.rounds.init(absoluteId());
         this.playerStates.init(absoluteId());
-        this.startTime = Instant.now();
-    }
-
-    public final NodeCollection<Round> rounds() {
-        return rounds;
-    }
-
-    public final NodeCollection<PlayerState> playerStates() {
-        return playerStates;
-    }
-
-    public final State state() {
-        return state;
-    }
-
-    public Season state(State state) {
-        this.state = state;
-        return this;
-    }
-
-    public Instant startTime() {
-        return startTime;
-    }
-
-    public Season startTime(Instant startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public Instant endTime() {
-        return endTime;
-    }
-
-    public Season endTime(Instant endTime) {
-        this.endTime = endTime;
-        return this;
+        //TODO: Se tiene que inicializar aquí???
+        this.startTime = TimeUtils.currentInstant();
     }
 
     @Override
@@ -68,16 +34,37 @@ public class Season extends Node {
         playerStates.forEach(Node::markAsDestroyed);
     }
 
-    public Competition competition() {
-        return parent();
+    public final Round currentRound() {
+        if(rounds.isEmpty()) return null;
+        Round round = rounds.last();
+        return round.state() == Round.State.Finished ? null : round;
     }
 
-    @Override
-    public Competition parent() {
-        String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
-        return GamificationGraph.get()
-                .competitions().find(ids[0]);
+    public final void startNewRound(Round round) {
+        if (round != null) {
+            rounds.add(round);
+            round.begin();
+        }
+    }
+
+    public final void finishCurrentRound() {
+        Round currentRound = rounds.last();
+        if(currentRound != null && currentRound.isAvailable()) currentRound.end();
+    }
+
+    //TODO: Hace falta???
+    public final List<PlayerState> persistencePlayerState() {
+        return playerStates.stream()
+                .map(this::filter)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
+
+    private PlayerState filter(PlayerState playerState) {
+        PlayerState newPlayerState = playerState.copy();
+        newPlayerState.missionAssignments().removeIf(this::endWithinThisSeason);
+        if(newPlayerState.missionAssignments().size() == 0) return null;
+        return newPlayerState;
     }
 
     void begin() {
@@ -93,48 +80,65 @@ public class Season extends Node {
         state = State.Finished;
     }
 
-    public final void startNewRound(Round round) {
-        if (round != null) {
-            rounds.add(round);
-            round.begin();
-        }
-    }
-
-    public final void finishCurrentRound() {
-        Round currentRound = rounds.last();
-        if(currentRound != null && currentRound.isAvailable()) currentRound.end();
-    }
-
-    public Round currentRound() {
-        if(rounds.isEmpty()) return null;
-        Round round = rounds.last();
-        return round.state() == Round.State.Finished ? null : round;
-    }
-
-    public final List<PlayerState> persistencePlayerState() {
-        return playerStates.stream()
-                .map(this::filter)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-    }
-
     private void endMissions() {
         playerStates.forEach(PlayerState::endMissions);
-    }
-
-    private PlayerState filter(PlayerState playerState) {
-        PlayerState newPlayerState = playerState.copy();
-        newPlayerState.missionAssignments().removeIf(this::endWithinThisSeason);
-        if(newPlayerState.missionAssignments().size() == 0) return null;
-        return newPlayerState;
     }
 
     boolean endWithinThisSeason(MissionAssignment missionAssignment) {
         return missionAssignment.hasExpired() || missionAssignment.expirationTime().endsWithMatch();
     }
 
+    public final NodeCollection<Round> rounds() {
+        //TODO: Revisa uso
+        return rounds.asReadOnly();
+    }
+
+    public NodeCollection<PlayerState> playerStates() {
+        //TODO: Revisa uso
+        return playerStates.asReadOnly();
+    }
+
+    public final Instant startTime() {
+        return startTime;
+    }
+
+    public final Season startTime(Instant startTime) {
+        this.startTime = startTime;
+        return this;
+    }
+
+    public final Instant endTime() {
+        return endTime;
+    }
+
+    public final Season endTime(Instant endTime) {
+        this.endTime = endTime;
+        return this;
+    }
+
+    public final State state() {
+        return state;
+    }
+
+    public final Season state(State state) {
+        this.state = state;
+        return this;
+    }
+
     protected void onBegin() {}
     protected void onEnd() {}
+
+    public final Competition competition() {
+        return parent();
+    }
+
+    @Override
+    public final Competition parent() {
+        String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
+        return GamificationGraph.get()
+                .competitions().find(ids[0]);
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,6 +1,6 @@
 package org.example.cinepolis.control.gamification.model.mission;
 
-import io.intino.gamification.graph.model.Fact;
+import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.graph.model.MissionAssignment;
 import io.intino.gamification.util.time.TimeUtils;
 

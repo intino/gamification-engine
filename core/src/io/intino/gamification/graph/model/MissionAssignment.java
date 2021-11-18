@@ -35,6 +35,12 @@ public abstract class MissionAssignment extends Node {
         this.scoreFunction = scoreFunction;
     }
 
+    private Progress initProgress(int stepsToComplete) {
+        Progress progress = new Progress(stepsToComplete);
+        progress.currentProperty().addObserver(this::onProgressChange);
+        return progress;
+    }
+
     boolean hasExpired() {
         if(expirationTime == null) return false;
         return !expirationTime.isAfter(TimeUtils.currentInstant());
@@ -71,16 +77,6 @@ public abstract class MissionAssignment extends Node {
         return missionAssignment;
     }
 
-    private Progress initProgress(int stepsToComplete) {
-        Progress progress = new Progress(stepsToComplete);
-        progress.currentProperty().addObserver(this::onProgressChange);
-        return progress;
-    }
-
-    public final Mission mission() {
-        return parent().parent().parent().missions().find(missionId);
-    }
-
     public final String missionId() {
         return missionId;
     }
@@ -97,24 +93,6 @@ public abstract class MissionAssignment extends Node {
         return expirationTime;
     }
 
-    public Integer score() {
-        return scoreFunction.apply(this);
-    }
-
-    public PlayerState player() {
-        return parent();
-    }
-
-    @Override
-    public PlayerState parent() {
-        String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
-        return GamificationGraph.get()
-                .competitions().find(ids[0])
-                .seasons().find(ids[1])
-                .playerStates().find(ids[2]);
-    }
-
     protected void onProgressChange(int oldValue, int newValue) {}
 
     protected void onMissionComplete() {}
@@ -123,6 +101,32 @@ public abstract class MissionAssignment extends Node {
     protected void onMissionEnd() {}
 
     protected abstract MissionAssignment getCopy();
+
+    public final PlayerState player() {
+        return parent();
+    }
+
+    @Override
+    public final PlayerState parent() {
+        String[] ids = parentIds();
+        if(ids == null || ids.length == 0) return null;
+        return GamificationGraph.get()
+                .competitions().find(ids[0])
+                .seasons().find(ids[1])
+                .playerStates().find(ids[2]);
+    }
+
+    /*
+
+    public final Mission mission() {
+        return parent().parent().parent().missions().find(missionId);
+    }
+
+    public Integer score() {
+        return scoreFunction.apply(this);
+    }
+
+    */
 
     public static class ExpirationTime {
 

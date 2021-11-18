@@ -1,6 +1,7 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.events.MissionProgressEventManager;
+import io.intino.gamification.events.EventCallback;
+import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.data.Progress;
 
@@ -9,39 +10,39 @@ public abstract class Mission extends Node {
     private final String description;
     private final int priority;
 
-    public Mission(String id, String description) {
+    protected Mission(String id, String description) {
         this(id, description, 0);
     }
 
-    public Mission(String id, String description, int priority) {
+    protected Mission(String id, String description, int priority) {
         super(id);
         this.description = description;
         this.priority = priority;
-        MissionProgressEventManager.get().setEventCallback(id, Progress::increment);
+        EventManager.get().setEventCallback(id, (EventCallback<Progress>) Progress::increment);
     }
 
-    public String description() {
+    public void call(String playerId) {
+        EventManager.get().callCallback(this, playerId);
+    }
+
+    public final String description() {
         return description;
     }
 
-    public int priority() {
+    public final int priority() {
         return priority;
     }
 
-    public Competition competition() {
+    public final Competition competition() {
         return parent();
     }
 
     @Override
-    public Competition parent() {
+    public final Competition parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0]);
-    }
-
-    public void call(String playerId) {
-        MissionProgressEventManager.get().callCallback(this, playerId);
     }
 
     @Override

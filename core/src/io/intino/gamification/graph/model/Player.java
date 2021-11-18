@@ -7,6 +7,7 @@ public class Player extends Entity {
     }
 
     public final void assignMission(MissionAssignment missionAssignment) {
+        if(missionAssignment == null) throw new NullPointerException("MissionAssignment cannot be null");
         Season season = availableSeason();
         if(season != null) {
             season.playerStates().find(id()).assignMission(missionAssignment);

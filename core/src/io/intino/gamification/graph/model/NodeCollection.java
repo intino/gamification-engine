@@ -31,7 +31,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     public synchronized boolean add(T node) {
         if(!meetPreconditions(node)) return false;
-        node.index = nodes.size();
+        node.index(nodes.size());
         nodes.add(node);
         lookupTable.put(node.id(), node);
         node.init();
@@ -58,7 +58,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     }
 
     public synchronized void destroy(T node) {
-        nodes.remove(node.index);
+        nodes.remove(node.index());
         destroyInternal(node);
     }
 
@@ -78,7 +78,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         lookupTable.remove(node.id());
         node.markAsDestroyed();
         node.onDestroy();
-        node.index = Integer.MIN_VALUE;
+        node.index(Integer.MIN_VALUE);
     }
 
     public boolean exists(String id) {

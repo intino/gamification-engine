@@ -15,22 +15,7 @@ public class Technician extends Player {
     }
 
     @Override
-    protected void onUpdate() {
-
-    }
-
-    @Override
     protected void onDestroy() {
-
-    }
-
-    @Override
-    protected void onEnable() {
-
-    }
-
-    @Override
-    protected void onDisable() {
 
     }
 }

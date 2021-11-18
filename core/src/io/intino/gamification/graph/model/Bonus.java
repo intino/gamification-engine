@@ -3,25 +3,25 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.util.time.TimeUtils;
 
-public class Foul extends FactDefinition {
+public class Bonus extends FactDefinition {
 
-    protected Foul(String id, int points) {
+    protected Bonus(String id, int points) {
         super(id, points);
     }
 
-    public final Foul description(String description) {
+    public final Bonus description(String description) {
         this.description = description;
         return this;
     }
 
     @Override
     protected final void addFactTo(Round.Match match) {
-        match.addFact(new Fact(TimeUtils.currentInstant(), Fact.FactType.Foul, description, points));
+        match.addFact(new Fact(TimeUtils.currentInstant(), Fact.FactType.Bonus, description, points));
     }
 
     @Override
     public String toString() {
-        return "Foul{" +
+        return "Bonus{" +
                 "description='" + description + '\'' +
                 ", points=" + points +
                 '}';

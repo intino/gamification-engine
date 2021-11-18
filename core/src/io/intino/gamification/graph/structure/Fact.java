@@ -1,4 +1,4 @@
-package io.intino.gamification.graph.model;
+package io.intino.gamification.graph.structure;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -13,6 +13,13 @@ public class Fact {
     public Fact(Instant ts, Type type, String name, int value) {
         this.ts = ts;
         this.type = type;
+        this.name = name;
+        this.value = value;
+    }
+
+    public Fact(Instant ts, FactType type, String name, int value) {
+        this.ts = ts;
+        this.type = new Type(type.name());
         this.name = name;
         this.value = value;
     }
@@ -85,5 +92,9 @@ public class Fact {
         public String toString() {
             return name;
         }
+    }
+
+    public enum FactType {
+        Reinforcement, Foul, Bonus, Mission
     }
 }

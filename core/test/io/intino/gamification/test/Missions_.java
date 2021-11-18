@@ -1,7 +1,6 @@
 package io.intino.gamification.test;
 
 import io.intino.gamification.GamificationEngine;
-import io.intino.gamification.events.MissionProgressEventManager;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.model.PlayerState;
 import io.intino.gamification.graph.model.Round;

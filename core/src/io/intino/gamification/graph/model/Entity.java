@@ -4,16 +4,16 @@ import io.intino.gamification.graph.GamificationGraph;
 
 public abstract class Entity extends Node {
 
-    public Entity(String id) {
+    Entity(String id) {
         super(id);
     }
 
-    public Competition competition() {
+    public final Competition competition() {
         return parent();
     }
 
     @Override
-    public Competition parent() {
+    public final Competition parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()

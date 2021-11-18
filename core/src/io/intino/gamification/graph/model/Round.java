@@ -1,6 +1,7 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
@@ -25,35 +26,9 @@ public class Round extends Node {
         matches.init(absoluteId());
     }
 
-    public Instant startTime() {
-        return this.startTime;
-    }
-
-    public Round startTime(Instant startTime) {
-        this.startTime = startTime;
-        return this;
-    }
-
-    public Instant endTime() {
-        return this.endTime;
-    }
-
-    public Round endTime(Instant endTime) {
-        this.endTime = endTime;
-        return this;
-    }
-
-    public State state() {
-        return this.state;
-    }
-
-    public Round state(State state) {
-        this.state = state;
-        return this;
-    }
-
-    public final NodeCollection<Match> matches() {
-        return matches;
+    @Override
+    void destroyChildren() {
+        matches.forEach(Node::markAsDestroyed);
     }
 
     void begin() {
@@ -68,20 +43,47 @@ public class Round extends Node {
         state = State.Finished;
     }
 
+    public final NodeCollection<Match> matches() {
+        //TODO: Revisar usos
+        return matches.asReadOnly();
+    }
+
+    public final Instant startTime() {
+        return this.startTime;
+    }
+
+    public final Round startTime(Instant startTime) {
+        this.startTime = startTime;
+        return this;
+    }
+
+    public final Instant endTime() {
+        return this.endTime;
+    }
+
+    public final Round endTime(Instant endTime) {
+        this.endTime = endTime;
+        return this;
+    }
+
+    public final State state() {
+        return this.state;
+    }
+
+    public final Round state(State state) {
+        this.state = state;
+        return this;
+    }
+
     protected void onBegin() {}
     protected void onEnd() {}
 
-    @Override
-    void destroyChildren() {
-        matches.forEach(Node::markAsDestroyed);
-    }
-
-    public Season season() {
+    public final Season season() {
         return parent();
     }
 
     @Override
-    public Season parent() {
+    public final Season parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
@@ -125,29 +127,50 @@ public class Round extends Node {
             super(playerId);
         }
 
-        public void addFact(Fact fact) {
+        void addFact(Fact fact) {
             facts.add(fact);
         }
 
-        public int score() {
-            return facts.stream().mapToInt(Fact::value).sum();
-        }
-
-        public List<Fact> facts() {
+        public final List<Fact> facts() {
             return Collections.unmodifiableList(facts);
         }
 
-        public Round round() {
+        public final int score() {
+            return facts.stream().mapToInt(Fact::value).sum();
+        }
+
+        public final Round round() {
             return parent();
         }
 
         @Override
-        public Round parent() {
+        public final Round parent() {
             String[] ids = parentIds();
             return GamificationGraph.get()
                     .competitions().find(ids[0])
                     .seasons().find(ids[1])
                     .rounds().find(ids[2]);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            if (!super.equals(o)) return false;
+            Match match = (Match) o;
+            return Objects.equals(facts, match.facts);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(super.hashCode(), facts);
+        }
+
+        @Override
+        public String toString() {
+            return "Match{" +
+                    "facts=" + facts +
+                    '}';
         }
     }
 }

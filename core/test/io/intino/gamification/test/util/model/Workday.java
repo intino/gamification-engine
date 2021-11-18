@@ -17,19 +17,4 @@ public class Workday extends Season {
     protected void onEnd() {
 
     }
-
-    @Override
-    protected void onUpdate() {
-
-    }
-
-    @Override
-    protected void onEnable() {
-
-    }
-
-    @Override
-    protected void onDisable() {
-
-    }
 }

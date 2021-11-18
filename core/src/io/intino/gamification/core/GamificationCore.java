@@ -1,6 +1,6 @@
 package io.intino.gamification.core;
 
-import io.intino.gamification.events.MissionProgressEventManager;
+import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GraphSerializer;
 import io.intino.gamification.graph.GamificationGraph;
 
@@ -9,7 +9,7 @@ public class GamificationCore {
     private final Configuration configuration;
     private GamificationGraph graph;
     private GraphSerializer graphSerializer;
-    private MissionProgressEventManager missionProgressEventManager;
+    private EventManager eventManager;
 
     public GamificationCore(GamificationParameters gamificationParameters) {
         this.configuration = new Configuration(gamificationParameters);
@@ -23,7 +23,7 @@ public class GamificationCore {
     private void initSubSystems() {
         this.graph = new GamificationGraph(this);
         this.graphSerializer = new GraphSerializer(this);
-        this.missionProgressEventManager = new MissionProgressEventManager();
+        this.eventManager = new EventManager();
     }
 
     public Configuration configuration() {
@@ -38,7 +38,7 @@ public class GamificationCore {
         return this.graphSerializer;
     }
 
-    public MissionProgressEventManager eventManager() {
-        return missionProgressEventManager;
+    public EventManager eventManager() {
+        return eventManager;
     }
 }

@@ -9,10 +9,11 @@ public abstract class SerializableCollection implements Serializable {
         initTransientAttributes();
     }
 
+    //TODO: Para qué sirve???
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
         initTransientAttributes();
     }
 
-    protected void initTransientAttributes() {}
+    protected final void initTransientAttributes() {}
 }

@@ -24,6 +24,14 @@ public abstract class FactDefinition extends Node {
 
     protected abstract void addFactTo(Round.Match match);
 
+    public String description() {
+        return description;
+    }
+
+    public int points() {
+        return points;
+    }
+
     public final Competition competition() {
         return parent();
     }
@@ -47,5 +55,14 @@ public abstract class FactDefinition extends Node {
     @Override
     public int hashCode() {
         return Objects.hash(super.hashCode(), description, points);
+    }
+
+    @Override
+    public String toString() {
+        return "FactDefinition{" +
+                "description='" + description + '\'' +
+                ", points=" + points +
+                ", competition=" + competition() +
+                '}';
     }
 }

@@ -21,7 +21,7 @@ public abstract class MissionAssignment extends Node {
         super(id);
         this.missionId = missionId;
         this.progress = initProgress(stepsToComplete);
-        this.creationTime = TimeUtils.currentInstant();
+        this.creationTime = TimeUtils.now();
         this.expirationTime = expirationTime;
         this.scoreFunction = scoreFunction;
     }
@@ -43,7 +43,7 @@ public abstract class MissionAssignment extends Node {
 
     boolean hasExpired() {
         if(expirationTime == null) return false;
-        return !expirationTime.isAfter(TimeUtils.currentInstant());
+        return !expirationTime.isAfter(TimeUtils.now());
     }
 
     void update(Progress.State newState) {

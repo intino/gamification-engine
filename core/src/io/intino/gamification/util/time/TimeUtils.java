@@ -19,7 +19,7 @@ public class TimeUtils {
 
 	/* INSTANT OF ----------------------------------------------------------------------------------------------------*/
 
-	public static Instant currentInstant() {
+	public static Instant now() {
 		return getInstantOf(getZonedDateTimeOf());
 	}
 

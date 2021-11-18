@@ -7,13 +7,13 @@ public class DatamartUtils {
 
     public static DeregisterAsset deleteAsset(String id) {
         return new DeregisterAsset()
-                .ts(TimeUtils.currentInstant())
+                .ts(TimeUtils.now())
                 .id(id);
     }
 
     public static RegisterAsset newAsset(String id, String name, String area) {
         return new RegisterAsset()
-                .ts(TimeUtils.currentInstant())
+                .ts(TimeUtils.now())
                 .id(id)
                 .name(name)
                 .area(area);
@@ -21,7 +21,7 @@ public class DatamartUtils {
 
     public static HireEmployee newEmployee(String id, String name, int age, String phone, String area) {
         return new HireEmployee()
-                .ts(TimeUtils.currentInstant())
+                .ts(TimeUtils.now())
                 .id(id)
                 .name(name)
                 .age(age)
@@ -31,13 +31,13 @@ public class DatamartUtils {
 
     public static DismissEmployee deleteEmployee(String id) {
         return new DismissEmployee()
-                .ts(TimeUtils.currentInstant())
+                .ts(TimeUtils.now())
                 .id(id);
     }
 
     public static AssetAlert generateAlert(String id, String asset, AssetAlert.Importance importance, int limitHours, String description) {
         return new AssetAlert()
-                .ts(TimeUtils.currentInstant())
+                .ts(TimeUtils.now())
                 .id(id)
                 .asset(asset)
                 .importance(importance)
@@ -47,7 +47,7 @@ public class DatamartUtils {
 
     public static FixedAsset completeAlert(String alert, String asset, String employee) {
         return new FixedAsset()
-                .ts(TimeUtils.currentInstant())
+                .ts(TimeUtils.now())
                 .alert(alert)
                 .asset(asset)
                 .employee(employee);

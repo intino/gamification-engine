@@ -1,17 +1,9 @@
 package org.example.cinepolis.control.gamification.dispatcher;
 
-import io.intino.gamification.graph.model.Round;
-import io.intino.gamification.graph.model.MissionAssignment;
-import io.intino.gamification.util.time.Scale;
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.gamification.model.mission.CinepolisMission;
 import org.example.cinepolis.datahub.events.gamification.CheckPenalties;
 
 import java.time.Instant;
-
-import static io.intino.gamification.util.data.Progress.State.InProgress;
-import static io.intino.gamification.util.time.TimeUtils.currentInstant;
-import static io.intino.gamification.util.time.TimeUtils.getInstantDiff;
 
 public class CheckPenaltiesDispatcher extends Dispatcher<CheckPenalties> {
 

@@ -4,11 +4,9 @@ import io.intino.gamification.graph.model.Round;
 import io.intino.gamification.graph.model.Competition;
 import io.intino.gamification.util.time.TimeUtils;
 import org.example.cinepolis.control.box.ControlBox;
-import org.example.cinepolis.control.gamification.model.Employee;
 import org.example.cinepolis.datahub.events.gamification.NewMatch;
 
 import java.util.Collection;
-import java.util.Map;
 
 public class NewMatchDispatcher extends Dispatcher<NewMatch> {
 
@@ -42,7 +40,7 @@ public class NewMatchDispatcher extends Dispatcher<NewMatch> {
         StringBuilder sb = new StringBuilder()
                 .append("match")
                 .append("_")
-                .append(TimeUtils.currentInstant().toString());
+                .append(TimeUtils.now().toString());
 
         return sb.toString();
     }

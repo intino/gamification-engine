@@ -16,7 +16,7 @@ public class Bonus extends FactDefinition {
 
     @Override
     protected final void addFactTo(Round.Match match) {
-        match.addFact(new Fact(TimeUtils.currentInstant(), Fact.FactType.Bonus, description, points));
+        match.addFact(new Fact(TimeUtils.now(), Fact.FactType.Bonus, description, points));
     }
 
     @Override

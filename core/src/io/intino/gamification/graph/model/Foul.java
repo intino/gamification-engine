@@ -16,7 +16,7 @@ public class Foul extends FactDefinition {
 
     @Override
     protected final void addFactTo(Round.Match match) {
-        match.addFact(new Fact(TimeUtils.currentInstant(), Fact.FactType.Foul, description, points));
+        match.addFact(new Fact(TimeUtils.now(), Fact.FactType.Foul, description, points));
     }
 
     @Override

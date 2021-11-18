@@ -30,7 +30,7 @@ public class Season extends Node {
         this.rounds.init(absoluteId());
         this.playerStates.init(absoluteId());
         //TODO: Se tiene que inicializar aquí???
-        this.startTime = TimeUtils.currentInstant();
+        this.startTime = TimeUtils.now();
     }
 
     @Override
@@ -72,13 +72,13 @@ public class Season extends Node {
     }
 
     void begin() {
-        startTime = TimeUtils.currentInstant();
+        startTime = TimeUtils.now();
         onBegin();
         state = State.Running;
     }
 
     void end() {
-        endTime = TimeUtils.currentInstant();
+        endTime = TimeUtils.now();
         endMissions();
         onEnd();
         state = State.Finished;

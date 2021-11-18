@@ -32,13 +32,13 @@ public class Round extends Node {
     }
 
     void begin() {
-        startTime = TimeUtils.currentInstant();
+        startTime = TimeUtils.now();
         onBegin();
         state = State.Running;
     }
 
     void end() {
-        endTime = TimeUtils.currentInstant();
+        endTime = TimeUtils.now();
         onEnd();
         state = State.Finished;
     }

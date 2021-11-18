@@ -46,12 +46,12 @@ public class EntradaTimeTrackerMission extends CinepolisMission {
         @Override
         protected void onMissionComplete() {
             //TODO: Revisar asignacion de puntos
-            playerState().addFact(new Fact(TimeUtils.currentInstant(), Fact.Type.Mission, id(), score()));
+            playerState().addFact(new Fact(TimeUtils.now(), Fact.Type.Mission, id(), score()));
         }
 
         @Override
         protected void onMissionFail() {
-            playerState().addFact(new Fact(TimeUtils.currentInstant(), Fact.Type.Mission, id(), score()));
+            playerState().addFact(new Fact(TimeUtils.now(), Fact.Type.Mission, id(), score()));
         }
 
         @Override

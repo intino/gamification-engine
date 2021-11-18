@@ -16,7 +16,7 @@ public class Reinforcement extends FactDefinition {
 
     @Override
     protected final void addFactTo(Round.Match match) {
-        match.addFact(new Fact(TimeUtils.currentInstant(), Fact.FactType.Reinforcement, description, points));
+        match.addFact(new Fact(TimeUtils.now(), Fact.FactType.Reinforcement, description, points));
     }
 
     @Override

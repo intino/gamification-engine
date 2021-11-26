@@ -25,6 +25,8 @@ public abstract class Mission extends Node {
         EventManager.get().callCallback(this, playerId);
     }
 
+    public abstract void update(MissionAssignment assignment);
+
     public final String description() {
         return description;
     }

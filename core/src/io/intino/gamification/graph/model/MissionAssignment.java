@@ -16,6 +16,7 @@ public abstract class MissionAssignment extends Node {
     private final Instant creationTime;
     private final ExpirationTime expirationTime;
     private final Function<MissionAssignment, Integer> scoreFunction;
+    private String description;
 
     protected MissionAssignment(String id, String missionId, int stepsToComplete, ExpirationTime expirationTime, Function<MissionAssignment, Integer> scoreFunction) {
         super(id);
@@ -91,6 +92,15 @@ public abstract class MissionAssignment extends Node {
 
     public final ExpirationTime expirationTime() {
         return expirationTime;
+    }
+
+    public String description() {
+        return description;
+    }
+
+    public MissionAssignment description(String description) {
+        this.description = description;
+        return this;
     }
 
     protected void onProgressChange(int oldValue, int newValue) {}

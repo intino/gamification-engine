@@ -29,7 +29,7 @@ public class Season extends Node {
     void init() {
         this.rounds.init(absoluteId());
         this.playerStates.init(absoluteId());
-        //TODO: Se tiene que inicializar aquí???
+        competition().players().forEach(player -> playerStates.add(new PlayerState(player.id())));
         this.startTime = TimeUtils.now();
     }
 

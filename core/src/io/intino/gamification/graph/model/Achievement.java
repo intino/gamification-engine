@@ -58,6 +58,6 @@ public class Achievement extends Node {
     }
 
     public enum Type {
-        Mention, Milestone, Prize
+        Bonus, Milestone, Prize
     }
 }

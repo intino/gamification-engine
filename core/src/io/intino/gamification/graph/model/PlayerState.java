@@ -41,12 +41,12 @@ public final class PlayerState extends Node {
 
     // Score from finished matches
     public int score() {
-        return facts().mapToInt(Fact::value).sum();
+        return facts().mapToInt(Fact::points).sum();
     }
 
     // Score, including points gained during the current round
     public int rawScore() {
-        return rawFacts().mapToInt(Fact::value).sum();
+        return rawFacts().mapToInt(Fact::points).sum();
     }
 
     void assignMission(MissionAssignment missionAssignment) {

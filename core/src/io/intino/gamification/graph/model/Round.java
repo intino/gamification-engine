@@ -126,7 +126,10 @@ public class Round extends Node {
             super(playerId);
         }
 
-        void addFact(Fact fact) {
+        public void addFact(Fact fact) {
+            fact.competition(round().season().competition().id());
+            fact.season(round().season().id());
+            fact.round(round().id());
             facts.add(fact);
         }
 
@@ -135,7 +138,7 @@ public class Round extends Node {
         }
 
         public final int score() {
-            return facts.stream().mapToInt(Fact::value).sum();
+            return facts.stream().mapToInt(Fact::points).sum();
         }
 
         public final Round round() {
@@ -153,23 +156,10 @@ public class Round extends Node {
         }
 
         @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            if (!super.equals(o)) return false;
-            Match match = (Match) o;
-            return Objects.equals(facts, match.facts);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(super.hashCode(), facts);
-        }
-
-        @Override
         public String toString() {
             return "Match{" +
-                    "facts=" + facts +
+                    "id=" + id() +
+                    ", facts=" + facts +
                     '}';
         }
     }

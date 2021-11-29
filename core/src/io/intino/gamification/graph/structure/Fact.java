@@ -165,7 +165,7 @@ public class Fact {
 
         private final String name;
 
-        public Type(String name) {
+        private Type(String name) {
             this.name = name;
         }
 

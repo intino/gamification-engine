@@ -28,15 +28,22 @@ public final class PlayerState extends Node {
 
     // Facts from finished matches
     public Stream<Fact> facts() {
+        if(parent() == null) return Stream.empty();
         return parent().rounds().stream()
                 .filter(round -> round.state() == Round.State.Finished)
-                .flatMap(round -> round.matches().find(id()).facts().stream());
+                .flatMap(this::factsOfMatch);
     }
 
     // All facts, including those in the current round
     public Stream<Fact> rawFacts() {
+        if(parent() == null) return Stream.empty();
         return parent().rounds().stream()
-                .flatMap(round -> round.matches().find(id()).facts().stream());
+                .flatMap(this::factsOfMatch);
+    }
+
+    private Stream<Fact> factsOfMatch(Round round) {
+        Round.Match match = round.matches().addIfNotExists(id(), () -> new Round.Match(id()));
+        return match.facts().stream();
     }
 
     // Score from finished matches

@@ -75,6 +75,15 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         destroyInternal(node);
     }
 
+    public synchronized void destroyAll() {
+        Iterator<T> iterator = nodes.iterator();
+        while(iterator.hasNext()) {
+            T node = iterator.next();
+            iterator.remove();
+            destroyInternal(node);
+        }
+    }
+
     @SuppressWarnings("all")
     public synchronized void removeIf(Predicate<T> predicate) {
         Iterator<T> iterator = nodes.iterator();

@@ -2,6 +2,7 @@ package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.SerializableCollection;
 
+import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -49,6 +50,19 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     public void addAll(Collection<? extends T> nodes) {
         nodes.forEach(this::add);
+    }
+
+    public T addIfNotExists(String key, Class<T> clazz) {
+        if(!exists(key)) {
+            try {
+                Constructor<T> constructor = clazz.getDeclaredConstructor(String.class);
+                constructor.setAccessible(true);
+                add(constructor.newInstance(key));
+            } catch (Exception e) {
+                throw new RuntimeException("Class " + clazz.getSimpleName() + " has no constructor taking 1 String");
+            }
+        }
+        return find(key);
     }
 
     public T addIfNotExists(String key, Supplier<T> supplier) {

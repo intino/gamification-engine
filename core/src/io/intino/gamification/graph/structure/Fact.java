@@ -22,7 +22,7 @@ public class Fact {
     private Type type;
     private String name;
     private int points;
-    private Map<String, Object> attributes;
+    private final Map<String, Object> attributes = new TreeMap<>();
 
     public Fact() {
         ts = TimeUtils.now();

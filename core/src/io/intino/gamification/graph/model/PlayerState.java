@@ -6,6 +6,7 @@ import io.intino.gamification.graph.structure.Fact;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+import static io.intino.gamification.util.data.Progress.State.Complete;
 import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public final class PlayerState extends Node {
@@ -48,12 +49,31 @@ public final class PlayerState extends Node {
 
     // Score from finished matches
     public int score() {
-        return facts().mapToInt(Fact::points).sum();
+        if(parent() == null) return 0;
+
+        int score = 0;
+
+        for(Round round : parent().rounds()) {
+            if(round.state() != Round.State.Finished) continue;
+            Round.Match match = round.matches().find(id());
+            if(match != null) score += Math.max(match.score(), 0);
+        }
+
+        return Math.max(score, 0);
     }
 
     // Score, including points gained during the current round
     public int rawScore() {
-        return rawFacts().mapToInt(Fact::points).sum();
+        if(parent() == null) return 0;
+
+        int score = 0;
+
+        for(Round round : parent().rounds()) {
+            Round.Match match = round.matches().find(id());
+            if(match != null) score += Math.max(match.score(), 0);
+        }
+
+        return Math.max(score, 0);
     }
 
     void assignMission(MissionAssignment missionAssignment) {

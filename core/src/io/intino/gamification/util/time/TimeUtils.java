@@ -4,16 +4,18 @@ import java.time.*;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+import static java.util.Objects.requireNonNull;
+
 public class TimeUtils {
 
-	private static String timeZone = "Atlantic/Canary";
+	private static ZoneOffset zoneOffset = ZoneOffset.UTC;
 
-	public static void timeZone(String timeZone) {
-		TimeUtils.timeZone = timeZone;
+	public static ZoneOffset zoneOffset() {
+		return TimeUtils.zoneOffset;
 	}
 
-	public static String timeZone() {
-		return timeZone;
+	public static void zoneOffset(ZoneOffset zoneOffset) {
+		TimeUtils.zoneOffset = requireNonNull(zoneOffset);
 	}
 
 	/* INSTANT OF ----------------------------------------------------------------------------------------------------*/
@@ -210,7 +212,7 @@ public class TimeUtils {
 	}
 
 	private static ZonedDateTime getZonedDateTimeOf() {
-		return ZonedDateTime.now(ZoneId.of(timeZone));
+		return ZonedDateTime.now(zoneOffset());
 	}
 
 	private static LocalDateTime getLocalDateTimeOf(Instant instant) {

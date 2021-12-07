@@ -18,7 +18,7 @@ public final class PlayerState extends Node {
     }
 
     @Override
-    void init() {
+    void onInit() {
         missionAssignments.init(absoluteId());
     }
 

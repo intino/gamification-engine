@@ -1,6 +1,5 @@
 package io.intino.gamification.graph;
 
-import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.Competition;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.file.FileUtils;
@@ -14,23 +13,20 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static java.nio.file.StandardCopyOption.*;
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class GraphSerializer {
 
     private static final String GRAPH_SUBDIR = "/graph";
 
-    private final GamificationCore core;
-    private final GamificationGraph graph;
     private final File rootDirectory;
 
-    public GraphSerializer(GamificationCore core) {
-        this.core = core;
-        this.graph = core.graph();
-        this.rootDirectory = FileUtils.createFolder(core.configuration().gamificationPath.get() + GRAPH_SUBDIR);
+    public GraphSerializer(File root) {
+        this.rootDirectory = root;
     }
 
-    public void save() {
+    public void save(GamificationGraph graph) {
         graph.competitions().stream().parallel().forEach(this::saveCompetition);
     }
 
@@ -46,7 +42,7 @@ public class GraphSerializer {
         }
     }
 
-    public void load() {
+    public void load(GamificationGraph graph) {
         File[] competitionFiles = rootDirectory.listFiles(this::isCompetitionFile);
         if(competitionFiles == null) return;
         List<Competition> competitions = Collections.synchronizedList(new ArrayList<>(competitionFiles.length));

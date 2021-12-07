@@ -1,5 +1,6 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.serializer.Json;
 
@@ -61,7 +62,7 @@ public abstract class Node implements Serializable {
     }
 
     private void initTransientAttributes() {}
-    void init() {}
+    void onInit() {}
     abstract Node parent();
     void destroyChildren() {}
 

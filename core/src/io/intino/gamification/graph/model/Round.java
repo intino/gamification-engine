@@ -22,7 +22,7 @@ public class Round extends Node {
     }
 
     @Override
-    void init() {
+    void onInit() {
         matches.init(absoluteId());
     }
 

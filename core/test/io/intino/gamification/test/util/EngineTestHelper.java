@@ -1,5 +1,6 @@
 package io.intino.gamification.test.util;
 
+import io.intino.gamification.GamificationConfig;
 import io.intino.gamification.GamificationEngine;
 
 import java.util.HashMap;
@@ -13,7 +14,7 @@ public class EngineTestHelper {
         parameters.put("gamification_time_zone", "Atlantic/Canary");
         parameters.put("gamification_path", "./temp/datamarts/cinepolis-gamification");
 
-        GamificationEngine engine = new GamificationEngine(parameters);
+        GamificationEngine engine = new GamificationEngine(new GamificationConfig.Builder().build());
         engine.launch();
 
         return engine;

@@ -36,7 +36,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         nodes.add(node);
         lookupTable.put(node.id(), node);
         node.setParentIds(context);
-        node.init();
+        node.onInit();
         node.onCreate();
         return true;
     }

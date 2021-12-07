@@ -19,7 +19,7 @@ public class Competition extends Node {
     }
 
     @Override
-    void init() {
+    void onInit() {
         seasons.init(absoluteId());
         entities.init(absoluteId());
         players.init(absoluteId());

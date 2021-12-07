@@ -1,10 +1,18 @@
 package io.intino.gamification.util;
 
-import io.intino.gamification.core.Configuration;
+import io.intino.gamification.GamificationConfig;
+
+import java.util.concurrent.atomic.AtomicReference;
+
+import static java.util.Objects.requireNonNull;
 
 public final class Log {
 
-    public static final Configuration.Variable<Logger> LoggerInstance = new Configuration.Variable<>(Log.Logger.getDefault());
+    private static final AtomicReference<Logger> LoggerInstance = new AtomicReference<>(Log.Logger.getDefault());
+    public static void setLogger(Logger logger) {
+        requireNonNull(logger);
+        LoggerInstance.set(logger);
+    }
 
     public static void debug(String message) {
         LoggerInstance.get().debug(message);

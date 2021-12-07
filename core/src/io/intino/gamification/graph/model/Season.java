@@ -26,7 +26,7 @@ public class Season extends Node {
     }
 
     @Override
-    void init() {
+    void onInit() {
         this.rounds.init(absoluteId());
         this.playerStates.init(absoluteId());
         competition().players().forEach(player -> playerStates.add(new PlayerState(player.id())));

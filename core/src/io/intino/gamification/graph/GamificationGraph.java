@@ -1,6 +1,5 @@
 package io.intino.gamification.graph;
 
-import io.intino.gamification.core.GamificationCore;
 import io.intino.gamification.graph.model.NodeCollection;
 import io.intino.gamification.graph.model.Competition;
 import io.intino.gamification.util.Log;
@@ -13,16 +12,9 @@ public class GamificationGraph {
         return instance;
     }
 
-    private final GamificationCore core;
     private final NodeCollection<Competition> competitions;
 
-    public GamificationGraph(GamificationCore core) {
-        if(core == null) {
-            IllegalArgumentException e = new IllegalArgumentException("GamificationCore cannot be null");
-            Log.error(e);
-            throw e;
-        }
-        this.core = core;
+    public GamificationGraph() {
         this.competitions = new NodeCollection<>();
         competitions.init("");
         GamificationGraph.instance = this;
@@ -33,6 +25,6 @@ public class GamificationGraph {
     }
 
     public void save() {
-        core.graphSerializer().save();
+        // TODO
     }
 }

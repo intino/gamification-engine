@@ -1,37 +1,30 @@
 package io.intino.gamification;
 
-import io.intino.gamification.core.Configuration;
-import io.intino.gamification.core.GamificationCore;
-import io.intino.gamification.core.GamificationParameters;
 import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GamificationGraph;
-
-import java.util.Map;
+import io.intino.gamification.util.time.TimeUtils;
 
 public class GamificationEngine {
 
-    private final GamificationParameters gamificationParameters;
-
-    private GamificationCore core;
-
-    private Configuration configuration;
+    private final GamificationConfig configuration;
     private GamificationGraph graph;
     private EventManager eventManager;
 
-    public GamificationEngine(Map<String, String> params) {
-        this.gamificationParameters = new GamificationParameters(params);
+    public GamificationEngine(GamificationConfig configuration) {
+        this.configuration = configuration;
     }
 
     public void launch() {
-        this.core = new GamificationCore(gamificationParameters);
-        this.core.start();
+        TimeUtils.zoneOffset(configuration.zoneOffset());
 
-        this.configuration = core.configuration();
-        this.graph = core.graph();
-        this.eventManager = core.eventManager();
+        this.graph = new GamificationGraph();
+        this.eventManager = new EventManager();
+
+        this.graph = new GamificationGraph();
+        this.eventManager = new EventManager();
     }
 
-    public Configuration configuration() {
+    public GamificationConfig configuration() {
         return this.configuration;
     }
 

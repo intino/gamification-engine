@@ -6,6 +6,7 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -137,7 +138,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     }
 
     public Stream<T> stream() {
-        return lookupTable.values().stream();
+        return nodes.stream();
     }
 
     public void sort(Comparator<T> comparator) {
@@ -146,7 +147,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     @Override
     public Iterator<T> iterator() {
-        return lookupTable.values().iterator();
+        return nodes.iterator();
     }
 
     public boolean readOnly() {
@@ -170,7 +171,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     public String toString() {
         return "NodeCollection{" +
                 "context='" + context + '\'' +
-                ", nodes=" + nodes +
+                ", nodes=" + nodes.stream().map(Node::id).collect(Collectors.joining(", ")) +
                 '}';
     }
 

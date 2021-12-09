@@ -23,6 +23,10 @@ public class Achievement extends Node {
         return this;
     }
 
+    public Type type() {
+        return type;
+    }
+
     public final Competition competition() {
         return parent();
     }

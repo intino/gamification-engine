@@ -5,6 +5,8 @@ import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.data.Progress;
 
+import java.time.Instant;
+
 public abstract class Mission extends Node {
 
     private final String description;
@@ -25,7 +27,7 @@ public abstract class Mission extends Node {
         EventManager.get().callCallback(this, playerId);
     }
 
-    public abstract void update(MissionAssignment assignment);
+    public abstract void update(MissionAssignment assignment, Instant ts);
 
     public final String description() {
         return description;

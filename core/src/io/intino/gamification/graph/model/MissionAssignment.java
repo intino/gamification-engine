@@ -26,6 +26,14 @@ public abstract class MissionAssignment extends Node {
         this.expirationTime = expirationTime;
     }
 
+    protected MissionAssignment(String id, String missionId, Progress progress, Instant creationTime, ExpirationTime expirationTime) {
+        super(id);
+        this.missionId = missionId;
+        this.progress = progress;
+        this.creationTime = creationTime;
+        this.expirationTime = expirationTime;
+    }
+
     private Progress initProgress(int stepsToComplete) {
         Progress progress = new Progress(stepsToComplete);
         progress.currentProperty().addObserver(this::onProgressChange);

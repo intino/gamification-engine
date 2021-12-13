@@ -15,25 +15,15 @@ public abstract class MissionAssignment extends Node {
     private final Progress progress;
     private final Instant creationTime;
     private final ExpirationTime expirationTime;
-    private final Function<MissionAssignment, Integer> scoreFunction;
+    private Instant endTime;
     private String description;
 
-    protected MissionAssignment(String id, String missionId, int stepsToComplete, ExpirationTime expirationTime, Function<MissionAssignment, Integer> scoreFunction) {
+    protected MissionAssignment(String id, String missionId, int stepsToComplete, ExpirationTime expirationTime) {
         super(id);
         this.missionId = missionId;
         this.progress = initProgress(stepsToComplete);
         this.creationTime = TimeUtils.now();
         this.expirationTime = expirationTime;
-        this.scoreFunction = scoreFunction;
-    }
-
-    protected MissionAssignment(String id, String missionId, Progress progress, Instant creationTime, ExpirationTime expirationTime, Function<MissionAssignment, Integer> scoreFunction) {
-        super(id);
-        this.missionId = missionId;
-        this.progress = progress;
-        this.creationTime = creationTime;
-        this.expirationTime = expirationTime;
-        this.scoreFunction = scoreFunction;
     }
 
     private Progress initProgress(int stepsToComplete) {
@@ -98,6 +88,15 @@ public abstract class MissionAssignment extends Node {
         return expirationTime;
     }
 
+    public Instant endTime() {
+        return endTime;
+    }
+
+    public MissionAssignment endTime(Instant endTime) {
+        this.endTime = endTime;
+        return this;
+    }
+
     public String description() {
         return description;
     }
@@ -129,18 +128,6 @@ public abstract class MissionAssignment extends Node {
                 .seasons().find(ids[1])
                 .playerStates().find(ids[2]);
     }
-
-    /*
-
-    public final Mission mission() {
-        return parent().parent().parent().missions().find(missionId);
-    }
-
-    public Integer score() {
-        return scoreFunction.apply(this);
-    }
-
-    */
 
     public static class ExpirationTime {
 

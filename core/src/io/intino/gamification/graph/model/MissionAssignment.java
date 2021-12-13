@@ -86,6 +86,10 @@ public abstract class MissionAssignment extends Node {
         return progress;
     }
 
+    public Progress.State state() {
+        return progress.state();
+    }
+
     public final Instant creationTime() {
         return creationTime;
     }

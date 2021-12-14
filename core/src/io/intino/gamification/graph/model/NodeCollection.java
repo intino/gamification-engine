@@ -76,17 +76,17 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         return find(key);
     }
 
-    public synchronized void destroy(T node) {
+    public synchronized void remove(T node) {
         nodes.remove(node.index());
-        destroyInternal(node);
+        removeInternal(node);
     }
 
-    public synchronized void destroyAll() {
+    public synchronized void removeAll() {
         Iterator<T> iterator = nodes.iterator();
         while(iterator.hasNext()) {
             T node = iterator.next();
             iterator.remove();
-            destroyInternal(node);
+            removeInternal(node);
         }
     }
 
@@ -97,12 +97,12 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
             T node = iterator.next();
             if(predicate.test(node)) {
                 iterator.remove();
-                destroyInternal(node);
+                removeInternal(node);
             }
         }
     }
 
-    private void destroyInternal(T node) {
+    private void removeInternal(T node) {
         lookupTable.remove(node.id());
         node.index(Integer.MIN_VALUE);
     }
@@ -203,7 +203,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
             }
 
             @Override
-            public synchronized void destroy(T node) {
+            public synchronized void remove(T node) {
                 throw new UnsupportedOperationException("Collection is read only");
             }
 

@@ -2,7 +2,10 @@ package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.Fact;
 
+import java.util.List;
 import java.util.stream.Stream;
+
+import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public final class PlayerState extends Node {
 
@@ -20,6 +23,37 @@ public final class PlayerState extends Node {
 
         if(finishedMissions == null) finishedMissions = new NodeCollection<>();
         finishedMissions.init(this, MissionAssignment.class);
+    }
+
+    public void assignMission(MissionAssignment assignment) {
+        if(assignment.state() == InProgress) {
+            activeMissions.add(assignment);
+        } else {
+            finishedMissions.add(assignment);
+        }
+    }
+
+    public void updateMission(MissionAssignment assignment) {
+        if(assignment.state() != InProgress) return;
+        assignment.update();
+        if(assignment.state() != InProgress) {
+            activeMissions.remove(assignment);
+            finishedMissions.add(assignment);
+        }
+    }
+
+    public void completeMission(MissionAssignment assignment) {
+        if(assignment.state() != InProgress) return;
+        assignment.complete();
+        activeMissions.remove(assignment);
+        finishedMissions.add(assignment);
+    }
+
+    public void failMission(MissionAssignment assignment) {
+        if(assignment.state() != InProgress) return;
+        assignment.fail();
+        activeMissions.remove(assignment);
+        finishedMissions.add(assignment);
     }
 
     // Facts from finished matches
@@ -71,8 +105,12 @@ public final class PlayerState extends Node {
         return Math.max(score, 0);
     }
 
-    public NodeCollection<MissionAssignment> activeMissions() {
-        return activeMissions;
+    public List<MissionAssignment> activeMissions() {
+        return activeMissions.list();
+    }
+
+    public List<MissionAssignment> finishedMissions() {
+        return finishedMissions.list();
     }
 
     private Competition competition() {

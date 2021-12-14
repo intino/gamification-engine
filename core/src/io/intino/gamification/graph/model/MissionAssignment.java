@@ -1,6 +1,5 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
@@ -38,27 +37,32 @@ public final class MissionAssignment extends Node {
         return !expirationTime.isAfter(TimeUtils.now());
     }
 
-    public void update() {
+    void update() {
         if(progress.state() == InProgress)
             progress.increment();
+        if(progress.state() != InProgress) {
+            endTime = TimeUtils.now();
+        }
     }
 
-    public void fail() {
-        if(progress.state() == InProgress) return;
-        progress.fail();
-    }
-
-    public void complete() {
+    void complete() {
         if(progress.state() == InProgress) return;
         progress.complete();
+        endTime = TimeUtils.now();
+    }
+
+    void fail() {
+        if(progress.state() == InProgress) return;
+        progress.fail();
+        endTime = TimeUtils.now();
     }
 
     public String missionId() {
         return missionId;
     }
 
-    public Progress progress() {
-        return progress;
+    public float progress() {
+        return progress.get();
     }
 
     public Progress.State state() {

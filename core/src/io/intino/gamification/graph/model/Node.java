@@ -1,6 +1,5 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.serializer.Json;
 
@@ -12,9 +11,8 @@ public abstract class Node implements Serializable {
     private static final String PARENT_SEPARATOR = "$";
 
     private final String id;
-    private String[] parentIds = new String[0];
-    private int index = Integer.MIN_VALUE;
-    private boolean destroyed = false;
+    private transient String[] parentIds = new String[0];
+    private transient int index = Integer.MIN_VALUE;
 
     Node(String id) {
         if(id == null) {
@@ -29,11 +27,6 @@ public abstract class Node implements Serializable {
     void setParentIds(String parentId) {
         if(parentId == null || parentId.isBlank()) return;
         parentIds = parentId.split("\\" + PARENT_SEPARATOR);
-    }
-
-    void markAsDestroyed() {
-        destroyed = true;
-        destroyChildren();
     }
 
     public final String id() {
@@ -57,17 +50,9 @@ public abstract class Node implements Serializable {
         this.index = index;
     }
 
-    public final boolean isAvailable() {
-        return !destroyed;
-    }
-
     private void initTransientAttributes() {}
     void onInit() {}
     abstract Node parent();
-    void destroyChildren() {}
-
-    protected void onCreate() {}
-    protected void onDestroy() {}
 
     @Override
     public boolean equals(Object o) {
@@ -84,21 +69,12 @@ public abstract class Node implements Serializable {
 
     @Override
     public String toString() {
-        return Json.toJson(this);
+        return "Node{" +
+                "id='" + id + '\'' +
+                '}';
     }
 
-    /*
-
-    public final boolean destroyed() {
-        return destroyed;
+    public String toJson() {
+        return Json.toJsonPretty(this);
     }
-
-    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-        in.defaultReadObject();
-        initTransientAttributes();
-    }
-
-    protected void onUpdate() {}
-
-    */
 }

@@ -16,7 +16,7 @@ public class GamificationGraph {
 
     public GamificationGraph() {
         this.competitions = new NodeCollection<>();
-        competitions.init("");
+        competitions.init("", Competition.class);
         GamificationGraph.instance = this;
     }
 

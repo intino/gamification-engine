@@ -1,10 +1,7 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.events.EventCallback;
-import io.intino.gamification.events.EventManager;
 import io.intino.gamification.graph.GamificationGraph;
-
-import java.util.Objects;
+import io.intino.gamification.util.serializer.Json;
 
 public abstract class FactDefinition extends Node {
 
@@ -14,14 +11,9 @@ public abstract class FactDefinition extends Node {
     FactDefinition(String id, int points) {
         super(id);
         this.points = points;
-        EventManager.get().setEventCallback(id, (EventCallback<Round.Match>) this::addFactTo);
     }
 
-    public void call(String playerId) {
-        EventManager.get().callCallback(this, playerId);
-    }
-
-    protected abstract void addFactTo(Round.Match match);
+    protected abstract void addFactTo(Match match);
 
     public String description() {
         return description;
@@ -40,20 +32,6 @@ public abstract class FactDefinition extends Node {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get().competitions().find(ids[0]);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        FactDefinition that = (FactDefinition) o;
-        return points == that.points && Objects.equals(description, that.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), description, points);
     }
 
     @Override

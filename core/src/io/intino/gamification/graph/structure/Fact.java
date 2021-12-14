@@ -2,6 +2,8 @@ package io.intino.gamification.graph.structure;
 
 import io.intino.gamification.util.time.TimeUtils;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.time.Instant;
 import java.util.*;
 
@@ -13,7 +15,7 @@ import java.util.*;
  *
  *
  * */
-public class Fact {
+public class Fact implements Serializable {
 
     private Instant ts;
     private String competition;
@@ -200,10 +202,23 @@ public class Fact {
         public static final Type Milestone = Type.register("Bonus");
         public static final Type Prize = Type.register("Prize");
         public static final Type Record = Type.register("Record");
-        public static final Type Mission = Type.register("Mission");
+        public static final Type MissionComplete = Type.register("MissionComplete");
+        public static final Type MissionFailed = Type.register("MissionFailed");
 
-        public List<Type> values() {
-            return List.of(Mission, Reinforcement, Foul, Bonus, Milestone, Prize, Record);
+        private static List<Type> values;
+
+        public static List<Type> values() {
+            if(values == null) {
+                Field[] fields = StandardTypes.class.getFields();
+                values = new ArrayList<>(fields.length);
+                for(Field field : fields) {
+                    try {
+                        values.add((Type)field.get(null));
+                    } catch (IllegalAccessException ignored) {
+                    }
+                }
+            }
+            return values;
         }
     }
 }

@@ -5,28 +5,27 @@ import io.intino.gamification.util.data.Progress;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
-import java.util.function.Function;
 
-import static io.intino.gamification.util.data.Progress.State.*;
+import static io.intino.gamification.util.data.Progress.State.InProgress;
 
-public abstract class MissionAssignment extends Node {
+public final class MissionAssignment extends Node {
 
     private final String missionId;
     private final Progress progress;
     private final Instant creationTime;
-    private final ExpirationTime expirationTime;
+    private final Instant expirationTime;
     private Instant endTime;
     private String description;
 
-    protected MissionAssignment(String id, String missionId, int stepsToComplete, ExpirationTime expirationTime) {
+    public MissionAssignment(String id, String missionId, int stepsToComplete, Instant expirationTime) {
         super(id);
         this.missionId = missionId;
-        this.progress = initProgress(stepsToComplete);
+        this.progress = new Progress(stepsToComplete);
         this.creationTime = TimeUtils.now();
         this.expirationTime = expirationTime;
     }
 
-    protected MissionAssignment(String id, String missionId, Progress progress, Instant creationTime, ExpirationTime expirationTime) {
+    public MissionAssignment(String id, String missionId, Progress progress, Instant creationTime, Instant expirationTime) {
         super(id);
         this.missionId = missionId;
         this.progress = progress;
@@ -34,53 +33,31 @@ public abstract class MissionAssignment extends Node {
         this.expirationTime = expirationTime;
     }
 
-    private Progress initProgress(int stepsToComplete) {
-        Progress progress = new Progress(stepsToComplete);
-        progress.currentProperty().addObserver(this::onProgressChange);
-        return progress;
-    }
-
-    boolean hasExpired() {
+    public boolean hasExpired() {
         if(expirationTime == null) return false;
         return !expirationTime.isAfter(TimeUtils.now());
     }
 
-    void update(Progress.State newState) {
-        if(newState == Complete) {
-            onMissionComplete();
-        } else if(newState == Failed) {
-            onMissionFail();
-        } else if(newState == InProgress) {
-            onMissionIncomplete();
-        }
-        onMissionEnd();
+    public void update() {
+        if(progress.state() == InProgress)
+            progress.increment();
     }
 
-    void fail() {
-        if(progress().state() == InProgress) {
-            progress.fail();
-            update(Failed);
-        }
+    public void fail() {
+        if(progress.state() == InProgress) return;
+        progress.fail();
     }
 
-    void complete() {
-        if(progress().state() == InProgress) {
-            progress.complete();
-            update(Complete);
-        }
+    public void complete() {
+        if(progress.state() == InProgress) return;
+        progress.complete();
     }
 
-    MissionAssignment copy() {
-        MissionAssignment missionAssignment = getCopy();
-        missionAssignment.progress.set(this.progress.current());
-        return missionAssignment;
-    }
-
-    public final String missionId() {
+    public String missionId() {
         return missionId;
     }
 
-    public final Progress progress() {
+    public Progress progress() {
         return progress;
     }
 
@@ -88,11 +65,11 @@ public abstract class MissionAssignment extends Node {
         return progress.state();
     }
 
-    public final Instant creationTime() {
+    public Instant creationTime() {
         return creationTime;
     }
 
-    public final ExpirationTime expirationTime() {
+    public Instant expirationTime() {
         return expirationTime;
     }
 
@@ -114,71 +91,17 @@ public abstract class MissionAssignment extends Node {
         return this;
     }
 
-    protected void onProgressChange(int oldValue, int newValue) {}
-
-    protected void onMissionComplete() {}
-    protected void onMissionFail() {}
-    protected void onMissionIncomplete() {}
-    protected void onMissionEnd() {}
-
-    protected abstract MissionAssignment getCopy();
-
-    public final PlayerState player() {
+    public PlayerState player() {
         return parent();
     }
 
     @Override
-    public final PlayerState parent() {
+    public  PlayerState parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
                 .competitions().find(ids[0])
                 .seasons().find(ids[1])
                 .playerStates().find(ids[2]);
-    }
-
-    public static class ExpirationTime {
-
-        private final Instant instant;
-
-        public ExpirationTime() {
-            this(null);
-        }
-
-        public ExpirationTime(Instant instant) {
-            this.instant = instant;
-        }
-
-        public Instant instant() {
-            return instant;
-        }
-
-        public boolean endsWithMatch() {
-            return instant == null;
-        }
-
-        public long getEpochSecond() {
-            return instant == null ? 0 : instant.getEpochSecond();
-        }
-
-        public int compareTo(Instant otherInstant) {
-            return instant == null && otherInstant == null ? 0 : -1;
-        }
-
-        public boolean isAfter(Instant otherInstant) {
-            return instant != null && instant.isAfter(otherInstant);
-        }
-
-        public boolean isBefore(Instant otherInstant) {
-            return instant != null && instant.isBefore(otherInstant);
-        }
-
-        @Override
-        public String toString() {
-            return "ExpirationTime{" +
-                    "instant=" + instant +
-                    ", endsWithMatch=" + endsWithMatch() +
-                    '}';
-        }
     }
 }

@@ -10,11 +10,10 @@ public class EngineTestHelper {
 
     public static GamificationEngine getEngine() {
 
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put("gamification_time_zone", "Atlantic/Canary");
-        parameters.put("gamification_path", "./temp/datamarts/cinepolis-gamification");
-
-        GamificationEngine engine = new GamificationEngine(new GamificationConfig.Builder().build());
+        GamificationEngine engine = new GamificationEngine(new GamificationConfig.Builder()
+                .gamificationDatamart("./temp/datamarts/cinepolis-gamification")
+                .gamificationPath("./temp/datamarts/cinepolis-gamification")
+                .build());
         engine.launch();
 
         return engine;

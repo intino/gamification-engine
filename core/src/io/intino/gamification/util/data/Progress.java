@@ -1,7 +1,5 @@
 package io.intino.gamification.util.data;
 
-import io.intino.gamification.graph.structure.Property;
-import io.intino.gamification.graph.structure.ReadOnlyProperty;
 import io.intino.gamification.util.Log;
 
 import java.io.Serializable;
@@ -9,7 +7,7 @@ import java.io.Serializable;
 public final class Progress implements Serializable {
 
     private final int total;
-    private final Property<Integer> current;
+    private int value;
     private boolean failed;
 
     public Progress(int total) {
@@ -23,41 +21,40 @@ public final class Progress implements Serializable {
             throw e;
         }
         this.total = total;
-        this.current = new Property<>();
-        this.current.set(Math.min(total, current));
+        this.value = Math.min(total, current);
         this.failed = false;
     }
 
     public float get() {
-        return this.current.get() / (float) this.total;
+        return this.value / (float) this.total;
     }
 
-    public Progress set(int current) {
-        if(state() == State.InProgress) this.current.set(Math.min(total, current));
+    public Progress set(int value) {
+        if(state() != State.InProgress) return this;
+        if(value < 0) return this;
+        this.value = Math.min(total, value);
         return this;
     }
 
-    public Progress increment() {
-        return set(current.get() + 1);
+    public void increment() {
+        ++value;
     }
 
-    public Progress fail() {
-        this.failed = true;
-        return this;
+    public void fail() {
+        failed = true;
     }
 
-    public Progress complete() {
-        this.current.set(this.total);
-        return this;
+    public void complete() {
+        value = total;
     }
 
     public State state() {
-        if(isCompleted()) return State.Complete;
-        if(!isFailed()) return State.InProgress;
-        return State.Failed;
+        if(isComplete()) return State.Complete;
+        if(isFailed()) return State.Failed;
+        return State.InProgress;
     }
 
-    private boolean isCompleted() {
+    private boolean isComplete() {
         return !failed && get() >= 1.0f;
     }
 
@@ -66,11 +63,7 @@ public final class Progress implements Serializable {
     }
 
     public int current() {
-        return current.get();
-    }
-
-    public ReadOnlyProperty<Integer> currentProperty() {
-        return current;
+        return value;
     }
 
     public int total() {

@@ -1,24 +1,25 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.GamificationGraph;
+import io.intino.gamification.util.serializer.Json;
 
 import java.util.Objects;
 
-public class Achievement extends Node {
+public final class Achievement extends Node {
 
     private final Type type;
     private String description;
 
-    protected Achievement(String id, Type type) {
+    public Achievement(String id, Type type) {
         super(id);
         this.type = type;
     }
 
-    public final String description() {
+    public String description() {
         return description;
     }
 
-    public final Achievement description(String description) {
+    public Achievement description(String description) {
         this.description = description;
         return this;
     }
@@ -27,12 +28,12 @@ public class Achievement extends Node {
         return type;
     }
 
-    public final Competition competition() {
+    public Competition competition() {
         return parent();
     }
 
     @Override
-    public final Competition parent() {
+    public Competition parent() {
         String[] ids = parentIds();
         if(ids == null || ids.length == 0) return null;
         return GamificationGraph.get()
@@ -62,6 +63,6 @@ public class Achievement extends Node {
     }
 
     public enum Type {
-        Bonus, Milestone, Prize
+        Bonus, Milestone, Prize, Record
     }
 }

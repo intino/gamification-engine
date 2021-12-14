@@ -38,7 +38,7 @@ public class GamificationConfig {
 
     public static class Builder {
 
-        private ZoneOffset zoneOffset;
+        private ZoneOffset zoneOffset = ZoneOffset.UTC;
         private String gamificationPath;
         private String gamificationDatamart;
 

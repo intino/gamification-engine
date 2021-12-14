@@ -13,18 +13,23 @@ import static java.util.Objects.requireNonNull;
 
 public class NodeCollection<T extends Node> extends SerializableCollection implements Iterable<T> {
 
-    private String context;
+    private transient String context;
+    private transient Class<T> elementType;
     private final List<T> nodes;
-    private final Map<String, T> lookupTable;
+    private transient final Map<String, T> lookupTable;
 
     public NodeCollection() {
         this.nodes = new ArrayList<>();
         this.lookupTable = new HashMap<>();
     }
 
-    public synchronized void init(String context) {
+    public synchronized void init(String context, Class<T> elementType) {
         if(initialized()) throw new IllegalStateException("NodeCollection has been already initialized");
         this.context = requireNonNull(context);
+        this.elementType = elementType;
+        for(T node : nodes) {
+            lookupTable.put(node.id(), node);
+        }
     }
 
     public boolean initialized() {
@@ -38,7 +43,6 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         lookupTable.put(node.id(), node);
         node.setParentIds(context);
         node.onInit();
-        node.onCreate();
         return true;
     }
 
@@ -53,14 +57,15 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         nodes.forEach(this::add);
     }
 
-    public T addIfNotExists(String key, Class<T> clazz) {
+    public T addIfNotExists(String key) {
         if(!exists(key)) {
             try {
-                Constructor<T> constructor = clazz.getDeclaredConstructor(String.class);
+                Constructor<T> constructor = elementType.getDeclaredConstructor(String.class);
                 constructor.setAccessible(true);
-                add(constructor.newInstance(key));
+                T instance = constructor.newInstance(key);
+                add(instance);
             } catch (Exception e) {
-                throw new RuntimeException("Class " + clazz.getSimpleName() + " has no constructor taking 1 String");
+                throw new RuntimeException("Class " + elementType.getSimpleName() + " has no constructor taking 1 String");
             }
         }
         return find(key);
@@ -99,8 +104,6 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     private void destroyInternal(T node) {
         lookupTable.remove(node.id());
-        node.markAsDestroyed();
-        node.onDestroy();
         node.index(Integer.MIN_VALUE);
     }
 
@@ -177,6 +180,10 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     public NodeCollection<T> asReadOnly() {
         return new NodeCollection<>() {
+
+            {
+                init(context, elementType);
+            }
 
             @Override
             public boolean readOnly() {

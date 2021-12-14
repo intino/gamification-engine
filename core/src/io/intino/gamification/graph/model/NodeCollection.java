@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
 
 public class NodeCollection<T extends Node> extends SerializableCollection implements Iterable<T> {
 
-    private transient String context;
+    private transient Object owner;
     private transient Class<T> elementType;
     private final List<T> nodes;
     private transient final Map<String, T> lookupTable;
@@ -23,9 +23,9 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         this.lookupTable = new HashMap<>();
     }
 
-    public synchronized void init(String context, Class<T> elementType) {
+    public synchronized void init(Object owner, Class<T> elementType) {
         if(initialized()) throw new IllegalStateException("NodeCollection has been already initialized");
-        this.context = requireNonNull(context);
+        this.owner = requireNonNull(owner);
         this.elementType = elementType;
         for(T node : nodes) {
             lookupTable.put(node.id(), node);
@@ -33,7 +33,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     }
 
     public boolean initialized() {
-        return context != null;
+        return owner != null;
     }
 
     public synchronized boolean add(T node) {
@@ -41,7 +41,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         node.index(nodes.size());
         nodes.add(node);
         lookupTable.put(node.id(), node);
-        node.setParentIds(context);
+        node.setParent(owner);
         node.onInit();
         return true;
     }
@@ -162,18 +162,18 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         NodeCollection<?> that = (NodeCollection<?>) o;
-        return context.equals(that.context) && nodes.equals(that.nodes);
+        return Objects.equals(owner, that.owner) && Objects.equals(elementType, that.elementType) && Objects.equals(nodes, that.nodes);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(context, nodes);
+        return Objects.hash(owner, elementType, nodes);
     }
 
     @Override
     public String toString() {
         return "NodeCollection{" +
-                "context='" + context + '\'' +
+                "owner='" + owner + '\'' +
                 ", nodes=" + nodes.stream().map(Node::id).collect(Collectors.joining(", ")) +
                 '}';
     }
@@ -182,7 +182,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         return new NodeCollection<>() {
 
             {
-                init(context, elementType);
+                init(owner, elementType);
             }
 
             @Override

@@ -1,5 +1,6 @@
 package io.intino.gamification.graph.model;
 
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.serializer.Json;
 
 public final class Competition extends Node {
@@ -17,23 +18,23 @@ public final class Competition extends Node {
 
     @Override
     void onInit() {
-        seasons = new NodeCollection<>();
-        seasons.init(absoluteId(), Season.class);
+        if(seasons == null) seasons = new NodeCollection<>();
+        seasons.init(this, Season.class);
 
-        players = new NodeCollection<>();
-        players.init(absoluteId(), Player.class);
+        if(players == null) players = new NodeCollection<>();
+        players.init(this, Player.class);
 
-        missions = new NodeCollection<>();
-        missions.init(absoluteId(), Mission.class);
+        if(missions == null) missions = new NodeCollection<>();
+        missions.init(this, Mission.class);
 
-        reinforcements = new NodeCollection<>();
-        reinforcements.init(absoluteId(), Reinforcement.class);
+        if(reinforcements == null) reinforcements = new NodeCollection<>();
+        reinforcements.init(this, Reinforcement.class);
 
-        fouls = new NodeCollection<>();
-        fouls.init(absoluteId(), Foul.class);
+        if(fouls == null) fouls = new NodeCollection<>();
+        fouls.init(this, Foul.class);
 
-        achievements = new NodeCollection<>();
-        achievements.init(absoluteId(), Achievement.class);
+        if(achievements == null) achievements = new NodeCollection<>();
+        achievements.init(this, Achievement.class);
     }
 
     public Season currentSeason() {
@@ -80,9 +81,8 @@ public final class Competition extends Node {
         return achievements;
     }
 
-    @Override
-    public Node parent() {
-        return null;
+    public GamificationGraph graph() {
+        return parent();
     }
 
     @Override

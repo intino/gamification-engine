@@ -5,16 +5,13 @@ import io.intino.gamification.graph.model.Round;
 import io.intino.gamification.graph.model.Season;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.serializer.Json;
-import org.apache.commons.io.FileUtils;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.Arrays;
 
-import static java.nio.file.StandardCopyOption.*;
+import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * + root
@@ -98,6 +95,18 @@ public class GraphSerializer {
         }
     }
 
+    public GamificationGraph loadGraph() {
+        GamificationGraph graph = new GamificationGraph();
+        File[] competitions = rootDirectory.listFiles(f -> f.isDirectory() && f.getName().startsWith("competition"));
+        if(competitions == null) return graph;
+        Arrays.sort(competitions);
+        for(File competitionDir : competitions) {
+            File competitionFile = new File(competitionDir, competitionDir.getName() + ".json");
+            loadCompetition(graph, competitionFile);
+        }
+        return graph;
+    }
+
     public Competition loadCompetition(GamificationGraph graph, File file) {
         Competition competition = Json.read(Competition.class, file);
         if(competition == null) return null;
@@ -108,22 +117,25 @@ public class GraphSerializer {
         Arrays.sort(seasons);
 
         for(File seasonDir : seasons) {
-            File[] files = seasonDir.listFiles(f -> f.isFile() && f.getName().startsWith("season"));
-            if(files == null || files.length == 0) continue;
-            competition.seasons().add(loadSeason(files[0]));
+            File seasonFile = new File(seasonDir, seasonDir.getName() + ".json");
+            competition.seasons().add(loadSeason(competition, seasonFile));
         }
 
         return competition;
     }
 
-    public Season loadSeason(File file) {
+    public Season loadSeason(Competition competition, File file) {
         Season season = Json.read(Season.class, file);
         if(season == null) return null;
+        competition.seasons().add(season);
+
         File[] rounds = file.getParentFile().listFiles(f -> f.isFile() && f.getName().startsWith("round"));
         if(rounds == null) return season;
         Arrays.sort(rounds);
+
         for(File round : rounds)
             season.rounds().add(loadRound(round));
+
         return season;
     }
 

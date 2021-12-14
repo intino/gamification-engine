@@ -25,33 +25,15 @@ public final class Match extends Node {
     /**
      * Unmodifiable
      */
-    public final List<Fact> facts() {
+    public List<Fact> facts() {
         return Collections.unmodifiableList(facts);
     }
 
-    public final int score() {
+    public int score() {
         return facts.stream().mapToInt(Fact::points).sum();
     }
 
-    public final Round round() {
+    public Round round() {
         return parent();
-    }
-
-    @Override
-    public final Round parent() {
-        String[] ids = parentIds();
-        if (ids == null || ids.length == 0) return null;
-        return GamificationGraph.get()
-                .competitions().find(ids[0])
-                .seasons().find(ids[1])
-                .rounds().find(ids[2]);
-    }
-
-    @Override
-    public String toString() {
-        return "Match{" +
-                "id=" + id() +
-                ", facts=" + facts +
-                '}';
     }
 }

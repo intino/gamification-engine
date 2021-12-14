@@ -1,14 +1,13 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.structure.Fact;
 
 import java.util.stream.Stream;
 
 public final class PlayerState extends Node {
 
-    private final NodeCollection<MissionAssignment> activeMissions = new NodeCollection<>();
-    private final NodeCollection<MissionAssignment> finishedMissions = new NodeCollection<>();
+    private NodeCollection<MissionAssignment> activeMissions;
+    private NodeCollection<MissionAssignment> finishedMissions;
 
     PlayerState(String id) {
         super(id);
@@ -16,14 +15,17 @@ public final class PlayerState extends Node {
 
     @Override
     void onInit() {
-        activeMissions.init(absoluteId(), MissionAssignment.class);
-        finishedMissions.init(absoluteId(), MissionAssignment.class);
+        if(activeMissions == null) activeMissions = new NodeCollection<>();
+        activeMissions.init(this, MissionAssignment.class);
+
+        if(finishedMissions == null) finishedMissions = new NodeCollection<>();
+        finishedMissions.init(this, MissionAssignment.class);
     }
 
     // Facts from finished matches
     public Stream<Fact> facts() {
         if(parent() == null) return Stream.empty();
-        return parent().rounds().stream()
+        return season().rounds().stream()
                 .filter(round -> round.state() == Round.State.Finished)
                 .flatMap(this::factsOfMatch);
     }
@@ -31,7 +33,7 @@ public final class PlayerState extends Node {
     // All facts, including those in the current round
     public Stream<Fact> rawFacts() {
         if(parent() == null) return Stream.empty();
-        return parent().rounds().stream()
+        return season().rounds().stream()
                 .flatMap(this::factsOfMatch);
     }
 
@@ -46,7 +48,7 @@ public final class PlayerState extends Node {
 
         int score = 0;
 
-        for(Round round : parent().rounds()) {
+        for(Round round : season().rounds()) {
             if(round.state() != Round.State.Finished) continue;
             Match match = round.matches().find(id());
             if(match != null) score += Math.max(match.score(), 0);
@@ -61,7 +63,7 @@ public final class PlayerState extends Node {
 
         int score = 0;
 
-        for(Round round : parent().rounds()) {
+        for(Round round : season().rounds()) {
             Match match = round.matches().find(id());
             if(match != null) score += Math.max(match.score(), 0);
         }
@@ -74,20 +76,11 @@ public final class PlayerState extends Node {
     }
 
     private Competition competition() {
-        return parent().parent();
+        return season().competition();
     }
 
     public Season season() {
         return parent();
-    }
-
-    @Override
-    public Season parent() {
-        String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
-        return GamificationGraph.get()
-                .competitions().find(ids[0])
-                .seasons().find(ids[1]);
     }
 
     @Override

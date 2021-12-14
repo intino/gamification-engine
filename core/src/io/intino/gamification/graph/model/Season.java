@@ -1,11 +1,9 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 public final class Season extends Node {
 
@@ -26,11 +24,11 @@ public final class Season extends Node {
 
     @Override
     void onInit() {
-        rounds = new NodeCollection<>();
-        rounds.init(absoluteId(), Round.class);
+        if(rounds == null) rounds = new NodeCollection<>();
+        rounds.init(this, Round.class);
 
-        playerStates = new NodeCollection<>();
-        playerStates.init(absoluteId(), PlayerState.class);
+        if(playerStates == null) playerStates = new NodeCollection<>();
+        playerStates.init(this, PlayerState.class);
         competition().players().forEach(player -> playerStates.add(new PlayerState(player.id())));
 
         startTime = TimeUtils.now();
@@ -56,7 +54,6 @@ public final class Season extends Node {
 
     void begin() {
         startTime = TimeUtils.now();
-        onBegin();
         state = State.Running;
     }
 
@@ -65,7 +62,7 @@ public final class Season extends Node {
         state = State.Finished;
     }
 
-    public final NodeCollection<Round> rounds() {
+    public NodeCollection<Round> rounds() {
         return rounds;
     }
 
@@ -73,60 +70,35 @@ public final class Season extends Node {
         return playerStates;
     }
 
-    public final Instant startTime() {
+    public Instant startTime() {
         return startTime;
     }
 
-    public final Season startTime(Instant startTime) {
+    public Season startTime(Instant startTime) {
         this.startTime = startTime;
         return this;
     }
 
-    public final Instant endTime() {
+    public Instant endTime() {
         return endTime;
     }
 
-    public final Season endTime(Instant endTime) {
+    public Season endTime(Instant endTime) {
         this.endTime = endTime;
         return this;
     }
 
-    public final State state() {
+    public State state() {
         return state;
     }
 
-    public final Season state(State state) {
+    public Season state(State state) {
         this.state = state;
         return this;
     }
 
-    protected void onBegin() {}
-    protected void onEnd() {}
-
-    public final Competition competition() {
+    public Competition competition() {
         return parent();
-    }
-
-    @Override
-    public final Competition parent() {
-        String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
-        return GamificationGraph.get()
-                .competitions().find(ids[0]);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        Season season = (Season) o;
-        return Objects.equals(rounds, season.rounds) && Objects.equals(playerStates, season.playerStates) && Objects.equals(startTime, season.startTime) && Objects.equals(endTime, season.endTime) && Objects.equals(state, season.state);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), rounds, playerStates, startTime, endTime, state);
     }
 
     @Override

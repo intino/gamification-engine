@@ -24,14 +24,7 @@ public abstract class FactDefinition extends Node {
     }
 
     public final Competition competition() {
-        return parent();
-    }
-
-    @Override
-    public final Competition parent() {
-        String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
-        return GamificationGraph.get().competitions().find(ids[0]);
+        return (Competition) parent();
     }
 
     @Override

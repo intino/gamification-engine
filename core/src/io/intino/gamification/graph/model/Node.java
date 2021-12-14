@@ -8,15 +8,13 @@ import java.util.Objects;
 
 public abstract class Node implements Serializable {
 
-    private static final String PARENT_SEPARATOR = "$";
-
     private final String id;
-    private transient String[] parentIds = new String[0];
+    private transient Object parent;
     private transient int index = Integer.MIN_VALUE;
 
     Node(String id) {
-        if(id == null) {
-            NullPointerException e = new NullPointerException("Id cannot be null");
+        if(id == null || id.isBlank()) {
+            IllegalArgumentException e = new IllegalArgumentException("Id cannot be null nor empty");
             Log.error(e);
             throw e;
         }
@@ -24,22 +22,17 @@ public abstract class Node implements Serializable {
         initTransientAttributes();
     }
 
-    void setParentIds(String parentId) {
-        if(parentId == null || parentId.isBlank()) return;
-        parentIds = parentId.split("\\" + PARENT_SEPARATOR);
+    void setParent(Object parent) {
+        this.parent = parent;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final <T> T parent() {
+        return (T) parent;
     }
 
     public final String id() {
         return id;
-    }
-
-    String[] parentIds() {
-        return parentIds;
-    }
-
-    String absoluteId() {
-        if(parentIds == null || parentIds.length == 0) return id;
-        return String.join(PARENT_SEPARATOR, parentIds) + PARENT_SEPARATOR + id;
     }
 
     int index() {
@@ -52,7 +45,6 @@ public abstract class Node implements Serializable {
 
     private void initTransientAttributes() {}
     void onInit() {}
-    abstract Node parent();
 
     @Override
     public boolean equals(Object o) {
@@ -69,9 +61,7 @@ public abstract class Node implements Serializable {
 
     @Override
     public String toString() {
-        return "Node{" +
-                "id='" + id + '\'' +
-                '}';
+        return toJson();
     }
 
     public String toJson() {

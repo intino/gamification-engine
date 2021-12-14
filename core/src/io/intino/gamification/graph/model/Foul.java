@@ -22,12 +22,4 @@ public final class Foul extends FactDefinition {
                 .name(id())
                 .points(points));
     }
-
-    @Override
-    public String toString() {
-        return "Foul{" +
-                "description='" + description + '\'' +
-                ", points=" + points +
-                '}';
-    }
 }

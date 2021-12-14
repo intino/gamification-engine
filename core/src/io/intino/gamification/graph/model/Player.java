@@ -5,5 +5,4 @@ public final class Player extends Entity {
     public Player(String id) {
         super(id);
     }
-
 }

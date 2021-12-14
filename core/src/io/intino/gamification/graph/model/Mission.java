@@ -32,21 +32,4 @@ public final class Mission extends Node {
     public Competition competition() {
         return parent();
     }
-
-    @Override
-    public Competition parent() {
-        String[] ids = parentIds();
-        if(ids == null || ids.length == 0) return null;
-        return GamificationGraph.get()
-                .competitions().find(ids[0]);
-    }
-
-    @Override
-    public String toString() {
-        return "Mission{" +
-                "description='" + description + '\'' +
-                ", priority=" + priority +
-                ", id='" + id() + '\'' +
-                '}';
-    }
 }

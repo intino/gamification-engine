@@ -22,12 +22,4 @@ public final class Reinforcement extends FactDefinition {
                 .name(id())
                 .points(points));
     }
-
-    @Override
-    public String toString() {
-        return "Reinforcement{" +
-                "description='" + description + '\'' +
-                ", points=" + points +
-                '}';
-    }
 }

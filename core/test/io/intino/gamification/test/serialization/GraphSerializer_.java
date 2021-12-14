@@ -37,11 +37,11 @@ public class GraphSerializer_ {
         GraphSerializer serializer = new GraphSerializer(new File("temp/graph"));
         serializer.save(competition, true);
 
-        load(serializer, competition);
+        load(serializer, graph);
     }
 
-    private static void load(GraphSerializer serializer, Competition expected) {
-        Competition actual = serializer.loadCompetition(expected.id());
+    private static void load(GraphSerializer serializer, GamificationGraph expected) {
+        GamificationGraph actual = serializer.loadGraph();
         System.out.println(Json.toJsonPretty(actual));
     }
 

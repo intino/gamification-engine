@@ -101,17 +101,6 @@ public final class Season extends Node {
         return parent();
     }
 
-    @Override
-    public String toString() {
-        return "Season{" +
-                "rounds=" + rounds +
-                ", playerStates=" + playerStates +
-                ", startTime=" + startTime +
-                ", endTime=" + endTime +
-                ", state=" + state +
-                '}';
-    }
-
     public enum State {
         Created, Running, Finished
     }

@@ -172,10 +172,7 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     @Override
     public String toString() {
-        return "NodeCollection{" +
-                "owner='" + owner + '\'' +
-                ", nodes=" + nodes.stream().map(Node::id).collect(Collectors.joining(", ")) +
-                '}';
+        return "[" + nodes.stream().map(Node::id).collect(Collectors.joining(", ")) + "]";
     }
 
     public NodeCollection<T> asReadOnly() {

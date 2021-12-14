@@ -15,14 +15,6 @@ public class GraphSerializer_ {
 
     public static void main(String[] args) {
 
-        NodeCollection<Match> collection = new NodeCollection<>();
-        collection.init("", Match.class);
-        collection.add(new Match("q"));
-
-        String json = Json.toJsonPretty(collection);
-
-        System.out.println(json);
-
         GamificationEngine engine = EngineTestHelper.getEngine();
 
         GamificationGraph graph = engine.graph();
@@ -33,6 +25,8 @@ public class GraphSerializer_ {
         addPlayers(competition);
         addAchievements(competition);
         addSeasons(competition);
+
+        System.out.println(competition.seasons().get(0));
 
         GraphSerializer serializer = new GraphSerializer(new File("temp/graph"));
         serializer.save(competition, true);

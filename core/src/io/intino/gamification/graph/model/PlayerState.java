@@ -105,12 +105,12 @@ public final class PlayerState extends Node {
         return Math.max(score, 0);
     }
 
-    public List<MissionAssignment> activeMissions() {
-        return activeMissions.list();
+    public NodeCollection<MissionAssignment> activeMissions() {
+        return activeMissions.asReadOnly();
     }
 
-    public List<MissionAssignment> finishedMissions() {
-        return finishedMissions.list();
+    public NodeCollection<MissionAssignment> finishedMissions() {
+        return finishedMissions.asReadOnly();
     }
 
     private Competition competition() {

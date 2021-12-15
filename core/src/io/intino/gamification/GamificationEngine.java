@@ -3,6 +3,8 @@ package io.intino.gamification;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.util.time.TimeUtils;
 
+import static java.util.Objects.requireNonNull;
+
 public class GamificationEngine {
 
     private final GamificationConfig configuration;
@@ -14,7 +16,6 @@ public class GamificationEngine {
 
     public void launch() {
         TimeUtils.zoneOffset(configuration.zoneOffset());
-        this.graph = new GamificationGraph();
     }
 
     public GamificationConfig configuration() {
@@ -23,5 +24,10 @@ public class GamificationEngine {
 
     public GamificationGraph graph() {
         return this.graph;
+    }
+
+    public GamificationEngine graph(GamificationGraph graph) {
+        this.graph = requireNonNull(graph);
+        return this;
     }
 }

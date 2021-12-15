@@ -8,11 +8,6 @@ public final class Reinforcement extends FactDefinition {
         super(id, points);
     }
 
-    public Reinforcement description(String description) {
-        this.description = description;
-        return this;
-    }
-
     @Override
     public void addFactTo(Match match) {
         match.addFact(new Fact()

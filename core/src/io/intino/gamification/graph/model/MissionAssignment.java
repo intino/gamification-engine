@@ -14,7 +14,6 @@ public final class MissionAssignment extends Node {
     private final Instant creationTime;
     private final Instant expirationTime;
     private Instant endTime;
-    private String description;
 
     public MissionAssignment(String id, String missionId, int stepsToComplete, Instant expirationTime) {
         super(id);
@@ -83,15 +82,6 @@ public final class MissionAssignment extends Node {
 
     public MissionAssignment endTime(Instant endTime) {
         this.endTime = endTime;
-        return this;
-    }
-
-    public String description() {
-        return description;
-    }
-
-    public MissionAssignment description(String description) {
-        this.description = description;
         return this;
     }
 

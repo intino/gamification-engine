@@ -2,7 +2,7 @@ package io.intino.gamification.test.serialization;
 
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.graph.GraphSerializer;
+import io.intino.gamification.graph.GamificationGraphSerializer;
 import io.intino.gamification.graph.model.*;
 import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.test.util.EngineTestHelper;
@@ -28,13 +28,13 @@ public class GraphSerializer_ {
 
         System.out.println(competition.seasons().get(0));
 
-        GraphSerializer serializer = new GraphSerializer(new File("temp/graph"));
+        GamificationGraphSerializer serializer = new GamificationGraphSerializer(new File("temp/graph"));
         serializer.save(competition, true);
 
         load(serializer, graph);
     }
 
-    private static void load(GraphSerializer serializer, GamificationGraph expected) {
+    private static void load(GamificationGraphSerializer serializer, GamificationGraph expected) {
         GamificationGraph actual = serializer.loadGraph();
         System.out.println(Json.toJsonPretty(actual));
     }

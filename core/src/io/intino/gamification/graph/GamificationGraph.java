@@ -20,7 +20,7 @@ public class GamificationGraph {
     }
 
     public void save(File directory) {
-        new GraphSerializer(directory).save(this);
+        new GamificationGraphSerializer(directory).save(this);
     }
 
     @Override

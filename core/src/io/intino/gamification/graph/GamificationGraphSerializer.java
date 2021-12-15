@@ -28,11 +28,11 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  *    + competition2
  *      ...
  * */
-public class GraphSerializer {
+public class GamificationGraphSerializer {
 
     private final File rootDirectory;
 
-    public GraphSerializer(File root) {
+    public GamificationGraphSerializer(File root) {
         this.rootDirectory = root;
     }
 

@@ -2,7 +2,7 @@ package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.Fact;
 
-import java.util.List;
+import java.util.Comparator;
 import java.util.stream.Stream;
 
 import static io.intino.gamification.util.data.Progress.State.InProgress;
@@ -28,8 +28,10 @@ public final class PlayerState extends Node {
     public void assignMission(MissionAssignment assignment) {
         if(assignment.state() == InProgress) {
             activeMissions.add(assignment);
+            activeMissions.sort(Comparator.comparing(MissionAssignment::startTime));
         } else {
             finishedMissions.add(assignment);
+            finishedMissions.sort(Comparator.comparing(MissionAssignment::endTime));
         }
     }
 
@@ -39,6 +41,7 @@ public final class PlayerState extends Node {
         if(assignment.state() != InProgress) {
             activeMissions.remove(assignment);
             finishedMissions.add(assignment);
+            finishedMissions.sort(Comparator.comparing(MissionAssignment::endTime));
         }
     }
 
@@ -47,6 +50,7 @@ public final class PlayerState extends Node {
         assignment.complete();
         activeMissions.remove(assignment);
         finishedMissions.add(assignment);
+        finishedMissions.sort(Comparator.comparing(MissionAssignment::endTime));
     }
 
     public void failMission(MissionAssignment assignment) {
@@ -54,6 +58,7 @@ public final class PlayerState extends Node {
         assignment.fail();
         activeMissions.remove(assignment);
         finishedMissions.add(assignment);
+        finishedMissions.sort(Comparator.comparing(MissionAssignment::endTime));
     }
 
     // Facts from finished matches

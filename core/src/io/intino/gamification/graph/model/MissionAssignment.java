@@ -11,7 +11,7 @@ public final class MissionAssignment extends Node {
 
     private final String missionId;
     private final Progress progress;
-    private final Instant creationTime;
+    private final Instant startTime;
     private final Instant expirationTime;
     private Instant endTime;
 
@@ -19,15 +19,15 @@ public final class MissionAssignment extends Node {
         super(id);
         this.missionId = missionId;
         this.progress = new Progress(stepsToComplete);
-        this.creationTime = TimeUtils.now();
+        this.startTime = TimeUtils.now();
         this.expirationTime = expirationTime;
     }
 
-    public MissionAssignment(String id, String missionId, Progress progress, Instant creationTime, Instant expirationTime) {
+    public MissionAssignment(String id, String missionId, Progress progress, Instant startTime, Instant expirationTime) {
         super(id);
         this.missionId = missionId;
         this.progress = progress;
-        this.creationTime = creationTime;
+        this.startTime = startTime;
         this.expirationTime = expirationTime;
     }
 
@@ -68,8 +68,8 @@ public final class MissionAssignment extends Node {
         return progress.state();
     }
 
-    public Instant creationTime() {
-        return creationTime;
+    public Instant startTime() {
+        return startTime;
     }
 
     public Instant expirationTime() {

@@ -144,6 +144,13 @@ public class TimeUtils {
 
 	/*-------------------------------------------------------------------------------------------------------*/
 
+	public static boolean inRange(Instant ts, Instant startTs, Instant endTs) {
+		long start = startTs.toEpochMilli();
+		long end = endTs.toEpochMilli();
+		long now = ts.toEpochMilli();
+		return start <= now && now <= end;
+	}
+
 	public static long getMillisOf(Scale scale, int amount) {
 
 		long millis = 0;

@@ -17,7 +17,9 @@ public class GraphSerializer_ {
 
         GamificationEngine engine = EngineTestHelper.getEngine();
 
-        GamificationGraph graph = engine.graph();
+        GamificationGraph graph = new GamificationGraph();
+
+        engine.setGraph(graph);
 
         Competition competition = new Competition("1");
         graph.competitions().add(competition);
@@ -28,8 +30,8 @@ public class GraphSerializer_ {
 
         System.out.println(competition.seasons().get(0));
 
-        GamificationGraphSerializer serializer = new GamificationGraphSerializer(new File("temp/graph"));
-        serializer.save(competition, true);
+        GamificationGraphSerializer serializer = new GamificationGraphSerializer(new File("temp/graph1"));
+        //serializer.save(competition, true);
 
         load(serializer, graph);
     }
@@ -64,7 +66,7 @@ public class GraphSerializer_ {
         for(Player player : season.competition().players()) {
             PlayerState state = season.playerStates().find(player.id());
             for(int i = 0;i < 5;i++) {
-                state.activeMissions().add(new MissionAssignment("ma" + i, "mission" + i, 1, null));
+                state.assignMission(new MissionAssignment("ma" + i, "mission" + i, 1, null));
             }
         }
     }

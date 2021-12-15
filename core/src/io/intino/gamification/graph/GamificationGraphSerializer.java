@@ -36,6 +36,10 @@ public class GamificationGraphSerializer {
         this.rootDirectory = root;
     }
 
+    public File root() {
+        return rootDirectory;
+    }
+
     public void save(GamificationGraph graph) {
         graph.competitions().stream().parallel().forEach(competition -> save(competition, true));
     }
@@ -97,11 +101,15 @@ public class GamificationGraphSerializer {
 
     public GamificationGraph loadGraph() {
         GamificationGraph graph = new GamificationGraph();
+        if(!rootDirectory.exists()) return graph;
+
         File[] competitions = rootDirectory.listFiles(f -> f.isDirectory() && f.getName().startsWith("competition"));
         if(competitions == null) return graph;
         Arrays.sort(competitions);
+
         for(File competitionDir : competitions) {
             File competitionFile = new File(competitionDir, competitionDir.getName() + ".json");
+            if(!competitionFile.exists()) continue;
             loadCompetition(graph, competitionFile);
         }
         return graph;
@@ -118,6 +126,7 @@ public class GamificationGraphSerializer {
 
         for(File seasonDir : seasons) {
             File seasonFile = new File(seasonDir, seasonDir.getName() + ".json");
+            if(!seasonFile.exists()) continue;
             competition.seasons().add(loadSeason(competition, seasonFile));
         }
 

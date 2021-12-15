@@ -26,7 +26,7 @@ public class GamificationEngine {
         return this.graph;
     }
 
-    public GamificationEngine graph(GamificationGraph graph) {
+    public GamificationEngine setGraph(GamificationGraph graph) {
         this.graph = requireNonNull(graph);
         return this;
     }

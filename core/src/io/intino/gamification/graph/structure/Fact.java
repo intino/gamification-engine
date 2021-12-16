@@ -202,6 +202,8 @@ public class Fact implements Serializable {
         public static final Type Milestone = Type.register("Bonus");
         public static final Type Prize = Type.register("Prize");
         public static final Type Record = Type.register("Record");
+        public static final Type MissionAssigned = Type.register("MissionAssigned");
+        public static final Type MissionUpdated = Type.register("MissionUpdated");
         public static final Type MissionComplete = Type.register("MissionComplete");
         public static final Type MissionFailed = Type.register("MissionFailed");
 

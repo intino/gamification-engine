@@ -61,6 +61,22 @@ public final class PlayerState extends Node {
         finishedMissions.sort(Comparator.comparing(MissionAssignment::endTime));
     }
 
+    public void removeActiveMission(MissionAssignment assignment) {
+        activeMissions.remove(assignment);
+    }
+
+    public void removeFinishedMission(MissionAssignment assignment) {
+        finishedMissions.remove(assignment);
+    }
+
+    public void removeAllActiveMissions() {
+        activeMissions.removeAll();
+    }
+
+    public void removeAllFinishedMissions() {
+        finishedMissions.removeAll();
+    }
+
     // Facts from finished matches
     public Stream<Fact> facts() {
         if(parent() == null) return Stream.empty();

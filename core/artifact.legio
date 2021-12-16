@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.intino.gamification", "1.1.0-SNAPSHOT") core
+Artifact("io.intino.gamification", "1.1.1-SNAPSHOT") core
 
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.1")

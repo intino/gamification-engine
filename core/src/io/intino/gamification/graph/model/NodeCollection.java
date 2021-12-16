@@ -37,7 +37,6 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
 
     public synchronized boolean add(T node) {
         if (!meetPreconditions(node)) return false;
-        node.index(nodes.size());
         nodes.add(node);
         lookupTable.put(node.id(), node);
         node.setParent(owner);
@@ -76,7 +75,7 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
     }
 
     public synchronized void remove(T node) {
-        nodes.remove(node.index());
+        nodes.remove(node);
         removeInternal(node);
     }
 
@@ -103,7 +102,6 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
 
     private void removeInternal(T node) {
         lookupTable.remove(node.id());
-        node.index(Integer.MIN_VALUE);
     }
 
     @Override

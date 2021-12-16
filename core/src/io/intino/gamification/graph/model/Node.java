@@ -10,7 +10,6 @@ public abstract class Node implements Serializable {
 
     private final String id;
     private transient Object parent;
-    private transient int index = Integer.MIN_VALUE;
 
     Node(String id) {
         if(id == null || id.isBlank()) {
@@ -33,14 +32,6 @@ public abstract class Node implements Serializable {
 
     public final String id() {
         return id;
-    }
-
-    int index() {
-        return index;
-    }
-
-    void index(int index) {
-        this.index = index;
     }
 
     private void initTransientAttributes() {}

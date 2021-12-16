@@ -25,7 +25,9 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
 
     public synchronized void init(Object owner, Class<T> elementType) {
         if(initialized()) throw new IllegalStateException("NodeCollection has been already initialized");
-        this.owner = requireNonNull(owner);
+        if(owner == null) throw new NullPointerException("Owner cannot be null");
+        if(elementType == null) throw new NullPointerException("Element type cannot be null");
+        this.owner = owner;
         this.elementType = elementType;
         for(T node : nodes) {
             lookupTable.put(node.id(), node);
@@ -179,10 +181,11 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
     }
 
     public NodeCollection<T> asReadOnly() {
+
         return new NodeCollection<>() {
 
             {
-                init(owner, elementType);
+                init(NodeCollection.this.owner, NodeCollection.this.elementType);
             }
 
             @Override

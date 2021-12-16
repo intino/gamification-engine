@@ -42,6 +42,7 @@ public final class Season extends Node {
 
     public void startNewRound(Round round) {
         if (round != null) {
+            finishCurrentRound();
             rounds.add(round);
             round.begin();
         }

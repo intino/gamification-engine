@@ -27,6 +27,8 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
         this.elementType = elementType;
         for (T node : nodes) {
             lookupTable.put(node.id(), node);
+            node.setParent(owner);
+            node.onInit();
         }
     }
 

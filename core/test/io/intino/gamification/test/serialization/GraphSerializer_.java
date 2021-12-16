@@ -31,7 +31,7 @@ public class GraphSerializer_ {
         System.out.println(competition.seasons().get(0));
 
         GamificationGraphSerializer serializer = new GamificationGraphSerializer(new File("temp/graph1"));
-        //serializer.save(competition, true);
+        serializer.save(competition, true);
 
         load(serializer, graph);
     }

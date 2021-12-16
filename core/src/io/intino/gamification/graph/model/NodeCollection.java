@@ -104,6 +104,7 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
 
     private void removeInternal(T node) {
         lookupTable.remove(node.id());
+        node.setParent(null);
     }
 
     @Override

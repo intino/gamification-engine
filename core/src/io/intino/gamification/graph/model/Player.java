@@ -6,23 +6,23 @@ public final class Player extends Entity {
         super(id);
     }
 
+    public PlayerState state() {
+        return competition().currentSeason().playerStates().find(id());
+    }
+
     public void assignMission(MissionAssignment assignment) {
-        PlayerState playerState = competition().currentSeason().playerStates().find(id());
-        playerState.assignMission(assignment);
+        state().assignMission(assignment);
     }
 
     public void updateMission(MissionAssignment assignment) {
-        PlayerState playerState = competition().currentSeason().playerStates().find(id());
-        playerState.updateMission(assignment);
+        state().updateMission(assignment);
     }
 
     public void completeMission(MissionAssignment assignment) {
-        PlayerState playerState = competition().currentSeason().playerStates().find(id());
-        playerState.completeMission(assignment);
+        state().completeMission(assignment);
     }
 
     public void failMission(MissionAssignment assignment) {
-        PlayerState playerState = competition().currentSeason().playerStates().find(id());
-        playerState.failMission(assignment);
+        state().failMission(assignment);
     }
 }

@@ -111,9 +111,12 @@ public class NodeCollection<T extends Node> extends SerializableCollection imple
         return lookupTable.containsKey(id);
     }
 
-    @SuppressWarnings("unchecked")
-    public <E extends T> E find(String id) {
-        return (E) lookupTable.get(id);
+    public T find(String id) {
+        return lookupTable.get(id);
+    }
+
+    public T find(Predicate<T> condition) {
+        return nodes.stream().filter(condition).findFirst().orElse(null);
     }
 
     public boolean isEmpty() {

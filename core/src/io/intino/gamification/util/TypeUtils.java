@@ -2,14 +2,41 @@ package io.intino.gamification.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static java.util.Objects.nonNull;
+import static java.util.stream.Collectors.toList;
 
 public final class TypeUtils {
+
+    public static List<Field> getAllFields(Class<?> clazz, Predicate<Field> filter) {
+        if(clazz == null) return null;
+        if(filter == null) filter = f -> true;
+
+        List<Field> fields = new ArrayList<>();
+
+        while(clazz != Object.class) {
+            List<Field> declaredFields = Arrays.stream(clazz.getDeclaredFields())
+                    .filter(filter)
+                    .peek(f -> f.setAccessible(true)).collect(toList());
+            fields.addAll(0, declaredFields);
+            clazz = clazz.getSuperclass();
+        }
+
+        return fields;
+    }
+
+    public static List<Field> getAllFields(Class<?> clazz) {
+        return getAllFields(clazz, f -> true);
+    }
 
     @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> type) {

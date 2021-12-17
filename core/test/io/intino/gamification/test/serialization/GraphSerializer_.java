@@ -9,11 +9,18 @@ import io.intino.gamification.test.util.EngineTestHelper;
 import io.intino.gamification.util.serializer.Json;
 
 import java.io.File;
+import java.time.Instant;
 import java.util.Random;
 
 public class GraphSerializer_ {
 
     public static void main(String[] args) {
+
+        MissionAssignment assignment = new MissionAssignment("id", "missionId", 1, Instant.now());
+
+        System.out.println(Json.toJsonPretty(assignment));
+
+        System.exit(0);
 
         GamificationEngine engine = EngineTestHelper.getEngine();
 

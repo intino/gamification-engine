@@ -31,6 +31,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class GamificationGraphSerializer {
 
     private final File rootDirectory;
+    private boolean prettyPrinting = true;
 
     public GamificationGraphSerializer(File root) {
         this.rootDirectory = root;
@@ -38,6 +39,11 @@ public class GamificationGraphSerializer {
 
     public File root() {
         return rootDirectory;
+    }
+
+    public GamificationGraphSerializer prettyPrinting(boolean usePrettyJson) {
+        this.prettyPrinting = usePrettyJson;
+        return this;
     }
 
     public void save(GamificationGraph graph) {
@@ -50,7 +56,7 @@ public class GamificationGraphSerializer {
         File file = competitionFile(competition);
         File tmp = new File(file.getAbsolutePath() + ".tmp");
         try {
-            Json.write(competition, tmp);
+            Json.write(competition, tmp, prettyPrinting);
             Files.move(tmp.toPath(), file.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
         } catch (Exception e) {
             Log.error(e);
@@ -71,7 +77,7 @@ public class GamificationGraphSerializer {
         File file = seasonFile(season);
         File tmp = new File(file.getAbsolutePath() + ".tmp");
         try {
-            Json.write(season, tmp);
+            Json.write(season, tmp, prettyPrinting);
             Files.move(tmp.toPath(), file.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
         } catch (Exception e) {
             Log.error(e);
@@ -90,7 +96,7 @@ public class GamificationGraphSerializer {
         File file = roundFile(round);
         File tmp = new File(file.getAbsolutePath() + ".tmp");
         try {
-            Json.write(round, tmp);
+            Json.write(round, tmp, prettyPrinting);
             Files.move(tmp.toPath(), file.toPath(), REPLACE_EXISTING, ATOMIC_MOVE);
         } catch (Exception e) {
             Log.error(e);

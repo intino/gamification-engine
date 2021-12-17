@@ -71,8 +71,17 @@ public final class Json {
         builder.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, jsonSerializationContext)
                 -> new JsonPrimitive(instant.toString()));
 
-        builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (jsonElement, type, jsonDeserializationContext)
-                -> Instant.parse(jsonElement.getAsString()));
+        builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (jsonElement, type, jsonDeserializationContext) -> {
+
+            if(jsonElement instanceof JsonObject) {
+                // Compatibility with older versions
+                JsonObject obj = (JsonObject) jsonElement;
+                return Instant.ofEpochSecond(obj.get("seconds").getAsLong(), obj.get("nanos").getAsLong());
+            }
+
+            return Instant.parse(jsonElement.getAsString());
+
+        });
 
         builder.registerTypeHierarchyAdapter(Node.class, (JsonSerializer<Node>) (node, type, jsonSerializationContext) -> {
 

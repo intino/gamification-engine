@@ -1,5 +1,6 @@
 package io.intino.gamification.test.serialization;
 
+import com.google.gson.Gson;
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.GamificationGraphSerializer;
@@ -18,7 +19,7 @@ public class GraphSerializer_ {
 
         MissionAssignment assignment = new MissionAssignment("id", "missionId", 1, Instant.now());
 
-        System.out.println(Json.toJsonPretty(assignment));
+        System.out.println(new Gson().toJson(Instant.now()));
 
         System.exit(0);
 

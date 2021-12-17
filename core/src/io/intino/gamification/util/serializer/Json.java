@@ -9,9 +9,7 @@ import io.intino.gamification.util.TypeUtils;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.time.Instant;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public final class Json {
@@ -69,11 +67,8 @@ public final class Json {
 
     private static void addTypeAdapters(GsonBuilder builder) {
 
-        builder.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, jsonSerializationContext) -> {
-            String str = instant.toString().replace(':', '_');
-            JsonPrimitive p = new JsonPrimitive(str);
-            return p;
-        });
+        builder.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, jsonSerializationContext)
+                -> new JsonPrimitive(instant.toString().replace(':', '_')));
 
         builder.registerTypeAdapter(Instant.class, (JsonDeserializer<Instant>) (jsonElement, type, jsonDeserializationContext) -> {
 

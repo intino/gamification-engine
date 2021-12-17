@@ -6,15 +6,25 @@ import io.intino.gamification.graph.GamificationGraphSerializer;
 import io.intino.gamification.graph.model.*;
 import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.test.util.EngineTestHelper;
+import io.intino.gamification.util.TypeUtils;
 import io.intino.gamification.util.serializer.Json;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.time.Instant;
+import java.util.List;
 import java.util.Random;
 
 public class GraphSerializer_ {
 
     public static void main(String[] args) {
+
+        Season season = new Season("hola");
+
+        List<Field> fields = TypeUtils.getAllFields(season.getClass(), field -> (field.getModifiers() & Modifier.TRANSIENT) == 0);
+
+        System.out.println(Json.toJsonPretty(season));
 
         MissionAssignment assignment = new MissionAssignment("id", "missionId", 1, Instant.now());
 
@@ -24,8 +34,6 @@ public class GraphSerializer_ {
 
         System.out.println(Json.fromJson(Instant.class, "{\"seconds\":1639732843,\"nanos\":204624900}"));
         System.out.println(Json.fromJson(Instant.class, Json.toJson(now)));
-
-        System.exit(0);
 
         GamificationEngine engine = EngineTestHelper.getEngine();
 

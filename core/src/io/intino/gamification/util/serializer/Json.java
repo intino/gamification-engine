@@ -1,7 +1,6 @@
 package io.intino.gamification.util.serializer;
 
 import com.google.gson.*;
-import io.intino.gamification.graph.model.MissionAssignment;
 import io.intino.gamification.graph.model.Node;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.TypeUtils;
@@ -86,7 +85,7 @@ public final class Json {
 
             JsonObject obj = new JsonObject();
 
-            List<Field> fields = TypeUtils.getAllFields(MissionAssignment.class, f -> (f.getModifiers() & Modifier.TRANSIENT) == 0);
+            List<Field> fields = TypeUtils.getAllFields(node.getClass(), f -> (f.getModifiers() & Modifier.TRANSIENT) == 0);
 
             for(Field field : fields) {
                 try {

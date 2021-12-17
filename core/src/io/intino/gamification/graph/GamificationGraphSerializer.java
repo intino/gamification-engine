@@ -94,6 +94,7 @@ public class GamificationGraphSerializer {
 
     public void save(Round round) {
         File file = roundFile(round);
+        file.getParentFile().mkdirs();
         File tmp = new File(file.getAbsolutePath() + ".tmp");
         try {
             Json.write(round, tmp, prettyPrinting);

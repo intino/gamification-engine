@@ -13,8 +13,8 @@ import java.util.List;
 
 public final class Json {
 
-    private static final Gson Serializer = builder().create();
-    private static final Gson PrettySerializer = builder().setPrettyPrinting().create();
+    public static final Gson Serializer = builder().create();
+    public static final Gson PrettySerializer = builder().setPrettyPrinting().create();
 
     public static String toJson(Object obj) {
         return Serializer.toJson(obj);
@@ -81,11 +81,16 @@ public final class Json {
 
         });
 
+        addNodeTypeAdapter(builder);
+    }
+
+    private static void addNodeTypeAdapter(GsonBuilder builder) {
+
         builder.registerTypeHierarchyAdapter(Node.class, (JsonSerializer<Node>) (node, type, jsonSerializationContext) -> {
 
             JsonObject obj = new JsonObject();
 
-            List<Field> fields = TypeUtils.getAllFields(node.getClass(), f -> (f.getModifiers() & Modifier.TRANSIENT) == 0);
+            List<Field> fields = TypeUtils.getAllFields(node.getClass(), field -> (field.getModifiers() & Modifier.TRANSIENT) == 0);
 
             for(Field field : fields) {
                 try {

@@ -1,7 +1,6 @@
 package io.intino.gamification.test.missions;
 
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.graph.GamificationGraphSerializer;
 import io.intino.gamification.graph.model.*;
 import org.junit.BeforeClass;
 import org.junit.Test;

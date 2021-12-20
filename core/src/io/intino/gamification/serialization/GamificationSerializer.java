@@ -1,5 +1,6 @@
-package io.intino.gamification.graph;
+package io.intino.gamification.serialization;
 
+import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.model.Competition;
 import io.intino.gamification.graph.model.Round;
 import io.intino.gamification.graph.model.Season;
@@ -28,20 +29,20 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  *    + competition2
  *      ...
  * */
-public class GamificationGraphSerializer {
+public class GamificationSerializer {
 
-    private final File rootDirectory;
+    private final File root;
     private boolean prettyPrinting = true;
 
-    public GamificationGraphSerializer(File root) {
-        this.rootDirectory = root;
+    public GamificationSerializer(File root) {
+        this.root = root;
     }
 
     public File root() {
-        return rootDirectory;
+        return root;
     }
 
-    public GamificationGraphSerializer prettyPrinting(boolean usePrettyJson) {
+    public GamificationSerializer prettyPrinting(boolean usePrettyJson) {
         this.prettyPrinting = usePrettyJson;
         return this;
     }
@@ -108,9 +109,9 @@ public class GamificationGraphSerializer {
 
     public GamificationGraph loadGraph() {
         GamificationGraph graph = new GamificationGraph();
-        if(!rootDirectory.exists()) return graph;
+        if(!root.exists()) return graph;
 
-        File[] competitions = rootDirectory.listFiles(f -> f.isDirectory() && f.getName().startsWith("competition"));
+        File[] competitions = root.listFiles(f -> f.isDirectory() && f.getName().startsWith("competition"));
         if(competitions == null) return graph;
         Arrays.sort(competitions);
 
@@ -160,7 +161,7 @@ public class GamificationGraphSerializer {
     }
 
     public File competitionDirectory(Competition competition) {
-        return new File(rootDirectory, "competition." + competition.id());
+        return new File(root, "competition." + competition.id());
     }
 
     public File competitionFile(Competition competition) {

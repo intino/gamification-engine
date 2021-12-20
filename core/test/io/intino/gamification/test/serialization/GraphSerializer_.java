@@ -2,38 +2,18 @@ package io.intino.gamification.test.serialization;
 
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.graph.GamificationGraphSerializer;
+import io.intino.gamification.serialization.GamificationSerializer;
 import io.intino.gamification.graph.model.*;
 import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.test.util.EngineTestHelper;
-import io.intino.gamification.util.TypeUtils;
 import io.intino.gamification.util.serializer.Json;
 
 import java.io.File;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.time.Instant;
-import java.util.List;
 import java.util.Random;
 
 public class GraphSerializer_ {
 
     public static void main(String[] args) {
-
-        Season season = new Season("hola");
-
-        List<Field> fields = TypeUtils.getAllFields(season.getClass(), field -> (field.getModifiers() & Modifier.TRANSIENT) == 0);
-
-        System.out.println(Json.toJsonPretty(season));
-
-        MissionAssignment assignment = new MissionAssignment("id", "missionId", 1, Instant.now());
-
-        Instant now = Instant.now();
-
-        Instant.parse(now.toString());
-
-        System.out.println(Json.fromJson(Instant.class, "{\"seconds\":1639732843,\"nanos\":204624900}"));
-        System.out.println(Json.fromJson(Instant.class, Json.toJson(now)));
 
         GamificationEngine engine = EngineTestHelper.getEngine();
 
@@ -48,15 +28,16 @@ public class GraphSerializer_ {
         addAchievements(competition);
         addSeasons(competition);
 
-        System.out.println(competition.seasons().get(0));
+        Season s = competition.seasons().get(0);
+        System.out.println(s.toJson());
 
-        GamificationGraphSerializer serializer = new GamificationGraphSerializer(new File("temp/graph1"));
+        GamificationSerializer serializer = new GamificationSerializer(new File("temp/graph1"));
         serializer.save(competition, true);
 
         load(serializer, graph);
     }
 
-    private static void load(GamificationGraphSerializer serializer, GamificationGraph expected) {
+    private static void load(GamificationSerializer serializer, GamificationGraph expected) {
         GamificationGraph actual = serializer.loadGraph();
         System.out.println(Json.toJsonPretty(actual));
     }

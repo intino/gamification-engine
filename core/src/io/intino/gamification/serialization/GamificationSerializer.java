@@ -48,7 +48,9 @@ public class GamificationSerializer {
     }
 
     public synchronized void save(GamificationGraph graph) {
-        graph.competitions().stream().parallel().forEach(competition -> save(competition, true));
+        for(Competition competition : graph.competitions()) {
+            save(competition, true);
+        }
     }
 
     public synchronized void save(Competition competition, boolean saveChildren) {

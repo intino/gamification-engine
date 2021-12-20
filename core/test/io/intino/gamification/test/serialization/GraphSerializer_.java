@@ -35,6 +35,12 @@ public class GraphSerializer_ {
         serializer.save(competition, true);
 
         load(serializer, graph);
+
+        String json = s.rounds().get(0).toJson();
+
+        Round round = Json.fromJson(Round.class, json);
+
+        System.out.println(round.matches().get(0).facts());
     }
 
     private static void load(GamificationSerializer serializer, GamificationGraph expected) {

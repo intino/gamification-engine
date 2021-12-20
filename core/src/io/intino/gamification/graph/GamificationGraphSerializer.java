@@ -46,11 +46,11 @@ public class GamificationGraphSerializer {
         return this;
     }
 
-    public void save(GamificationGraph graph) {
+    public synchronized void save(GamificationGraph graph) {
         graph.competitions().stream().parallel().forEach(competition -> save(competition, true));
     }
 
-    public void save(Competition competition, boolean saveChildren) {
+    public synchronized void save(Competition competition, boolean saveChildren) {
         File directory = competitionDirectory(competition);
         directory.mkdirs();
         File file = competitionFile(competition);
@@ -71,7 +71,7 @@ public class GamificationGraphSerializer {
         }
     }
 
-    public void save(Season season, boolean saveChildren) {
+    public synchronized void save(Season season, boolean saveChildren) {
         File directory = seasonDirectory(season);
         directory.mkdirs();
         File file = seasonFile(season);
@@ -92,7 +92,7 @@ public class GamificationGraphSerializer {
         }
     }
 
-    public void save(Round round) {
+    public synchronized void save(Round round) {
         File file = roundFile(round);
         file.getParentFile().mkdirs();
         File tmp = new File(file.getAbsolutePath() + ".tmp");

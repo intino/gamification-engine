@@ -12,11 +12,9 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
     private transient Object owner;
     private transient Class<T> elementType;
     private final List<T> nodes;
-    private transient final Map<String, T> lookupTable;
 
     public NodeCollection() {
         this.nodes = new ArrayList<>();
-        this.lookupTable = new HashMap<>();
     }
 
     public synchronized void init(Object owner, Class<T> elementType) {
@@ -25,11 +23,6 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
         if (elementType == null) throw new NullPointerException("Element type cannot be null");
         this.owner = owner;
         this.elementType = elementType;
-        for (T node : nodes) {
-            lookupTable.put(node.id(), node);
-            node.setParent(owner);
-            node.onInit();
-        }
     }
 
     @Override
@@ -40,7 +33,6 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
     public synchronized boolean add(T node) {
         if (!meetPreconditions(node)) return false;
         nodes.add(node);
-        lookupTable.put(node.id(), node);
         node.setParent(owner);
         node.onInit();
         return true;
@@ -103,18 +95,17 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
     }
 
     private void removeInternal(T node) {
-        lookupTable.remove(node.id());
         node.setParent(null);
     }
 
     @Override
     public boolean exists(String id) {
-        return lookupTable.containsKey(id);
+        return find(id) != null;
     }
 
     @Override
     public T find(String id) {
-        return lookupTable.get(id);
+        return nodes.stream().filter(node -> node.id().equals(id)).findFirst().orElse(null);
     }
 
     @Override
@@ -124,7 +115,7 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
 
     @Override
     public boolean isEmpty() {
-        return size() == 0;
+        return nodes.isEmpty();
     }
 
     @Override

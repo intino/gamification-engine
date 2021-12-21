@@ -11,8 +11,6 @@ public final class Reinforcement extends FactDefinition {
     @Override
     public void addFactTo(Match match) {
         match.addFact(new Fact()
-                .season(match.round().season().id())
-                .round(match.round().id())
                 .type(Fact.StandardTypes.Reinforcement)
                 .name(id())
                 .points(points));

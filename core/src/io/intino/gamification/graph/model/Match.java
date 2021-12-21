@@ -15,9 +15,6 @@ public final class Match extends Node {
     }
 
     public void addFact(Fact fact) {
-        fact.competition(round().season().competition().id());
-        fact.season(round().season().id());
-        fact.round(round().id());
         facts.add(fact);
     }
 

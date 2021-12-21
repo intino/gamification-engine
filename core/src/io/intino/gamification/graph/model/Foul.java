@@ -11,8 +11,6 @@ public final class Foul extends FactDefinition {
     @Override
     public void addFactTo(Match match) {
         match.addFact(new Fact()
-                .season(match.round().season().id())
-                .round(match.round().id())
                 .type(Fact.StandardTypes.Foul)
                 .name(id())
                 .points(points));

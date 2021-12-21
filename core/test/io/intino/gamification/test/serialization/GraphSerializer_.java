@@ -1,26 +1,24 @@
 package io.intino.gamification.test.serialization;
 
-import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.model.*;
 import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.serialization.GamificationSerializer;
-import io.intino.gamification.test.util.EngineTestHelper;
 
 import java.io.File;
 import java.util.Random;
 
 public class GraphSerializer_ {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
-        GamificationEngine engine = EngineTestHelper.getEngine();
+        //GamificationEngine engine = EngineTestHelper.getEngine();
 
         GamificationGraph graph = new GamificationGraph();
 
-        engine.setGraph(graph);
+        //engine.setGraph(graph);
 
-        for(int i = 0;i < 2;i++) {
+        for(int i = 0;i < 10;i++) {
             Competition competition = new Competition(String.valueOf(i + 1));
             graph.competitions().add(competition);
 
@@ -29,10 +27,23 @@ public class GraphSerializer_ {
             addSeasons(competition);
         }
 
+        System.gc();
+
+        Thread.sleep(1000);
+
+        Runtime r = Runtime.getRuntime();
+        long totalMemory = r.totalMemory();
+        long freeMemory = r.freeMemory();
+
+        double usedMemory = totalMemory - freeMemory;
+        usedMemory = usedMemory / 1024.0 / 1024.0;
+
+        System.out.println("used memory = " + usedMemory + " MB");
+
         long start = System.currentTimeMillis();
 
         GamificationSerializer serializer = new GamificationSerializer(new File("temp/graph1"));
-        serializer.prettyPrinting(true);
+        serializer.prettyPrinting(false);
         serializer.save(graph);
 
         long time = System.currentTimeMillis() - start;

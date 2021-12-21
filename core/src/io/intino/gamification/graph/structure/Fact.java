@@ -18,9 +18,6 @@ import java.util.*;
 public class Fact implements Serializable {
 
     private Instant ts;
-    private String competition;
-    private String season;
-    private String round;
     private Type type;
     private String name;
     private int points;
@@ -36,33 +33,6 @@ public class Fact implements Serializable {
 
     public Fact ts(Instant ts) {
         this.ts = ts;
-        return this;
-    }
-
-    public String competition() {
-        return competition;
-    }
-
-    public Fact competition(String competition) {
-        this.competition = competition;
-        return this;
-    }
-
-    public String season() {
-        return season;
-    }
-
-    public Fact season(String season) {
-        this.season = season;
-        return this;
-    }
-
-    public String round() {
-        return round;
-    }
-
-    public Fact round(String round) {
-        this.round = round;
         return this;
     }
 
@@ -127,21 +97,18 @@ public class Fact implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Fact fact = (Fact) o;
-        return points == fact.points && Objects.equals(ts, fact.ts) && Objects.equals(competition, fact.competition) && Objects.equals(season, fact.season) && Objects.equals(round, fact.round) && Objects.equals(type, fact.type) && Objects.equals(name, fact.name) && Objects.equals(attributes, fact.attributes);
+        return points == fact.points && Objects.equals(ts, fact.ts) && Objects.equals(type, fact.type) && Objects.equals(name, fact.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ts, competition, season, round, type, name, points, attributes);
+        return Objects.hash(ts, type, name, points);
     }
 
     @Override
     public String toString() {
         return "Fact{" +
                 "ts=" + ts +
-                ", competition='" + competition + '\'' +
-                ", season='" + season + '\'' +
-                ", round='" + round + '\'' +
                 ", type=" + type +
                 ", name='" + name + '\'' +
                 ", points=" + points +

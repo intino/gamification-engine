@@ -181,7 +181,14 @@ public final class Json {
             if(!name.equals("id") && obj.has(name)) {
                 try {
                     JsonElement jsonElement = obj.get(name);
-                    field.set(node, context.deserialize(jsonElement, field.getType()));
+                    Object value = context.deserialize(jsonElement, field.getType());
+                    field.set(node, value);
+                    if(field.getType().equals(NodeCollection.class)) {
+                        Field owner = NodeCollection.class.getDeclaredField("owner");
+                        owner.setAccessible(true);
+                        owner.set(value, node);
+                    }
+
                 } catch (Exception e) {
                     Log.error(e);
                 }

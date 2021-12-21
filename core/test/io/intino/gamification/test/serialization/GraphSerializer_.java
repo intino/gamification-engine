@@ -10,7 +10,16 @@ import java.util.Random;
 
 public class GraphSerializer_ {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+
+        GamificationSerializer serializer = new GamificationSerializer(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\externa\\temp\\datamarts\\wizard\\gamification\\graph"));
+
+        GamificationGraph graph = serializer.loadGraph();
+
+        System.out.println(graph);
+    }
+
+    public static void main1(String[] args) throws InterruptedException {
 
         //GamificationEngine engine = EngineTestHelper.getEngine();
 

@@ -23,6 +23,7 @@ public final class Season extends Node {
 
     @Override
     void onInit() {
+        competition().players().stream().map(p -> new PlayerState(p.id())).forEach(playerStates::add);
     }
 
     public Round currentRound() {

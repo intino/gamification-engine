@@ -3,35 +3,26 @@ package io.intino.gamification.graph.model;
 import io.intino.gamification.util.time.TimeUtils;
 
 import java.time.Instant;
-import java.util.List;
 
 public final class Season extends Node {
 
-    private transient NodeCollection<Round> rounds;
-    private NodeCollection<PlayerState> playerStates;
+    private transient final NodeCollection<Round> rounds;
+    private final NodeCollection<PlayerState> playerStates;
     private Instant startTime;
     private Instant endTime;
     private State state = State.Created;
 
     public Season(String id) {
         super(id);
-    }
-
-    public Season(String id, List<PlayerState> persistencePlayerState) {
-        super(id);
-        this.playerStates.addAll(persistencePlayerState);
+        rounds = new NodeCollection<>();
+        rounds.init(this, Round.class);
+        playerStates = new NodeCollection<>();
+        playerStates.init(this, PlayerState.class);
+        startTime = TimeUtils.now();
     }
 
     @Override
     void onInit() {
-        if(rounds == null) rounds = new NodeCollection<>();
-        rounds.init(this, Round.class);
-
-        if(playerStates == null) playerStates = new NodeCollection<>();
-        playerStates.init(this, PlayerState.class);
-        competition().players().forEach(player -> playerStates.add(new PlayerState(player.id())));
-
-        startTime = TimeUtils.now();
     }
 
     public Round currentRound() {
@@ -56,6 +47,7 @@ public final class Season extends Node {
     void begin() {
         startTime = TimeUtils.now();
         state = State.Running;
+        competition().players().forEach(p -> playerStates.add(new PlayerState(p.id())));
     }
 
     void end() {

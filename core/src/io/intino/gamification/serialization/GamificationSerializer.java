@@ -120,15 +120,14 @@ public class GamificationSerializer {
         for(File competitionDir : competitions) {
             File competitionFile = new File(competitionDir, competitionDir.getName() + ".json");
             if(!competitionFile.exists()) continue;
-            loadCompetition(graph, competitionFile);
+            graph.competitions().add(loadCompetition(competitionFile));
         }
         return graph;
     }
 
-    public Competition loadCompetition(GamificationGraph graph, File file) {
+    public Competition loadCompetition(File file) {
         Competition competition = Json.read(Competition.class, file);
         if(competition == null) return null;
-        graph.competitions().add(competition);
 
         File[] seasons = file.getParentFile().listFiles(f -> f.isDirectory() && f.getName().startsWith("season"));
         if(seasons == null) return competition;
@@ -137,16 +136,15 @@ public class GamificationSerializer {
         for(File seasonDir : seasons) {
             File seasonFile = new File(seasonDir, seasonDir.getName() + ".json");
             if(!seasonFile.exists()) continue;
-            competition.seasons().add(loadSeason(competition, seasonFile));
+            competition.seasons().add(loadSeason(seasonFile));
         }
 
         return competition;
     }
 
-    public Season loadSeason(Competition competition, File file) {
+    public Season loadSeason(File file) {
         Season season = Json.read(Season.class, file);
         if(season == null) return null;
-        competition.seasons().add(season);
 
         File[] rounds = file.getParentFile().listFiles(f -> f.isFile() && f.getName().startsWith("round"));
         if(rounds == null) return season;

@@ -6,19 +6,19 @@ import java.time.Instant;
 
 public final class Round extends Node {
 
-    private NodeCollection<Match> matches;
+    private final NodeCollection<Match> matches;
     private Instant startTime;
     private Instant endTime;
     private State state = State.Created;
 
     public Round(String id) {
         super(id);
+        matches = new NodeCollection<>();
+        matches.init(this, Match.class);
     }
 
     @Override
     void onInit() {
-        if(matches == null) matches = new NodeCollection<>();
-        matches.init(this, Match.class);
     }
 
     void begin() {

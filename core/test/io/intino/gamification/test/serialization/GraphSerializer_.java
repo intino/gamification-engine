@@ -2,11 +2,10 @@ package io.intino.gamification.test.serialization;
 
 import io.intino.gamification.GamificationEngine;
 import io.intino.gamification.graph.GamificationGraph;
-import io.intino.gamification.serialization.GamificationSerializer;
 import io.intino.gamification.graph.model.*;
 import io.intino.gamification.graph.structure.Fact;
+import io.intino.gamification.serialization.GamificationSerializer;
 import io.intino.gamification.test.util.EngineTestHelper;
-import io.intino.gamification.util.serializer.Json;
 
 import java.io.File;
 import java.util.Random;
@@ -57,7 +56,7 @@ public class GraphSerializer_ {
     }
 
     private static void addPlayers(Competition competition) {
-        for(int i = 0;i < 200;i++) {
+        for(int i = 0;i < 100;i++) {
             competition.players().add(new Player("player" + i));
         }
     }
@@ -73,7 +72,7 @@ public class GraphSerializer_ {
 
     private static void addMissionAssignments(Season season) {
         for(Player player : season.competition().players()) {
-            PlayerState state = season.playerStates().find(player.id());
+            PlayerState state = season.playerStates().addIfNotExists(player.id());
             for(int i = 0;i < 10;i++) {
                 state.assignMission(new MissionAssignment("ma" + i, "mission" + i, 1, null));
             }

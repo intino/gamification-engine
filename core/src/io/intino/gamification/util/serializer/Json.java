@@ -1,15 +1,18 @@
 package io.intino.gamification.util.serializer;
 
 import com.google.gson.*;
-import io.intino.gamification.graph.model.Node;
+import io.intino.gamification.graph.model.*;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.TypeUtils;
 
 import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class Json {
 
@@ -102,5 +105,50 @@ public final class Json {
 
             return obj;
         });
+
+        builder.registerTypeHierarchyAdapter(Competition.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
+            JsonObject obj = (JsonObject) jsonElement;
+            Competition competition = new Competition(obj.get("id").getAsString());
+            deserializeNodeContents(competition, type, obj, jsonDeserializationContext);
+            return competition;
+        });
+
+        builder.registerTypeHierarchyAdapter(Season.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
+            JsonObject obj = (JsonObject) jsonElement;
+            Season season = new Season(obj.get("id").getAsString());
+            deserializeNodeContents(season, type, obj, jsonDeserializationContext);
+            return season;
+        });
+
+        builder.registerTypeHierarchyAdapter(Round.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
+            JsonObject obj = (JsonObject) jsonElement;
+            Round round = new Round(obj.get("id").getAsString());
+            deserializeNodeContents(round, type, obj, jsonDeserializationContext);
+            return round;
+        });
+    }
+
+    private static final Map<Type, List<Field>> FieldsCache = new HashMap<>();
+
+    private static void deserializeNodeContents(Node node, Type type, JsonObject obj, JsonDeserializationContext context) {
+
+        List<Field> fields = FieldsCache.get(type);
+
+        if(fields == null) {
+            fields = TypeUtils.getAllFields(node.getClass(), field -> (field.getModifiers() & Modifier.TRANSIENT) == 0);
+            FieldsCache.put(type, fields);
+        }
+
+        for(Field field : fields) {
+            field.setAccessible(true);
+            String name = field.getName();
+            if(!name.equals("id") && obj.has(name)) {
+                try {
+                    JsonElement jsonElement = obj.get(name);
+                    field.set(node, context.deserialize(jsonElement, field.getType()));
+                } catch (Exception ignored) {
+                }
+            }
+        }
     }
 }

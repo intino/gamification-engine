@@ -5,36 +5,37 @@ import io.intino.gamification.util.serializer.Json;
 
 public final class Competition extends Node {
 
-    private transient NodeCollection<Season> seasons;
-    private NodeCollection<Player> players;
-    private NodeCollection<Mission> missions;
-    private NodeCollection<Reinforcement> reinforcements;
-    private NodeCollection<Foul> fouls;
-    private NodeCollection<Achievement> achievements;
+    private final transient NodeCollection<Season> seasons;
+    private final NodeCollection<Player> players;
+    private final NodeCollection<Mission> missions;
+    private final NodeCollection<Reinforcement> reinforcements;
+    private final NodeCollection<Foul> fouls;
+    private final NodeCollection<Achievement> achievements;
 
     public Competition(String id) {
         super(id);
+
+        seasons = new NodeCollection<>();
+        seasons.init(this, Season.class);
+
+        players = new NodeCollection<>();
+        players.init(this, Player.class);
+
+        missions = new NodeCollection<>();
+        missions.init(this, Mission.class);
+
+        reinforcements = new NodeCollection<>();
+        reinforcements.init(this, Reinforcement.class);
+
+        fouls = new NodeCollection<>();
+        fouls.init(this, Foul.class);
+
+        achievements = new NodeCollection<>();
+        achievements.init(this, Achievement.class);
     }
 
     @Override
     void onInit() {
-        if(seasons == null) seasons = new NodeCollection<>();
-        seasons.init(this, Season.class);
-
-        if(players == null) players = new NodeCollection<>();
-        players.init(this, Player.class);
-
-        if(missions == null) missions = new NodeCollection<>();
-        missions.init(this, Mission.class);
-
-        if(reinforcements == null) reinforcements = new NodeCollection<>();
-        reinforcements.init(this, Reinforcement.class);
-
-        if(fouls == null) fouls = new NodeCollection<>();
-        fouls.init(this, Foul.class);
-
-        if(achievements == null) achievements = new NodeCollection<>();
-        achievements.init(this, Achievement.class);
     }
 
     public Season currentSeason() {

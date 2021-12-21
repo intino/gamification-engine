@@ -1,6 +1,5 @@
 package io.intino.gamification.graph.model;
 
-import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.structure.Fact;
 
 import java.util.ArrayList;

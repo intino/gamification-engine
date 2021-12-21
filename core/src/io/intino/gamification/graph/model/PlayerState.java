@@ -9,20 +9,20 @@ import static io.intino.gamification.util.data.Progress.State.InProgress;
 
 public final class PlayerState extends Node {
 
-    private NodeCollection<MissionAssignment> activeMissions;
-    private NodeCollection<MissionAssignment> finishedMissions;
+    private final NodeCollection<MissionAssignment> activeMissions;
+    private final NodeCollection<MissionAssignment> finishedMissions;
 
     PlayerState(String id) {
         super(id);
+        activeMissions = new NodeCollection<>();
+        activeMissions.init(this, MissionAssignment.class);
+
+        finishedMissions = new NodeCollection<>();
+        finishedMissions.init(this, MissionAssignment.class);
     }
 
     @Override
     void onInit() {
-        if(activeMissions == null) activeMissions = new NodeCollection<>();
-        activeMissions.init(this, MissionAssignment.class);
-
-        if(finishedMissions == null) finishedMissions = new NodeCollection<>();
-        finishedMissions.init(this, MissionAssignment.class);
     }
 
     public void assignMission(MissionAssignment assignment) {

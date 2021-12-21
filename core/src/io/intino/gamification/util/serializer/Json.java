@@ -187,6 +187,7 @@ public final class Json {
                         Field owner = NodeCollection.class.getDeclaredField("owner");
                         owner.setAccessible(true);
                         owner.set(value, node);
+                        ((NodeCollection<?>)value).initElements();
                     }
 
                 } catch (Exception e) {

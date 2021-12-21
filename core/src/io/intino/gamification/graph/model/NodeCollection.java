@@ -21,12 +21,16 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
         return elementType;
     }
 
-    public synchronized void init(Object owner, Class<T> elementType) {
+    public void init(Object owner, Class<T> elementType) {
         if (initialized()) throw new IllegalStateException("NodeCollection has been already initialized");
         if (owner == null) throw new NullPointerException("Owner cannot be null");
         if (elementType == null) throw new NullPointerException("Element type cannot be null");
         this.owner = owner;
         this.elementType = elementType;
+    }
+
+    public void initElements() {
+        for(T element : nodes) element.setParent(owner);
     }
 
     @Override

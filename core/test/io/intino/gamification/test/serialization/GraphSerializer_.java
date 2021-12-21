@@ -16,6 +16,10 @@ public class GraphSerializer_ {
 
         GamificationGraph graph = serializer.loadGraph();
 
+        Competition competition = graph.competitions().find("Mexico");
+        Season season = competition.seasons().get(0);
+        Round round = season.rounds().get(0);
+
         System.out.println(graph);
     }
 

@@ -52,7 +52,7 @@ public abstract class Node implements Serializable {
 
     @Override
     public String toString() {
-        return toJson();
+        return id();
     }
 
     public String toJson() {

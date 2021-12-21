@@ -36,4 +36,13 @@ public final class Match extends Node {
     public Round round() {
         return parent();
     }
+
+    @Override
+    public String toString() {
+        return "Match{" +
+                "id=" + id() +
+                ", facts=" + facts.size() +
+                ", score=" + score() +
+                '}';
+    }
 }

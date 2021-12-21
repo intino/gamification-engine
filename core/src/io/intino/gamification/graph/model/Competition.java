@@ -70,7 +70,7 @@ public final class Competition extends Node {
         return missions;
     }
 
-    public NodeCollection<Reinforcement> successes() {
+    public NodeCollection<Reinforcement> reinforcements() {
         return reinforcements;
     }
 
@@ -88,7 +88,16 @@ public final class Competition extends Node {
 
     @Override
     public String toString() {
-        return id();
+        return "Competition{" +
+                "id=" + id() +
+                ", currentSeason=" + currentSeason() +
+                ", seasons=" + seasons.size() +
+                ", players=" + players.size() +
+                ", missions=" + missions.size() +
+                ", reinforcements=" + reinforcements.size() +
+                ", fouls=" + fouls.size() +
+                ", achievements=" + achievements.size() +
+                '}';
     }
 
     @Override

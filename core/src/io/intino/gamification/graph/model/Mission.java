@@ -16,4 +16,12 @@ public final class Mission extends Node {
     public Competition competition() {
         return parent();
     }
+
+    @Override
+    public String toString() {
+        return "Mission{" +
+                "id=" + id() +
+                ", points=" + points +
+                '}';
+    }
 }

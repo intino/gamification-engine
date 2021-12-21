@@ -66,6 +66,17 @@ public final class Round extends Node {
         return parent();
     }
 
+    @Override
+    public String toString() {
+        return "Round{" +
+                "id=" + id() +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", state=" + state +
+                ", matches=" + matches.size() +
+                '}';
+    }
+
     public enum State {
         Created, Running, Finished
     }

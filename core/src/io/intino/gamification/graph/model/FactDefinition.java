@@ -18,4 +18,12 @@ public abstract class FactDefinition extends Node {
     public final Competition competition() {
         return parent();
     }
+
+    @Override
+    public String toString() {
+        return getClass().getSimpleName() + "{" +
+                "id=" + id() +
+                ", points=" + points +
+                '}';
+    }
 }

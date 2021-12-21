@@ -145,7 +145,11 @@ public final class PlayerState extends Node {
     @Override
     public String toString() {
         return "PlayerState{" +
-                "missionAssignments=" + activeMissions +
+                "id=" + id() +
+                ", activeMissions=" + activeMissions.size() +
+                ", finishedMissions=" + finishedMissions.size() +
+                ", facts=" + rawFacts().count() +
+                ", score=" + rawScore() +
                 '}';
     }
 }

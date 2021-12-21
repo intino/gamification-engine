@@ -21,31 +21,33 @@ public class GraphSerializer_ {
 
         engine.setGraph(graph);
 
-        Competition competition = new Competition("1");
-        graph.competitions().add(competition);
+        for(int i = 0;i < 2;i++) {
+            Competition competition = new Competition(String.valueOf(i + 1));
+            graph.competitions().add(competition);
 
-        addPlayers(competition);
-        addAchievements(competition);
-        addSeasons(competition);
+            addPlayers(competition);
+            addAchievements(competition);
+            addSeasons(competition);
+        }
 
-        Season s = competition.seasons().get(0);
-        System.out.println(s.toJson());
+        long start = System.currentTimeMillis();
 
         GamificationSerializer serializer = new GamificationSerializer(new File("temp/graph1"));
-        serializer.save(competition, true);
+        serializer.prettyPrinting(true);
+        serializer.save(graph);
+
+        long time = System.currentTimeMillis() - start;
+
+        System.out.println("Write Time: " + time + " ms");
 
         load(serializer, graph);
-
-        String json = s.rounds().get(0).toJson();
-
-        Round round = Json.fromJson(Round.class, json);
-
-        System.out.println(round.matches().get(0).facts());
     }
 
     private static void load(GamificationSerializer serializer, GamificationGraph expected) {
+        long start = System.currentTimeMillis();
         GamificationGraph actual = serializer.loadGraph();
-        System.out.println(Json.toJsonPretty(actual));
+        long time = System.currentTimeMillis() - start;
+        System.out.println("Read Time: " + time + " ms");
     }
 
     private static void addAchievements(Competition competition) {
@@ -55,13 +57,13 @@ public class GraphSerializer_ {
     }
 
     private static void addPlayers(Competition competition) {
-        for(int i = 0;i < 100;i++) {
+        for(int i = 0;i < 200;i++) {
             competition.players().add(new Player("player" + i));
         }
     }
 
     private static void addSeasons(Competition competition) {
-        for(int i = 0;i < 3;i++) {
+        for(int i = 0;i < 10;i++) {
             Season season = new Season(String.valueOf(i + 1));
             competition.seasons().add(season);
             addMissionAssignments(season);
@@ -72,14 +74,14 @@ public class GraphSerializer_ {
     private static void addMissionAssignments(Season season) {
         for(Player player : season.competition().players()) {
             PlayerState state = season.playerStates().find(player.id());
-            for(int i = 0;i < 5;i++) {
+            for(int i = 0;i < 10;i++) {
                 state.assignMission(new MissionAssignment("ma" + i, "mission" + i, 1, null));
             }
         }
     }
 
     private static void addRounds(Season season) {
-        for(int i = 0;i < 4;i++) {
+        for(int i = 0;i < 24;i++) {
             Round round = new Round(String.valueOf(i + 1));
             season.rounds().add(round);
             addMatches(round);

@@ -10,11 +10,15 @@ import java.util.stream.Stream;
 public class NodeCollection<T extends Node> implements UnmodifiableNodeCollection<T> {
 
     private transient Object owner;
-    private transient Class<T> elementType;
+    private Class<T> elementType;
     private final List<T> nodes;
 
     public NodeCollection() {
         this.nodes = new ArrayList<>();
+    }
+
+    public Class<T> elementType() {
+        return elementType;
     }
 
     public synchronized void init(Object owner, Class<T> elementType) {

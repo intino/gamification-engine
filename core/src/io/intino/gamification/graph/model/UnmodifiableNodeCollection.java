@@ -1,11 +1,12 @@
 package io.intino.gamification.graph.model;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public interface UnmodifiableNodeCollection<T> extends Iterable<T> {
+public interface UnmodifiableNodeCollection<T> extends Iterable<T>, Serializable {
 
     boolean initialized();
 

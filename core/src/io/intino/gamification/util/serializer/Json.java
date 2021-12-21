@@ -1,6 +1,7 @@
 package io.intino.gamification.util.serializer;
 
 import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import io.intino.gamification.graph.model.*;
 import io.intino.gamification.util.Log;
 import io.intino.gamification.util.TypeUtils;
@@ -18,6 +19,7 @@ public final class Json {
 
     public static final Gson Serializer = builder().create();
     public static final Gson PrettySerializer = builder().setPrettyPrinting().create();
+    private static final Map<Type, List<Field>> FieldsCache = new HashMap<>();
 
     public static String toJson(Object obj) {
         return Serializer.toJson(obj);
@@ -126,9 +128,43 @@ public final class Json {
             deserializeNodeContents(round, type, obj, jsonDeserializationContext);
             return round;
         });
-    }
 
-    private static final Map<Type, List<Field>> FieldsCache = new HashMap<>();
+        builder.registerTypeAdapter(NodeCollection.class, (JsonSerializer<NodeCollection<?>>) (collection, type, jsonSerializationContext) -> {
+            JsonObject obj = new JsonObject();
+            obj.add("elementType", new JsonPrimitive(collection.elementType().getName()));
+            obj.add("nodes", jsonSerializationContext.serialize(collection.list()));
+            return obj;
+        });
+
+        builder.registerTypeAdapter(NodeCollection.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
+            JsonObject obj = (JsonObject) jsonElement;
+            NodeCollection<?> collection = new NodeCollection<>();
+            List<Field> fields = FieldsCache.get(NodeCollection.class);
+            if(fields == null) {
+                fields = TypeUtils.getAllFields(NodeCollection.class, f -> (f.getModifiers() & Modifier.TRANSIENT) == 0);
+                FieldsCache.put(NodeCollection.class, fields);
+            }
+
+            try {
+                Field elementType = fields.stream().filter(f -> f.getName().equals("elementType")).findFirst().orElse(null);
+                Field nodes = fields.stream().filter(f -> f.getName().equals("nodes")).findFirst().orElse(null);
+
+                if(elementType == null || nodes == null) throw new RuntimeException("Incompatible versions: elementType or nodes does not exist");
+
+                elementType.setAccessible(true);
+                Class<?> elementTypeClass = Class.forName(obj.get("elementType").getAsString());
+                elementType.set(collection, elementTypeClass);
+
+                nodes.setAccessible(true);
+                Type nodesType = TypeToken.getParameterized(nodes.getType(), elementTypeClass).getType();
+                nodes.set(collection, jsonDeserializationContext.deserialize(obj.get("nodes"), nodesType));
+
+            } catch (Exception e) {
+                Log.error(e);
+            }
+            return collection;
+         });
+    }
 
     private static void deserializeNodeContents(Node node, Type type, JsonObject obj, JsonDeserializationContext context) {
 
@@ -146,7 +182,8 @@ public final class Json {
                 try {
                     JsonElement jsonElement = obj.get(name);
                     field.set(node, context.deserialize(jsonElement, field.getType()));
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    Log.error(e);
                 }
             }
         }

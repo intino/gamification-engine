@@ -18,7 +18,7 @@ public class GraphSerializer_ {
 
         //engine.setGraph(graph);
 
-        for(int i = 0;i < 10;i++) {
+        for(int i = 0;i < 1;i++) {
             Competition competition = new Competition(String.valueOf(i + 1));
             graph.competitions().add(competition);
 
@@ -43,7 +43,7 @@ public class GraphSerializer_ {
         long start = System.currentTimeMillis();
 
         GamificationSerializer serializer = new GamificationSerializer(new File("temp/graph1"));
-        serializer.prettyPrinting(false);
+        serializer.prettyPrinting(true);
         serializer.save(graph);
 
         long time = System.currentTimeMillis() - start;
@@ -93,7 +93,7 @@ public class GraphSerializer_ {
     private static void addRounds(Season season) {
         for(int i = 0;i < 24;i++) {
             Round round = new Round(String.valueOf(i + 1));
-            season.rounds().add(round);
+            season.startNewRound(round);
             addMatches(round);
         }
     }

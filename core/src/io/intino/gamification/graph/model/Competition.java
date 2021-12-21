@@ -46,11 +46,9 @@ public final class Competition extends Node {
 
     public void startNewSeason(Season season) {
         if (season != null) {
-            if(currentSeason() == null) {
-                finishCurrentSeason();
-                seasons.add(season);
-                season.begin();
-            }
+            finishCurrentSeason();
+            seasons.add(season);
+            season.begin();
         }
     }
 

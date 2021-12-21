@@ -75,7 +75,7 @@ public class GraphSerializer_ {
     private static void addSeasons(Competition competition) {
         for(int i = 0;i < 10;i++) {
             Season season = new Season(String.valueOf(i + 1));
-            competition.seasons().add(season);
+            competition.startNewSeason(season);
             addMissionAssignments(season);
             addRounds(season);
         }

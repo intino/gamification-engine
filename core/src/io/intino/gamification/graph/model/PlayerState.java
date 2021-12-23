@@ -1,7 +1,9 @@
 package io.intino.gamification.graph.model;
 
 import io.intino.gamification.graph.structure.Fact;
+import io.intino.gamification.util.time.TimeUtils;
 
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.stream.Stream;
 
@@ -121,6 +123,33 @@ public final class PlayerState extends Node {
         for(Round round : season().rounds()) {
             Match match = round.matches().find(id());
             if(match != null) score += Math.max(match.score(), 0);
+        }
+
+        return Math.max(score, 0);
+    }
+
+    public int scoreBetween(Instant start, Instant end) {
+        if(parent() == null) return 0;
+
+        int score = 0;
+
+        boolean endReached = false;
+
+        NodeCollection<Round> rounds = season().rounds();
+
+        for(int i = 0; i < rounds.size() && !endReached; i++) {
+            Round round = rounds.get(i);
+            Match match = round.matches().find(id());
+            if(match == null) continue;
+
+            for(Fact fact : match.facts()) {
+                if(TimeUtils.inRange(fact.ts(), start, end)) {
+                    score += fact.points();
+                } else {
+                    endReached = true;
+                    break;
+                }
+            }
         }
 
         return Math.max(score, 0);

@@ -17,8 +17,11 @@ import java.util.Map;
 
 public final class Json {
 
-    public static final Gson Serializer = builder().create();
-    public static final Gson PrettySerializer = builder().setPrettyPrinting().create();
+    public static final Gson Serializer = builder(false).create();
+    public static final Gson PrettySerializer = builder(false).setPrettyPrinting().create();
+    public static final Gson EmbeddedSerializer = builder(true).create();
+    public static final Gson EmbeddedPrettySerializer = builder(true).setPrettyPrinting().create();
+
     private static final Map<Type, List<Field>> FieldsCache = new HashMap<>();
 
     public static String toJson(Object obj) {
@@ -27,6 +30,14 @@ public final class Json {
 
     public static String toJsonPretty(Object obj) {
         return PrettySerializer.toJson(obj);
+    }
+
+    public static String toJsonEmbedded(Object obj) {
+        return EmbeddedSerializer.toJson(obj);
+    }
+
+    public static String toJsonPrettyEmbedded(Object obj) {
+        return EmbeddedPrettySerializer.toJson(obj);
     }
 
     public static <T> T fromJson(Class<T> clazz, String json) {
@@ -62,14 +73,31 @@ public final class Json {
         return PrettySerializer;
     }
 
-    private static GsonBuilder builder() {
+    public static Gson jsonEmbeddedSerializer() {
+        return EmbeddedSerializer;
+    }
+
+    public static Gson jsonEmbeddedPrettySerializer() {
+        return EmbeddedPrettySerializer;
+    }
+
+    private static GsonBuilder builder(boolean embedded) {
         GsonBuilder builder = new GsonBuilder();
         builder.serializeNulls();
-        addTypeAdapters(builder);
+        addTypeAdapters(builder, embedded);
         return builder;
     }
 
-    private static void addTypeAdapters(GsonBuilder builder) {
+    private static void addTypeAdapters(GsonBuilder builder, boolean embedded) {
+
+        builder.registerTypeAdapter(Class.class, (JsonSerializer<Class>) (o, type, jsonSerializationContext) -> new JsonPrimitive(o.getName()));
+        builder.registerTypeAdapter(Class.class, (JsonDeserializer<Class>) (o, type, jsonSerializationContext) -> {
+            try {
+                return Class.forName(o.getAsString());
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+        });
 
         builder.registerTypeAdapter(Instant.class, (JsonSerializer<Instant>) (instant, type, jsonSerializationContext)
                 -> new JsonPrimitive(instant.toString().replace(':', '_')));
@@ -86,22 +114,27 @@ public final class Json {
 
         });
 
-        addNodeTypeAdapter(builder);
+        addNodeTypeAdapter(builder, embedded);
     }
 
-    private static void addNodeTypeAdapter(GsonBuilder builder) {
+    private static void addNodeTypeAdapter(GsonBuilder builder, boolean embedded) {
 
         builder.registerTypeHierarchyAdapter(Node.class, (JsonSerializer<Node>) (node, type, jsonSerializationContext) -> {
 
             JsonObject obj = new JsonObject();
 
-            List<Field> fields = TypeUtils.getAllFields(node.getClass(), field -> (field.getModifiers() & Modifier.TRANSIENT) == 0);
+            List<Field> fields = FieldsCache.get(type);
+
+            if(fields == null) {
+                fields = TypeUtils.getAllFields(node.getClass());
+            }
 
             for(Field field : fields) {
                 try {
+                    if(!embedded && (field.getModifiers() & Modifier.TRANSIENT) != 0) continue;
                     obj.add(field.getName(), jsonSerializationContext.serialize(field.get(node)));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+                    Log.error(e);
                 }
             }
 
@@ -111,21 +144,21 @@ public final class Json {
         builder.registerTypeHierarchyAdapter(Competition.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
             JsonObject obj = (JsonObject) jsonElement;
             Competition competition = new Competition(obj.get("id").getAsString());
-            deserializeNodeContents(competition, type, obj, jsonDeserializationContext);
+            deserializeNodeContents(competition, type, obj, jsonDeserializationContext, embedded);
             return competition;
         });
 
         builder.registerTypeHierarchyAdapter(Season.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
             JsonObject obj = (JsonObject) jsonElement;
             Season season = new Season(obj.get("id").getAsString());
-            deserializeNodeContents(season, type, obj, jsonDeserializationContext);
+            deserializeNodeContents(season, type, obj, jsonDeserializationContext, embedded);
             return season;
         });
 
         builder.registerTypeHierarchyAdapter(Round.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
             JsonObject obj = (JsonObject) jsonElement;
             Round round = new Round(obj.get("id").getAsString());
-            deserializeNodeContents(round, type, obj, jsonDeserializationContext);
+            deserializeNodeContents(round, type, obj, jsonDeserializationContext, embedded);
             return round;
         });
 
@@ -166,17 +199,20 @@ public final class Json {
          });
     }
 
-    private static void deserializeNodeContents(Node node, Type type, JsonObject obj, JsonDeserializationContext context) {
+    private static void deserializeNodeContents(Node node, Type type, JsonObject obj, JsonDeserializationContext context, boolean embedded) {
 
         List<Field> fields = FieldsCache.get(type);
 
         if(fields == null) {
-            fields = TypeUtils.getAllFields(node.getClass(), field -> (field.getModifiers() & Modifier.TRANSIENT) == 0);
+            fields = TypeUtils.getAllFields(node.getClass());
             FieldsCache.put(type, fields);
         }
 
         for(Field field : fields) {
             field.setAccessible(true);
+
+            if(!embedded && (field.getModifiers() & Modifier.TRANSIENT) != 0) continue;
+
             String name = field.getName();
             if(!name.equals("id") && obj.has(name)) {
                 try {

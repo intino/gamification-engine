@@ -4,6 +4,7 @@ import io.intino.gamification.graph.GamificationGraph;
 import io.intino.gamification.graph.model.*;
 import io.intino.gamification.graph.structure.Fact;
 import io.intino.gamification.serialization.GamificationSerializer;
+import io.intino.gamification.util.serializer.Json;
 
 import java.io.File;
 import java.util.Random;
@@ -11,6 +12,10 @@ import java.util.Random;
 public class GraphSerializer_ {
 
     public static void main(String[] args) {
+
+        String json = Json.toJson(MissionAssignment.class);
+
+        Class<MissionAssignment> c = Json.fromJson(Class.class, json);
 
         GamificationSerializer serializer = new GamificationSerializer(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\externa\\temp\\datamarts\\wizard\\gamification\\graph"));
 

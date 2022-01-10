@@ -28,7 +28,7 @@ public class PlayerState_ {
         mission = new Mission("m", 100);
         competition.missions().add(mission);
         season = new Season("s");
-        competition.startNewSeason(season);
+        competition.startNewSeason(season, false);
         round = new Round("r");
         season.startNewRound(round);
     }

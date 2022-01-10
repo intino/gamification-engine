@@ -70,6 +70,10 @@ public final class Progress implements Serializable {
         return total;
     }
 
+    public Progress copy() {
+        return new Progress(total(), current());
+    }
+
     public enum State {
         Complete, InProgress, Failed
     }

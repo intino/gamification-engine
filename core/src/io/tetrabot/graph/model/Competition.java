@@ -44,11 +44,32 @@ public final class Competition extends Node {
         return season.state() == Season.State.Finished ? null : season;
     }
 
-    public void startNewSeason(Season season) {
+    /**
+     * Ends the current round and starts the new season as the current one.
+     *
+     * @param season the new season
+     * @param inheritActiveMissions tells whether the new season should carry on the active missions remaining in the last season or not
+     *
+     * */
+    public void startNewSeason(Season season, boolean inheritActiveMissions) {
         if (season != null) {
-            finishCurrentSeason();
+            Season lastSeason = currentSeason();
+            if(lastSeason != null) finishCurrentSeason();
             seasons.add(season);
             season.begin();
+            if(lastSeason != null && inheritActiveMissions) {
+                inheritActiveMissions(lastSeason, season);
+            }
+        }
+    }
+
+    private void inheritActiveMissions(Season lastSeason, Season currentSeason) {
+        for(PlayerState player : currentSeason.playerStates()) {
+            PlayerState lastState = lastSeason.playerStates().find(player.id());
+            if(lastState == null) continue;
+            for(MissionAssignment assignment : lastState.activeMissions()) {
+                player.assignMission(assignment.copy());
+            }
         }
     }
 

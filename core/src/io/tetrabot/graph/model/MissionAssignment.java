@@ -98,4 +98,8 @@ public final class MissionAssignment extends Node {
     public PlayerState player() {
         return parent();
     }
+
+    public MissionAssignment copy() {
+        return new MissionAssignment(id(), missionId, progress.copy(), startTime, expirationTime);
+    }
 }

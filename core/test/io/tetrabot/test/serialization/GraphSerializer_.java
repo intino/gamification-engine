@@ -10,11 +10,18 @@ import java.util.Random;
 
 public class GraphSerializer_ {
 
-    public static void main3(String[] args) {
+    public static void main(String[] args) {
 
+        TetrabotSerializer serializer = new TetrabotSerializer(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\externa\\temp\\datamarts\\wizard\\gamification\\graph"));
+
+        TetrabotGraph graph = serializer.loadGraph();
+
+        Competition competition = graph.competitions().find("Honduras");
+
+        System.out.println(competition.seasons());
     }
 
-    public static void main(String[] args) {
+    public static void main3(String[] args) {
 
         String json = Json.toJson(MissionAssignment.class);
 

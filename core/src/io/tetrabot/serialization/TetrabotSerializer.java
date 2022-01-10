@@ -10,6 +10,9 @@ import io.tetrabot.util.Json;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.nio.file.StandardCopyOption.ATOMIC_MOVE;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -28,6 +31,8 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  *
  *    + competition2
  *      ...
+ *
+ *
  * */
 public class TetrabotSerializer {
 
@@ -127,15 +132,15 @@ public class TetrabotSerializer {
         Competition competition = Json.read(Competition.class, file);
         if(competition == null) return null;
 
-        File[] seasons = file.getParentFile().listFiles(f -> f.isDirectory() && f.getName().startsWith("season"));
-        if(seasons == null) return competition;
-        Arrays.sort(seasons);
+        File[] seasonDirectories = file.getParentFile().listFiles(f -> f.isDirectory() && f.getName().startsWith("season"));
+        if(seasonDirectories == null) return competition;
 
-        for(File seasonDir : seasons) {
-            File seasonFile = new File(seasonDir, seasonDir.getName() + ".json");
-            if(!seasonFile.exists()) continue;
-            competition.seasons().add(loadSeason(seasonFile));
-        }
+        Arrays.stream(seasonDirectories)
+                .map(directory -> new File(directory, directory.getName() + ".json"))
+                .filter(File::exists)
+                .map(this::loadSeason)
+                .sorted(Comparator.comparing(Season::startTime))
+                .forEach(competition.seasons()::add);
 
         return competition;
     }
@@ -144,12 +149,10 @@ public class TetrabotSerializer {
         Season season = Json.read(Season.class, file);
         if(season == null) return null;
 
-        File[] rounds = file.getParentFile().listFiles(f -> f.isFile() && f.getName().startsWith("round"));
-        if(rounds == null) return season;
-        Arrays.sort(rounds);
+        File[] roundFiles = file.getParentFile().listFiles(f -> f.isFile() && f.getName().startsWith("round"));
+        if(roundFiles == null) return season;
 
-        for(File round : rounds)
-            season.rounds().add(loadRound(round));
+        Arrays.stream(roundFiles).map(this::loadRound).sorted(Comparator.comparing(Round::startTime)).forEach(season.rounds()::add);
 
         return season;
     }

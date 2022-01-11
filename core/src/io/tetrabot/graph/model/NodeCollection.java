@@ -22,7 +22,6 @@ public class NodeCollection<T extends Node> implements UnmodifiableNodeCollectio
     }
 
     public void init(Object owner, Class<T> elementType) {
-        if (initialized()) throw new IllegalStateException("NodeCollection has been already initialized");
         if (owner == null) throw new NullPointerException("Owner cannot be null");
         if (elementType == null) throw new NullPointerException("Element type cannot be null");
         this.owner = owner;

@@ -12,17 +12,17 @@ public final class PlayerState extends Node {
     private final NodeCollection<MissionAssignment> activeMissions;
     private final NodeCollection<MissionAssignment> finishedMissions;
 
-    PlayerState(String id) {
+    public PlayerState(String id) {
         super(id);
         activeMissions = new NodeCollection<>();
-        activeMissions.init(this, MissionAssignment.class);
-
         finishedMissions = new NodeCollection<>();
-        finishedMissions.init(this, MissionAssignment.class);
+        onInit();
     }
 
     @Override
     void onInit() {
+        activeMissions.init(this, MissionAssignment.class);
+        finishedMissions.init(this, MissionAssignment.class);
     }
 
     public void assignMission(MissionAssignment assignment) {

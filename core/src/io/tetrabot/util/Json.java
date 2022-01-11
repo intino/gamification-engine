@@ -153,6 +153,13 @@ public final class Json {
             return season;
         });
 
+        builder.registerTypeHierarchyAdapter(PlayerState.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
+            JsonObject obj = (JsonObject) jsonElement;
+            PlayerState playerState = new PlayerState(obj.get("id").getAsString());
+            deserializeNodeContents(playerState, type, obj, jsonDeserializationContext, embedded);
+            return playerState;
+        });
+
         builder.registerTypeHierarchyAdapter(Round.class, (JsonDeserializer<Object>) (jsonElement, type, jsonDeserializationContext) -> {
             JsonObject obj = (JsonObject) jsonElement;
             Round round = new Round(obj.get("id").getAsString());

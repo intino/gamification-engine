@@ -16,7 +16,11 @@ public class GraphSerializer_ {
 
         TetrabotGraph graph = serializer.loadGraph();
 
-        Competition competition = graph.competitions().find("Honduras");
+        Competition competition = graph.competitions().find("Mexico");
+
+        Season season = competition.currentSeason();
+
+        season.playerStates().get(0).assignMission(new MissionAssignment("hola", competition.missions().get(0).id(), 1, null));
 
         System.out.println(competition.seasons());
     }

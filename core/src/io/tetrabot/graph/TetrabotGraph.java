@@ -28,4 +28,8 @@ public class TetrabotGraph {
     public String toString() {
         return Json.toJsonPretty(this);
     }
+
+    public TetrabotGraph copy() {
+        return new TetrabotGraphCopy().copy(this);
+    }
 }

@@ -3,6 +3,8 @@ package io.tetrabot.graph.model;
 import io.tetrabot.graph.TetrabotGraph;
 import io.tetrabot.util.Json;
 
+import java.util.function.Predicate;
+
 public final class Competition extends Node {
 
     private final transient NodeCollection<Season> seasons;
@@ -123,5 +125,37 @@ public final class Competition extends Node {
     @Override
     public String toJson() {
         return Json.toJsonPretty(this);
+    }
+
+    @Override
+    public Competition copy() {
+        return new Copy().create();
+    }
+
+    public class Copy {
+
+        private Predicate<Season> seasonFilter = s -> true;
+        private Predicate<Round> roundFilter = r -> true;
+
+        public Competition create() {
+            Competition copy = new Competition(id());
+            players().forEach(e -> copy.players().add(e.copy()));
+            missions().forEach(e -> copy.missions().add(e.copy()));
+            reinforcements().forEach(e -> copy.reinforcements().add(e.copy()));
+            fouls().forEach(e -> copy.fouls().add(e.copy()));
+            achievements().forEach(e -> copy.achievements().add(e.copy()));
+            seasons().stream().filter(seasonFilter).forEach(s -> copy.seasons.add(s.new Copy().roundFilter(roundFilter).create()));
+            return copy;
+        }
+
+        public Copy seasonFilter(Predicate<Season> seasonFilter) {
+            this.seasonFilter = seasonFilter == null ? s -> true : seasonFilter;
+            return this;
+        }
+
+        public Copy roundFilter(Predicate<Round> roundFilter) {
+            this.roundFilter = roundFilter == null ? r -> true : roundFilter;
+            return this;
+        }
     }
 }

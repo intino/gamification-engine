@@ -6,6 +6,11 @@ public final class Mission extends ScoringNodeDefinition<Mission> {
         super(id);
     }
 
+    @Override
+    public Mission copy() {
+        return new Mission(id()).points(points());
+    }
+
     public Mission(String id, int points) {
         super(id, points);
     }

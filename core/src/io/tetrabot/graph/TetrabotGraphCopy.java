@@ -1,10 +1,8 @@
 package io.tetrabot.graph;
 
 import io.tetrabot.graph.model.Competition;
-import io.tetrabot.graph.model.Node;
 import io.tetrabot.graph.model.Round;
 import io.tetrabot.graph.model.Season;
-import io.tetrabot.util.Json;
 
 import java.util.function.Predicate;
 
@@ -23,35 +21,9 @@ public class TetrabotGraphCopy {
     private void deepCopy(TetrabotGraph dst, TetrabotGraph src) {
         for(Competition srcCompetition : src.competitions()) {
             if(competitionFilter.test(srcCompetition)) {
-                Competition dstCompetition = shallowCopy(srcCompetition);
-                dst.competitions().add(dstCompetition);
-                copySeasons(dstCompetition, srcCompetition);
+                dst.competitions().add(srcCompetition.new Copy().seasonFilter(seasonFilter).create());
             }
         }
-    }
-
-    private void copySeasons(Competition dstCompetition, Competition srcCompetition) {
-        for(Season srcSeason : srcCompetition.seasons()) {
-            if(seasonFilter.test(srcSeason)) {
-                Season dstSeason = shallowCopy(srcSeason);
-                dstCompetition.seasons().add(dstSeason);
-                copyRounds(dstSeason, srcSeason);
-            }
-        }
-    }
-
-    private void copyRounds(Season dstSeason, Season srcSeason) {
-        for(Round srcRound : srcSeason.rounds()) {
-            if(roundFilter.test(srcRound)) {
-                Round dstRound = shallowCopy(srcRound);
-                dstSeason.rounds().add(dstRound);
-            }
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends Node> T shallowCopy(T node) {
-        return (T) Json.fromJson(node.getClass(), Json.toJson(node));
     }
 
     public TetrabotGraphCopy competitionFilter(Predicate<Competition> competitionFilter) {

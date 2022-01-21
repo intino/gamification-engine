@@ -25,6 +25,11 @@ public final class Achievement extends Node {
                 '}';
     }
 
+    @Override
+    public Achievement copy() {
+        return new Achievement(id(), type);
+    }
+
     public enum Type {
         Bonus, Milestone, Prize, Record
     }

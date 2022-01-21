@@ -3,6 +3,7 @@ package io.tetrabot.graph.model;
 import io.tetrabot.util.time.TimeUtils;
 
 import java.time.Instant;
+import java.util.function.Predicate;
 
 public final class Season extends Node {
 
@@ -108,7 +109,32 @@ public final class Season extends Node {
                 '}';
     }
 
+    @Override
+    public Season copy() {
+        return new Copy().create();
+    }
+
     public enum State {
         Created, Running, Finished
+    }
+
+    public class Copy {
+
+        private Predicate<Round> roundFilter = r -> true;
+
+        public Season create() {
+            Season copy = new Season(id());
+            copy.state = state;
+            copy.startTime = startTime;
+            copy.endTime = endTime;
+            playerStates.stream().map(PlayerState::copy).forEach(copy.playerStates::add);
+            rounds.stream().filter(roundFilter).map(Round::copy).forEach(copy.rounds::add);
+            return copy;
+        }
+
+        public Copy roundFilter(Predicate<Round> roundFilter) {
+            this.roundFilter = roundFilter == null ? r -> true : roundFilter;
+            return this;
+        }
     }
 }

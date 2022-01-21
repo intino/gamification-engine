@@ -77,6 +77,16 @@ public final class Round extends Node {
                 '}';
     }
 
+    @Override
+    public Round copy() {
+        Round copy = new Round(id());
+        copy.startTime = startTime;
+        copy.endTime = endTime;
+        copy.state = state;
+        matches.stream().map(Match::copy).forEach(copy.matches::add);
+        return copy;
+    }
+
     public enum State {
         Created, Running, Finished
     }

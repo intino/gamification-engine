@@ -99,6 +99,7 @@ public final class MissionAssignment extends Node {
         return parent();
     }
 
+    @Override
     public MissionAssignment copy() {
         return new MissionAssignment(id(), missionId, progress.copy(), startTime, expirationTime);
     }

@@ -58,4 +58,6 @@ public abstract class Node implements Serializable {
     public String toJson() {
         return Json.toJsonPretty(this);
     }
+
+    public abstract Node copy();
 }

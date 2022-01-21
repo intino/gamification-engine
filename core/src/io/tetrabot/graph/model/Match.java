@@ -3,6 +3,7 @@ package io.tetrabot.graph.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class Match extends Node {
 
@@ -38,5 +39,12 @@ public final class Match extends Node {
                 ", facts=" + facts.size() +
                 ", score=" + score() +
                 '}';
+    }
+
+    @Override
+    public Match copy() {
+        Match copy = new Match(id());
+        facts.stream().map(Fact::copy).forEach(copy.facts::add);
+        return copy;
     }
 }

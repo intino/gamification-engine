@@ -5,6 +5,7 @@ import io.tetrabot.util.data.Progress;
 
 import java.time.Instant;
 import java.util.Comparator;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class PlayerState extends Node {
@@ -61,12 +62,12 @@ public final class PlayerState extends Node {
         finishedMissions.sort(Comparator.comparing(MissionAssignment::endTime));
     }
 
-    public void removeActiveMission(MissionAssignment assignment) {
-        activeMissions.remove(assignment);
+    public void removeActiveMission(String assignmentId) {
+        activeMissions.removeIf(a -> a.id().equals(assignmentId));
     }
 
-    public void removeFinishedMission(MissionAssignment assignment) {
-        finishedMissions.remove(assignment);
+    public void removeFinishedMission(String assignmentId) {
+        finishedMissions.removeIf(a -> a.id().equals(assignmentId));
     }
 
     public void removeAllActiveMissions() {
@@ -178,5 +179,13 @@ public final class PlayerState extends Node {
                 ", facts=" + rawFacts().count() +
                 ", score=" + rawScore() +
                 '}';
+    }
+
+    @Override
+    public PlayerState copy() {
+        PlayerState copy = new PlayerState(id());
+        activeMissions.stream().map(MissionAssignment::copy).forEach(copy.activeMissions::add);
+        finishedMissions.stream().map(MissionAssignment::copy).forEach(copy.finishedMissions::add);
+        return copy;
     }
 }

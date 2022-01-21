@@ -6,6 +6,11 @@ public final class Reinforcement extends ScoringNodeDefinition<Reinforcement> {
         super(id);
     }
 
+    @Override
+    public Reinforcement copy() {
+        return new Reinforcement(id()).points(points());
+    }
+
     public Reinforcement(String id, int points) {
         super(id, points);
     }

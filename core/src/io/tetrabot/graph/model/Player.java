@@ -6,6 +6,11 @@ public final class Player extends Entity {
         super(id);
     }
 
+    @Override
+    public Player copy() {
+        return new Player(id());
+    }
+
     public PlayerState state() {
         return competition().currentSeason().playerStates().find(id());
     }

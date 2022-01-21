@@ -113,6 +113,12 @@ public class Fact implements Serializable {
                 '}';
     }
 
+    public Fact copy() {
+        Fact facts = new Fact().ts(ts).name(name).type(type).points(this.points);
+        facts.attributes.putAll(attributes);
+        return facts;
+    }
+
     public static class Type {
 
         private static final Map<String, Type> RegisteredTypes = new HashMap<>();

@@ -1,6 +1,6 @@
 dsl Legio
 
-Artifact("io.tetrabot", "1.2.4-SNAPSHOT") core
+Artifact("io.tetrabot", "1.2.5-SNAPSHOT") core
 
 	Imports
 		Compile("io.intino.alexandria", "core-framework", "2.1.1")

@@ -15,17 +15,34 @@ public class GraphSerializer_ {
 
     public static void main(String[] args) {
 
-        TetrabotSerializer serializer = new TetrabotSerializer(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\externa\\temp\\datamarts\\wizard\\gamification\\graph"));
+        TetrabotSerializer serializer = new TetrabotSerializer(new File("C:\\Users\\naits\\Desktop\\MonentiaDev\\externa\\temp\\datamarts\\gamification\\graph"));
 
+        serializer.prettyPrinting(false);
+
+        long start;
+        long end;
+
+        start = System.currentTimeMillis();
         TetrabotGraph graph = serializer.loadGraph();
+        end = System.currentTimeMillis();
 
-        Competition competition = graph.competitions().find("Mexico");
+        System.out.println("Loaded in " + (end - start) / 1000.0 + " seconds");
 
-        Season season = competition.currentSeason();
+        start = System.currentTimeMillis();
+        serializer.save(graph);
+        end = System.currentTimeMillis();
 
-        season.playerStates().get(0).assignMission(new MissionAssignment("hola", competition.missions().get(0).id(), 1, null));
+        System.out.println("Saved in " + (end - start) / 1000.0 + " seconds");
 
-        System.out.println(competition.seasons());
+        start = System.currentTimeMillis();
+        TetrabotGraph other = graph.copy();
+        end = System.currentTimeMillis();
+        System.out.println("Copied in " + ((end - start) / 1000.0) + " seconds");
+
+        Match s1 = graph.competitions().find("Mexico").seasons().get(1).rounds().get(0).matches().get(10);
+        Match s2 = other.competitions().find("Mexico").seasons().get(1).rounds().get(0).matches().get(10);
+
+        System.out.println();
     }
 
     public static void main3(String[] args) {

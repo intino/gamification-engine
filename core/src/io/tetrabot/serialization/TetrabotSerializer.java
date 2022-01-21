@@ -152,7 +152,8 @@ public class TetrabotSerializer {
         File[] roundFiles = file.getParentFile().listFiles(f -> f.isFile() && f.getName().startsWith("round"));
         if(roundFiles == null) return season;
 
-        Arrays.stream(roundFiles).map(this::loadRound).sorted(Comparator.comparing(Round::startTime)).forEach(season.rounds()::add);
+        Arrays.stream(roundFiles).map(this::loadRound).sorted(Comparator.comparing(Round::startTime))
+                .forEach(season.rounds()::add);
 
         return season;
     }
